@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 # Allow GITHUB_TOKEN to deploy to Pages
@@ -11,10 +12,12 @@ permissions:
   pages: write
   id-token: write
 
-# Single concurrent deploy; don't cancel an in-progress production deploy
+# Serialize per ref: production deploys on main never get blocked by PR
+# validation runs (each ref gets its own group). Don't cancel in-progress
+# production deploys; do cancel superseded PR builds.
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -26,7 +29,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -35,13 +38,17 @@ jobs:
       - name: Build with Astro
         run: npm run build
 
+      # On pull requests we only build to validate; the upload + deploy below
+      # are gated to pushes to main so PRs don't touch the live site.
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
