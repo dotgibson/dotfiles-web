@@ -1,5 +1,5 @@
 ---
-import { nav, site } from '../data/site';
+import { nav, site, coreRepoUrl } from '../data/site';
 import { withBase } from '../lib/url';
 
 const current = Astro.url.pathname.replace(/\/$/, '');
@@ -34,7 +34,7 @@ function isActive(href: string) {
           ))
         }
         <li class="nav__cta">
-          <a class="btn btn-ghost" href={site.githubBase} target="_blank" rel="noopener">
+          <a class="btn btn-ghost" href={coreRepoUrl} target="_blank" rel="noopener">
             GitHub ↗
           </a>
         </li>
