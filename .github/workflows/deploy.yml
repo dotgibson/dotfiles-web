@@ -12,10 +12,12 @@ permissions:
   pages: write
   id-token: write
 
-# Single concurrent deploy; don't cancel an in-progress production deploy
+# Serialize per ref: production deploys on main never get blocked by PR
+# validation runs (each ref gets its own group). Don't cancel in-progress
+# production deploys; do cancel superseded PR builds.
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
