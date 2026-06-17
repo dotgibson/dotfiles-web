@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-06-17",
+  "fleet": {
+    "publicRepos": 9,
+    "layers": 3,
+    "loadOrderStages": 15
+  },
+  "core": {
+    "version": "0.1.0-dev",
+    "sourcedModules": 13,
+    "zshLoc": 2862,
+    "gitAliases": 57,
+    "pinnedPlugins": 7,
+    "completions": 22
+  },
+  "packages": {
+    "dotfiles-MacBook": 60,
+    "dotfiles-Kali": 28,
+    "dotfiles-Fedora": 31,
+    "dotfiles-Arch": 36,
+    "dotfiles-openSUSE": 30,
+    "dotfiles-Alpine": 32,
+    "dotfiles-Gentoo": 30,
+    "dotfiles-Kali-offensive": 36
+  },
+  "ci": {
+    "dotfiles-core": true,
+    "dotfiles-MacBook": true,
+    "dotfiles-Windows": true,
+    "dotfiles-Kali": false,
+    "dotfiles-Fedora": false,
+    "dotfiles-Arch": false,
+    "dotfiles-openSUSE": false,
+    "dotfiles-Alpine": false,
+    "dotfiles-Gentoo": false
+  }
+}

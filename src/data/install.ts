@@ -99,14 +99,30 @@ export const platforms: Platform[] = [
   {
     id: 'linux',
     label: 'Linux distros',
-    repo: 'dotfiles-core',
-    available: false,
+    repo: 'dotfiles-Fedora',
+    available: true,
     intro:
-      'Fedora is the template the other distro repos (Arch, openSUSE, Alpine, Gentoo, Debian) are stamped from — same structure every time, only the package manager and distro quirks change. These are being rolled out.',
+      'Fedora is the template; Arch, openSUSE, Alpine, and Gentoo are stamped from it — same structure every time, only the package manager and a few distro quirks change. Pick the repo for your distro; the flow below is identical across all of them.',
     steps: [
       {
-        title: 'Coming soon',
-        body: 'The distro repos are in progress. The pattern is identical to macOS: clone, dry-run, ./bootstrap.sh. Watch dotfiles-core for the rollout.',
+        title: 'Clone your distro’s repo',
+        body: 'Swap Fedora for Arch, openSUSE, Alpine, or Gentoo. Core is already vendored under core/, so the clone is self-contained.',
+        code: 'git clone https://github.com/Gerrrt/dotfiles-Fedora ~/dotfiles-Fedora\ncd ~/dotfiles-Fedora',
+      },
+      {
+        title: 'Preview the symlink plan (optional)',
+        body: '--links-only re-wires symlinks without touching the package manager; pair it with the bootstrap to see what changes first.',
+        code: './bootstrap.sh --links-only',
+      },
+      {
+        title: 'Provision + wire',
+        body: 'Installs the distro package layer, then symlinks. Idempotent — re-run any time. exec zsh to land in the new shell.',
+        code: './bootstrap.sh\nexec zsh',
+      },
+      {
+        title: 'Per-distro flags',
+        body:
+          'Fedora / openSUSE: --no-flatpak skips Flatpak. Gentoo: --no-sync skips the slow emerge --sync on re-runs. Arch: a manual/minimal box needs the stage-0 prep in SETUP.md first (git, sudo, a UTF-8 locale). Alpine: run as root or with doas; enable the community repo.',
       },
     ],
   },

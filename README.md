@@ -29,11 +29,27 @@ npm run preview    # preview the production build locally
 Content is data-driven — edit these and the site updates:
 
 - `src/data/site.ts` — site name, owner, nav, GitHub links
-- `src/data/repos.ts` — the repository map / showcase cards (and their status)
+- `src/data/repos.ts` — the repository map / showcase cards (prose + status)
 - `src/data/install.ts` — per-platform install steps
 - `src/data/changelog.ts` — the changelog mirror
 
 Styling lives in `src/styles/global.css` (Tokyo Night design tokens at the top).
+
+## Source-derived metrics
+
+The "by the numbers" strip and the per-card package counts are **not** hand-typed —
+they come from `src/data/generated.json`, which `scripts/collect-metrics.mjs` derives
+by reading the sibling repos (`../dotfiles-core`, `../dotfiles-Fedora`, …):
+
+```bash
+npm run metrics      # checkout the sibling repos next to this one first
+# or point it elsewhere:
+DOTFILES_ROOT=/path/to/repos npm run metrics
+```
+
+Regenerate and commit `generated.json` whenever Core or an OS repo changes. The script
+is defensive: if the sibling repos aren't checked out (e.g. on the Pages CI runner,
+which clones only this repo), it leaves the committed JSON untouched.
 
 ## Deployment
 

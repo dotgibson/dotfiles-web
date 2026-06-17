@@ -1,0 +1,78 @@
+---
+// "By the numbers" strip. Every figure comes from src/data/generated.json, which
+// scripts/collect-metrics.mjs derives from the actual sibling repos — so the strip
+// can't drift from the real codebase.
+import { headlineStats, metrics } from '../data/metrics';
+---
+
+<section class="metrics" aria-label="The system by the numbers">
+  <div class="container">
+    <dl class="metrics__grid">
+      {
+        headlineStats.map((s) => (
+          <div class="metric">
+            <dt class="metric__value text-mono">{s.value}</dt>
+            <dd class="metric__label">{s.label}</dd>
+            <dd class="metric__hint muted">{s.hint}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    {
+      metrics.core.version && (
+        <p class="metrics__stamp muted text-mono">
+          Core <span class="tone-purple">{metrics.core.version}</span> · derived from source on {metrics.generatedAt}
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .metrics {
+    border-block: 1px solid var(--border);
+    background: var(--tn-bg-dark);
+    padding-block: 2.5rem;
+  }
+  .metrics__grid {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
+  }
+  @media (min-width: 640px) {
+    .metrics__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 960px) {
+    .metrics__grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  .metric {
+    text-align: center;
+  }
+  .metric__value {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    margin: 0;
+  }
+  .metric__label {
+    margin: 0.4rem 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .metric__hint {
+    margin: 0.15rem 0 0;
+    font-size: 0.74rem;
+    line-height: 1.35;
+  }
+  .metrics__stamp {
+    text-align: center;
+    margin: 2rem 0 0;
+    font-size: 0.78rem;
+  }
+</style>

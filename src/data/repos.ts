@@ -16,6 +16,11 @@ export interface Repo {
   icon: string; // short glyph/emoji used on the card
 }
 
+// Live, source-derived numbers (per-repo package counts, Core metrics) are merged
+// in at render time from src/data/generated.json — produced by
+// scripts/collect-metrics.mjs reading the sibling repos. Keep prose here and keep
+// counts out of this file so they can't drift from the actual repositories.
+
 export const layerMeta: Record<Layer, { label: string; accent: string; desc: string }> = {
   core: {
     label: 'Core',
@@ -60,7 +65,7 @@ export const repos: Repo[] = [
     name: 'dotfiles-MacBook',
     layer: 'os',
     status: 'stable',
-    icon: '',
+    icon: '⌘',
     blurb:
       'macOS (Apple Silicon / Intel) terminal environment. Homebrew + brew bundle, Ghostty, 1Password agent, native pbcopy clipboard.',
     highlights: ['Homebrew + Brewfile', 'Ghostty config', 'osxkeychain git', 'macOS defaults'],
@@ -69,7 +74,7 @@ export const repos: Repo[] = [
     name: 'dotfiles-Windows',
     layer: 'host',
     status: 'stable',
-    icon: '',
+    icon: '⊞',
     blurb:
       'The native Windows host: PowerShell 7 as daily driver, Windows Terminal, scoop/winget, psmux, and the bridge into WSL2.',
     highlights: ['pwsh profile loader', 'scoop + winget', 'psmux multiplexer', 'WSL2 bridge'],
@@ -78,7 +83,7 @@ export const repos: Repo[] = [
     name: 'dotfiles-Kali',
     layer: 'role',
     status: 'stable',
-    icon: '',
+    icon: '⚔',
     blurb:
       'The Kali node — the only repo with three layers. Core + apt OS layer + a unique offensive role layer for authorized engagements.',
     highlights: ['engagement scaffolding', 'scope-first workflow', 'NetExec / BloodHound CE', 'WSL2 mirrored net'],
@@ -86,49 +91,49 @@ export const repos: Repo[] = [
   {
     name: 'dotfiles-Fedora',
     layer: 'os',
-    status: 'wip',
-    icon: '',
-    blurb: 'The Linux template every other distro repo is stamped from. dnf + RPM Fusion, Wayland-first clipboard.',
-    highlights: ['dnf package layer', 'distro template', 'Wayland/X11 clip'],
+    status: 'stable',
+    icon: '◉',
+    blurb: 'The Linux template every other distro repo is stamped from. dnf + RPM Fusion, Flathub, Wayland clipboard, SELinux helpers.',
+    highlights: ['dnf package layer', 'distro template', 'Wayland/X11 clip', 'SELinux helpers'],
   },
   {
     name: 'dotfiles-Arch',
     layer: 'os',
-    status: 'planned',
-    icon: '',
-    blurb: 'Rolling-release Arch. pacman + AUR, the cleanest distro for the modern-CLI stack.',
-    highlights: ['pacman + AUR', 'rolling release'],
+    status: 'beta',
+    icon: '▲',
+    blurb: 'Rolling-release Arch. pacman + AUR + multilib, with a bare-metal stage-0 SETUP guide for a minimal install.',
+    highlights: ['pacman + AUR', 'multilib + mirrors', 'stage-0 SETUP.md', 'rolling release'],
   },
   {
     name: 'dotfiles-openSUSE',
     layer: 'os',
-    status: 'planned',
-    icon: '',
-    blurb: 'zypper with the best dependency solver of the bunch. Tumbleweed (dup) and Leap (up) aware.',
-    highlights: ['zypper', 'Tumbleweed + Leap'],
+    status: 'beta',
+    icon: '❖',
+    blurb: 'zypper with the best dependency solver of the bunch. Packman, AppArmor, Btrfs/snapper, Tumbleweed (dup) + Leap (up) aware.',
+    highlights: ['zypper + Packman', 'Btrfs / snapper', 'AppArmor', 'Tumbleweed + Leap'],
   },
   {
     name: 'dotfiles-Alpine',
     layer: 'os',
-    status: 'planned',
-    icon: '',
-    blurb: 'The lean outlier: musl libc, busybox, doas. The small-footprint / container / rescue layer.',
-    highlights: ['musl + busybox', 'apk + doas'],
+    status: 'beta',
+    icon: '❄',
+    blurb: 'The lean outlier: musl libc, busybox, doas. The small-footprint / container / rescue layer — bootstrap detects doas vs sudo.',
+    highlights: ['musl + busybox', 'apk + doas', 'container / rescue'],
   },
   {
     name: 'dotfiles-Gentoo',
     layer: 'os',
-    status: 'planned',
-    icon: '',
-    blurb: 'Source-based capstone. emerge + USE flags — the most educational build in the fleet.',
-    highlights: ['emerge from source', 'USE flags'],
+    status: 'beta',
+    icon: '◢',
+    blurb: 'Source-based capstone. emerge + full category/name atoms + USE flags — the most educational build in the fleet.',
+    highlights: ['emerge from source', 'USE flags', 'full atoms', '--no-sync re-runs'],
   },
   {
     name: 'dotfiles-Debian',
     layer: 'os',
     status: 'planned',
-    icon: '',
-    blurb: 'The apt baseline inside WSL2, tracked separately from the distro template.',
+    icon: '◍',
+    blurb: 'The apt baseline inside WSL2, tracked separately from the distro template. A declared sync target, not yet public.',
     highlights: ['apt', 'WSL2 baseline'],
   },
 ];

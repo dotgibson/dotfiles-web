@@ -31,6 +31,47 @@ const comparisons = [
     body: 'chezmoi (one repo + per-OS templates) is the most DRY answer and the right move if you ever collapse nine repos into one. This system keeps the nine-repo portfolio; switching later is a content migration, not a rewrite, because Core is already plain and OS-agnostic.',
   },
 ];
+
+// Deep-dive docs that live in the repos but were previously unlinked from the site.
+const blob = (repo: string, path: string) => `https://github.com/Gerrrt/${repo}/blob/main/${path}`;
+const deepDives = [
+  {
+    title: 'Porting matrix',
+    repo: 'dotfiles-core',
+    href: blob('dotfiles-core', 'PORTING-MATRIX.md'),
+    body: 'The per-distro lookup that turns the Fedora template into Arch, openSUSE, Alpine, and Gentoo — package manager, clipboard backend, and quirks, side by side.',
+  },
+  {
+    title: 'Offensive methodology',
+    repo: 'dotfiles-Kali',
+    href: blob('dotfiles-Kali', 'OFFENSIVE-METHODOLOGY.md'),
+    body: 'How the Kali role layer maps to MITRE ATT&CK tactics — NetExec, BloodHound CE, Impacket, certipy-ad — and where loot lands under ~/engagements.',
+  },
+  {
+    title: 'Security policy',
+    repo: 'dotfiles-core',
+    href: blob('dotfiles-core', 'SECURITY.md'),
+    body: 'The supply-chain stance: SHA-pinned plugins, pinned CI actions and pre-commit hooks, and how to report an issue.',
+  },
+  {
+    title: 'Windows architecture audit',
+    repo: 'dotfiles-Windows',
+    href: blob('dotfiles-Windows', 'docs/ARCHITECTURE-AUDIT.md'),
+    body: 'The structural audit behind the PowerShell host: fragment loader, coverage gate, and how the host layer bridges into WSL.',
+  },
+  {
+    title: 'macOS migration guide',
+    repo: 'dotfiles-MacBook',
+    href: blob('dotfiles-MacBook', 'MIGRATION.md'),
+    body: 'Moving an existing Mac onto the ecosystem without trampling what is already there.',
+  },
+  {
+    title: 'Arch stage-0 setup',
+    repo: 'dotfiles-Arch',
+    href: blob('dotfiles-Arch', 'SETUP.md'),
+    body: 'Bare-metal groundwork for a minimal Arch box — user, sudo, git, and a UTF-8 locale — before bootstrap can run.',
+  },
+];
 ---
 
 <Base
@@ -149,6 +190,25 @@ git subtree pull --prefix=core https://github.com/Gerrrt/dotfiles-core main --sq
         </p>
       </div>
 
+      <!-- deep dives -->
+      <h2 class="mt">Deep dives</h2>
+      <p>
+        The design decisions above are documented in full inside the repos. These are the
+        long-form references worth reading next:
+      </p>
+      <div class="grid grid-3">
+        {
+          deepDives.map((d) => (
+            <a class="card deep-dive" href={d.href} target="_blank" rel="noopener">
+              <span class="deep-dive__repo text-mono muted">{d.repo}</span>
+              <h3>{d.title}</h3>
+              <p>{d.body}</p>
+              <span class="deep-dive__link">Read it ↗</span>
+            </a>
+          ))
+        }
+      </div>
+
       <div class="center" style="margin-top:3rem;">
         <a class="btn btn-primary" href={withBase('/getting-started')}>Install it →</a>
       </div>
@@ -159,6 +219,36 @@ git subtree pull --prefix=core https://github.com/Gerrrt/dotfiles-core main --sq
 <style>
   .mt {
     margin-top: 3.5rem;
+  }
+  .deep-dive {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: inherit;
+  }
+  a.deep-dive:hover {
+    color: inherit;
+  }
+  .deep-dive__repo {
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+  }
+  .deep-dive h3 {
+    margin: 0.4rem 0 0.5rem;
+    font-size: 1.05rem;
+  }
+  .deep-dive p {
+    font-size: 0.88rem;
+    margin: 0 0 1rem;
+  }
+  .deep-dive__link {
+    margin-top: auto;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--tn-cyan);
+  }
+  a.deep-dive:hover .deep-dive__link {
+    color: var(--tn-blue);
   }
   .rule {
     margin: 0 0 1rem;

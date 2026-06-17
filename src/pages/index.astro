@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import Metrics from '../components/Metrics.astro';
 import RepoCard from '../components/RepoCard.astro';
 import CommandBlock from '../components/CommandBlock.astro';
 import { repos, layerMeta } from '../data/repos';
@@ -50,6 +51,8 @@ const orderedRepos = [...repos];
 
 <Base>
   <Hero />
+
+  <Metrics />
 
   <!-- ===================================================== features -->
   <section class="section">
@@ -126,8 +129,9 @@ const orderedRepos = [...repos];
         <span class="eyebrow">The fleet</span>
         <h2>Repository map</h2>
         <p class="lead">
-          Four repos are public and stable today; the distro family is rolling out from the
-          Fedora template. Each card links to its repo when it goes live.
+          Nine repositories are public today — one Core, vendored into eight OS layers —
+          with Debian the next stamp from the Fedora template. Each card links straight to
+          its repo.
         </p>
       </div>
 

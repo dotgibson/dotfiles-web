@@ -1,6 +1,7 @@
 ---
 import type { Repo } from '../data/repos';
 import { layerMeta, statusMeta } from '../data/repos';
+import { packageCount } from '../data/metrics';
 import { site } from '../data/site';
 
 interface Props {
@@ -13,6 +14,11 @@ const isLive = repo.status === 'stable' || repo.status === 'beta';
 const href = `${site.githubBase}/${repo.name}`;
 const Tag = isLive ? 'a' : 'div';
 const linkProps = isLive ? { href, target: '_blank', rel: 'noopener' } : {};
+
+// Source-derived package counts (from generated.json). Kali also ships a separate
+// offensive stack, surfaced as a second figure.
+const pkgs = packageCount(repo.name);
+const offensivePkgs = packageCount(`${repo.name}-offensive`);
 ---
 
 <Tag class:list={['card repo-card', { 'repo-card--soon': !isLive }]} {...linkProps}>
@@ -31,13 +37,23 @@ const linkProps = isLive ? { href, target: '_blank', rel: 'noopener' } : {};
     {repo.highlights.map((h) => <li>{h}</li>)}
   </ul>
 
-  {
-    isLive ? (
-      <span class="repo-card__link">View on GitHub ↗</span>
-    ) : (
-      <span class="repo-card__link muted">Not public yet</span>
-    )
-  }
+  <div class="repo-card__foot">
+    {
+      pkgs != null && (
+        <span class="repo-card__pkgs text-mono">
+          {pkgs} pkgs
+          {offensivePkgs != null && <span class="tone-red"> + {offensivePkgs} offensive</span>}
+        </span>
+      )
+    }
+    {
+      isLive ? (
+        <span class="repo-card__link">View on GitHub ↗</span>
+      ) : (
+        <span class="repo-card__link muted">Not public yet</span>
+      )
+    }
+  </div>
 </Tag>
 
 <style>
@@ -100,8 +116,18 @@ const linkProps = isLive ? { href, target: '_blank', rel: 'noopener' } : {};
     border-radius: 6px;
     padding: 0.15rem 0.5rem;
   }
-  .repo-card__link {
+  .repo-card__foot {
     margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .repo-card__pkgs {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+  }
+  .repo-card__link {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--tn-cyan);
