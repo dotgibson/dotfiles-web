@@ -6,9 +6,12 @@ on:
   pull_request:
   workflow_dispatch:
 
-# Allow GITHUB_TOKEN to deploy to Pages
+# Allow GITHUB_TOKEN to deploy to Pages. `actions: read` lets the build read the
+# latest workflow-run conclusion for the repo cards (other public repos resolve
+# anonymously; private/forbidden ones just fall back to no CI badge).
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -37,6 +40,10 @@ jobs:
 
       - name: Build with Astro
         run: npm run build
+        env:
+          # Higher GitHub API rate limit + Actions access for the live repo-card
+          # badges. Build is resilient if this is unset or the API is unreachable.
+          GITHUB_TOKEN: ${{ github.token }}
 
       # On pull requests we only build to validate; the upload + deploy below
       # are gated to pushes to main so PRs don't touch the live site.

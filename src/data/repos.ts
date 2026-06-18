@@ -128,12 +128,4 @@ export const repos: Repo[] = [
     blurb: 'Source-based capstone. emerge + full category/name atoms + USE flags — the most educational build in the fleet.',
     highlights: ['emerge from source', 'USE flags', 'full atoms', '--no-sync re-runs'],
   },
-  {
-    name: 'dotfiles-Debian',
-    layer: 'os',
-    status: 'planned',
-    icon: '◍',
-    blurb: 'The apt baseline inside WSL2, tracked separately from the distro template. A declared sync target, not yet public.',
-    highlights: ['apt', 'WSL2 baseline'],
-  },
 ];

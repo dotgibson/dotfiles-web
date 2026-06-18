@@ -5,7 +5,13 @@ import Metrics from '../components/Metrics.astro';
 import RepoCard from '../components/RepoCard.astro';
 import CommandBlock from '../components/CommandBlock.astro';
 import { repos, layerMeta } from '../data/repos';
+import { getRepoLiveMap } from '../lib/github';
 import { withBase } from '../lib/url';
+
+// Live GitHub data for the cards, fetched once at build time. Best-effort: if the
+// API is unreachable or rate-limited, this resolves to all-null and the cards just
+// omit the live badges — the build never fails on it.
+const live = await getRepoLiveMap(repos.map((r) => r.name));
 
 const features = [
   {
@@ -129,14 +135,14 @@ const orderedRepos = [...repos];
         <span class="eyebrow">The fleet</span>
         <h2>Repository map</h2>
         <p class="lead">
-          Nine repositories are public today — one Core, vendored into eight OS layers —
-          with Debian the next stamp from the Fedora template. Each card links straight to
-          its repo.
+          Nine repositories are public today — one Core, vendored into eight OS layers. Each
+          card links straight to its repo, with live stars, last-push, and CI status pulled
+          from GitHub at build time.
         </p>
       </div>
 
       <div class="grid grid-3">
-        {orderedRepos.map((repo) => <RepoCard repo={repo} />)}
+        {orderedRepos.map((repo) => <RepoCard repo={repo} live={live[repo.name]} />)}
       </div>
     </div>
   </section>

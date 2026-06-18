@@ -2,12 +2,14 @@
 import type { Repo } from '../data/repos';
 import { layerMeta, statusMeta } from '../data/repos';
 import { packageCount } from '../data/metrics';
+import { relativeAge, type RepoLive } from '../lib/github';
 import { site } from '../data/site';
 
 interface Props {
   repo: Repo;
+  live?: RepoLive;
 }
-const { repo } = Astro.props;
+const { repo, live } = Astro.props;
 const layer = layerMeta[repo.layer];
 const status = statusMeta[repo.status];
 const isLive = repo.status === 'stable' || repo.status === 'beta';
@@ -19,6 +21,18 @@ const linkProps = isLive ? { href, target: '_blank', rel: 'noopener' } : {};
 // offensive stack, surfaced as a second figure.
 const pkgs = packageCount(repo.name);
 const offensivePkgs = packageCount(`${repo.name}-offensive`);
+
+// Live GitHub badges (build-time, best-effort — any field may be null).
+const stars = live?.stars ?? null;
+const age = relativeAge(live?.pushedAt ?? null);
+const ci = live?.ci ?? null;
+const ciMeta = {
+  success: { tone: 'green', glyph: '●', label: 'CI passing' },
+  failure: { tone: 'red', glyph: '●', label: 'CI failing' },
+  neutral: { tone: 'muted', glyph: '○', label: 'CI' },
+} as const;
+const ciBadge = ci ? ciMeta[ci] : null;
+const hasMeta = stars != null || age != null || ciBadge != null;
 ---
 
 <Tag class:list={['card repo-card', { 'repo-card--soon': !isLive }]} {...linkProps}>
@@ -32,6 +46,28 @@ const offensivePkgs = packageCount(`${repo.name}-offensive`);
     {repo.name}
   </h3>
   <p class="repo-card__blurb">{repo.blurb}</p>
+
+  {
+    hasMeta && (
+      <div class="repo-card__live text-mono" aria-label="Live GitHub stats">
+        {stars != null && (
+          <span class="repo-card__stat" title="Stars">
+            ★ {stars}
+          </span>
+        )}
+        {age && (
+          <span class="repo-card__stat" title="Last push">
+            ⟳ {age}
+          </span>
+        )}
+        {ciBadge && (
+          <span class:list={['repo-card__stat', `tone-${ciBadge.tone}`]} title={ciBadge.label}>
+            {ciBadge.glyph} CI
+          </span>
+        )}
+      </div>
+    )
+  }
 
   <ul class="repo-card__tags">
     {repo.highlights.map((h) => <li>{h}</li>)}
@@ -97,7 +133,18 @@ const offensivePkgs = packageCount(`${repo.name}-offensive`);
   }
   .repo-card__blurb {
     font-size: 0.9rem;
+    margin-bottom: 0.85rem;
+  }
+  .repo-card__live {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     margin-bottom: 1rem;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+  }
+  .repo-card__stat {
+    white-space: nowrap;
   }
   .repo-card__tags {
     display: flex;
