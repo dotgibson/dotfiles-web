@@ -1,5 +1,6 @@
 ---
 import { nav, site, coreRepoUrl } from '../data/site';
+import { metrics } from '../data/metrics';
 import { withBase } from '../lib/url';
 
 const current = Astro.url.pathname.replace(/\/$/, '');
@@ -8,15 +9,33 @@ function isActive(href: string) {
   const target = withBase(href).replace(/\/$/, '');
   return current === target;
 }
+
+// The Core version this build documents (from generated.json) — surfaced as a
+// badge so the site self-identifies which release it reflects. Null-safe: hidden
+// if the snapshot has no version stamp.
+const coreVersion = metrics.core.version;
 ---
 
 <header class="site-header" id="top">
   <div class="container site-header__inner">
-    <a class="brand" href={withBase('/')}>
-      <span class="brand__glyph">~/</span>
-      <span class="brand__name">{site.name}</span>
-      <span class="brand__cursor"></span>
-    </a>
+    <div class="brand-wrap">
+      <a class="brand" href={withBase('/')}>
+        <span class="brand__glyph">~/</span>
+        <span class="brand__name">{site.name}</span>
+        <span class="brand__cursor"></span>
+      </a>
+      {
+        coreVersion && (
+          <a
+            class="ver"
+            href={withBase('/changelog')}
+            title="Core version this site documents — view the changelog"
+          >
+            core {coreVersion}
+          </a>
+        )
+      }
+    </div>
 
     <nav class="nav" aria-label="Primary">
       <ul class="nav__list" id="nav-list">
@@ -62,6 +81,11 @@ function isActive(href: string) {
     justify-content: space-between;
     height: 4rem;
   }
+  .brand-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
   .brand {
     display: inline-flex;
     align-items: center;
@@ -83,6 +107,21 @@ function isActive(href: string) {
     background: var(--tn-cyan);
     margin-left: 0.15rem;
     animation: blink 1.1s steps(2, start) infinite;
+  }
+  .ver {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1;
+    color: var(--text-dim);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .ver:hover {
+    color: #fff;
+    border-color: var(--tn-border-bright);
   }
   .nav__list {
     display: flex;
@@ -175,6 +214,11 @@ function isActive(href: string) {
     .nav__cta .btn {
       width: 100%;
       justify-content: center;
+    }
+  }
+  @media (max-width: 520px) {
+    .ver {
+      display: none;
     }
   }
 </style>

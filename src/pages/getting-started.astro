@@ -2,7 +2,17 @@
 import Base from '../layouts/Base.astro';
 import CommandBlock from '../components/CommandBlock.astro';
 import { platforms } from '../data/install';
-import { site } from '../data/site';
+import { site, release } from '../data/site';
+
+// The channels to offer. Always include `current` so a config where `current` is
+// a tag but `channels` wasn't updated still surfaces (and pins) that version
+// instead of silently showing a pinned badge over main-only commands.
+const channels = release.channels.includes(release.current)
+  ? [...release.channels]
+  : [release.current, ...release.channels];
+// Show the dropdown when there's a real choice OR we're pinned to a non-main
+// release; otherwise the static rolling pill is enough.
+const showSelect = channels.length > 1 || release.current !== 'main';
 ---
 
 <Base
@@ -33,8 +43,38 @@ import { site } from '../data/site';
         </ul>
       </div>
 
+      <!-- version channel switcher -->
+      <div class="card verbar">
+        <div class="verbar__copy">
+          <h3>Version</h3>
+          <p class="muted">
+            Pick a release to pin the commands below. Tagged releases are
+            <strong>hermetic</strong> — Core is vendored, so an older tag installs exactly
+            what it shipped with. <code>main</code> tracks the latest commit.
+          </p>
+        </div>
+        {
+          showSelect ? (
+            <label class="verselect">
+              <select id="version-select" aria-label="Release version">
+                {channels.map((c) => (
+                  <option value={c} selected={c === release.current}>
+                    {c === 'main' ? 'main · rolling (latest commit)' : c}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <span class="badge tone-cyan">
+              <span class="dot" />
+              {release.current === 'main' ? 'main · rolling' : release.current}
+            </span>
+          )
+        }
+      </div>
+
       <!-- platform tabs -->
-      <div class="tabs" id="install-tabs">
+      <div class="tabs" id="install-tabs" data-default-ref={release.current}>
         <div class="tabs__list" role="tablist" aria-label="Platform">
           {
             platforms.map((p, i) => (
@@ -102,7 +142,9 @@ import { site } from '../data/site';
 ./bootstrap.sh --links-only`}
         />
         <p class="muted" style="margin-bottom:0;">
-          Maintainers can fan a Core change out to every OS repo at once with
+          Tracking a pinned release instead? Re-clone the new tag (or
+          <code>git fetch --tags && git checkout vX.Y.Z</code>) — the vendored Core moves
+          with it. Maintainers can fan a Core change out to every OS repo at once with
           <code>scripts/sync-core.sh</code> from <code>dotfiles-core</code>.
         </p>
       </div>
@@ -112,7 +154,7 @@ import { site } from '../data/site';
 
 <style>
   .prereq {
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
   }
   .prereq h3 {
     margin-top: 0;
@@ -124,6 +166,35 @@ import { site } from '../data/site';
   }
   .prereq li {
     margin-bottom: 0.4rem;
+  }
+
+  .verbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .verbar h3 {
+    margin: 0 0 0.3rem;
+  }
+  .verbar__copy {
+    max-width: 60ch;
+  }
+  .verbar__copy .muted {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+  .verselect select {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--tn-fg);
+    background: var(--tn-bg-dark);
+    border: 1px solid var(--tn-border-bright);
+    border-radius: 8px;
+    padding: 0.55rem 0.8rem;
+    cursor: pointer;
   }
 
   .tabs__list {
@@ -238,6 +309,7 @@ import { site } from '../data/site';
 </style>
 
 <script>
+  // Tab switching for the platform panels.
   const root = document.getElementById('install-tabs');
   if (root) {
     const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tab]'));
@@ -257,5 +329,59 @@ import { site } from '../data/site';
         });
       });
     });
+  }
+</script>
+
+<script>
+  // Version switcher: rewrite every install command's clone ref to the selected
+  // release. Line-local and generic — only `git clone …Gerrrt/…` lines and the
+  // Windows `irm …/raw.githubusercontent.com/Gerrrt/<repo>/<ref>/…` one-liner are
+  // touched, so curated prose on every other line is left alone. Operates on the
+  // per-line spans CommandBlock renders and keeps each copy button's data-code in
+  // sync (Base.astro's copy handler reads that attribute).
+  const tabsRoot = document.getElementById('install-tabs');
+  const sel = document.getElementById('version-select') as HTMLSelectElement | null;
+  const defaultRef = tabsRoot?.getAttribute('data-default-ref') || 'main';
+
+  // Same strictness as src/data/site.ts's REF_PATTERN — never inject an unvalidated
+  // ref into a copy/pastable command, even though the build-time check should have
+  // already rejected a bad one.
+  const REF_OK = /^[A-Za-z0-9._/-]+$/;
+
+  const pinClone = (text: string, ref: string): string => {
+    if (ref !== 'main' && !REF_OK.test(ref)) return text;
+    let out = text.replace(
+      /\bgit clone\s+(?:--branch\s+\S+\s+)?(https:\/\/github\.com\/Gerrrt\/\S+)/g,
+      ref === 'main' ? 'git clone $1' : `git clone --branch ${ref} $1`
+    );
+    // Replace the ref SEGMENT after the repo (works for main, v-tags, or any
+    // other ref), since the pristine source always carries the rolling 'main'.
+    out = out.replace(
+      /(raw\.githubusercontent\.com\/Gerrrt\/[^/]+\/)[^/\s]+/g,
+      `$1${ref}`
+    );
+    return out;
+  };
+
+  const apply = (ref: string) => {
+    document.querySelectorAll<HTMLElement>('#install-tabs .codeblock').forEach((block) => {
+      block.querySelectorAll<HTMLElement>('.cb-text').forEach((span) => {
+        if (span.dataset.orig === undefined) span.dataset.orig = span.textContent ?? '';
+        span.textContent = pinClone(span.dataset.orig, ref);
+      });
+      const btn = block.querySelector<HTMLButtonElement>('[data-copy]');
+      if (btn) {
+        if (btn.dataset.codeOrig === undefined)
+          btn.dataset.codeOrig = btn.getAttribute('data-code') ?? '';
+        btn.setAttribute('data-code', pinClone(btn.dataset.codeOrig, ref));
+      }
+    });
+  };
+
+  if (sel) {
+    apply(sel.value);
+    sel.addEventListener('change', () => apply(sel.value));
+  } else if (defaultRef !== 'main') {
+    apply(defaultRef);
   }
 </script>

@@ -5,6 +5,16 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      dotfiles_ref:
+        description: "Tag/branch to pin the fleet to when regenerating metrics (e.g. v1.0.0). Empty = ship the committed src/data/generated.json as-is."
+        required: false
+        default: ""
+  # Lets dotfiles-core's release workflow rebuild the docs against a freshly cut
+  # tag. POST a repository_dispatch with:
+  #   {"event_type":"release","client_payload":{"ref":"v1.0.0"}}
+  repository_dispatch:
+    types: [release]
 
 # Allow GITHUB_TOKEN to deploy to Pages. `actions: read` lets the build read the
 # latest workflow-run conclusion for the repo cards (other public repos resolve
@@ -37,6 +47,49 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # Pinned-metrics build (opt-in). When a ref is supplied — via workflow_dispatch
+      # or a `release` repository_dispatch — check out the whole fleet at that ref so
+      # the next step can regenerate src/data/generated.json from a RELEASE rather
+      # than whatever was last committed. Fails fast if a repo can't be cloned at
+      # all, so a release build can never silently ship the committed snapshot; a
+      # missing TAG (OS repos version independently — see core.lock) falls back to
+      # the default branch. Normal pushes skip this entirely.
+      - name: Check out the fleet at a pinned ref
+        id: fleet
+        if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.dotfiles_ref != '') || github.event_name == 'repository_dispatch' }}
+        env:
+          REF: ${{ github.event.inputs.dotfiles_ref || github.event.client_payload.ref }}
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+          if [ -z "${REF:-}" ]; then
+            echo "::error::pinned build triggered without a ref (set dotfiles_ref / client_payload.ref)"
+            exit 1
+          fi
+          root="${RUNNER_TEMP}/fleet"
+          mkdir -p "$root"
+          repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Kali \
+                 dotfiles-Fedora dotfiles-Arch dotfiles-openSUSE dotfiles-Alpine dotfiles-Gentoo"
+          for r in $repos; do
+            url="https://x-access-token:${GH_TOKEN}@github.com/${OWNER}/${r}.git"
+            if git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>/dev/null; then
+              echo "cloned $r @ $REF"
+            elif git clone --depth 1 "$url" "$root/$r" 2>/dev/null; then
+              echo "cloned $r @ default branch ($REF not found)"
+            else
+              echo "::error::could not clone $r at $REF or its default branch"
+              exit 1
+            fi
+          done
+          echo "root=$root" >> "$GITHUB_OUTPUT"
+
+      - name: Regenerate metrics from the pinned fleet
+        if: ${{ steps.fleet.outputs.root != '' }}
+        run: npm run metrics
+        env:
+          DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
 
       - name: Build with Astro
         run: npm run build
