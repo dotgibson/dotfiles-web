@@ -40,13 +40,17 @@ async function fetchJson(url: string): Promise<any | null> {
 
 async function getOne(name: string): Promise<RepoLive> {
   const base = `https://api.github.com/repos/${site.githubUser}/${name}`;
-  // Repo info (stars, pushed_at) and the latest completed default-branch run, in
-  // parallel. The Actions call may 404/403 for repos without workflows or without
-  // token access — that just leaves ci null.
-  const [info, runs] = await Promise.all([
-    fetchJson(base),
-    fetchJson(`${base}/actions/runs?branch=main&status=completed&per_page=1`),
-  ]);
+  // Repo info first (stars, pushed_at, default_branch). We query workflow runs on
+  // the actual default branch — falling back to main — so a renamed default branch
+  // doesn't silently null the CI badge while CI is healthy. Repos run in parallel
+  // via getRepoLiveMap, so this per-repo sequencing costs one extra round-trip, not
+  // a serialized build. The Actions call may 404/403 (no workflows / no token
+  // access) — that just leaves ci null.
+  const info = await fetchJson(base);
+  const branch = info?.default_branch || 'main';
+  const runs = await fetchJson(
+    `${base}/actions/runs?branch=${encodeURIComponent(branch)}&status=completed&per_page=1`
+  );
   let ci: RepoLive['ci'] = null;
   const run = runs?.workflow_runs?.[0];
   if (run) ci = run.conclusion === 'success' ? 'success' : run.conclusion === 'failure' ? 'failure' : 'neutral';
