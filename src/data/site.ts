@@ -16,6 +16,16 @@ export const site = {
 // Convenience: full URL to the core repo, used by the top-level GitHub links.
 export const coreRepoUrl = `${site.githubBase}/${site.coreRepo}`;
 
+// A git ref we're willing to drop into a copy/pastable clone command. Deliberately
+// strict — tag/branch characters only (letters, digits, . _ / -), no whitespace or
+// shell metacharacters — so an operator typo in `release.channels` can't generate a
+// broken or unsafe command line. Mirrored verbatim by the client-side rewrite on the
+// Get Started page.
+const REF_PATTERN = /^[A-Za-z0-9._/-]+$/;
+export function isValidRef(channel: string): boolean {
+  return REF_PATTERN.test(channel);
+}
+
 // Release channels surfaced by the docs version-switcher (Get Started page).
 // This is the OPERATOR-maintained source of truth, bumped by hand at release
 // time alongside `scripts/release.sh` in dotfiles-core — the docs deliberately
@@ -37,11 +47,27 @@ export const release = {
   channels: ['main'] as readonly string[],
 } as const;
 
+// Fail the build LOUDLY on a malformed channel, at import time — not lazily when a
+// visitor happens to select it. 'main' is the sentinel rolling channel; every other
+// entry must be a clean git ref.
+for (const c of [release.current, ...release.channels]) {
+  if (c !== 'main' && !isValidRef(c)) {
+    throw new Error(
+      `src/data/site.ts: release channel "${c}" is not a valid git ref ` +
+        `(allowed: letters, digits, and . _ / -). Fix release.current/release.channels.`
+    );
+  }
+}
+
 // The clone-ref flag for a channel: '' for the rolling 'main' channel, or
-// '--branch <tag> ' for a pinned tag. Used to parameterize the install commands
-// (the client-side switcher applies the same transform on selection change).
+// '--branch <tag> ' for a pinned tag. Throws on an invalid ref (the import-time
+// check above normally catches it first; this guards direct callers too).
 export function cloneRef(channel: string): string {
-  return channel === 'main' ? '' : `--branch ${channel} `;
+  if (channel === 'main') return '';
+  if (!isValidRef(channel)) {
+    throw new Error(`cloneRef: "${channel}" is not a valid git ref`);
+  }
+  return `--branch ${channel} `;
 }
 
 // Primary navigation. `href` values are page paths (base path is applied in the layout).

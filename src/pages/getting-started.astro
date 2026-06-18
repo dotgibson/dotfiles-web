@@ -3,6 +3,16 @@ import Base from '../layouts/Base.astro';
 import CommandBlock from '../components/CommandBlock.astro';
 import { platforms } from '../data/install';
 import { site, release } from '../data/site';
+
+// The channels to offer. Always include `current` so a config where `current` is
+// a tag but `channels` wasn't updated still surfaces (and pins) that version
+// instead of silently showing a pinned badge over main-only commands.
+const channels = release.channels.includes(release.current)
+  ? [...release.channels]
+  : [release.current, ...release.channels];
+// Show the dropdown when there's a real choice OR we're pinned to a non-main
+// release; otherwise the static rolling pill is enough.
+const showSelect = channels.length > 1 || release.current !== 'main';
 ---
 
 <Base
@@ -44,10 +54,10 @@ import { site, release } from '../data/site';
           </p>
         </div>
         {
-          release.channels.length > 1 ? (
+          showSelect ? (
             <label class="verselect">
               <select id="version-select" aria-label="Release version">
-                {release.channels.map((c) => (
+                {channels.map((c) => (
                   <option value={c} selected={c === release.current}>
                     {c === 'main' ? 'main · rolling (latest commit)' : c}
                   </option>
@@ -64,7 +74,7 @@ import { site, release } from '../data/site';
       </div>
 
       <!-- platform tabs -->
-      <div class="tabs" id="install-tabs">
+      <div class="tabs" id="install-tabs" data-default-ref={release.current}>
         <div class="tabs__list" role="tablist" aria-label="Platform">
           {
             platforms.map((p, i) => (
@@ -329,15 +339,25 @@ import { site, release } from '../data/site';
   // touched, so curated prose on every other line is left alone. Operates on the
   // per-line spans CommandBlock renders and keeps each copy button's data-code in
   // sync (Base.astro's copy handler reads that attribute).
+  const tabsRoot = document.getElementById('install-tabs');
   const sel = document.getElementById('version-select') as HTMLSelectElement | null;
+  const defaultRef = tabsRoot?.getAttribute('data-default-ref') || 'main';
+
+  // Same strictness as src/data/site.ts's REF_PATTERN — never inject an unvalidated
+  // ref into a copy/pastable command, even though the build-time check should have
+  // already rejected a bad one.
+  const REF_OK = /^[A-Za-z0-9._/-]+$/;
 
   const pinClone = (text: string, ref: string): string => {
+    if (ref !== 'main' && !REF_OK.test(ref)) return text;
     let out = text.replace(
       /\bgit clone\s+(?:--branch\s+\S+\s+)?(https:\/\/github\.com\/Gerrrt\/\S+)/g,
       ref === 'main' ? 'git clone $1' : `git clone --branch ${ref} $1`
     );
+    // Replace the ref SEGMENT after the repo (works for main, v-tags, or any
+    // other ref), since the pristine source always carries the rolling 'main'.
     out = out.replace(
-      /(raw\.githubusercontent\.com\/Gerrrt\/[^/]+\/)(?:main|v[0-9][^/\s]*)/g,
+      /(raw\.githubusercontent\.com\/Gerrrt\/[^/]+\/)[^/\s]+/g,
       `$1${ref}`
     );
     return out;
@@ -361,5 +381,7 @@ import { site, release } from '../data/site';
   if (sel) {
     apply(sel.value);
     sel.addEventListener('change', () => apply(sel.value));
+  } else if (defaultRef !== 'main') {
+    apply(defaultRef);
   }
 </script>

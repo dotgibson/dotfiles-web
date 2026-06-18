@@ -51,10 +51,10 @@ jobs:
       # Pinned-metrics build (opt-in). When a ref is supplied — via workflow_dispatch
       # or a `release` repository_dispatch — check out the whole fleet at that ref so
       # the next step can regenerate src/data/generated.json from a RELEASE rather
-      # than whatever was last committed. Per-repo fallback to the default branch
-      # keeps the build alive if a tag doesn't exist in every repo (OS repos version
-      # independently — see core.lock). Normal pushes skip this and ship the
-      # committed snapshot untouched.
+      # than whatever was last committed. Fails fast if a repo can't be cloned at
+      # all, so a release build can never silently ship the committed snapshot; a
+      # missing TAG (OS repos version independently — see core.lock) falls back to
+      # the default branch. Normal pushes skip this entirely.
       - name: Check out the fleet at a pinned ref
         id: fleet
         if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.dotfiles_ref != '') || github.event_name == 'repository_dispatch' }}
@@ -64,6 +64,10 @@ jobs:
           OWNER: ${{ github.repository_owner }}
         run: |
           set -euo pipefail
+          if [ -z "${REF:-}" ]; then
+            echo "::error::pinned build triggered without a ref (set dotfiles_ref / client_payload.ref)"
+            exit 1
+          fi
           root="${RUNNER_TEMP}/fleet"
           mkdir -p "$root"
           repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Kali \
@@ -71,11 +75,12 @@ jobs:
           for r in $repos; do
             url="https://x-access-token:${GH_TOKEN}@github.com/${OWNER}/${r}.git"
             if git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>/dev/null; then
-              echo ":: $r @ $REF"
+              echo "cloned $r @ $REF"
             elif git clone --depth 1 "$url" "$root/$r" 2>/dev/null; then
-              echo ":: $r @ default branch ($REF not found)"
+              echo "cloned $r @ default branch ($REF not found)"
             else
-              echo "::warning::could not clone $r — its metrics fall back to the committed snapshot"
+              echo "::error::could not clone $r at $REF or its default branch"
+              exit 1
             fi
           done
           echo "root=$root" >> "$GITHUB_OUTPUT"
