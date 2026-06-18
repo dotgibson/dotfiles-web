@@ -120,6 +120,94 @@ if (kaliOffensive != null) packages['dotfiles-Kali-offensive'] = kaliOffensive;
 
 const publicRepos = [core, ...osRepos].filter(has).length;
 
+// ── Changelog (parsed from each repo's canonical CHANGELOG.md) ───────────────
+// The site's changelog page was a hand-curated mirror that drifted from the real
+// files. Parse the newest version block (Keep a Changelog format) straight from
+// source instead, so it can't go stale. Repos without a CHANGELOG.md are skipped.
+
+// Strip the inline Markdown the files use (bold/code/italics/links) down to plain
+// text — the page renders list items as text, not Markdown.
+function cleanInline(s) {
+  // NB: these files use `_` for italics; `*` only ever appears as literal content
+  // (globs, `* main`), so we strip paired `**bold**` but never single `*`.
+  return s
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/(?<!\w)_([^_]+)_(?!\w)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseChangelog(name) {
+  const file = join(repoPath(name), 'CHANGELOG.md');
+  if (!existsSync(file)) return null;
+  const lines = readFileSync(file, 'utf8').split('\n');
+
+  // First version heading: "## [Unreleased] — suffix" or "## [vX.Y.Z] - 2026-01-02".
+  let i = lines.findIndex((l) => /^##\s+\[.+\]/.test(l));
+  if (i < 0) return null;
+  const head = lines[i].match(/^##\s+\[([^\]]+)\]\s*(?:[-–—]\s*(.*))?$/);
+  const version = head ? head[1].trim() : 'Unreleased';
+  let suffix = head && head[2] ? head[2].trim() : '';
+  let date;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(suffix)) {
+    date = suffix;
+    suffix = '';
+  }
+
+  // Block runs until the next "## " heading.
+  const block = [];
+  for (i++; i < lines.length && !/^##\s+/.test(lines[i]); i++) block.push(lines[i]);
+
+  const groups = [];
+  const pre = []; // prose before the first ### becomes the summary
+  let cur = null;
+  let buf = null; // lines of the item currently being built
+  let sawCategory = false;
+  const flush = () => {
+    if (cur && buf) cur.items.push(cleanInline(buf.join(' ')));
+    buf = null;
+  };
+  for (const raw of block) {
+    const line = raw.replace(/\s+$/, '');
+    const cat = line.match(/^###\s+(.*)$/);
+    if (cat) {
+      flush();
+      sawCategory = true;
+      cur = { category: cat[1].trim(), items: [] };
+      groups.push(cur);
+      continue;
+    }
+    if (!sawCategory) {
+      if (line.trim()) pre.push(line.trim());
+      continue;
+    }
+    const bullet = line.match(/^[-*]\s+(.*)$/); // top-level bullet (continuations are indented)
+    if (bullet) {
+      flush();
+      buf = [bullet[1]];
+    } else if (buf && line.trim()) {
+      buf.push(line.trim());
+    }
+  }
+  flush();
+
+  let summary = [suffix, cleanInline(pre.join(' '))].filter(Boolean).join(' — ');
+  return {
+    repo: name,
+    version,
+    date,
+    summary: summary || undefined,
+    groups: groups.filter((g) => g.items.length),
+  };
+}
+
+const changelog = [core, ...osRepos]
+  .filter(has)
+  .map(parseChangelog)
+  .filter((e) => e && e.groups.length);
+
 const data = {
   generatedAt: new Date().toISOString().slice(0, 10),
   fleet: {
@@ -137,8 +225,14 @@ const data = {
   },
   packages,
   ci,
+  changelog,
 };
 
 writeFileSync(out, JSON.stringify(data, null, 2) + '\n');
 console.log(`[collect-metrics] wrote ${out.replace(webRepo + '/', '')}`);
-console.log(JSON.stringify(data, null, 2));
+const { changelog: cl, ...rest } = data;
+console.log(JSON.stringify(rest, null, 2));
+console.log(
+  `[collect-metrics] changelog: ${cl.length} repo(s) — ` +
+    cl.map((e) => `${e.repo} (${e.groups.reduce((n, g) => n + g.items.length, 0)} items)`).join(', ')
+);

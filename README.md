@@ -31,15 +31,19 @@ Content is data-driven — edit these and the site updates:
 - `src/data/site.ts` — site name, owner, nav, GitHub links
 - `src/data/repos.ts` — the repository map / showcase cards (prose + status)
 - `src/data/install.ts` — per-platform install steps
-- `src/data/changelog.ts` — the changelog mirror
+
+The **changelog** is no longer hand-edited: `src/data/changelog.ts` just re-exports
+the entries parsed from each repo's `CHANGELOG.md` into `generated.json` (see below).
 
 Styling lives in `src/styles/global.css` (Tokyo Night design tokens at the top).
 
-## Source-derived metrics
+## Source-derived data (metrics + changelog)
 
-The "by the numbers" strip and the per-card package counts are **not** hand-typed —
-they come from `src/data/generated.json`, which `scripts/collect-metrics.mjs` derives
-by reading the sibling repos (`../dotfiles-core`, `../dotfiles-Fedora`, …):
+The "by the numbers" strip, the per-card package counts, and the **changelog** are
+**not** hand-typed — they come from `src/data/generated.json`, which
+`scripts/collect-metrics.mjs` derives by reading the sibling repos (`../dotfiles-core`,
+`../dotfiles-Fedora`, …). The changelog is parsed from each repo's `CHANGELOG.md`
+(newest version block, Keep a Changelog format):
 
 ```bash
 npm run metrics      # checkout the sibling repos next to this one first
