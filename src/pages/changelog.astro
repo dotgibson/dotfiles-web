@@ -13,7 +13,7 @@ const categoryTone: Record<string, string> = {
 
 <Base
   title="Changelog"
-  description="What's new across the dotfiles ecosystem — a curated mirror of the per-repo CHANGELOG.md files."
+  description="What's new across the dotfiles ecosystem — parsed straight from each repo's CHANGELOG.md at build time."
 >
   <section class="section">
     <div class="container">
@@ -21,10 +21,9 @@ const categoryTone: Record<string, string> = {
         <span class="eyebrow">Changelog</span>
         <h1>What’s new</h1>
         <p class="lead">
-          A curated mirror of the per-repo changelogs. Core changes fan out to every OS repo
-          on the next <code>git subtree pull</code>, so a Core entry is a change every
-          machine receives. The canonical record lives in each repo’s
-          <code>CHANGELOG.md</code>.
+          Parsed straight from each repo’s <code>CHANGELOG.md</code> at build time — not a
+          hand-kept mirror. Core changes fan out to every OS repo on the next
+          <code>git subtree pull</code>, so a Core entry is a change every machine receives.
         </p>
       </div>
 
@@ -38,7 +37,15 @@ const categoryTone: Record<string, string> = {
                     {entry.repo}
                   </a>
                 </h2>
-                <span class="badge tone-orange"><span class="dot" />{entry.version}</span>
+                <span class="badge tone-orange"><span class="dot" />{entry.version}{entry.date ? ` · ${entry.date}` : ''}</span>
+                <a
+                  class="cl-entry__source text-mono"
+                  href={`${site.githubBase}/${entry.repo}/blob/main/CHANGELOG.md`}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  CHANGELOG.md ↗
+                </a>
               </div>
               {entry.summary && <p class="cl-entry__summary">{entry.summary}</p>}
 
@@ -62,8 +69,9 @@ const categoryTone: Record<string, string> = {
       </div>
 
       <p class="muted center" style="margin-top:2.5rem;">
-        Looking for the distro repos’ history? They’re rolling out from the Fedora template —
-        check back as each goes public.
+        Only repos with a <code>CHANGELOG.md</code> appear here. The distro layers track Core
+        via <code>git subtree</code> and don’t keep their own yet — they’ll show up
+        automatically once they do.
       </p>
     </div>
   </section>
@@ -87,6 +95,15 @@ const categoryTone: Record<string, string> = {
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
+  }
+  .cl-entry__source {
+    margin-left: auto;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--tn-cyan);
+  }
+  .cl-entry__source:hover {
+    color: var(--tn-blue);
   }
   .cl-entry__head h2 {
     margin: 0;
