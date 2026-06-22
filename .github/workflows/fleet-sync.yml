@@ -1,0 +1,79 @@
+name: fleet-sync
+
+# Keep the showcase site's DERIVED data in step with the actual fleet. The changelog
+# page and the "by the numbers" strip both read src/data/generated.json, which
+# scripts/collect-metrics.mjs builds from each sibling repo's CHANGELOG.md + package
+# manifests. That only refreshes when someone runs `npm run metrics` locally with the
+# siblings checked out — so it silently rots. This bot re-derives it weekly against
+# fresh clones of the fleet and opens a PR when the numbers/changelog have drifted;
+# merging it triggers deploy.yml to rebuild the site. workflow_dispatch refreshes on demand.
+#
+# First-party only (GITHUB_TOKEN + gh, no third-party action), mirroring the
+# dotfiles-core freshness bot. A fixed branch keeps it idempotent (update, don't stack).
+
+on:
+  schedule:
+    - cron: "0 8 * * 2" # Tuesdays 08:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fleet-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # push the refresh branch
+      pull-requests: write # open/update the PR
+    env:
+      BRANCH: automation/fleet-metrics
+      GH_TOKEN: ${{ github.token }}
+      OWNER: ${{ github.repository_owner }}
+    steps:
+      # Check the site into a subdir so the rest of the fleet can sit beside it as
+      # siblings — the layout collect-metrics.mjs expects (root = parent of this repo).
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          path: dotfiles-web
+      - name: Clone the fleet as siblings (read-only, shallow)
+        run: |
+          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch \
+                   dotfiles-Debian dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
+                   dotfiles-openSUSE dotfiles-Windows; do
+            git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r" 2>/dev/null \
+              || echo "::warning::could not clone $r (skipped in metrics)"
+          done
+      - name: Regenerate the derived metrics
+        working-directory: dotfiles-web
+        run: node scripts/collect-metrics.mjs
+      - name: Open a PR if the derived data drifted
+        working-directory: dotfiles-web
+        run: |
+          set -euo pipefail
+          # generatedAt is a day-granular stamp that changes on every run; judge drift on
+          # the real content only, and discard a stamp-only change so we don't PR noise.
+          old="$(git show HEAD:src/data/generated.json | jq 'del(.generatedAt)')"
+          new="$(jq 'del(.generatedAt)' src/data/generated.json)"
+          if [ "$old" = "$new" ]; then
+            git checkout -- src/data/generated.json
+            echo "✅ site metrics already in step with the fleet" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git add src/data/generated.json
+          git commit -m "chore(data): refresh fleet metrics + changelog (fleet-sync bot)"
+          git push -f -u origin "$BRANCH"
+          # Idempotent: update the existing PR if one is already open for this branch.
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            gh pr create --head "$BRANCH" --base "${GITHUB_REF_NAME}" \
+              --title "chore(data): refresh fleet metrics + changelog" \
+              --body "Automated by the fleet-sync bot. \`src/data/generated.json\` (the changelog page + by-the-numbers strip) was behind the fleet; this regenerates it via \`collect-metrics.mjs\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
+          fi
+          echo "📊 opened/updated PR on \`$BRANCH\`" >> "$GITHUB_STEP_SUMMARY"
