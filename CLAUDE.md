@@ -1,15 +1,15 @@
 # CLAUDE.md — dotfiles-web
 
 Project memory for Claude Code, auto-loaded every session. The system's
-source-of-truth rules live in [dotfiles-core](https://github.com/Gerrrt/dotfiles-core); this repo does **not**
-vendor `core/`.
+source-of-truth rules live in [dotfiles-core](https://github.com/Gerrrt/dotfiles-core).
 
 ## What this repo is
 
-`dotfiles-web` is the **Showcase layer** of a ten-repo, three-layer dotfiles fleet
-(Core → OS-native → Role → Showcase): the public docs site. Built with **Astro**,
-themed in **Tokyo Night**, deployed to **GitHub Pages**. It *documents* the system
-rather than configuring a machine.
+`dotfiles-web` is the **public showcase + docs site** for a nine-repo dotfiles
+system built on a three-layer model (Core → OS-native → Role). It *documents* the
+system rather than configuring a machine, so it is **not** itself one of the three
+layers. Built with **Astro**, themed in **Tokyo Night**, deployed to **GitHub
+Pages**.
 
 ## The rule that bites
 
