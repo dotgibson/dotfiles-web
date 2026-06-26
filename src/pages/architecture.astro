@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CommandBlock from '../components/CommandBlock.astro';
+import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
 import { withBase } from '../lib/url';
 
 const loadOrder = [
@@ -143,6 +144,10 @@ const deepDives = [
           <span class="muted">engagement scaffolding, C2, Impacket, wordlists</span>
         </div>
       </div>
+
+      <!-- the subtree topology, drawn from the real repo list -->
+      <h2 class="mt">The fleet at a glance</h2>
+      <ArchitectureDiagram />
 
       <!-- how an OS repo consumes core -->
       <h2 class="mt">How an OS repo consumes Core</h2>
