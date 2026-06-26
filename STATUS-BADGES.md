@@ -83,7 +83,7 @@ component.
     <a class="ci-card" href="https://github.com/Gerrrt/dotfiles-Kali/actions/workflows/lint.yml" target="_blank" rel="noopener">
       <div class="ci-card__head">
         <span class="ci-card__name">⚔ dotfiles-Kali</span>
-        <span class="ci-card__layer tone-red">Role</span>
+        <span class="ci-card__layer tone-red">Role / offensive</span>
       </div>
       <img class="ci-card__badge" loading="lazy" alt="dotfiles-Kali lint status"
         src="https://github.com/Gerrrt/dotfiles-Kali/actions/workflows/lint.yml/badge.svg" />
