@@ -12,7 +12,7 @@
 //     parsed locally and matched character-for-character against the allowlist
 //     baked in below. An unknown token is reported and skipped — never executed.
 //   • Nothing derived from the argument is ever eval'd or expanded into a command.
-import { modules, modulesFor, defaultTokens, type BuildModule } from '../data/modules';
+import { modulesFor, defaultTokens, type BuildModule } from '../data/modules';
 
 // Repo slugs are constants from our own data, but escape anyway so a future edit
 // with an odd character can't break out of the single-quoted heredoc/string.
@@ -20,8 +20,12 @@ const sq = (s: string) => s.replace(/'/g, `'\\''`);
 const dq = (s: string) => s.replace(/(["`$\\])/g, '\\$1');
 
 function bashAllowlist(): string {
-  // token|label lines consumed by a case statement in the script.
-  return modules.map((m) => `  ${m.id}) echo "${dq(m.label)} (${dq(m.repo)})" ;;`).join('\n');
+  // token|label lines consumed by a case statement in the script. Scoped to Unix
+  // modules so the bash installer never reports a Windows-only token (e.g. `ps`)
+  // as valid — mirrors ps1Allowlist()'s windows scoping.
+  return modulesFor('unix')
+    .map((m) => `  ${m.id}) echo "${dq(m.label)} (${dq(m.repo)})" ;;`)
+    .join('\n');
 }
 
 export function bashScript(baseUrl: string): string {
@@ -102,6 +106,11 @@ function ps1Allowlist(): string {
 export function ps1Script(baseUrl: string): string {
   const base = baseUrl.replace(/\/$/, '');
   const def = defaultTokens('windows') || 'nvim';
+  // PowerShell array literal for the default, so `[string[]]` binds cleanly.
+  const defArr = def
+    .split(',')
+    .map((t) => `'${t}'`)
+    .join(',');
   return `# dotfiles — modular bootstrap for Windows (generated, static)
 #
 # Usage (passes modules as an argument to the downloaded script):
@@ -109,7 +118,11 @@ export function ps1Script(baseUrl: string): string {
 #
 # Modules are validated against a fixed allowlist; unknown tokens are skipped.
 # The native Windows host lives in dotfiles-Windows; this mirrors the Unix flow.
-param([string]$Modules = '${def}')
+#
+# Accept [string[]] so an unquoted \`nvim,ps\` (which PowerShell parses as an array)
+# binds correctly; join, then split, so a single quoted 'nvim,ps' works too.
+param([string[]]$Modules = @(${defArr}))
+$Requested = ($Modules -join ',')
 
 function Get-ModuleLabel($id) {
   switch ($id) {
@@ -119,14 +132,14 @@ ${ps1Allowlist()}
 }
 
 Write-Host "🚀 dotfiles modular bootstrap (Windows)" -ForegroundColor Cyan
-Write-Host "   requested: $Modules"
+Write-Host "   requested: $Requested"
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
   Write-Warning "git not found — install Git for Windows before bootstrapping."
 }
 
 $selected = @()
-foreach ($raw in $Modules.Split(',')) {
+foreach ($raw in $Requested.Split(',')) {
   $tok = $raw.Trim().ToLower()
   if (-not $tok) { continue }
   $label = Get-ModuleLabel $tok
