@@ -6,6 +6,7 @@
 // idempotent bootstrap. Every flag offered here is one the installer actually accepts,
 // mirroring the per-platform steps in src/data/install.ts; keep the two in step.
 import { site } from '../data/site';
+import { withBase } from '../lib/url';
 
 // Platform/flag model. Rendered client-side for live updates; a <noscript> fallback
 // points at the full guide so the section is still useful without JS.
@@ -69,7 +70,7 @@ const platforms = [
     </div>
   </div>
 
-  <div class="builder__tabs" role="tablist" aria-label="Platform" id="ib-tabs"></div>
+  <div class="builder__tabs" role="radiogroup" aria-label="Platform" id="ib-tabs"></div>
 
   <div class="builder__distro" id="ib-distro" hidden>
     <label for="ib-distro-sel">Distro</label>
@@ -82,13 +83,13 @@ const platforms = [
 
   <div class="codeblock builder__out">
     <button class="copy" type="button" data-copy aria-label="Copy command">copy</button>
-    <pre><code id="ib-out"></code></pre>
+    <pre aria-live="polite" aria-label="Generated install command"><code id="ib-out"></code></pre>
   </div>
 
   <noscript>
     <p class="builder__noscript">
       Enable JavaScript for the interactive builder, or follow the
-      <a href={`${GH}/${site.coreRepo}`}>full install guide</a>.
+      <a href={withBase('/getting-started')}>full install guide</a>.
     </p>
   </noscript>
 </div>
@@ -130,8 +131,10 @@ const platforms = [
       const flagStr = flags.length ? ' ' + flags.join(' ') : '';
 
       if (p.shell === 'powershell') {
+        // .git suffix mirrors the canonical manual Windows snippet in src/data/install.ts;
+        // git still checks out into the dotfiles-Windows/ directory, so `cd` is unchanged.
         return [
-          `git clone ${GH}/${repo}`,
+          `git clone ${GH}/${repo}.git`,
           `cd ${repo}`,
           `.\\install.ps1${flagStr}`,
         ].join('\n');
@@ -191,21 +194,44 @@ const platforms = [
       if (copyBtn) copyBtn.setAttribute('data-code', cmd);
     }
 
-    // Platform tabs.
+    // Platform selector — a radiogroup, not a tablist: picking a platform
+    // reconfigures one shared output rather than swapping between panels. Roving
+    // tabindex + arrow/Home/End keys give it proper keyboard semantics.
+    const tabButtons = [];
+    function selectPlatform(id, focus) {
+      activeId = id;
+      tabButtons.forEach((t) => {
+        const on = t.dataset.id === activeId;
+        t.setAttribute('aria-checked', String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      });
+      render();
+    }
     platforms.forEach((p) => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.role = 'tab';
+      btn.setAttribute('role', 'radio');
       btn.className = 'builder__tab';
       btn.textContent = p.label;
-      btn.setAttribute('aria-selected', String(p.id === activeId));
-      btn.addEventListener('click', () => {
-        activeId = p.id;
-        tabsEl.querySelectorAll('.builder__tab').forEach((t, i) => {
-          t.setAttribute('aria-selected', String(platforms[i].id === activeId));
-        });
-        render();
+      btn.dataset.id = p.id;
+      const on = p.id === activeId;
+      btn.setAttribute('aria-checked', String(on));
+      btn.tabIndex = on ? 0 : -1;
+      btn.addEventListener('click', () => selectPlatform(p.id, false));
+      btn.addEventListener('keydown', (e) => {
+        const idx = platforms.findIndex((x) => x.id === activeId);
+        let next = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (idx + 1) % platforms.length;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (idx - 1 + platforms.length) % platforms.length;
+        else if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = platforms.length - 1;
+        if (next !== null) {
+          e.preventDefault();
+          selectPlatform(platforms[next].id, true);
+        }
       });
+      tabButtons.push(btn);
       tabsEl.appendChild(btn);
     });
 
@@ -286,7 +312,7 @@ const platforms = [
     color: var(--tn-fg);
     border-color: var(--tn-blue);
   }
-  .builder__tab[aria-selected='true'] {
+  .builder__tab[aria-checked='true'] {
     color: var(--tn-bg-dark);
     background: var(--tn-green);
     border-color: var(--tn-green);
