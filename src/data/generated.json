@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-23",
+  "generatedAt": "2026-06-26",
   "fleet": {
     "publicRepos": 9,
     "layers": 3,
@@ -8,20 +8,20 @@
   "core": {
     "version": "1.2.0",
     "sourcedModules": 13,
-    "zshLoc": 2933,
+    "zshLoc": 3084,
     "gitAliases": 57,
     "pinnedPlugins": 7,
-    "completions": 26
+    "completions": 27
   },
   "packages": {
-    "dotfiles-MacBook": 63,
-    "dotfiles-Kali": 28,
+    "dotfiles-MacBook": 64,
+    "dotfiles-Kali": 29,
     "dotfiles-Fedora": 31,
     "dotfiles-Arch": 36,
     "dotfiles-openSUSE": 30,
     "dotfiles-Alpine": 32,
     "dotfiles-Gentoo": 30,
-    "dotfiles-Kali-offensive": 36
+    "dotfiles-Kali-offensive": 34
   },
   "ci": {
     "dotfiles-core": true,
@@ -42,20 +42,55 @@
         {
           "category": "Added",
           "items": [
-            "Claude Code project memory + maintenance routines (CLAUDE.md, .claude/) — a root CLAUDE.md encoding the three-layer model, the \"is it Core?\" test, the manifest contract, and the load order so every Claude session reasons from the real rules. Three on-demand slash commands automate the judgment-heavy chores the audit can't: /doc-audit (prose-vs-reality drift across the fleet, via the doc-consistency subagent), /tool-scout (research the modern-CLI stack for tools worth adopting, via the tool-scout subagent), and /freshness-triage (review dependency-bump PRs against upstream changelogs). All report-first; none vendor out without a green make audit. CLAUDE.md added to the audit's repo-meta allowlist (.claude/ was already a prefix).",
-            "Scheduled maintenance bots (.github/workflows/claude-routines.yml) — run the /doc-audit and /tool-scout routines headless on a weekly cron (and on demand), filing findings as a deduplicated GitHub issue. The Claude Code CLI is installed from npm (pinned via CLAUDE_CODE_VERSION in scripts/tool-versions.env) — no third-party action, mirroring freshness.yml. Auth is a Claude subscription token (CLAUDE_CODE_OAUTH_TOKEN, from claude setup-token); inert until that secret is set (the workflow no-ops with a warning otherwise).",
-            "make release-notes + cliff.toml — git-cliff config + a Makefile target that drafts a GitHub Release body from Conventional Commits since the last release commit. Scoped dev-tooling (audit allowlist, not core.manifest, zero runtime cost); it does not generate CHANGELOG.md (that stays hand-curated and is promoted by scripts/release.sh). Surfaced by /tool-scout (issue #44).",
-            "aliases.md is now surfaced in the changelog — the cross-fleet aliases cheat sheet (Core + per-OS + offensive layers), previously shipped without an entry."
+            {
+              "text": "pullall [dir] shell function (zsh/functions.zsh) — fast-update every git repo under a parent directory in parallel: prunes deleted remote branches, stashes uncommitted tracked changes, switches to each repo's auto-detected trunk (main/master/trunk/… via origin/HEAD, not a hard-coded main), fast-forwards it, pops the stash back (reporting a pop conflict instead of swallowing it), then prints a summary card. The parent directory is configurable (argument → $PULLALL_DIR → CWD) so Core stays machine-agnostic; parallelism via xargs -P ($PULLALL_JOBS, default 10). Colour is TTY/NO_COLOR-aware and repo paths are passed positionally (no shell injection from odd names). Ships with a _pullall completion, a core-help row, and behavioural tests.",
+              "kind": "config"
+            },
+            {
+              "text": "dotfiles-Defense-PLAN.md — a forward-looking architecture note plus a complete, ready-to-instantiate skeleton for a future dotfiles-Defense repo (the defensive/blue Role layer that mirrors dotfiles-Kali). Records the red/blue split decision, the trigger for standing the repo up, the layer-table identity, and every scaffold file verbatim (README, CLAUDE.md, bootstrap, defense.zsh, methodology, gitignore, compose stub, templates) so the repo can be git init-ed when the trigger is met. Added to the audit's repo-meta allowlist; it is planning, not shipped Core.",
+              "kind": "feature"
+            },
+            {
+              "text": "Claude Code project memory + maintenance routines (CLAUDE.md, .claude/) — a root CLAUDE.md encoding the three-layer model, the \"is it Core?\" test, the manifest contract, and the load order so every Claude session reasons from the real rules. Three on-demand slash commands automate the judgment-heavy chores the audit can't: /doc-audit (prose-vs-reality drift across the fleet, via the doc-consistency subagent), /tool-scout (research the modern-CLI stack for tools worth adopting, via the tool-scout subagent), and /freshness-triage (review dependency-bump PRs against upstream changelogs). All report-first; none vendor out without a green make audit. CLAUDE.md added to the audit's repo-meta allowlist (.claude/ was already a prefix).",
+              "kind": "config"
+            },
+            {
+              "text": "Scheduled maintenance bots (.github/workflows/claude-routines.yml) — run the /doc-audit and /tool-scout routines headless on a weekly cron (and on demand), filing findings as a deduplicated GitHub issue. The Claude Code CLI is installed from npm (pinned via CLAUDE_CODE_VERSION in scripts/tool-versions.env) — no third-party action, mirroring freshness.yml. Auth is a Claude subscription token (CLAUDE_CODE_OAUTH_TOKEN, from claude setup-token); inert until that secret is set (the workflow no-ops with a warning otherwise).",
+              "kind": "security"
+            },
+            {
+              "text": "make release-notes + cliff.toml — git-cliff config + a Makefile target that drafts a GitHub Release body from Conventional Commits since the last release commit. Scoped dev-tooling (audit allowlist, not core.manifest, zero runtime cost); it does not generate CHANGELOG.md (that stays hand-curated and is promoted by scripts/release.sh). Surfaced by /tool-scout (issue #44).",
+              "kind": "config"
+            },
+            {
+              "text": "aliases.md is now surfaced in the changelog — the cross-fleet aliases cheat sheet (Core + per-OS + offensive layers), previously shipped without an entry.",
+              "kind": "feature"
+            }
           ]
         },
         {
           "category": "Fixed",
           "items": [
-            "freshness.yml opens its pin-bump PRs against the default branch, not the dispatched ref (GITHUB_REF_NAME), and uses a ref-independent concurrency group — so a manual run from a feature branch can't target the wrong base or race the cron.",
-            "aliases.md — corrected the myip expansion (it redirects stderr: curl -fsS https://ifconfig.me 2>/dev/null && echo) and repo-qualified the cross-repo source paths in the header so they don't read as broken local links.",
-            "doc-consistency subagent — aligned its system description with the canonical nine-repo, three-layer (Core → OS-native → Role) wording.",
-            "audit-core.sh — clarified the META-allowlist comments: those files are \"not shipped Core\" (absent from core.manifest), not \"never vendored\" (the subtree copy carries them physically).",
-            "Doc drift caught by /doc-audit — corrected \"vendored into/fans out to nine OS repos\" → eight (Windows vendors no core/) in CHANGELOG.md + CONTRIBUTING.md; added the manifest-listed zsh/loader.zsh and lazygit/config.yml to the README Layout tree; completed the README tmux-scripts list (added tmux-battery/tmux-cheat); and attributed the cheat alias to functions.zsh (not aliases.zsh) in aliases.md."
+            {
+              "text": "freshness.yml opens its pin-bump PRs against the default branch, not the dispatched ref (GITHUB_REF_NAME), and uses a ref-independent concurrency group — so a manual run from a feature branch can't target the wrong base or race the cron.",
+              "kind": "config"
+            },
+            {
+              "text": "aliases.md — corrected the myip expansion (it redirects stderr: curl -fsS https://ifconfig.me 2>/dev/null && echo) and repo-qualified the cross-repo source paths in the header so they don't read as broken local links.",
+              "kind": "fix"
+            },
+            {
+              "text": "doc-consistency subagent — aligned its system description with the canonical nine-repo, three-layer (Core → OS-native → Role) wording.",
+              "kind": "fix"
+            },
+            {
+              "text": "audit-core.sh — clarified the META-allowlist comments: those files are \"not shipped Core\" (absent from core.manifest), not \"never vendored\" (the subtree copy carries them physically).",
+              "kind": "config"
+            },
+            {
+              "text": "Doc drift caught by /doc-audit — corrected \"vendored into/fans out to nine OS repos\" → eight (Windows vendors no core/) in CHANGELOG.md + CONTRIBUTING.md; added the manifest-listed zsh/loader.zsh and lazygit/config.yml to the README Layout tree; completed the README tmux-scripts list (added tmux-battery/tmux-cheat); and attributed the cheat alias to functions.zsh (not aliases.zsh) in aliases.md.",
+              "kind": "fix"
+            }
           ]
         }
       ]
@@ -68,49 +103,469 @@
         {
           "category": "CI / structure (backend)",
           "items": [
-            "nvim-sync bot (.github/workflows/nvim-sync.yml) — runs nvim-sync.ps1 weekly (and on demand) and opens a PR when Core's nvim/ tree has actually moved ahead, so the host editor config can't silently fall behind. Judges drift on the Lua tree only (ignores .core-ref's per-run timestamp). First-party (GITHUB_TOKEN + gh), no third-party action.",
-            "package-freshness bot (.github/workflows/package-freshness.yml + packages/Check-PackageFreshness.ps1) — weekly on windows-latest, resolves the live scoop/winget version of each managed app and files a deduplicated findings issue when any is ahead of packages.lock.json. Findings only: re-pinning still runs locally via Update-PackageLock.ps1 (it needs the apps installed).",
-            "Hermetic, incremental CI — GitHub Actions pinned to commit SHAs; Pester and PSScriptAnalyzer pinned to exact versions; PSGallery modules cached; a detect-changes gate skips the Windows jobs for docs-only changes.",
-            "Coverage gate — Pester enforces ≥85% coverage on the pure-helper library.",
-            "uninstall.ps1 — reverse the bootstrap; removes only symlinks that point back into the repo, with -DryRun / -RestoreBackups.",
-            "Pre-commit hook — .githooks/pre-commit runs the dependency-free validator; install.ps1 wires core.hooksPath.",
-            "Fragment-load health gate — the profile records any fragment that fails to load; dotfiles-doctor reports it.",
-            "More host-layer tests — extracted pure helpers (ConvertTo-WslPath, Get-FragmentHealthResult, the uninstall link map) with behavioral tests.",
-            "Pinned module floors — packages/modules.ps1 carries -MinimumVersion floors for a reproducible baseline without freezing maintenance updates.",
-            "Dependabot for the pinned actions.",
-            "Install transcript log under %LOCALAPPDATA%\\dotfiles\\logs.",
-            "editorconfig enforcement (final newline / trailing whitespace / LF) in the validator and Pester suite.",
-            "Manifest provenance — winget ids must be Publisher.Package; scoop apps must name a declared bucket.",
-            "This changelog."
+            {
+              "text": "nvim-sync bot (.github/workflows/nvim-sync.yml) — runs nvim-sync.ps1 weekly (and on demand) and opens a PR when Core's nvim/ tree has actually moved ahead, so the host editor config can't silently fall behind. Judges drift on the Lua tree only (ignores .core-ref's per-run timestamp). First-party (GITHUB_TOKEN + gh), no third-party action.",
+              "kind": "config"
+            },
+            {
+              "text": "package-freshness bot (.github/workflows/package-freshness.yml + packages/Check-PackageFreshness.ps1) — weekly on windows-latest, resolves the live scoop/winget version of each managed app and files a deduplicated findings issue when any is ahead of packages.lock.json. Findings only: re-pinning still runs locally via Update-PackageLock.ps1 (it needs the apps installed).",
+              "kind": "other"
+            },
+            {
+              "text": "Hermetic, incremental CI — GitHub Actions pinned to commit SHAs; Pester and PSScriptAnalyzer pinned to exact versions; PSGallery modules cached; a detect-changes gate skips the Windows jobs for docs-only changes.",
+              "kind": "perf"
+            },
+            {
+              "text": "Coverage gate — Pester enforces ≥85% coverage on the pure-helper library.",
+              "kind": "other"
+            },
+            {
+              "text": "uninstall.ps1 — reverse the bootstrap; removes only symlinks that point back into the repo, with -DryRun / -RestoreBackups.",
+              "kind": "other"
+            },
+            {
+              "text": "Pre-commit hook — .githooks/pre-commit runs the dependency-free validator; install.ps1 wires core.hooksPath.",
+              "kind": "other"
+            },
+            {
+              "text": "Fragment-load health gate — the profile records any fragment that fails to load; dotfiles-doctor reports it.",
+              "kind": "other"
+            },
+            {
+              "text": "More host-layer tests — extracted pure helpers (ConvertTo-WslPath, Get-FragmentHealthResult, the uninstall link map) with behavioral tests.",
+              "kind": "other"
+            },
+            {
+              "text": "Pinned module floors — packages/modules.ps1 carries -MinimumVersion floors for a reproducible baseline without freezing maintenance updates.",
+              "kind": "other"
+            },
+            {
+              "text": "Dependabot for the pinned actions.",
+              "kind": "other"
+            },
+            {
+              "text": "Install transcript log under %LOCALAPPDATA%\\dotfiles\\logs.",
+              "kind": "other"
+            },
+            {
+              "text": "editorconfig enforcement (final newline / trailing whitespace / LF) in the validator and Pester suite.",
+              "kind": "other"
+            },
+            {
+              "text": "Manifest provenance — winget ids must be Publisher.Package; scoop apps must name a declared bucket.",
+              "kind": "config"
+            },
+            {
+              "text": "This changelog.",
+              "kind": "other"
+            }
           ]
         },
         {
           "category": "Terminal UX",
           "items": [
-            "install.ps1 -DryRun previews every change and mutates nothing; -Help prints usage; -NonInteractive / -Yes for unattended runs.",
-            "Graceful interrupts — install.ps1 and the package installer print where they stopped (and close the log) on Ctrl-C or error.",
-            "Unified error/warning layout — Write-DotErr / Write-DotWarn used across the entry points.",
-            "NO_COLOR + DOTFILES_ASCII fallbacks across every renderer.",
-            "Install progress — per-package [n/total] with elapsed time.",
-            "Interactive overwrite — confirm before backing up a real user file; stale links are rewired silently.",
-            "Tab-completion for dothelp filters, derived from the catalog.",
-            "Zero-config onboarding — prompt for git name/email at install time.",
-            "dotfiles-doctor -Fix opt-in remediation for the common issues.",
-            "dothelp -i fuzzy command picker (fzf) that copies the pick.",
-            "serve -Local — opt-in localhost-only bind (127.0.0.1) for the quick CWD HTTP server; LAN exposure stays the default."
+            {
+              "text": "install.ps1 -DryRun previews every change and mutates nothing; -Help prints usage; -NonInteractive / -Yes for unattended runs.",
+              "kind": "other"
+            },
+            {
+              "text": "Graceful interrupts — install.ps1 and the package installer print where they stopped (and close the log) on Ctrl-C or error.",
+              "kind": "other"
+            },
+            {
+              "text": "Unified error/warning layout — Write-DotErr / Write-DotWarn used across the entry points.",
+              "kind": "other"
+            },
+            {
+              "text": "NO_COLOR + DOTFILES_ASCII fallbacks across every renderer.",
+              "kind": "other"
+            },
+            {
+              "text": "Install progress — per-package [n/total] with elapsed time.",
+              "kind": "other"
+            },
+            {
+              "text": "Interactive overwrite — confirm before backing up a real user file; stale links are rewired silently.",
+              "kind": "other"
+            },
+            {
+              "text": "Tab-completion for dothelp filters, derived from the catalog.",
+              "kind": "other"
+            },
+            {
+              "text": "Zero-config onboarding — prompt for git name/email at install time.",
+              "kind": "config"
+            },
+            {
+              "text": "dotfiles-doctor -Fix opt-in remediation for the common issues.",
+              "kind": "fix"
+            },
+            {
+              "text": "dothelp -i fuzzy command picker (fzf) that copies the pick.",
+              "kind": "other"
+            },
+            {
+              "text": "serve -Local — opt-in localhost-only bind (127.0.0.1) for the quick CWD HTTP server; LAN exposure stays the default.",
+              "kind": "config"
+            }
           ]
         },
         {
           "category": "Fixes",
           "items": [
-            "md no longer shadows mkdir — the glow markdown-render alias was bound to md, clobbering PowerShell's built-in md (mkdir). It's now gmd; md is mkdir again. README, docs/TOOLS.md, and the dothelp catalog updated.",
-            "tools command implemented — the cheatsheet advertised tools (\"open the host tool docs\") but nothing defined it. It now renders docs/TOOLS.md (glow → bat → nvim → plain), and is listed in dothelp.",
-            "Dead-shim guards for fif / fbr — a tool that *resolves* on PATH but won't *launch* (a stale Chocolatey shim, or a scoop shim whose app was removed, shadowing the real binary) produced raw Program rg.exe failed to run / cannot find file ...fzf.exe errors. A new Test-CmdRuns helper probes executability so fif/fbr (and the same class of Ctrl+t/Ctrl+r breakage) fail with an actionable fix hint instead.",
-            "dotfiles-doctor now checks executability — a new *Core toolchain runs* probe flags tools that resolve but won't launch, which the resolve-only check could not see.",
-            "tools / gmd no longer abort when less is absent — glow (and bat) page through $PAGER, defaulting to less, which isn't on a stock Windows box, so glow --pager died with exec: \"less\" not found. Both now pass paging flags only when a pager actually exists and render inline otherwise. Per-finding backlog IDs and their status live in docs/ARCHITECTURE-AUDIT.md — the single ID registry, so this log stays prose with no competing B#/U# scheme."
+            {
+              "text": "md no longer shadows mkdir — the glow markdown-render alias was bound to md, clobbering PowerShell's built-in md (mkdir). It's now gmd; md is mkdir again. README, docs/TOOLS.md, and the dothelp catalog updated.",
+              "kind": "other"
+            },
+            {
+              "text": "tools command implemented — the cheatsheet advertised tools (\"open the host tool docs\") but nothing defined it. It now renders docs/TOOLS.md (glow → bat → nvim → plain), and is listed in dothelp.",
+              "kind": "feature"
+            },
+            {
+              "text": "Dead-shim guards for fif / fbr — a tool that *resolves* on PATH but won't *launch* (a stale Chocolatey shim, or a scoop shim whose app was removed, shadowing the real binary) produced raw Program rg.exe failed to run / cannot find file ...fzf.exe errors. A new Test-CmdRuns helper probes executability so fif/fbr (and the same class of Ctrl+t/Ctrl+r breakage) fail with an actionable fix hint instead.",
+              "kind": "fix"
+            },
+            {
+              "text": "dotfiles-doctor now checks executability — a new *Core toolchain runs* probe flags tools that resolve but won't launch, which the resolve-only check could not see.",
+              "kind": "feature"
+            },
+            {
+              "text": "tools / gmd no longer abort when less is absent — glow (and bat) page through $PAGER, defaulting to less, which isn't on a stock Windows box, so glow --pager died with exec: \"less\" not found. Both now pass paging flags only when a pager actually exists and render inline otherwise. Per-finding backlog IDs and their status live in docs/ARCHITECTURE-AUDIT.md — the single ID registry, so this log stays prose with no competing B#/U# scheme.",
+              "kind": "other"
+            }
           ]
         }
       ]
+    }
+  ],
+  "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "pullall [dir] shell function (zsh/functions.zsh) — fast-update every git repo under a parent directory in parallel: prunes deleted remote branches, stashes uncommitted tracked changes, switches to each repo's auto-detected trunk (main/master/trunk/… via origin/HEAD, not a hard-coded main), fast-forwards it, pops the stash back (reporting a pop conflict instead of swallowing it), then prints a summary card. The parent directory is configurable (argument → $PULLALL_DIR → CWD) so Core stays machine-agnostic; parallelism via xargs -P ($PULLALL_JOBS, default 10). Colour is TTY/NO_COLOR-aware and repo paths are passed positionally (no shell injection from odd names). Ships with a _pullall completion, a core-help row, and behavioural tests.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "dotfiles-Defense-PLAN.md — a forward-looking architecture note plus a complete, ready-to-instantiate skeleton for a future dotfiles-Defense repo (the defensive/blue Role layer that mirrors dotfiles-Kali). Records the red/blue split decision, the trigger for standing the repo up, the layer-table identity, and every scaffold file verbatim (README, CLAUDE.md, bootstrap, defense.zsh, methodology, gitignore, compose stub, templates) so the repo can be git init-ed when the trigger is met. Added to the audit's repo-meta allowlist; it is planning, not shipped Core.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "Claude Code project memory + maintenance routines (CLAUDE.md, .claude/) — a root CLAUDE.md encoding the three-layer model, the \"is it Core?\" test, the manifest contract, and the load order so every Claude session reasons from the real rules. Three on-demand slash commands automate the judgment-heavy chores the audit can't: /doc-audit (prose-vs-reality drift across the fleet, via the doc-consistency subagent), /tool-scout (research the modern-CLI stack for tools worth adopting, via the tool-scout subagent), and /freshness-triage (review dependency-bump PRs against upstream changelogs). All report-first; none vendor out without a green make audit. CLAUDE.md added to the audit's repo-meta allowlist (.claude/ was already a prefix).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "security",
+      "text": "Scheduled maintenance bots (.github/workflows/claude-routines.yml) — run the /doc-audit and /tool-scout routines headless on a weekly cron (and on demand), filing findings as a deduplicated GitHub issue. The Claude Code CLI is installed from npm (pinned via CLAUDE_CODE_VERSION in scripts/tool-versions.env) — no third-party action, mirroring freshness.yml. Auth is a Claude subscription token (CLAUDE_CODE_OAUTH_TOKEN, from claude setup-token); inert until that secret is set (the workflow no-ops with a warning otherwise).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "make release-notes + cliff.toml — git-cliff config + a Makefile target that drafts a GitHub Release body from Conventional Commits since the last release commit. Scoped dev-tooling (audit allowlist, not core.manifest, zero runtime cost); it does not generate CHANGELOG.md (that stays hand-curated and is promoted by scripts/release.sh). Surfaced by /tool-scout (issue #44).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "aliases.md is now surfaced in the changelog — the cross-fleet aliases cheat sheet (Core + per-OS + offensive layers), previously shipped without an entry.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "freshness.yml opens its pin-bump PRs against the default branch, not the dispatched ref (GITHUB_REF_NAME), and uses a ref-independent concurrency group — so a manual run from a feature branch can't target the wrong base or race the cron.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "aliases.md — corrected the myip expansion (it redirects stderr: curl -fsS https://ifconfig.me 2>/dev/null && echo) and repo-qualified the cross-repo source paths in the header so they don't read as broken local links.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "doc-consistency subagent — aligned its system description with the canonical nine-repo, three-layer (Core → OS-native → Role) wording.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "audit-core.sh — clarified the META-allowlist comments: those files are \"not shipped Core\" (absent from core.manifest), not \"never vendored\" (the subtree copy carries them physically).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Doc drift caught by /doc-audit — corrected \"vendored into/fans out to nine OS repos\" → eight (Windows vendors no core/) in CHANGELOG.md + CONTRIBUTING.md; added the manifest-listed zsh/loader.zsh and lazygit/config.yml to the README Layout tree; completed the README tmux-scripts list (added tmux-battery/tmux-cheat); and attributed the cheat alias to functions.zsh (not aliases.zsh) in aliases.md.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "config",
+      "text": "nvim-sync bot (.github/workflows/nvim-sync.yml) — runs nvim-sync.ps1 weekly (and on demand) and opens a PR when Core's nvim/ tree has actually moved ahead, so the host editor config can't silently fall behind. Judges drift on the Lua tree only (ignores .core-ref's per-run timestamp). First-party (GITHUB_TOKEN + gh), no third-party action.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "package-freshness bot (.github/workflows/package-freshness.yml + packages/Check-PackageFreshness.ps1) — weekly on windows-latest, resolves the live scoop/winget version of each managed app and files a deduplicated findings issue when any is ahead of packages.lock.json. Findings only: re-pinning still runs locally via Update-PackageLock.ps1 (it needs the apps installed).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "perf",
+      "text": "Hermetic, incremental CI — GitHub Actions pinned to commit SHAs; Pester and PSScriptAnalyzer pinned to exact versions; PSGallery modules cached; a detect-changes gate skips the Windows jobs for docs-only changes.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "Coverage gate — Pester enforces ≥85% coverage on the pure-helper library.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "uninstall.ps1 — reverse the bootstrap; removes only symlinks that point back into the repo, with -DryRun / -RestoreBackups.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "Pre-commit hook — .githooks/pre-commit runs the dependency-free validator; install.ps1 wires core.hooksPath.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "Fragment-load health gate — the profile records any fragment that fails to load; dotfiles-doctor reports it.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "More host-layer tests — extracted pure helpers (ConvertTo-WslPath, Get-FragmentHealthResult, the uninstall link map) with behavioral tests.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "Pinned module floors — packages/modules.ps1 carries -MinimumVersion floors for a reproducible baseline without freezing maintenance updates.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "Dependabot for the pinned actions.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "Install transcript log under %LOCALAPPDATA%\\dotfiles\\logs.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "editorconfig enforcement (final newline / trailing whitespace / LF) in the validator and Pester suite.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "config",
+      "text": "Manifest provenance — winget ids must be Publisher.Package; scoop apps must name a declared bucket.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "CI / structure (backend)",
+      "kind": "other",
+      "text": "This changelog.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "install.ps1 -DryRun previews every change and mutates nothing; -Help prints usage; -NonInteractive / -Yes for unattended runs.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "Graceful interrupts — install.ps1 and the package installer print where they stopped (and close the log) on Ctrl-C or error.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "Unified error/warning layout — Write-DotErr / Write-DotWarn used across the entry points.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "NO_COLOR + DOTFILES_ASCII fallbacks across every renderer.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "Install progress — per-package [n/total] with elapsed time.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "Interactive overwrite — confirm before backing up a real user file; stale links are rewired silently.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "Tab-completion for dothelp filters, derived from the catalog.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "config",
+      "text": "Zero-config onboarding — prompt for git name/email at install time.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "fix",
+      "text": "dotfiles-doctor -Fix opt-in remediation for the common issues.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "other",
+      "text": "dothelp -i fuzzy command picker (fzf) that copies the pick.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Terminal UX",
+      "kind": "config",
+      "text": "serve -Local — opt-in localhost-only bind (127.0.0.1) for the quick CWD HTTP server; LAN exposure stays the default.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixes",
+      "kind": "other",
+      "text": "md no longer shadows mkdir — the glow markdown-render alias was bound to md, clobbering PowerShell's built-in md (mkdir). It's now gmd; md is mkdir again. README, docs/TOOLS.md, and the dothelp catalog updated.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixes",
+      "kind": "feature",
+      "text": "tools command implemented — the cheatsheet advertised tools (\"open the host tool docs\") but nothing defined it. It now renders docs/TOOLS.md (glow → bat → nvim → plain), and is listed in dothelp.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixes",
+      "kind": "fix",
+      "text": "Dead-shim guards for fif / fbr — a tool that *resolves* on PATH but won't *launch* (a stale Chocolatey shim, or a scoop shim whose app was removed, shadowing the real binary) produced raw Program rg.exe failed to run / cannot find file ...fzf.exe errors. A new Test-CmdRuns helper probes executability so fif/fbr (and the same class of Ctrl+t/Ctrl+r breakage) fail with an actionable fix hint instead.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixes",
+      "kind": "feature",
+      "text": "dotfiles-doctor now checks executability — a new *Core toolchain runs* probe flags tools that resolve but won't launch, which the resolve-only check could not see.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixes",
+      "kind": "other",
+      "text": "tools / gmd no longer abort when less is absent — glow (and bat) page through $PAGER, defaulting to less, which isn't on a stock Windows box, so glow --pager died with exec: \"less\" not found. Both now pass paging flags only when a pager actually exists and render inline otherwise. Per-finding backlog IDs and their status live in docs/ARCHITECTURE-AUDIT.md — the single ID registry, so this log stays prose with no competing B#/U# scheme.",
+      "core": false
     }
   ]
 }

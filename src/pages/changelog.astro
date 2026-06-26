@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { changelog } from '../data/changelog';
+import { changelog, feed, kindMeta, presentKinds } from '../data/changelog';
 import { site } from '../data/site';
 
 const categoryTone: Record<string, string> = {
@@ -9,25 +9,79 @@ const categoryTone: Record<string, string> = {
   Fixed: 'cyan',
   Security: 'red',
 };
+const fmtVer = (version: string, date?: string) => (date ? `${version} · ${date}` : version);
 ---
 
 <Base
   title="Changelog"
-  description="What's new across the dotfiles ecosystem — parsed straight from each repo's CHANGELOG.md at build time."
+  description="A developer-friendly Diff/Update Feed across the dotfiles ecosystem — every change classified (perf, config, security…) and parsed straight from each repo's CHANGELOG.md at build time."
 >
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Changelog</span>
+        <span class="eyebrow">Diff / update feed</span>
         <h1>What’s new</h1>
         <p class="lead">
-          Parsed straight from each repo’s <code>CHANGELOG.md</code> at build time — not a
-          hand-kept mirror. Core changes fan out to every OS repo on the next
-          <code>git subtree pull</code>, so a Core entry is a change every machine receives.
+          One reverse-chronological feed across every repo, parsed straight from each
+          <code>CHANGELOG.md</code> at build time — not a hand-kept mirror. Each change is
+          classified so you can filter to <strong>perf</strong>, <strong>config</strong>, or
+          <strong>security</strong> at a glance. A
+          <span class="badge tone-purple feed-core"><span class="dot" />Core</span>
+          change fans out to every OS repo on the next <code>git subtree pull</code>.
         </p>
       </div>
 
-      <div class="changelog">
+      <!-- controls: view toggle + kind filters -->
+      <div class="cl-controls" id="cl-controls">
+        <div class="cl-views" role="group" aria-label="View">
+          <button type="button" class="cl-view active" data-view="feed" aria-pressed="true">Feed</button>
+          <button type="button" class="cl-view" data-view="repo" aria-pressed="false">By repo</button>
+        </div>
+        <div class="cl-filters" role="group" aria-label="Filter by kind">
+          <button type="button" class="cl-chip active" data-filter="all" aria-pressed="true">All</button>
+          {
+            presentKinds.map((k) => (
+              <button type="button" class:list={['cl-chip', `tone-${kindMeta[k].tone}`]} data-filter={k} aria-pressed="false">
+                {kindMeta[k].label}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- unified feed (default) -->
+      <div class="cl-feed" id="feed-view">
+        {
+          feed.map((f) => {
+            const m = kindMeta[f.kind];
+            const hl = f.kind === 'perf' || f.kind === 'security';
+            return (
+              <article
+                class:list={['feed-item', { 'feed-item--hl': hl }]}
+                data-kind={f.kind}
+                style={`--rail: var(--tn-${m.tone})`}
+              >
+                <div class="feed-item__body">
+                  <div class="feed-item__meta">
+                    <span class:list={['badge', `tone-${m.tone}`]}><span class="dot" />{m.label}</span>
+                    <a class="feed-item__repo text-mono" href={`${site.githubBase}/${f.repo}`} target="_blank" rel="noopener">
+                      {f.repo}
+                    </a>
+                    <span class="feed-item__ver text-mono">{fmtVer(f.version, f.date)}</span>
+                    {f.core && (
+                      <span class="badge tone-purple feed-item__core"><span class="dot" />↳ every OS repo</span>
+                    )}
+                  </div>
+                  <p class="feed-item__text">{f.text}</p>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+
+      <!-- by-repo grouping (toggle) -->
+      <div class="changelog" id="repo-view" hidden>
         {
           changelog.map((entry) => (
             <article class="cl-entry">
@@ -37,7 +91,7 @@ const categoryTone: Record<string, string> = {
                     {entry.repo}
                   </a>
                 </h2>
-                <span class="badge tone-orange"><span class="dot" />{entry.version}{entry.date ? ` · ${entry.date}` : ''}</span>
+                <span class="badge tone-orange"><span class="dot" />{fmtVer(entry.version, entry.date)}</span>
                 <a
                   class="cl-entry__source text-mono"
                   href={`${site.githubBase}/${entry.repo}/blob/main/CHANGELOG.md`}
@@ -57,7 +111,10 @@ const categoryTone: Record<string, string> = {
                     </h3>
                     <ul class="cl-list">
                       {g.items.map((item) => (
-                        <li>{item}</li>
+                        <li data-kind={item.kind}>
+                          <span class:list={['cl-tag', `tone-${kindMeta[item.kind].tone}`]}>{kindMeta[item.kind].label}</span>
+                          {item.text}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -67,6 +124,8 @@ const categoryTone: Record<string, string> = {
           ))
         }
       </div>
+
+      <p class="muted center cl-empty" id="cl-empty" hidden>No changes match this filter.</p>
 
       <p class="muted center" style="margin-top:2.5rem;">
         Only repos with a <code>CHANGELOG.md</code> appear here. The distro layers track Core
@@ -78,6 +137,124 @@ const categoryTone: Record<string, string> = {
 </Base>
 
 <style>
+  /* controls */
+  .cl-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .cl-views {
+    display: flex;
+    gap: 0.3rem;
+    padding: 0.3rem;
+    background: var(--tn-bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .cl-view {
+    padding: 0.4rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  .cl-view.active {
+    color: #10131f;
+    background: linear-gradient(135deg, var(--tn-blue), var(--tn-purple));
+  }
+  .cl-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .cl-chip {
+    padding: 0.35rem 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--tn-bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .cl-chip:hover {
+    border-color: var(--tn-border-bright);
+  }
+  .cl-chip.active {
+    color: #fff;
+    border-color: currentColor;
+    background: var(--tn-surface-2);
+  }
+
+  /* feed */
+  .cl-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .feed-item {
+    position: relative;
+    padding: 0.9rem 1.1rem 0.9rem 1.25rem;
+    background: var(--tn-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .feed-item::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--rail, var(--tn-comment));
+    opacity: 0.45;
+  }
+  .feed-item--hl {
+    border-color: color-mix(in srgb, var(--rail) 35%, var(--border));
+  }
+  .feed-item--hl::before {
+    width: 4px;
+    opacity: 1;
+  }
+  .feed-item__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-bottom: 0.45rem;
+  }
+  .feed-item__repo {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--tn-cyan);
+  }
+  .feed-item__repo:hover {
+    color: var(--tn-blue);
+  }
+  .feed-item__ver {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .feed-item__core {
+    font-size: 0.72rem;
+  }
+  .feed-item__text {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    max-width: 90ch;
+  }
+
+  /* by-repo (existing layout) */
   .changelog {
     display: flex;
     flex-direction: column;
@@ -141,4 +318,89 @@ const categoryTone: Record<string, string> = {
   .cl-list li::marker {
     color: var(--tn-comment);
   }
+  .cl-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    padding: 0 0.3rem;
+    margin-right: 0.5rem;
+    vertical-align: 0.08em;
+    opacity: 0.85;
+  }
 </style>
+
+<script>
+  // Changelog feed: view toggle (Feed / By repo) + kind filtering. Both are pure
+  // client-side show/hide over the build-time data — no fetch, no runtime API.
+  const controls = document.getElementById('cl-controls');
+  const feedView = document.getElementById('feed-view');
+  const repoView = document.getElementById('repo-view');
+  const empty = document.getElementById('cl-empty');
+
+  if (controls && feedView && repoView) {
+    let view = 'feed';
+    let filter = 'all';
+
+    const viewBtns = Array.from(controls.querySelectorAll<HTMLButtonElement>('[data-view]'));
+    const chipBtns = Array.from(controls.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+
+    const setPressed = (btns: HTMLButtonElement[], active: HTMLButtonElement) => {
+      btns.forEach((b) => {
+        const on = b === active;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+    };
+
+    const apply = () => {
+      const active = view === 'feed' ? feedView : repoView;
+      const hidden = view === 'feed' ? repoView : feedView;
+      active.hidden = false;
+      hidden.hidden = true;
+
+      // Filter items by kind within the active view.
+      let visible = 0;
+      active.querySelectorAll<HTMLElement>('[data-kind]').forEach((el) => {
+        const show = filter === 'all' || el.dataset.kind === filter;
+        el.hidden = !show;
+        if (show) visible++;
+      });
+
+      // In by-repo view, hide a whole group/entry if all its items are filtered out.
+      if (view === 'repo') {
+        repoView.querySelectorAll<HTMLElement>('.cl-group').forEach((g) => {
+          const any = Array.from(g.querySelectorAll<HTMLElement>('[data-kind]')).some((i) => !i.hidden);
+          g.hidden = !any;
+        });
+        repoView.querySelectorAll<HTMLElement>('.cl-entry').forEach((e) => {
+          const any = Array.from(e.querySelectorAll<HTMLElement>('.cl-group')).some((g) => !g.hidden);
+          e.hidden = !any;
+        });
+      }
+
+      if (empty) empty.hidden = visible > 0;
+    };
+
+    viewBtns.forEach((b) =>
+      b.addEventListener('click', () => {
+        view = b.dataset.view || 'feed';
+        setPressed(viewBtns, b);
+        apply();
+      })
+    );
+    chipBtns.forEach((b) =>
+      b.addEventListener('click', () => {
+        filter = b.dataset.filter || 'all';
+        setPressed(chipBtns, b);
+        apply();
+      })
+    );
+
+    apply();
+  }
+</script>

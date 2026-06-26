@@ -139,6 +139,44 @@ function cleanInline(s) {
     .trim();
 }
 
+// Map a change line to a coarse "kind" so the Diff/Update Feed can highlight and
+// filter (design §2.2). Two honest, build-time signals: an explicit
+// Conventional-Commits verb if the line carries one, else a keyword scan, else the
+// Keep a Changelog category as fallback. Deterministic, no network. Order matters —
+// the first match wins, so the high-signal kinds (security, perf) are checked first.
+const CC_KIND = {
+  perf: 'perf',
+  feat: 'feature',
+  fix: 'fix',
+  refactor: 'config',
+  chore: 'config',
+  build: 'config',
+  docs: 'config',
+  style: 'config',
+  security: 'security',
+};
+const KIND_RULES = [
+  { kind: 'security', re: /\b(security|cve|vuln\w*|secret|credential|exploit|sanitiz\w*|hardening)\b/i },
+  { kind: 'perf', re: /\b(perf\w*|faster|speed\w*|latency|startup|benchmark\w*|lazy|defer\w*|cache[ds]?|optimi[sz]\w*)\b/i },
+  { kind: 'fix', re: /\b(fix\w*|bug\w*|regression|broken|correct\w*|guard|workaround)\b/i },
+  { kind: 'config', re: /\b(config\w*|manifest|load order|refactor\w*|rename[ds]?|restructur\w*|default[s]?|setting[s]?|option[s]?)\b/i },
+  { kind: 'feature', re: /\b(add\w*|feat\w*|introduce[ds]?|new|support[s]?|implement\w*)\b/i },
+];
+const CATEGORY_KIND = {
+  Added: 'feature',
+  Changed: 'config',
+  Fixed: 'fix',
+  Security: 'security',
+  Removed: 'config',
+  Deprecated: 'config',
+};
+function classify(text, category) {
+  const cc = text.match(/^([a-z]+)(?:\([^)]*\))?!?:/i);
+  if (cc && CC_KIND[cc[1].toLowerCase()]) return CC_KIND[cc[1].toLowerCase()];
+  for (const r of KIND_RULES) if (r.re.test(text)) return r.kind;
+  return CATEGORY_KIND[category] || 'other';
+}
+
 function parseChangelog(name) {
   const file = join(repoPath(name), 'CHANGELOG.md');
   if (!existsSync(file)) return null;
@@ -166,7 +204,10 @@ function parseChangelog(name) {
   let buf = null; // lines of the item currently being built
   let sawCategory = false;
   const flush = () => {
-    if (cur && buf) cur.items.push(cleanInline(buf.join(' ')));
+    if (cur && buf) {
+      const text = cleanInline(buf.join(' '));
+      cur.items.push({ text, kind: classify(text, cur.category) });
+    }
     buf = null;
   };
   for (const raw of block) {
@@ -208,6 +249,31 @@ const changelog = [core, ...osRepos]
   .map(parseChangelog)
   .filter((e) => e && e.groups.length);
 
+// Flat cross-repo projection for the Diff/Update Feed (design §2.3): one entry per
+// change, newest first, each carrying its repo/version/kind. `core: true` marks a
+// change authored in Core — it fans out to every OS repo, the feed's headline fact.
+// Undated blocks (an Unreleased section) float to the top.
+const feed = changelog
+  .flatMap((e) =>
+    e.groups.flatMap((g) =>
+      g.items.map((it) => ({
+        repo: e.repo,
+        version: e.version,
+        date: e.date,
+        category: g.category,
+        kind: it.kind,
+        text: it.text,
+        core: e.repo === core,
+      }))
+    )
+  )
+  .sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return -1;
+    if (!b.date) return 1;
+    return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+  });
+
 const data = {
   generatedAt: new Date().toISOString().slice(0, 10),
   fleet: {
@@ -226,6 +292,7 @@ const data = {
   packages,
   ci,
   changelog,
+  feed,
 };
 
 writeFileSync(out, JSON.stringify(data, null, 2) + '\n');
