@@ -10,11 +10,19 @@ on:
         description: "Tag/branch to pin the fleet to when regenerating metrics (e.g. v1.0.0). Empty = ship the committed src/data/generated.json as-is."
         required: false
         default: ""
-  # Lets dotfiles-core's release workflow rebuild the docs against a freshly cut
-  # tag. POST a repository_dispatch with:
-  #   {"event_type":"release","client_payload":{"ref":"v1.0.0"}}
+  # Lets a source repo rebuild & redeploy the docs — the static-site equivalent of
+  # a cache purge (there is no per-request cache to invalidate; you re-publish the
+  # artifact). Two event types, both POSTed as a repository_dispatch:
+  #   release — pin the whole fleet to a freshly cut tag, then rebuild:
+  #     {"event_type":"release","client_payload":{"ref":"v1.0.0"}}
+  #   refresh — rebuild from each repo's DEFAULT branch (no ref needed), e.g. on a
+  #     push to a source repo whose CHANGELOG/metrics the showcase mirrors.
+  #     {"event_type":"refresh"}
+  # The POST is authenticated by the dispatching repo's GITHUB_WEBHOOK_SECRET (a PAT
+  # with this repo's contents:write) — GitHub verifies the caller via that token, so
+  # no HMAC signature layer is needed on this (static, server-less) side.
   repository_dispatch:
-    types: [release]
+    types: [release, refresh]
 
 # Allow GITHUB_TOKEN to deploy to Pages. `actions: read` lets the build read the
 # latest workflow-run conclusion for the repo cards (other public repos resolve
@@ -60,11 +68,16 @@ jobs:
         if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.dotfiles_ref != '') || github.event_name == 'repository_dispatch' }}
         env:
           REF: ${{ github.event.inputs.dotfiles_ref || github.event.client_payload.ref }}
+          EVENT_ACTION: ${{ github.event.action }}
           GH_TOKEN: ${{ github.token }}
           OWNER: ${{ github.repository_owner }}
         run: |
           set -euo pipefail
-          if [ -z "${REF:-}" ]; then
+          # A `release` dispatch (or a manual pinned build) MUST carry a ref so the
+          # docs are built from a TAGGED fleet — bail loudly if it doesn't. A
+          # `refresh` dispatch intentionally carries no ref: it rebuilds from each
+          # repo's default branch (the cache-purge path), so an empty REF is fine.
+          if [ -z "${REF:-}" ] && [ "${EVENT_ACTION:-}" != "refresh" ]; then
             echo "::error::pinned build triggered without a ref (set dotfiles_ref / client_payload.ref)"
             exit 1
           fi
@@ -74,12 +87,12 @@ jobs:
                  dotfiles-Fedora dotfiles-Arch dotfiles-openSUSE dotfiles-Alpine dotfiles-Gentoo"
           for r in $repos; do
             url="https://x-access-token:${GH_TOKEN}@github.com/${OWNER}/${r}.git"
-            if git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>/dev/null; then
+            if [ -n "${REF:-}" ] && git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>/dev/null; then
               echo "cloned $r @ $REF"
             elif git clone --depth 1 "$url" "$root/$r" 2>/dev/null; then
-              echo "cloned $r @ default branch ($REF not found)"
+              echo "cloned $r @ default branch${REF:+ ($REF not found)}"
             else
-              echo "::error::could not clone $r at $REF or its default branch"
+              echo "::error::could not clone $r at ${REF:-default branch}"
               exit 1
             fi
           done

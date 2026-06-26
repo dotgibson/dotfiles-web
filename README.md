@@ -61,6 +61,55 @@ Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds with Ast
 publishes to GitHub Pages. **One-time setup:** in the repo's
 **Settings → Pages**, set **Source** to **GitHub Actions**.
 
+### Refreshing the showcase when a source repo changes (the "cache purge")
+
+This site is **static** — there is no server runtime and therefore no per-request
+cache to invalidate. The equivalent of "clear the cache" is to **rebuild and
+re-publish the Pages artifact**, which the deploy workflow already exposes as a
+[`repository_dispatch`](https://docs.github.com/actions/using-workflows/events-that-trigger-workflows#repository_dispatch)
+receiver. A source repo (`dotfiles-core`, an OS repo, …) pings it on push:
+
+```bash
+curl -fsS -X POST \
+  -H "Authorization: Bearer $GITHUB_WEBHOOK_SECRET" \
+  -H "Accept: application/vnd.github+json" \
+  https://api.github.com/repos/Gerrrt/dotfiles-web/dispatches \
+  -d '{"event_type":"refresh"}'
+```
+
+- **`refresh`** rebuilds from each repo's **default branch** (regenerates
+  `src/data/generated.json` from the live fleet, then redeploys) — use this for an
+  ordinary push.
+- **`release`** pins the whole fleet to a tag first
+  (`{"event_type":"release","client_payload":{"ref":"v1.0.0"}}`) — used by
+  dotfiles-core's release workflow.
+
+As a drop-in for a source repo (`.github/workflows/notify-web.yml`):
+
+```yaml
+name: Refresh showcase
+on:
+  push:
+    branches: [main]
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_WEBHOOK_SECRET }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/Gerrrt/dotfiles-web/dispatches \
+            -d '{"event_type":"refresh"}'
+```
+
+### Environment variables / secrets
+
+| Variable                | Where it lives                          | Purpose                                                                                                              |
+| ----------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `GITHUB_TOKEN`          | auto-injected in **this** repo's CI     | Higher GitHub API rate limit + Actions access for the live repo-card badges during the Astro build. Build is resilient if unset. |
+| `GITHUB_WEBHOOK_SECRET` | a **secret in each dispatching** source repo | A fine-grained **PAT** with `contents:write` on `dotfiles-web`, used as the `Authorization: Bearer` token on the `repository_dispatch` POST that triggers a rebuild. GitHub authenticates the caller via this token, so the static site needs no HMAC signature-verification layer of its own. |
+
 ### Changing the URL
 
 The site is configured for a GitHub Pages *project* path in `astro.config.mjs`
