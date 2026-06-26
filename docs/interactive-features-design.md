@@ -17,10 +17,14 @@ deterministic, no-surprises command line over clickable magic.
 
 **Two decisions already locked** (they constrain the whole design):
 
-- **Generated commands invoke the *existing* per-repo `bootstrap.sh` + flags** —
-  not a new hosted `curl | bash` service. Whatever the generator emits must be a
-  real command that works against the repos as they are today (or against a small,
-  in-tree bootstrap enhancement described in §1.3).
+- **The generator's commands invoke the *existing* per-repo `bootstrap.sh` +
+  flags** — its default output is a readable clone-then-run, not a blind
+  `curl | bash`. Whatever the generator emits must be a real command that works
+  against the repos as they are today (or against a small, in-tree bootstrap
+  enhancement described in §1.3). *(Separately, the operator wants a hosted
+  one-liner as the **landing-page hero** — that's the §3 dispatcher's public face,
+  designed in §4; it still only routes to those same per-repo bootstraps, so the
+  two are consistent.)*
 - The site is a **static Astro build** deployed to GitHub Pages. There is no
   server at request time. Every "dynamic" behaviour is either *build-time* (Astro
   frontmatter / `collect-metrics.mjs`) or *client-side* progressive enhancement.
@@ -459,7 +463,90 @@ Two viable homes, both compatible with "per-repo bootstrap" (the dispatcher only
 
 ---
 
-## 4. Recommended rollout
+## 4. Landing-page hero — the one-liner dream
+
+The operator's stated vision for the landing page is a single, irresistible
+install string:
+
+```sh
+# For Linux/macOS (Zsh) & Windows (PowerShell)
+curl -sS https://your-showcase.com | bash   # or the PowerShell equivalent
+```
+
+This is the **public face of the §3 universal dispatcher** — the URL serves the
+OS-detecting script, which clones the right repo and runs its existing
+`bootstrap.sh` (so it still honours the locked "invoke existing per-repo
+bootstrap" decision; the dispatcher only *routes*). It replaces / augments the
+current static terminal mock in `src/components/Hero.astro` (the clone +
+`bootstrap.sh --links-only --dry-run` cassette).
+
+### 4.1 The wrinkle: a bare domain can't pipe to a shell
+
+`curl -sS https://your-showcase.com | bash` piping the **site root** would pipe
+**HTML** into `bash`. Two honest ways to make the dream real on a static Pages
+deploy:
+
+- **(Recommended) a script path:** `curl -sSL https://<host>/install.sh | sh`.
+  Trivially works from Pages `public/install.sh`. The hero shows this exact line.
+- **User-Agent content negotiation** (the `sh.rustup.rs` trick — serve the script
+  to `curl`, HTML to browsers from the *same* bare URL). Pages is static and
+  *can't* content-negotiate, so this needs a tiny edge worker / redirect in front
+  of the domain. More magic, more moving parts — defer unless a custom domain
+  with an edge layer already exists.
+
+So the realistic hero string is `…/install.sh | sh`, not the bare domain — worth
+flagging because the bare-domain version reads great but won't run.
+
+### 4.2 Platform-aware hero (client-side, progressive enhancement)
+
+One shell can't serve both worlds — Windows needs `irm … | iex`, not `curl …
+| bash`. The hero detects the visitor's OS client-side (`navigator.userAgentData`
+/ `navigator.platform`) and shows the matching one-liner by default, with the
+others one click away:
+
+```
+  macOS / Linux   curl -sSL https://<host>/install.sh | sh
+  Windows         irm https://<host>/install.ps1 | iex
+```
+
+Detection is a *display* convenience only — both commands are always present (tabs
+/ a small switch), and with JS off the hero falls back to showing the macOS/Linux
+line plus a visible link to the Windows form. This mirrors the existing platform
+tabs and version-switcher patterns already in the codebase — no new dependency.
+
+### 4.3 Keeping CLI-purist trust at the front door
+
+A blind `| sh` from the *hero* of a site aimed at CLI purists is a tension worth
+designing for, not hand-waving:
+
+- Show the pipe-to-shell as the headline, but pair it with a **"read it first"**
+  secondary line in the same block:
+  `curl -sSL https://<host>/install.sh -o install.sh && less install.sh && sh install.sh`.
+- **Pin by default.** The hosted `install.sh` is served at a **tagged**,
+  immutable path (reusing the release-channel mechanism), so `| sh` fetches a
+  hermetic script, not a moving `main`.
+- The dispatcher does nothing privileged itself; all `sudo`/`doas` stays inside
+  the audited per-repo bootstraps (per §3.5).
+- Link the hero one-liner straight to the **§1 generator** ("want just Zsh +
+  Neovim, or a dry run first? build a custom command →") so the curious land on
+  the readable, flag-by-flag path.
+
+### 4.4 Relationship to the locked decisions & generator
+
+- The generator (§1) still **defaults to clone-then-run** — the readable path.
+- The hero one-liner is the **aspirational headline** and depends on the §3
+  dispatcher shipping + being hosted (Phase 3 below). Until then, the hero keeps
+  today's clone + `bootstrap.sh` cassette, optionally swapped for a *non-executing*
+  animated preview of the future one-liner so the page can promise it before the
+  infra lands.
+- Files touched when it ships: `src/components/Hero.astro` (the headline block),
+  `public/install.sh` + `public/install.ps1` (the served dispatcher, or a redirect
+  to the canonical copy in `dotfiles-core`), and a `host` constant in
+  `src/data/site.ts`.
+
+---
+
+## 5. Recommended rollout
 
 1. **Phase 1 (web-only, zero external risk):** Track A generator + the Diff/Update
    Feed. Both are pure `dotfiles-web` changes (new `bootstrap.ts`, generator page,
@@ -469,11 +556,15 @@ Two viable homes, both compatible with "per-repo bootstrap" (the dispatcher only
    bootstrap, audit green in `dotfiles-core`, fan out per `PORTING-MATRIX.md`;
    then flip on the `module`-kind options in `bootstrap.ts` (data-only on the web
    side). Delivers literal module selection (Track B).
-3. **Phase 3 (optional):** the universal dispatcher in `dotfiles-core` (or Pages
-   `public/`), surfaced as the generator's advanced one-liner.
+3. **Phase 3 (the one-liner dream, §4):** the universal dispatcher in
+   `dotfiles-core` served from Pages `public/install.sh` + `install.ps1`, surfaced
+   as both the generator's advanced one-liner **and the landing-page hero**
+   (`Hero.astro`). Pin it to a tag and ship the "read it first" companion line.
+   Until this lands, the hero keeps today's clone + `bootstrap.sh` cassette.
 
 Each phase is independently shippable and independently revertible; nothing in
-Phase 1 depends on Phases 2-3.
+Phase 1 depends on Phases 2-3. The headline hero one-liner (§4) is the most
+visible payoff but the most infra — hence last, behind the dispatcher it depends on.
 
 ---
 
