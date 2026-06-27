@@ -11,11 +11,13 @@
 //   Fedora/Arch/openSUSE: --links-only --no-flatpak  + --only/--skip (modules)
 //   Alpine:               --links-only               + --only/--skip (modules)
 //   Gentoo:               --links-only --no-sync      + --only/--skip (modules)
-//   Kali:                 --links-only --no-offensive  (no module selection yet)
+//   Kali:                 --links-only --no-offensive + --only/--skip (modules)
 //   macOS:                --links-only --no-brew --macos-defaults --set-shell --dry-run
+//                          + --only/--skip (modules)
 //   Windows (install.ps1): -SkipPackages -DryRun
-// The five Linux distros gained --only/--skip module selection via the shared
-// core/lib/bootstrap-lib.sh (Track B); `modules: true` opts a target into the UI.
+// Every repo that vendors core/lib/bootstrap-lib.sh now accepts --only/--skip module
+// selection (Track B); `modules: true` opts a target into the UI. Windows has no
+// vendored Core, so it carries no module groups.
 // Re-verify after any bootstrap change — scripts/verify-bootstrap-flags.mjs guards it.
 
 export type Dialect = 'sh' | 'ps';
@@ -84,6 +86,7 @@ export const targets: BootstrapTarget[] = [
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-MacBook',
+    modules: true,
     blurb: 'Apple Silicon or Intel. Homebrew does the heavy lifting; Core is vendored.',
     flags: [
       linksOnly,
@@ -153,6 +156,7 @@ export const targets: BootstrapTarget[] = [
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-Kali',
+    modules: true,
     blurb: 'Three layers: Core + apt OS layer + the offensive role layer. Built for Kali on WSL2.',
     flags: [
       linksOnly,
