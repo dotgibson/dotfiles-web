@@ -67,7 +67,13 @@ This site is **static** — there is no server runtime and therefore no per-requ
 cache to invalidate. The equivalent of "clear the cache" is to **rebuild and
 re-publish the Pages artifact**, which the deploy workflow already exposes as a
 [`repository_dispatch`](https://docs.github.com/actions/using-workflows/events-that-trigger-workflows#repository_dispatch)
-receiver. A source repo (`dotfiles-core`, an OS repo, …) pings it on push:
+receiver. A source repo (`dotfiles-core`, an OS repo, …) pings it on push.
+
+> **Activating it:** the dispatchers are inert until a `GITHUB_WEBHOOK_SECRET`
+> secret is added to each source repo. See [`docs/WEBHOOK-SETUP.md`](docs/WEBHOOK-SETUP.md)
+> for the one-time token + secret walkthrough.
+
+Under the hood, the dispatch is:
 
 ```bash
 curl -fsS -X POST \
