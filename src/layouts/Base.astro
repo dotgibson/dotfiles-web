@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site';
+import { site, coreRepoUrl } from '../data/site';
 import { withBase } from '../lib/url';
 
 interface Props {
@@ -14,6 +14,18 @@ const pageTitle = title ? `${title} · ${site.name}` : site.title;
 const pageDesc = description ?? site.description;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(withBase('/og.svg'), Astro.site).href;
+
+// Vim-style keyboard nav: the `g`-chord destinations, base-path-aware. Read by the
+// script below from a data attribute so the routes resolve correctly under /dotfiles-web.
+const kbdRoutes = {
+  h: withBase('/'),
+  s: withBase('/getting-started'),
+  n: withBase('/generator'),
+  a: withBase('/architecture'),
+  c: withBase('/config'),
+  x: withBase('/changelog'),
+  o: coreRepoUrl,
+};
 ---
 
 <!doctype html>
@@ -53,6 +65,115 @@ const ogImage = new URL(withBase('/og.svg'), Astro.site).href;
       <slot />
     </main>
     <Footer />
+
+    <!-- Discoverability for the keyboard nav — also works by click (mouse/touch). -->
+    <button type="button" class="kbd-hint" id="kbd-hint" aria-haspopup="dialog" aria-controls="kbd-overlay">
+      <kbd>?</kbd> shortcuts
+    </button>
+
+    <!-- Keyboard-shortcuts overlay (vim-flavoured). Hidden until `?` or the hint. -->
+    <div
+      class="kbd-overlay"
+      id="kbd-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Keyboard shortcuts"
+      data-routes={JSON.stringify(kbdRoutes)}
+      hidden
+    >
+      <div class="kbd-card" role="document">
+        <h2>Keyboard shortcuts</h2>
+        <table class="kbd-table">
+          <tbody>
+            <tr><td><kbd>?</kbd></td><td>toggle this help</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>g</kbd> / <kbd>G</kbd></td><td>jump to top / bottom</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>h</kbd></td><td>home</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>s</kbd></td><td>get started</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>n</kbd></td><td>generator</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>a</kbd></td><td>architecture</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>c</kbd></td><td>config explorer</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>x</kbd></td><td>changelog</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>o</kbd></td><td>open the Core repo on GitHub</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>close this help</td></tr>
+          </tbody>
+        </table>
+        <p class="kbd-foot">Shortcuts pause while you're typing in a field.</p>
+      </div>
+    </div>
+
+    <script>
+      // Vim-style keyboard navigation + a `?` help overlay. Progressive enhancement:
+      // the site is fully usable without it, and it stays out of the way while typing.
+      (() => {
+        const overlay = document.getElementById('kbd-overlay');
+        const hint = document.getElementById('kbd-hint');
+        if (!overlay) return;
+        let routes: Record<string, string> = {};
+        try {
+          routes = JSON.parse(overlay.getAttribute('data-routes') || '{}');
+        } catch {
+          /* malformed — nav chords just no-op */
+        }
+
+        const isTyping = (el: EventTarget | null) => {
+          const n = el as HTMLElement | null;
+          if (!n) return false;
+          const tag = (n.tagName || '').toLowerCase();
+          return tag === 'input' || tag === 'textarea' || tag === 'select' || n.isContentEditable;
+        };
+        const showHelp = (show?: boolean) => {
+          const willShow = show ?? overlay.hasAttribute('hidden');
+          overlay.toggleAttribute('hidden', !willShow);
+        };
+
+        let pendingG = false;
+        let gTimer: ReturnType<typeof setTimeout> | undefined;
+        const clearG = () => {
+          pendingG = false;
+          if (gTimer) clearTimeout(gTimer);
+        };
+
+        document.addEventListener('keydown', (e) => {
+          if (e.metaKey || e.ctrlKey || e.altKey) return; // leave browser/OS chords alone
+          if (isTyping(e.target)) return;
+
+          if (e.key === 'Escape') {
+            showHelp(false);
+            clearG();
+            return;
+          }
+          if (e.key === '?') {
+            e.preventDefault();
+            showHelp();
+            return;
+          }
+          if (e.key === 'G') {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            return;
+          }
+
+          if (pendingG) {
+            clearG();
+            if (e.key === 'g') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return;
+            }
+            const url = routes[e.key];
+            if (url) window.location.href = url;
+            return;
+          }
+          if (e.key === 'g') {
+            pendingG = true;
+            gTimer = setTimeout(() => (pendingG = false), 1200); // chord times out
+          }
+        });
+
+        hint?.addEventListener('click', () => showHelp(true));
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) showHelp(false); // click the backdrop to close
+        });
+      })();
+    </script>
 
     <script>
       // Global copy-to-clipboard for every [data-copy] button.

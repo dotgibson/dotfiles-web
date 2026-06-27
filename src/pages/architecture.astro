@@ -24,13 +24,30 @@ const loadOrder = [
 
 const comparisons = [
   {
-    title: 'vs submodule',
-    body: 'Submodules store a pointer, so a fresh clone is empty until you run submodule update --init. Subtree vendors the actual files — every repo is self-contained and clone-and-go. Better for public portfolio repos.',
+    title: 'vs git submodule',
+    body: 'A submodule stores a pointer, so a fresh clone is empty until git submodule update --init — the classic "I cloned it and nothing works" footgun. Subtree vendors the actual files, so every machine repo is self-contained and clone-and-go. The cost subtree pays back: a vendored copy in each repo (kept honest by the sync script + a manifest audit).',
   },
   {
-    title: 'vs chezmoi',
-    body: 'chezmoi (one repo + per-OS templates) is the most DRY answer and the right move if you ever collapse nine repos into one. This system keeps the nine-repo portfolio; switching later is a content migration, not a rewrite, because Core is already plain and OS-agnostic.',
+    title: 'vs chezmoi / yadm',
+    body: 'One repo + per-OS templates is the most DRY answer, and the right move the day you want to collapse nine repos into one. This system keeps the nine-repo portfolio instead — each machine is a clean, public, self-contained artifact. Because Core is already plain and OS-agnostic, moving to chezmoi later is a content migration, not a rewrite.',
   },
+  {
+    title: 'vs GNU stow',
+    body: 'stow is a perfect, zero-magic symlink farmer over a single repo — and genuinely simpler if you have one machine. What it has no opinion about is layering or per-OS divergence, so a multi-OS setup drifts into host branches and .stow-local-ignore gymnastics. This system bakes the Core / OS / Role split in and ships its own idempotent symlinker (with backups + a dry-run).',
+  },
+  {
+    title: 'vs a bare $HOME git repo',
+    body: 'The git --bare + alias trick is the leanest possible — no symlinks, files live in $HOME. Hard to beat solo. But it has no layer model, no per-OS story, noisy status against your whole home dir, and it is a real footgun on a shared or multi-user box. This trades that leanness for an explicit, auditable structure.',
+  },
+];
+
+// Intellectual honesty: when this design is the WRONG one. A system that can't name
+// its own constraints isn't trustworthy — so say plainly who should reach for something
+// lighter.
+const notForYou = [
+  'You have one or two machines with no real OS spread — this is over-engineered for that; a bare $HOME repo or stow is far less ceremony.',
+  'You want ONE repo, not nine — reach for chezmoi or yadm. (The migration is content, not a rewrite, because Core is already plain.)',
+  'You can’t stomach any vendored duplication — the nine-repo + vendored-Core model deliberately trades a little duplication for clone-and-go self-containment and a public per-machine portfolio.',
 ];
 
 // The macOS desktop layer — committed GUI tooling the OS-native layer owns, themed to match
@@ -174,8 +191,14 @@ git subtree pull --prefix=core https://github.com/Gerrrt/dotfiles-core main --sq
         receives so a sync is traceable.
       </p>
 
-      <!-- why subtree -->
-      <h2 class="mt">Why subtree (not submodule, not chezmoi)</h2>
+      <!-- how it compares -->
+      <h2 class="mt">How it compares — and when it's the wrong tool</h2>
+      <p>
+        Every dotfiles approach is a trade. This one optimizes for <strong>clone-and-go
+        self-containment</strong> across many machines and a <strong>public, per-machine
+        portfolio</strong> — paying a little vendored duplication for it. Here's how that
+        lands against the usual alternatives, each of which wins in its own case.
+      </p>
       <div class="grid grid-2">
         {
           comparisons.map((c) => (
@@ -185,6 +208,14 @@ git subtree pull --prefix=core https://github.com/Gerrrt/dotfiles-core main --sq
             </article>
           ))
         }
+      </div>
+
+      <div class="notforyou">
+        <h3>When to reach for something else</h3>
+        <p>A system that can't name its own constraints isn't worth trusting. Don't use this if:</p>
+        <ul>
+          {notForYou.map((n) => <li>{n}</li>)}
+        </ul>
       </div>
 
       <!-- load order -->
@@ -322,6 +353,32 @@ git subtree pull --prefix=core https://github.com/Gerrrt/dotfiles-core main --sq
     color: #fff !important;
     font-weight: 600;
     margin-top: 0.75rem !important;
+  }
+  .notforyou {
+    margin: 1.5rem 0 0;
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--tn-orange);
+    background: linear-gradient(180deg, var(--tn-surface), var(--tn-bg-dark));
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .notforyou h3 {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--tn-orange);
+  }
+  .notforyou p {
+    margin: 0 0 0.75rem;
+    color: var(--text-dim);
+  }
+  .notforyou ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+  .notforyou li {
+    margin: 0.4rem 0;
+    color: var(--text-dim);
+    line-height: 1.55;
   }
 
   .layer-table {
