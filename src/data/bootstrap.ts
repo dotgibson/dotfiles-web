@@ -8,14 +8,15 @@
 // (its bootstrap validates against a KNOWN_FLAGS allowlist) and are wrong
 // everywhere else, so a target only ever lists flags it genuinely supports.
 // Verified against each repo's bootstrap.sh / install.ps1 case-arms:
-//   Fedora/Arch/openSUSE: --links-only --no-flatpak
-//   Alpine:               --links-only
-//   Gentoo:               --links-only --no-sync
-//   Kali:                 --links-only --no-offensive
+//   Fedora/Arch/openSUSE: --links-only --no-flatpak  + --only/--skip (modules)
+//   Alpine:               --links-only               + --only/--skip (modules)
+//   Gentoo:               --links-only --no-sync      + --only/--skip (modules)
+//   Kali:                 --links-only --no-offensive  (no module selection yet)
 //   macOS:                --links-only --no-brew --macos-defaults --set-shell --dry-run
 //   Windows (install.ps1): -SkipPackages -DryRun
-// Re-verify after any bootstrap change (the planned scripts/verify-bootstrap-flags.mjs
-// guard automates this).
+// The five Linux distros gained --only/--skip module selection via the shared
+// core/lib/bootstrap-lib.sh (Track B); `modules: true` opts a target into the UI.
+// Re-verify after any bootstrap change — scripts/verify-bootstrap-flags.mjs guards it.
 
 export type Dialect = 'sh' | 'ps';
 
@@ -37,8 +38,27 @@ export interface BootstrapTarget {
   cloneDir?: string; // sh only; defaults to ~/<repo> when unset
   blurb: string; // one line shown above the options
   flags: BootstrapFlag[]; // only the flags THIS target really accepts
+  modules?: boolean; // does this bootstrap accept --only/--skip module selection?
   notes?: string[]; // post-install reminders rendered below the command
 }
+
+// The Core wiring groups a `modules: true` target can narrow with --only/--skip
+// (the shared core/lib/bootstrap-lib.sh scaffold — see dotfiles-core). All six are
+// linked by default; the generator emits --only/--skip ONLY when a subset is chosen.
+// The keys MUST match BLIB_MODULES in bootstrap-lib.sh exactly.
+export interface ModuleGroup {
+  key: string; // the literal group token emitted in --only/--skip (e.g. 'zsh')
+  label: string; // plain-language name
+  help: string; // one-line "what it links"
+}
+export const moduleGroups: ModuleGroup[] = [
+  { key: 'zsh', label: 'Zsh', help: 'shell module chain, the OS zsh overlay, the managed ~/.zshrc loader + default shell' },
+  { key: 'nvim', label: 'Neovim', help: 'the Neovim config tree (and the stock-vim fallback)' },
+  { key: 'tmux', label: 'tmux', help: 'tmux config + reset, popup scripts, the OS overlay, and tpm' },
+  { key: 'git', label: 'Git', help: 'Core gitconfig, the OS git overlay, and the seeded local identity' },
+  { key: 'prompt', label: 'Starship prompt', help: 'the starship.toml theme' },
+  { key: 'tools', label: 'CLI tools', help: 'lazygit, mise, the clip helpers, ssh config, and the seeded sesh config' },
+];
 
 // ── reusable flag definitions (shared across the Linux distro targets) ───────
 const linksOnly: BootstrapFlag = {
@@ -156,6 +176,7 @@ export const targets: BootstrapTarget[] = [
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-Fedora',
+    modules: true,
     blurb: 'The Linux template every other distro repo is stamped from. dnf + RPM Fusion.',
     flags: [linksOnly, noFlatpak],
     notes: ['Land in the new shell with `exec zsh`.'],
@@ -167,6 +188,7 @@ export const targets: BootstrapTarget[] = [
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-Arch',
+    modules: true,
     blurb: 'Rolling-release Arch. pacman + AUR. A minimal box needs the stage-0 prep in SETUP.md first.',
     flags: [linksOnly, noFlatpak],
     notes: ['Bare-metal / minimal install? Do the stage-0 prep in SETUP.md (git, sudo, a UTF-8 locale) first.'],
@@ -178,6 +200,7 @@ export const targets: BootstrapTarget[] = [
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-openSUSE',
+    modules: true,
     blurb: 'zypper with the best dependency solver of the bunch. Tumbleweed (dup) + Leap (up) aware.',
     flags: [linksOnly, noFlatpak],
     notes: ['Land in the new shell with `exec zsh`.'],
@@ -189,6 +212,7 @@ export const targets: BootstrapTarget[] = [
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-Alpine',
+    modules: true,
     blurb: 'The lean outlier: musl libc, busybox, doas. Run as root or with doas; enable the community repo.',
     flags: [linksOnly],
     notes: ['Run as root or with doas, and make sure the community apk repo is enabled.'],
@@ -200,6 +224,7 @@ export const targets: BootstrapTarget[] = [
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-Gentoo',
+    modules: true,
     blurb: 'Source-based capstone. emerge compiles packages, so expect real build time.',
     flags: [
       linksOnly,
