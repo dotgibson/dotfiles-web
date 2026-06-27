@@ -38,9 +38,11 @@ const defaultCommand = `curl -fsSL ${bashUrl} | bash -s -- --modules ${defaultMo
     <div>
       <h3>Build your one-line install</h3>
       <p class="muted">
-        Tick the components you want and copy the command. The selection becomes shell
-        arguments your machine runs locally — nothing from the URL is piped into your
-        shell. Prefer the explicit route? The per-platform steps below do the same thing.
+        Tick the components you want and copy the command. Yes — this streams the script
+        from the URL straight into your shell, so read it first (pipe it to <code>less</code>).
+        What’s safe here: your selection is just local shell arguments, and nothing is
+        reflected or executed server-side. Prefer not to pipe? Clone the repo and run its
+        bootstrap instead — same result, fully transparent.
       </p>
     </div>
   </div>

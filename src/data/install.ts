@@ -20,8 +20,8 @@ export interface Platform {
 // The static installer endpoints (src/pages/install.ts and install.ps1.ts).
 // These are prerendered plain-text scripts. Because the site is static, module
 // selection is passed as SHELL ARGUMENTS the operator runs locally — NOT a
-// server-side query string. The "Build your install command" widget on the home
-// page assembles the one-liner from these definitions.
+// server-side query string. The InstallCommandBuilder component (used on the home
+// page and the Get Started page) assembles the one-liner from these definitions.
 // ---------------------------------------------------------------------------
 export const installer = {
   bashPath: '/install',

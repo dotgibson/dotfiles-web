@@ -3,30 +3,11 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Metrics from '../components/Metrics.astro';
 import RepoCard from '../components/RepoCard.astro';
-import CommandBlock from '../components/CommandBlock.astro';
 import InstallBuilder from '../components/InstallBuilder.astro';
+import InstallCommandBuilder from '../components/InstallCommandBuilder.astro';
 import { repos, layerMeta } from '../data/repos';
-import { installer, installerOptions } from '../data/install';
 import { getRepoLiveMap } from '../lib/github';
 import { withBase } from '../lib/url';
-
-// Absolute URLs to the static install endpoints, for copy/pastable one-liners.
-const bashUrl = new URL(withBase(installer.bashPath), Astro.site).href;
-const ps1Url = new URL(withBase(installer.ps1Path), Astro.site).href;
-
-// The default command, rendered server-side so it's correct with JS disabled; the
-// client script below keeps it in sync as checkboxes change.
-const defaultModules = installerOptions
-  .filter((o) => o.kind === 'module' && o.default)
-  .map((o) => o.id)
-  .join(',');
-const defaultFlags = installerOptions
-  .filter((o) => o.kind === 'flag' && o.default && o.flag)
-  .map((o) => o.flag)
-  .join(' ');
-const defaultCommand = `curl -fsSL ${bashUrl} | bash -s -- --modules ${defaultModules}${
-  defaultFlags ? ` ${defaultFlags}` : ''
-}`;
 
 // Live GitHub data for the cards, fetched once at build time. Best-effort: if the
 // API is unreachable or rate-limited, this resolves to all-null and the cards just
@@ -191,51 +172,17 @@ const orderedRepos = [...repos];
   <section class="section" id="one-liner">
     <div class="container">
       <div class="section-head center">
-        <span class="eyebrow">One-line installer</span>
-        <h2>Build your install command</h2>
+        <span class="eyebrow">Prefer a one-liner?</span>
+        <h2>Or install with a single command</h2>
         <p class="lead">
-          Prefer <code>curl … | bash</code>? Tick the components you want and copy the
-          one-liner. It auto-detects your OS, clones the matching repo, and runs its
-          bootstrap. Selection rides in as <strong>shell arguments</strong> — the script
-          is static, so there’s no server doing the work, and you can read it first.
+          Cloning and running the bootstrap (above) is the recommended path — you can read
+          everything first. If you’d rather pipe a script, the same install is a static,
+          OS-detecting one-liner; your selection rides in as <strong>shell arguments</strong>,
+          so nothing from the URL is executed server-side.
         </p>
       </div>
 
-      <div class="builder" id="install-builder" data-bash-url={bashUrl}>
-        <fieldset class="builder__opts">
-          <legend>Components</legend>
-          {
-            installerOptions.map((o) => (
-              <label class:list={['builder__opt', { 'is-locked': o.locked }]}>
-                <input
-                  type="checkbox"
-                  data-id={o.id}
-                  data-kind={o.kind}
-                  data-flag={o.flag ?? ''}
-                  checked={o.default || o.locked}
-                  disabled={o.locked}
-                />
-                <span class="builder__opt-main">
-                  <span class="builder__opt-label">
-                    {o.label}
-                    {o.locked && <span class="builder__opt-tag">always on</span>}
-                  </span>
-                  <span class="builder__opt-note">{o.note}</span>
-                </span>
-              </label>
-            ))
-          }
-        </fieldset>
-
-        <div class="builder__out">
-          <CommandBlock code={defaultCommand} />
-          <p class="muted builder__hint">
-            Windows uses the PowerShell mirror:
-            <code>irm {ps1Url} | iex</code>. Always review a piped script before running it
-            — open either URL in your browser, or pipe it to <code>less</code> first.
-          </p>
-        </div>
-      </div>
+      <InstallCommandBuilder />
     </div>
   </section>
 </Base>
@@ -335,133 +282,4 @@ const orderedRepos = [...repos];
     }
   }
 
-  .builder {
-    display: grid;
-    gap: 2rem;
-    max-width: 980px;
-    margin-inline: auto;
-    align-items: start;
-  }
-  @media (min-width: 860px) {
-    .builder {
-      grid-template-columns: 0.9fr 1.1fr;
-    }
-  }
-  .builder__opts {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--tn-bg-dark);
-    padding: 1.25rem 1.4rem;
-    margin: 0;
-  }
-  .builder__opts legend {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    padding: 0 0.4rem;
-  }
-  .builder__opt {
-    display: flex;
-    gap: 0.8rem;
-    padding: 0.7rem 0;
-    cursor: pointer;
-    border-top: 1px solid var(--border);
-  }
-  .builder__opt:first-of-type {
-    border-top: 0;
-  }
-  .builder__opt.is-locked {
-    cursor: default;
-    opacity: 0.85;
-  }
-  .builder__opt input {
-    margin-top: 0.2rem;
-    width: 1.05rem;
-    height: 1.05rem;
-    accent-color: var(--tn-purple);
-    flex: none;
-  }
-  .builder__opt-main {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-  .builder__opt-label {
-    font-weight: 600;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .builder__opt-tag {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--tn-cyan);
-    border: 1px solid var(--tn-border-bright);
-    border-radius: 999px;
-    padding: 0.05rem 0.45rem;
-  }
-  .builder__opt-note {
-    font-size: 0.84rem;
-    color: var(--text-dim);
-  }
-  .builder__hint {
-    font-size: 0.82rem;
-    margin: 0.9rem 0 0;
-  }
-  .builder__hint code {
-    word-break: break-all;
-  }
 </style>
-
-<script>
-  // Keep the one-line install command in sync with the component checkboxes.
-  // Pure string assembly on the client — there is no live API; the selection
-  // becomes SHELL ARGUMENTS the operator runs locally. Mirrors the getting-started
-  // version switcher: update the visible per-line span AND the copy button's
-  // data-code (Base.astro's copy handler reads that attribute).
-  const builder = document.getElementById('install-builder');
-  if (builder) {
-    const bashUrl = builder.dataset.bashUrl ?? '/install';
-    const boxes = Array.from(builder.querySelectorAll<HTMLInputElement>('input[type=checkbox]'));
-    const block = builder.querySelector<HTMLElement>('.codeblock');
-    const textSpan = block?.querySelector<HTMLElement>('.cb-text') ?? null;
-    const copyBtn = block?.querySelector<HTMLButtonElement>('[data-copy]') ?? null;
-
-    // Defense-in-depth, in the same spirit as src/data/site.ts's REF_PATTERN but
-    // deliberately STRICTER: module ids are simple tokens, so this set omits the
-    // slash that REF_PATTERN allows for git refs. Only validated tokens reach the
-    // generated command line, so a future option id can't smuggle in metacharacters.
-    const TOKEN_OK = /^[A-Za-z0-9._-]+$/;
-
-    const build = (): string => {
-      const modules: string[] = [];
-      const flags: string[] = [];
-      for (const b of boxes) {
-        if (!b.checked) continue;
-        const id = b.dataset.id ?? '';
-        if (b.dataset.kind === 'module' && TOKEN_OK.test(id)) {
-          modules.push(id);
-        } else if (b.dataset.kind === 'flag' && b.dataset.flag) {
-          flags.push(b.dataset.flag);
-        }
-      }
-      if (modules.length === 0) modules.push('core'); // core is locked-on; belt and braces
-      const tail = flags.length ? ` ${flags.join(' ')}` : '';
-      return `curl -fsSL ${bashUrl} | bash -s -- --modules ${modules.join(',')}${tail}`;
-    };
-
-    const render = () => {
-      const cmd = build();
-      if (textSpan) textSpan.textContent = cmd;
-      if (copyBtn) copyBtn.setAttribute('data-code', cmd);
-    };
-
-    boxes.forEach((b) => b.addEventListener('change', render));
-    render();
-  }
-</script>
