@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import CommandBlock from '../components/CommandBlock.astro';
-import InstallCommandBuilder from '../components/InstallCommandBuilder.astro';
 import { platforms } from '../data/install';
 import { site, release } from '../data/site';
 
@@ -73,9 +72,6 @@ const showSelect = channels.length > 1 || release.current !== 'main';
           )
         }
       </div>
-
-      <!-- one-line install builder (curl-pipe launcher) -->
-      <InstallCommandBuilder />
 
       <!-- platform tabs -->
       <div class="tabs" id="install-tabs" data-default-ref={release.current}>

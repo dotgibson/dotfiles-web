@@ -4,7 +4,6 @@ import Hero from '../components/Hero.astro';
 import Metrics from '../components/Metrics.astro';
 import RepoCard from '../components/RepoCard.astro';
 import InstallBuilder from '../components/InstallBuilder.astro';
-import InstallCommandBuilder from '../components/InstallCommandBuilder.astro';
 import { repos, layerMeta } from '../data/repos';
 import { getRepoLiveMap } from '../lib/github';
 import { withBase } from '../lib/url';
@@ -165,24 +164,6 @@ const orderedRepos = [...repos];
       <div class="install-cta__code">
         <InstallBuilder />
       </div>
-    </div>
-  </section>
-
-  <!-- ===================================================== one-line installer -->
-  <section class="section" id="one-liner">
-    <div class="container">
-      <div class="section-head center">
-        <span class="eyebrow">Prefer a one-liner?</span>
-        <h2>Or install with a single command</h2>
-        <p class="lead">
-          Cloning and running the bootstrap (above) is the recommended path — you can read
-          everything first. If you’d rather pipe a script, the same install is a static,
-          OS-detecting one-liner; your selection rides in as <strong>shell arguments</strong>,
-          so nothing from the URL is executed server-side.
-        </p>
-      </div>
-
-      <InstallCommandBuilder />
     </div>
   </section>
 </Base>
