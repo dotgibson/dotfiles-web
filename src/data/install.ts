@@ -16,6 +16,58 @@ export interface Platform {
   steps: InstallStep[];
 }
 
+// ---------------------------------------------------------------------------
+// The static installer endpoints (src/pages/install.ts and install.ps1.ts).
+// These are prerendered plain-text scripts. Because the site is static, module
+// selection is passed as SHELL ARGUMENTS the operator runs locally — NOT a
+// server-side query string. The "Build your install command" widget on the home
+// page assembles the one-liner from these definitions.
+// ---------------------------------------------------------------------------
+export const installer = {
+  bashPath: '/install',
+  ps1Path: '/install.ps1',
+} as const;
+
+// An installer option is either a `module` (folded into the comma-separated
+// `--modules` value) or a `flag` (a standalone CLI switch). `locked` options are
+// always-on Core components: shown checked and disabled so the UI stays honest
+// about what is and isn't optional.
+export interface InstallerOption {
+  id: string;
+  label: string;
+  note: string;
+  kind: 'module' | 'flag';
+  flag?: string; // for kind:'flag' — the literal switch to emit (e.g. '--dry-run')
+  default: boolean;
+  locked?: boolean;
+}
+
+export const installerOptions: InstallerOption[] = [
+  {
+    id: 'core',
+    label: 'Core',
+    note: 'zsh · nvim · tmux · git · starship — the vendored Core layer. Always installed.',
+    kind: 'module',
+    default: true,
+    locked: true,
+  },
+  {
+    id: 'offensive',
+    label: 'Offensive role layer',
+    note: 'Kali engagement tooling (the offensive package set). Selecting it targets dotfiles-Kali.',
+    kind: 'module',
+    default: false,
+  },
+  {
+    id: 'dry-run',
+    label: 'Dry run',
+    note: 'Preview every symlink it would create and change nothing (--links-only --dry-run).',
+    kind: 'flag',
+    flag: '--dry-run',
+    default: false,
+  },
+];
+
 export const platforms: Platform[] = [
   {
     id: 'macos',
