@@ -43,38 +43,20 @@ if ($DryRun)       { Write-Host "   mode    : dry run (no changes will be made)"
 if ($SkipPackages) { Write-Host "   mode    : links only (skipping packages)" }
 Write-Host ""
 
-# --- Dependency pre-flight ---
-# Audit the core toolchain via Get-Command and optionally auto-install missing
-# pieces with WinGet before we clone. The dotfiles-Windows installer manages its
-# own package layer too; this just smooths a bare machine (incl. git). The
-# hashtable maps each probed command to its official WinGet id, so there is no
-# binary/package mismatch and nothing is "installed" with no real target.
-$RequiredTools = [ordered]@{ git = 'Git.Git'; nvim = 'Neovim.Neovim'; fzf = 'junegunn.fzf' }
-$MissingTools = @($RequiredTools.Keys | Where-Object { -not (Get-Command $_ -ErrorAction SilentlyContinue) })
-
-if ($MissingTools.Count -gt 0) {
-  Write-Host "🔍 Missing dependencies: $($MissingTools -join ', ')" -ForegroundColor Yellow
-  if ($DryRun) {
-    Write-Host "   (dry run — skipping dependency install)"
-  } elseif (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    Write-Warning "WinGet unavailable — install the above manually, or proceed and let the repo installer handle packages."
-  } else {
-    $depReply = Read-Host "   Attempt automated install via WinGet? (y/N)"
-    if ($depReply -match '^[yY]') {
-      foreach ($tool in $MissingTools) {
-        $wingetId = $RequiredTools[$tool]
-        Write-Host "📦 Installing $tool via WinGet…" -ForegroundColor Green
-        # Pin with --id -e and pre-accept agreements so a non-interactive run never blocks.
-        winget install --id $wingetId -e --accept-package-agreements --accept-source-agreements --silent
-      }
-    } else {
-      Write-Host "⏭️  Skipping — the repo installer will still install its own package set."
-    }
-  }
+# --- Dependency audit (report-only) ---
+# Probe the core toolchain via Get-Command and REPORT what's missing. We do not
+# install anything here: the dotfiles-Windows installer owns the package layer,
+# so this stays a non-interactive heads-up that never touches the system.
+# git is excluded here on purpose — it is a hard requirement checked separately
+# below, so listing it as something "the installer handles" would mislead.
+$missingTools = @('nvim', 'fzf') | Where-Object { -not (Get-Command $_ -ErrorAction SilentlyContinue) }
+if ($missingTools) {
+  Write-Host "🔍 Optional tools not yet on PATH: $($missingTools -join ', ')" -ForegroundColor Yellow
+  Write-Host "   The Windows installer handles these; or install them yourself first."
   Write-Host ""
 }
 
-# git is mandatory even if the user skipped the dependency install above.
+# git is mandatory to clone the repo, so it stays a hard requirement.
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
   Write-Error "install: git is required but was not found on PATH"; exit 1
 }
