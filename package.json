@@ -10,6 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "metrics": "node scripts/collect-metrics.mjs",
+    "snippets": "node scripts/collect-snippets.mjs",
+    "data": "npm run metrics && npm run snippets",
     "verify:flags": "node scripts/verify-bootstrap-flags.mjs",
     "astro": "astro"
   },

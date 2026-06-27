@@ -54,32 +54,37 @@ jobs:
                    dotfiles-openSUSE dotfiles-Windows; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r"
           done
-      - name: Regenerate the derived metrics
+      - name: Regenerate the derived data (metrics + config snippets)
         working-directory: dotfiles-web
-        run: node scripts/collect-metrics.mjs
+        run: |
+          node scripts/collect-metrics.mjs
+          node scripts/collect-snippets.mjs
       - name: Open a PR if the derived data drifted
         working-directory: dotfiles-web
         run: |
           set -euo pipefail
-          # generatedAt is a day-granular stamp that changes on every run; judge drift on
-          # the real content only, and discard a stamp-only change so we don't PR noise.
+          # generatedAt is a day-granular stamp that changes on every run; judge metrics
+          # drift on the real content only, and discard a stamp-only change so we don't PR
+          # noise. snippets.json carries no timestamp, so a plain git diff is its drift test.
           old="$(git show HEAD:src/data/generated.json | jq 'del(.generatedAt)')"
           new="$(jq 'del(.generatedAt)' src/data/generated.json)"
-          if [ "$old" = "$new" ]; then
-            git checkout -- src/data/generated.json
-            echo "✅ site metrics already in step with the fleet" >> "$GITHUB_STEP_SUMMARY"
+          snips_changed=no
+          git diff --quiet -- src/data/snippets.json || snips_changed=yes
+          if [ "$old" = "$new" ] && [ "$snips_changed" = no ]; then
+            git checkout -- src/data/generated.json src/data/snippets.json
+            echo "✅ site data already in step with the fleet" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git switch -C "$BRANCH"
-          git add src/data/generated.json
-          git commit -m "chore(data): refresh fleet metrics + changelog (fleet-sync bot)"
+          git add src/data/generated.json src/data/snippets.json
+          git commit -m "chore(data): refresh fleet metrics + changelog + config snippets (fleet-sync bot)"
           git push -f -u origin "$BRANCH"
           # Idempotent: update the existing PR if one is already open for this branch.
           if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
             gh pr create --head "$BRANCH" --base "$DEFAULT_BRANCH" \
-              --title "chore(data): refresh fleet metrics + changelog" \
-              --body "Automated by the fleet-sync bot. \`src/data/generated.json\` (the changelog page + by-the-numbers strip) was behind the fleet; this regenerates it via \`collect-metrics.mjs\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
+              --title "chore(data): refresh fleet metrics + changelog + config snippets" \
+              --body "Automated by the fleet-sync bot. The derived site data (\`src/data/generated.json\` — changelog + by-the-numbers; \`src/data/snippets.json\` — the Config explorer's baked source files) was behind the fleet; this regenerates it via \`collect-metrics.mjs\` + \`collect-snippets.mjs\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
           fi
           echo "📊 opened/updated PR on \`$BRANCH\`" >> "$GITHUB_STEP_SUMMARY"

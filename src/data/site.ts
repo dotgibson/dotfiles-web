@@ -76,6 +76,7 @@ export const nav = [
   { label: "Get Started", href: "/getting-started" },
   { label: "Generator", href: "/generator" },
   { label: "Architecture", href: "/architecture" },
+  { label: "Config", href: "/config" },
   { label: "Repos", href: "/#repos" },
   { label: "Changelog", href: "/changelog" },
 ] as const;

@@ -1,0 +1,297 @@
+---
+import { Code } from 'astro:components';
+import Base from '../layouts/Base.astro';
+import data from '../data/snippets.json';
+
+type Snippet = {
+  id: string;
+  layer: 'core' | 'os' | 'role';
+  repo: string;
+  path: string;
+  lang: string;
+  title: string;
+  blurb: string;
+  url: string;
+  content: string;
+  total: number;
+  shown: number;
+  truncated: boolean;
+};
+
+const snippets = data.snippets as Snippet[];
+
+// The three layers, in model order. Each tab shows the real files baked from the
+// sibling repos by scripts/collect-snippets.mjs — no prose stand-ins.
+const layers = [
+  { id: 'core', label: 'Core', tagline: 'Authored once, vendored into every repo.' },
+  { id: 'os', label: 'OS-native', tagline: 'The same idea, one package manager apart.' },
+  { id: 'role', label: 'Role', tagline: 'The offensive layer, on top of the OS layer.' },
+] as const;
+
+const byLayer = (id: string) => snippets.filter((s) => s.layer === id);
+// Single theme, not dual: this site is dark-only (no prefers-color-scheme light path),
+// so Shiki's light/dark switching would render light tokens on a dark page for visitors
+// whose OS is set to light. Pin the Tokyo Night theme to match the rest of the site.
+const codeTheme = 'tokyo-night';
+---
+
+<Base
+  title="Config — see the actual dotfiles"
+  description="The real config, not prose: Core, OS-native, and Role layer files pulled straight from the source repos and rendered inline."
+>
+  <section class="explorer">
+    <header class="explorer__head">
+      <p class="eyebrow">Config explorer</p>
+      <h1>The actual config — not a description of it</h1>
+      <p class="lede">
+        Every file below is pulled straight from its source repo at build time and
+        rendered as-is. Pick a layer; read the real thing. Truncated files link to the
+        full source on GitHub.
+      </p>
+    </header>
+
+    <div class="tabs" id="config-tabs">
+      <div class="tabs__row" role="tablist" aria-label="Config layers">
+        {
+          layers.map((l, i) => (
+            <button
+              class:list={['tab', { active: i === 0 }]}
+              role="tab"
+              data-tab={l.id}
+              aria-selected={i === 0 ? 'true' : 'false'}
+            >
+              {l.label}
+              <span class="tab__count">{byLayer(l.id).length}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        layers.map((l, i) => (
+          <section
+            class:list={['panel', { active: i === 0 }]}
+            role="tabpanel"
+            data-panel={l.id}
+            hidden={i !== 0}
+          >
+            <p class="panel__tagline">{l.tagline}</p>
+            <div class="snips">
+              {byLayer(l.id).map((s) => (
+                <article class="snip">
+                  <div class="snip__bar">
+                    <div class="snip__id">
+                      <span class="snip__repo">{s.repo}</span>
+                      <span class="snip__path">{s.path}</span>
+                    </div>
+                    <a class="snip__src" href={s.url} target="_blank" rel="noopener">
+                      view on GitHub ↗
+                    </a>
+                  </div>
+                  <p class="snip__blurb">{s.blurb}</p>
+                  <div class="snip__code">
+                    <Code code={s.content} lang={s.lang as any} theme={codeTheme} />
+                  </div>
+                  {s.truncated && (
+                    <p class="snip__more">
+                      Showing the first {s.shown} of {s.total} lines —{' '}
+                      <a href={s.url} target="_blank" rel="noopener">
+                        read the full file ↗
+                      </a>
+                    </p>
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .explorer {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 4rem) var(--gap) 4rem;
+  }
+  .explorer__head {
+    max-width: 720px;
+    margin-bottom: 2rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.5rem;
+  }
+  .explorer__head h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    margin: 0 0 0.75rem;
+  }
+  .lede {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* tabs */
+  .tabs__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+  .tab {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font: 600 0.95rem/1 var(--font-mono);
+    padding: 0.7rem 0.9rem;
+    cursor: pointer;
+    margin-bottom: -1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab:hover {
+    color: var(--text);
+  }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab__count {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.05rem 0.45rem;
+  }
+  .tab.active .tab__count {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .panel[hidden] {
+    display: none;
+  }
+  .panel__tagline {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    margin: 0 0 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  /* snippet cards */
+  .snips {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .snip {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    overflow: hidden;
+  }
+  .snip__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--tn-bg-storm);
+  }
+  .snip__id {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .snip__repo {
+    color: var(--accent-2);
+    flex: none;
+  }
+  .snip__path {
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .snip__src {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .snip__src:hover {
+    color: var(--accent);
+  }
+  .snip__blurb {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    border-bottom: 1px solid var(--border);
+  }
+  /* Astro's <Code> emits a .astro-code <pre>; give it room + a scroll cap so a long
+     file doesn't dominate the page. */
+  .snip__code :global(pre.astro-code) {
+    margin: 0;
+    padding: 1rem;
+    max-height: 460px;
+    overflow: auto;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    border-radius: 0;
+  }
+  .snip__more {
+    margin: 0;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .snip__more a,
+  .lede a {
+    color: var(--accent);
+  }
+</style>
+
+<script>
+  // Layer tab switching — same vanilla pattern as the Get Started platform tabs.
+  const root = document.getElementById('config-tabs');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.tab;
+        tabs.forEach((t) => {
+          const on = t === tab;
+          t.classList.toggle('active', on);
+          t.setAttribute('aria-selected', String(on));
+        });
+        panels.forEach((p) => {
+          const on = p.dataset.panel === id;
+          p.classList.toggle('active', on);
+          p.hidden = !on;
+        });
+      });
+    });
+  }
+</script>

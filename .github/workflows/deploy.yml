@@ -98,9 +98,9 @@ jobs:
           done
           echo "root=$root" >> "$GITHUB_OUTPUT"
 
-      - name: Regenerate metrics from the pinned fleet
+      - name: Regenerate metrics + config snippets from the pinned fleet
         if: ${{ steps.fleet.outputs.root != '' }}
-        run: npm run metrics
+        run: npm run data # metrics + snippets, both defensive (no-op if a repo is absent)
         env:
           DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
 
