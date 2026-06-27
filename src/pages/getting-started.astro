@@ -30,6 +30,12 @@ const showSelect = channels.length > 1 || release.current !== 'main';
           <strong>bootstrap</strong>. Core is vendored, so a clone is self-contained — no
           submodule flags. Pick your platform below.
         </p>
+        <p class="trybrowser">
+          <span aria-hidden="true">⚡</span> Not ready to install?
+          <a href="https://codespaces.new/Gerrrt/dotfiles-Kali" target="_blank" rel="noopener">
+            Launch the Kali environment in your browser →</a>
+          — a Codespace boots straight into the offensive shell, nothing to clone.
+        </p>
       </div>
 
       <!-- prerequisites -->
@@ -153,6 +159,20 @@ const showSelect = channels.length > 1 || release.current !== 'main';
 </Base>
 
 <style>
+  .trybrowser {
+    margin: 0 0 1.5rem;
+    padding: 0.85rem 1rem;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .trybrowser a {
+    color: var(--accent);
+    font-weight: 600;
+  }
   .prereq {
     margin-bottom: 1.5rem;
   }

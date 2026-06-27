@@ -24,6 +24,16 @@ import { withBase } from '../lib/url';
         <a class="btn btn-ghost" href={withBase('/architecture')}>How it works</a>
       </div>
 
+      <p class="hero__launch">
+        <span class="hero__launch-zap" aria-hidden="true">⚡</span>
+        <span class="hero__launch-text">
+          No install —
+          <a href="https://codespaces.new/Gerrrt/dotfiles-Kali" target="_blank" rel="noopener">
+            launch the Kali environment in your browser ↗</a>
+          <span class="hero__launch-note">a Codespace boots straight into the offensive shell — htp, ipp, lhost, ttyup live</span>
+        </span>
+      </p>
+
       <ul class="hero__stats">
         <li><strong class="tone-purple">9</strong><span>repos</span></li>
         <li><strong class="tone-blue">3</strong><span>layers</span></li>
@@ -76,6 +86,37 @@ import { withBase } from '../lib/url';
   }
   .hero__cta {
     margin-top: 1.75rem;
+  }
+  .hero__launch {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+  .hero__launch-zap {
+    color: var(--tn-yellow);
+    line-height: 1.5;
+  }
+  .hero__launch-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    line-height: 1.5;
+  }
+  .hero__launch a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .hero__launch a:hover {
+    text-decoration: underline;
+  }
+  .hero__launch-note {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--text-muted);
   }
   .hero__stats {
     display: flex;
