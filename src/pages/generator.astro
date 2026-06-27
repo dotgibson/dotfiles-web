@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { targets } from '../data/bootstrap';
+import { targets, moduleGroups } from '../data/bootstrap';
 import { release, isValidRef, cloneRef } from '../data/site';
 import { site } from '../data/site';
 
@@ -27,7 +27,7 @@ const defCode = defLines.join('\n');
 
 // Serialised to the client island (typed data drives everything; no user free-text
 // ever reaches a command).
-const payload = { targets, channels, current: release.current };
+const payload = { targets, moduleGroups, channels, current: release.current };
 ---
 
 <Base
@@ -40,10 +40,10 @@ const payload = { targets, channels, current: release.current };
         <span class="eyebrow">Command generator</span>
         <h1>Build your install command</h1>
         <p class="lead">
-          Pick a platform, toggle the options you want, and copy a command that runs against
-          the repo <strong>as it is today</strong> — a real <code>clone</code> +
-          <code>bootstrap</code>, no magic <code>curl | bash</code>. Every toggle maps to a
-          flag the bootstrap actually accepts.
+          Pick a platform, toggle the options you want — and on the Linux distros, choose which
+          <strong>Core modules</strong> to link — then copy a command that runs against the repo
+          <strong>as it is today</strong>: a real <code>clone</code> + <code>bootstrap</code>, no
+          magic <code>curl | bash</code>. Every toggle maps to a flag the bootstrap actually accepts.
         </p>
       </div>
 
@@ -88,6 +88,9 @@ const payload = { targets, channels, current: release.current };
             )
           }
         </div>
+
+        <!-- core module selection — shown only for targets that accept --only/--skip -->
+        <div class="gen__modules" id="gen-modules" hidden></div>
 
         <!-- live output -->
         <div class="gen__out">
@@ -262,6 +265,23 @@ const payload = { targets, channels, current: release.current };
   .gen__notes code {
     font-size: 0.8rem;
   }
+  .gen__modules {
+    margin: 0 0 1.5rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--tn-bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .gen__modules-hint {
+    margin: 0.2rem 0 0.9rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .gen__modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0 1.25rem;
+  }
   /* code-block text colours (these are component-scoped in CommandBlock; the island
      renders its own block, so re-declare them here). */
   .cb-prompt {
@@ -279,11 +299,13 @@ const payload = { targets, channels, current: release.current };
   // validated with the SAME pattern as src/data/site.ts before it can appear in a
   // command (mirrored here because the build-time module isn't shipped to the client).
   interface Flag { key: string; label: string; flag: string; help: string; kind: 'provision' | 'safety'; default?: boolean }
-  interface Target { id: string; label: string; repo: string; dialect: 'sh' | 'ps'; entry: string; cloneDir?: string; blurb: string; flags: Flag[]; notes?: string[] }
+  interface ModuleGroup { key: string; label: string; help: string }
+  interface Target { id: string; label: string; repo: string; dialect: 'sh' | 'ps'; entry: string; cloneDir?: string; blurb: string; flags: Flag[]; modules?: boolean; notes?: string[] }
 
   const root = document.getElementById('generator');
   const codeEl = document.getElementById('gen-code');
   const optionsEl = document.getElementById('gen-options');
+  const modulesEl = document.getElementById('gen-modules');
   const blurbEl = document.getElementById('gen-blurb');
   const notesEl = document.getElementById('gen-notes');
   const repoEl = document.getElementById('gen-repo') as HTMLAnchorElement | null;
@@ -294,8 +316,9 @@ const payload = { targets, channels, current: release.current };
   const GH = 'https://github.com/Gerrrt';
 
   if (root && codeEl && optionsEl) {
-    const data = JSON.parse(root.dataset.gen || '{}') as { targets: Target[]; current: string };
+    const data = JSON.parse(root.dataset.gen || '{}') as { targets: Target[]; moduleGroups: ModuleGroup[]; current: string };
     const targets = data.targets || [];
+    const allModules = (data.moduleGroups || []).map((g) => g.key);
     let active: Target = targets[0];
 
     // Build the command lines for the current selection. Validate the ref FIRST —
@@ -306,7 +329,8 @@ const payload = { targets, channels, current: release.current };
       const refFlag = safeRef === 'main' ? '' : `--branch ${safeRef} `;
       const url = `${GH}/${t.repo}`;
       const flagStr = t.flags.filter((f) => selected.has(f.key)).map((f) => f.flag).join(' ');
-      const run = t.entry + (flagStr ? ' ' + flagStr : '');
+      const mod = moduleClause(t);
+      const run = t.entry + (flagStr ? ' ' + flagStr : '') + (mod ? ' ' + mod : '');
       if (t.dialect === 'ps') return [`git clone ${refFlag}${url}`, `cd ${t.repo}`, run];
       const dir = t.cloneDir || `~/${t.repo}`;
       return [`git clone ${refFlag}${url} ${dir}`, `cd ${dir}`, run];
@@ -316,6 +340,74 @@ const payload = { targets, channels, current: release.current };
       const set = new Set<string>();
       optionsEl!.querySelectorAll<HTMLInputElement>('input:checked').forEach((i) => set.add(i.value));
       return set;
+    }
+
+    // Modules live in their OWN container (#gen-modules), so selectedKeys above never
+    // picks them up. Default: all checked = full Core.
+    function selectedModules(): string[] {
+      if (!modulesEl) return [];
+      return Array.from(modulesEl.querySelectorAll<HTMLInputElement>('input:checked')).map((i) => i.value);
+    }
+
+    // The --only/--skip clause for the current module selection: nothing when all (or,
+    // defensively, none) are picked; otherwise the SHORTER of --skip <unpicked> and
+    // --only <picked>. The shared lib accepts both — emit whichever reads cleaner.
+    function moduleClause(t: Target): string {
+      if (!t.modules || !allModules.length) return '';
+      const sel = selectedModules();
+      if (sel.length === 0 || sel.length === allModules.length) return '';
+      const unsel = allModules.filter((k) => !sel.includes(k));
+      return unsel.length < sel.length ? `--skip ${unsel.join(',')}` : `--only ${sel.join(',')}`;
+    }
+
+    // Enforce at least one module — re-check the box that would empty the set.
+    function onModuleChange(e: Event) {
+      if (selectedModules().length === 0) {
+        (e.target as HTMLInputElement).checked = true;
+        return;
+      }
+      renderOutput();
+    }
+
+    function renderModules() {
+      if (!modulesEl) return;
+      modulesEl.replaceChildren();
+      if (!active.modules) {
+        modulesEl.hidden = true;
+        return;
+      }
+      modulesEl.hidden = false;
+      const h = document.createElement('p');
+      h.className = 'gen__group-title';
+      h.textContent = 'Core modules to link';
+      const hint = document.createElement('p');
+      hint.className = 'gen__modules-hint';
+      hint.textContent =
+        'All on = full Core. Uncheck any to link only a subset — the command gains --only/--skip.';
+      const grid = document.createElement('div');
+      grid.className = 'gen__modules-grid';
+      for (const g of data.moduleGroups || []) {
+        const label = document.createElement('label');
+        label.className = 'gen__opt gen__mod';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.value = g.key;
+        input.checked = true;
+        input.addEventListener('change', onModuleChange);
+        const name = document.createElement('span');
+        name.className = 'gen__opt-name';
+        name.textContent = g.label;
+        const key = document.createElement('span');
+        key.className = 'gen__opt-flag';
+        key.textContent = g.key;
+        name.appendChild(key);
+        const help = document.createElement('span');
+        help.className = 'gen__opt-help';
+        help.textContent = g.help;
+        label.append(input, name, help);
+        grid.appendChild(label);
+      }
+      modulesEl.append(h, hint, grid);
     }
 
     // Render the command into the codeblock and keep the copy button's data-code in
@@ -421,6 +513,7 @@ const payload = { targets, channels, current: release.current };
         repoEl.href = `${GH}/${active.repo}`;
       }
       renderOptions();
+      renderModules();
       renderNotes();
       renderOutput();
     }

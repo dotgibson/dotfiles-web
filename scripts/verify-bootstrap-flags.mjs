@@ -45,6 +45,7 @@ function loadTargets() {
       .replace(/export interface \w+ \{[\s\S]*?\n\}\n/g, '')
       .replace(/:\s*BootstrapFlag\b/g, '')
       .replace(/:\s*BootstrapTarget\[\]/g, '')
+      .replace(/:\s*ModuleGroup\[\]/g, '')
       .replace(/^export const /gm, 'const ') + '\nreturn targets;';
   let targets;
   try {
@@ -128,9 +129,23 @@ for (const t of targets) {
     }
   }
 
+  // A `modules: true` target's generator emits --only/--skip (the module multi-select).
+  // These aren't BootstrapFlag entries, so assert acceptance explicitly here.
+  if (t.modules) {
+    for (const flag of ['--only', '--skip']) {
+      if (!accepted.has(flag)) {
+        errors.push(
+          `${t.repo} (${t.id}): bootstrap.ts sets modules:true but ${isPs ? 'install.ps1' : 'bootstrap.sh'} ` +
+            `does not accept "${flag}". Accepted: ${[...accepted].sort().join(' ') || '(none parsed)'}`
+        );
+      }
+    }
+  }
+
   // Informational: repo flags the generator chooses not to surface (help/automation/
-  // destructive are expected omissions — never an error).
-  const ignore = new Set(['-h', '--help', '-q', '--quiet', '--json', '-Help']);
+  // destructive are expected omissions — never an error). --only/--skip are surfaced
+  // via the module selector, not as flags, so they belong here too.
+  const ignore = new Set(['-h', '--help', '-q', '--quiet', '--json', '-Help', '--only', '--skip']);
   const notSurfaced = [...accepted].filter((f) => !surfaced.includes(f) && !ignore.has(f));
   if (notSurfaced.length) notes.push(`${t.repo} (${t.id}): not surfaced — ${notSurfaced.sort().join(' ')}`);
 }
