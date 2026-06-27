@@ -69,7 +69,7 @@ re-publish the Pages artifact**, which the deploy workflow already exposes as a
 [`repository_dispatch`](https://docs.github.com/actions/using-workflows/events-that-trigger-workflows#repository_dispatch)
 receiver. A source repo (`dotfiles-core`, an OS repo, …) pings it on push.
 
-> **Activating it:** the dispatchers are inert until a `GITHUB_WEBHOOK_SECRET`
+> **Activating it:** the dispatchers are inert until a `WEBHOOK_SECRET`
 > secret is added to each source repo. See [`docs/WEBHOOK-SETUP.md`](docs/WEBHOOK-SETUP.md)
 > for the one-time token + secret walkthrough.
 
@@ -78,7 +78,7 @@ Under the hood, the dispatch is:
 ```bash
 curl -fsS -X POST \
   --max-time 30 --retry 3 --retry-delay 5 --retry-connrefused \
-  -H "Authorization: Bearer $GITHUB_WEBHOOK_SECRET" \
+  -H "Authorization: Bearer $WEBHOOK_SECRET" \
   -H "Accept: application/vnd.github+json" \
   -H "Content-Type: application/json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
@@ -111,11 +111,11 @@ jobs:
     timeout-minutes: 5
     steps:
       - env:
-          TOKEN: ${{ secrets.GITHUB_WEBHOOK_SECRET }}
+          TOKEN: ${{ secrets.WEBHOOK_SECRET }}
         run: |
           set -euo pipefail
           if [ -z "${TOKEN:-}" ]; then
-            echo "::warning::GITHUB_WEBHOOK_SECRET not set — skipping showcase refresh"
+            echo "::warning::WEBHOOK_SECRET not set — skipping showcase refresh"
             exit 0
           fi
           curl -fsS -X POST \
@@ -136,7 +136,7 @@ OS repos).
 | Variable                | Where it lives                          | Purpose                                                                                                              |
 | ----------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `GITHUB_TOKEN`          | auto-injected in **this** repo's CI     | Higher GitHub API rate limit + Actions access for the live repo-card badges during the Astro build. Build is resilient if unset. |
-| `GITHUB_WEBHOOK_SECRET` | a **secret in each dispatching** source repo | A fine-grained **PAT** scoped **Contents: Read and write** (`contents:write`) on `dotfiles-web`, used as the `Authorization: Bearer` token on the `repository_dispatch` POST that triggers a rebuild. GitHub authenticates the caller via this token, so the static site needs no HMAC signature-verification layer of its own. |
+| `WEBHOOK_SECRET` | a **secret in each dispatching** source repo | A fine-grained **PAT** scoped **Contents: Read and write** (`contents:write`) on `dotfiles-web`, used as the `Authorization: Bearer` token on the `repository_dispatch` POST that triggers a rebuild. GitHub authenticates the caller via this token, so the static site needs no HMAC signature-verification layer of its own. |
 
 ### Changing the URL
 

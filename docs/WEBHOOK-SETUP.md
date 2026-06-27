@@ -5,7 +5,7 @@ and re-publish the Pages artifact**. `.github/workflows/deploy.yml` exposes a
 `repository_dispatch` (`refresh` / `release`) receiver for that, and each source
 repo ships a `.github/workflows/notify-web.yml` dispatcher that pings it on push.
 
-The dispatchers are inert until a `GITHUB_WEBHOOK_SECRET` secret is present — they
+The dispatchers are inert until a `WEBHOOK_SECRET` secret is present — they
 log a warning and exit 0 otherwise. The two one-time steps below wire it up.
 
 ## 1. Create the token (once)
@@ -46,7 +46,7 @@ For each of `dotfiles-core`, `dotfiles-MacBook`, `dotfiles-Windows`,
 
 1. Repo → **Settings → Secrets and variables → Actions**
 2. **New repository secret**
-3. **Name:** `GITHUB_WEBHOOK_SECRET` (must match exactly) — **Value:** the token
+3. **Name:** `WEBHOOK_SECRET` (must match exactly) — **Value:** the token
 4. **Add secret**
 
 ### Or do all nine from the terminal with `gh`
@@ -55,7 +55,7 @@ For each of `dotfiles-core`, `dotfiles-MacBook`, `dotfiles-Windows`,
 read -rs TOKEN   # paste github_pat_..., press Enter — kept off-screen & out of history
 
 for r in core MacBook Windows Kali Fedora Arch openSUSE Alpine Gentoo; do
-  printf '%s' "$TOKEN" | gh secret set GITHUB_WEBHOOK_SECRET --repo "Gerrrt/dotfiles-$r" --body -
+  printf '%s' "$TOKEN" | gh secret set WEBHOOK_SECRET --repo "Gerrrt/dotfiles-$r" --body -
   echo "set on dotfiles-$r"
 done
 unset TOKEN
@@ -71,6 +71,6 @@ No commit required:
 3. In **`dotfiles-web` → Actions**, a **"Deploy to GitHub Pages"** run should
    start within a few seconds (triggered by `repository_dispatch: refresh`).
 
-A green dispatcher run that logs `GITHUB_WEBHOOK_SECRET not set — skipping
+A green dispatcher run that logs `WEBHOOK_SECRET not set — skipping
 showcase refresh` means the secret isn't being picked up — re-check the name and
 that it was added to that repo.
