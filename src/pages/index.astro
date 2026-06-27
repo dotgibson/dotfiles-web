@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Metrics from '../components/Metrics.astro';
 import RepoCard from '../components/RepoCard.astro';
-import CommandBlock from '../components/CommandBlock.astro';
+import InstallBuilder from '../components/InstallBuilder.astro';
 import { repos, layerMeta } from '../data/repos';
 import { getRepoLiveMap } from '../lib/github';
 import { withBase } from '../lib/url';
@@ -162,12 +162,7 @@ const orderedRepos = [...repos];
         </div>
       </div>
       <div class="install-cta__code">
-        <CommandBlock
-          code={`git clone https://github.com/Gerrrt/dotfiles-MacBook ~/dotfiles-MacBook
-cd ~/dotfiles-MacBook
-./bootstrap.sh --links-only --dry-run   # preview, changes nothing
-./bootstrap.sh                          # provision + wire`}
-        />
+        <InstallBuilder />
       </div>
     </div>
   </section>

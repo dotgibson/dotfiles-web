@@ -1,0 +1,379 @@
+---
+// InstallBuilder.astro — the landing page's interactive install-command builder.
+// Pick a platform, toggle the options you want, and it composes the EXACT command:
+// `git clone … && ./bootstrap.sh …` (or `install.ps1` on Windows). Deliberately not
+// a curl-pipe-bash one-liner — this fleet installs by cloning a repo and running its
+// idempotent bootstrap. Every flag offered here is one the installer actually accepts,
+// mirroring the per-platform steps in src/data/install.ts; keep the two in step.
+import { site } from '../data/site';
+import { withBase } from '../lib/url';
+
+// Platform/flag model. Rendered client-side for live updates; a <noscript> fallback
+// points at the full guide so the section is still useful without JS.
+const GH = site.githubBase; // https://github.com/Gerrrt
+
+const platforms = [
+  {
+    id: 'macos',
+    label: 'macOS',
+    repo: 'dotfiles-MacBook',
+    flags: [
+      { flag: '--dry-run', label: 'Dry run — preview, change nothing' },
+      { flag: '--links-only', label: 'Links only — skip Homebrew packages' },
+      { flag: '--macos-defaults', label: 'Apply opt-in macOS defaults' },
+    ],
+  },
+  {
+    id: 'kali',
+    label: 'Kali · WSL2',
+    repo: 'dotfiles-Kali',
+    flags: [
+      { flag: '--dry-run', label: 'Dry run — preview, change nothing' },
+      { flag: '--links-only', label: 'Links only — skip apt packages' },
+      { flag: '--no-offensive', label: 'Skip the heavy offensive toolchain' },
+    ],
+  },
+  {
+    id: 'linux',
+    label: 'Linux distro',
+    distros: [
+      { id: 'Fedora', repo: 'dotfiles-Fedora', extra: [{ flag: '--no-flatpak', label: 'Skip Flatpak apps' }] },
+      { id: 'Arch', repo: 'dotfiles-Arch', extra: [] },
+      { id: 'openSUSE', repo: 'dotfiles-openSUSE', extra: [{ flag: '--no-flatpak', label: 'Skip Flatpak apps' }] },
+      { id: 'Alpine', repo: 'dotfiles-Alpine', extra: [] },
+      { id: 'Gentoo', repo: 'dotfiles-Gentoo', extra: [{ flag: '--no-sync', label: 'Skip emerge --sync on re-runs' }] },
+    ],
+    flags: [
+      { flag: '--dry-run', label: 'Dry run — preview, change nothing' },
+      { flag: '--links-only', label: 'Links only — skip package install' },
+    ],
+  },
+  {
+    id: 'windows',
+    label: 'Windows',
+    repo: 'dotfiles-Windows',
+    shell: 'powershell',
+    flags: [
+      { flag: '-DryRun', label: 'Dry run — preview, change nothing' },
+      { flag: '-SkipPackages', label: 'Skip scoop / winget packages' },
+    ],
+  },
+];
+---
+
+<div class="builder">
+  <div class="builder__head">
+    <span class="builder__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <div>
+      <h3>Build your install command</h3>
+      <p>Pick a platform, toggle the options you want — get the exact command. No <code>curl | bash</code>; every flag is one the bootstrap actually accepts.</p>
+    </div>
+  </div>
+
+  <div class="builder__tabs" role="radiogroup" aria-label="Platform" id="ib-tabs"></div>
+
+  <div class="builder__distro" id="ib-distro" hidden>
+    <label for="ib-distro-sel">Distro</label>
+    <select id="ib-distro-sel"></select>
+  </div>
+
+  <fieldset class="builder__flags" id="ib-flags">
+    <legend>Options</legend>
+  </fieldset>
+
+  <div class="codeblock builder__out">
+    <button class="copy" type="button" data-copy aria-label="Copy command">copy</button>
+    <pre aria-live="polite" aria-label="Generated install command"><code id="ib-out"></code></pre>
+  </div>
+
+  <noscript>
+    <p class="builder__noscript">
+      Enable JavaScript for the interactive builder, or follow the
+      <a href={withBase('/getting-started')}>full install guide</a>.
+    </p>
+  </noscript>
+</div>
+
+<script define:vars={{ platforms, GH }}>
+  (() => {
+    const tabsEl = document.getElementById('ib-tabs');
+    const distroWrap = document.getElementById('ib-distro');
+    const distroSel = document.getElementById('ib-distro-sel');
+    const flagsEl = document.getElementById('ib-flags');
+    const outEl = document.getElementById('ib-out');
+    const copyBtn = document.querySelector('.builder__out [data-copy]');
+    if (!tabsEl || !flagsEl || !outEl) return;
+
+    let activeId = platforms[0].id;
+    const checked = new Set();
+
+    const current = () => platforms.find((p) => p.id === activeId);
+    const currentDistro = () => {
+      const p = current();
+      if (!p.distros) return null;
+      return p.distros.find((d) => d.id === distroSel.value) || p.distros[0];
+    };
+
+    // Every flag available for the current platform (+ distro extras), in order.
+    const flagsFor = () => {
+      const p = current();
+      const distro = currentDistro();
+      return [...p.flags, ...(distro ? distro.extra : [])];
+    };
+
+    function buildCommand() {
+      const p = current();
+      const distro = currentDistro();
+      const repo = distro ? distro.repo : p.repo;
+      const flags = flagsFor()
+        .map((f) => f.flag)
+        .filter((f) => checked.has(f));
+      const flagStr = flags.length ? ' ' + flags.join(' ') : '';
+
+      if (p.shell === 'powershell') {
+        // .git suffix mirrors the canonical manual Windows snippet in src/data/install.ts;
+        // git still checks out into the dotfiles-Windows/ directory, so `cd` is unchanged.
+        return [
+          `git clone ${GH}/${repo}.git`,
+          `cd ${repo}`,
+          `.\\install.ps1${flagStr}`,
+        ].join('\n');
+      }
+      return [
+        `git clone ${GH}/${repo} ~/${repo}`,
+        `cd ~/${repo}`,
+        `./bootstrap.sh${flagStr}`,
+      ].join('\n');
+    }
+
+    function render() {
+      const p = current();
+
+      // Distro picker — only for the Linux platform.
+      if (p.distros) {
+        if (!distroSel.options.length) {
+          distroSel.innerHTML = p.distros.map((d) => `<option value="${d.id}">${d.id}</option>`).join('');
+        }
+        distroWrap.hidden = false;
+      } else {
+        distroWrap.hidden = true;
+      }
+
+      // Flag checkboxes. Drop any checked flags that don't exist on the new platform
+      // so a stale toggle can't leak into another platform's command.
+      const avail = flagsFor();
+      const availSet = new Set(avail.map((f) => f.flag));
+      for (const f of [...checked]) if (!availSet.has(f)) checked.delete(f);
+
+      flagsEl.querySelectorAll('.builder__flag').forEach((n) => n.remove());
+      for (const f of avail) {
+        const id = 'ib-' + f.flag.replace(/[^a-z0-9]+/gi, '');
+        const label = document.createElement('label');
+        label.className = 'builder__flag';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.id = id;
+        cb.checked = checked.has(f.flag);
+        cb.addEventListener('change', () => {
+          if (cb.checked) checked.add(f.flag);
+          else checked.delete(f.flag);
+          paint();
+        });
+        const span = document.createElement('span');
+        span.innerHTML = `<code>${f.flag}</code> ${f.label}`;
+        label.append(cb, span);
+        flagsEl.appendChild(label);
+      }
+
+      paint();
+    }
+
+    function paint() {
+      const cmd = buildCommand();
+      outEl.textContent = cmd;
+      if (copyBtn) copyBtn.setAttribute('data-code', cmd);
+    }
+
+    // Platform selector — a radiogroup, not a tablist: picking a platform
+    // reconfigures one shared output rather than swapping between panels. Roving
+    // tabindex + arrow/Home/End keys give it proper keyboard semantics.
+    const tabButtons = [];
+    function selectPlatform(id, focus) {
+      activeId = id;
+      tabButtons.forEach((t) => {
+        const on = t.dataset.id === activeId;
+        t.setAttribute('aria-checked', String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      });
+      render();
+    }
+    platforms.forEach((p) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('role', 'radio');
+      btn.className = 'builder__tab';
+      btn.textContent = p.label;
+      btn.dataset.id = p.id;
+      const on = p.id === activeId;
+      btn.setAttribute('aria-checked', String(on));
+      btn.tabIndex = on ? 0 : -1;
+      btn.addEventListener('click', () => selectPlatform(p.id, false));
+      btn.addEventListener('keydown', (e) => {
+        const idx = platforms.findIndex((x) => x.id === activeId);
+        let next = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (idx + 1) % platforms.length;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (idx - 1 + platforms.length) % platforms.length;
+        else if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = platforms.length - 1;
+        if (next !== null) {
+          e.preventDefault();
+          selectPlatform(platforms[next].id, true);
+        }
+      });
+      tabButtons.push(btn);
+      tabsEl.appendChild(btn);
+    });
+
+    distroSel.addEventListener('change', render);
+    render();
+  })();
+</script>
+
+<style>
+  .builder {
+    background: linear-gradient(180deg, var(--tn-surface), var(--tn-bg-dark));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .builder__head {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+  }
+  .builder__dots {
+    display: inline-flex;
+    gap: 0.35rem;
+    padding-top: 0.4rem;
+    flex: none;
+  }
+  .builder__dots i {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .builder__dots i:first-child {
+    background: var(--tn-red, #f7768e);
+  }
+  .builder__dots i:nth-child(2) {
+    background: var(--tn-orange, #e0af68);
+  }
+  .builder__dots i:last-child {
+    background: var(--tn-green);
+  }
+  .builder__head h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
+  }
+  .builder__head p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .builder__head code,
+  .builder__flag code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--tn-green);
+  }
+
+  .builder__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .builder__tab {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--tn-bg-dark);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .builder__tab:hover {
+    color: var(--tn-fg);
+    border-color: var(--tn-blue);
+  }
+  .builder__tab[aria-checked='true'] {
+    color: var(--tn-bg-dark);
+    background: var(--tn-green);
+    border-color: var(--tn-green);
+    font-weight: 600;
+  }
+
+  .builder__distro {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+  }
+  .builder__distro label {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .builder__distro select {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--tn-bg-dark);
+    color: var(--tn-fg);
+  }
+
+  .builder__flags {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    margin: 0;
+  }
+  .builder__flags legend {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    padding: 0 0.4rem;
+  }
+  .builder__flag {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 0.86rem;
+    cursor: pointer;
+  }
+  .builder__flag input {
+    accent-color: var(--tn-green);
+    flex: none;
+  }
+
+  .builder__out {
+    margin: 0;
+  }
+  .builder__noscript {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+</style>
