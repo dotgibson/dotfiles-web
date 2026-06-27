@@ -9,7 +9,9 @@
 #
 # Flags:
 #   --modules a,b   comma-separated component set (default: core)
-#   --dry-run       preview the symlink plan, change nothing (--links-only --dry-run)
+#   --dry-run       preview without changing anything. True preview only on the
+#                   macOS bootstrap; every other target has no preview mode, so the
+#                   launcher reports that and exits without cloning or mutating.
 #   --dest DIR      where to clone the repo (default: $HOME)
 #   -h, --help      show this header
 #
@@ -30,7 +32,9 @@ USAGE
 
 FLAGS
   --modules a,b   comma-separated component set (default: core; e.g. core,offensive)
-  --dry-run       preview the symlink plan, change nothing (--links-only --dry-run)
+  --dry-run       preview without changing anything. True preview only on macOS;
+                  on every other target the launcher reports that its bootstrap has
+                  no preview mode and exits without cloning or mutating.
   --dest DIR      where to clone the repo (default: $HOME)
   -h, --help      show this help and exit
 
@@ -108,15 +112,18 @@ if [ "$REPO" = "dotfiles-Kali" ] && ! has_module offensive; then
 fi
 if [ "$DRY_RUN" -eq 1 ]; then
   # Only dotfiles-MacBook's bootstrap implements a true no-op preview (--dry-run).
-  # The Linux/Kali bootstraps reject unknown flags (exit 1) and have NO preview
-  # mode — and --links-only still mutates symlinks, so it is not a dry run. Keep
-  # the "changes nothing" promise honest: preview on macOS, otherwise explain and
-  # exit cleanly WITHOUT cloning or touching anything.
+  # Every other target (Fedora/Arch/openSUSE/Alpine/Gentoo/Kali) rejects unknown
+  # flags (exit 1) and has NO preview mode — and --links-only still mutates
+  # symlinks, so it is not a dry run. Keep the "changes nothing" promise honest:
+  # preview on macOS, otherwise explain and exit cleanly WITHOUT cloning or
+  # touching anything.
   if [ "$REPO" = "dotfiles-MacBook" ]; then
     bootstrap_args+=(--links-only --dry-run)
   else
     echo "ℹ️  $REPO's bootstrap has no dry-run/preview mode — nothing was changed." >&2
-    echo "    Inspect it first: git clone $URL && less $REPO/bootstrap.sh" >&2
+    # %q-quote the interpolated values so the printed line is safe to paste, and
+    # mirror the launcher's own shallow clone (--depth 1).
+    printf '    Inspect it first: git clone --depth 1 %q && less %q\n' "$URL" "$REPO/bootstrap.sh" >&2
     echo "    Then re-run without --dry-run to install." >&2
     exit 0
   fi
