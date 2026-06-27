@@ -107,7 +107,19 @@ if [ "$REPO" = "dotfiles-Kali" ] && ! has_module offensive; then
   bootstrap_args+=(--no-offensive)
 fi
 if [ "$DRY_RUN" -eq 1 ]; then
-  bootstrap_args+=(--links-only --dry-run)
+  # Only dotfiles-MacBook's bootstrap implements a true no-op preview (--dry-run).
+  # The Linux/Kali bootstraps reject unknown flags (exit 1) and have NO preview
+  # mode — and --links-only still mutates symlinks, so it is not a dry run. Keep
+  # the "changes nothing" promise honest: preview on macOS, otherwise explain and
+  # exit cleanly WITHOUT cloning or touching anything.
+  if [ "$REPO" = "dotfiles-MacBook" ]; then
+    bootstrap_args+=(--links-only --dry-run)
+  else
+    echo "ℹ️  $REPO's bootstrap has no dry-run/preview mode — nothing was changed." >&2
+    echo "    Inspect it first: git clone $URL && less $REPO/bootstrap.sh" >&2
+    echo "    Then re-run without --dry-run to install." >&2
+    exit 0
+  fi
 fi
 
 if [ -d "$TARGET/.git" ]; then

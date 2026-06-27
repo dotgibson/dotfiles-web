@@ -61,7 +61,7 @@ export const installerOptions: InstallerOption[] = [
   {
     id: 'dry-run',
     label: 'Dry run',
-    note: 'Preview every symlink it would create and change nothing (--links-only --dry-run).',
+    note: 'Preview without touching your system. The macOS bootstrap prints the full symlink plan; Linux/Kali bootstraps have no preview mode, so the launcher reports that and exits cleanly.',
     kind: 'flag',
     flag: '--dry-run',
     default: false,
