@@ -47,9 +47,11 @@ Write-Host ""
 # Probe the core toolchain via Get-Command and REPORT what's missing. We do not
 # install anything here: the dotfiles-Windows installer owns the package layer,
 # so this stays a non-interactive heads-up that never touches the system.
-$missingTools = @('git', 'nvim', 'fzf') | Where-Object { -not (Get-Command $_ -ErrorAction SilentlyContinue) }
+# git is excluded here on purpose — it is a hard requirement checked separately
+# below, so listing it as something "the installer handles" would mislead.
+$missingTools = @('nvim', 'fzf') | Where-Object { -not (Get-Command $_ -ErrorAction SilentlyContinue) }
 if ($missingTools) {
-  Write-Host "🔍 Not yet on PATH: $($missingTools -join ', ')" -ForegroundColor Yellow
+  Write-Host "🔍 Optional tools not yet on PATH: $($missingTools -join ', ')" -ForegroundColor Yellow
   Write-Host "   The Windows installer handles these; or install them yourself first."
   Write-Host ""
 }

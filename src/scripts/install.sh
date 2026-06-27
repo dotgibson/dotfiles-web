@@ -104,12 +104,14 @@ echo
 # do not install anything here: the per-repo bootstrap owns the package layer, so
 # this stays a non-interactive heads-up that never touches the system. Probe names
 # only (no binary↔package map needed when we aren't installing).
+# git is excluded here on purpose — it is a hard requirement checked separately
+# below, so listing it as something "the bootstrap installs" would mislead.
 dep_missing=""
-for dep in zsh nvim tmux fzf git rg bat; do
+for dep in zsh nvim tmux fzf rg bat; do
   command -v "$dep" >/dev/null 2>&1 || dep_missing="$dep_missing $dep"
 done
 if [ -n "${dep_missing# }" ]; then
-  echo "🔍 Not yet on PATH:${dep_missing}"
+  echo "🔍 Optional tools not yet on PATH:${dep_missing}"
   echo "   The repo bootstrap installs these; or install them yourself first."
   echo
 fi
