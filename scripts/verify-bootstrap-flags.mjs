@@ -36,7 +36,9 @@ const repoPath = (name) => join(root, name);
 // reimplementing a TS parser. Fails loud if the shape changes unexpectedly.
 function loadTargets() {
   const file = join(webRepo, 'src', 'data', 'bootstrap.ts');
-  const src = readFileSync(file, 'utf8');
+  // Normalise CRLF → LF so the type-strip regexes match on a Windows checkout
+  // (git may have converted line endings), not just an LF working tree.
+  const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
   const js =
     src
       .replace(/export type \w+ =[^\n]*\n/g, '')
@@ -86,10 +88,10 @@ function shAcceptedFlags(src) {
 // not paren-counting).
 function psAcceptedFlags(src) {
   const flags = new Set();
-  const start = src.indexOf('param(');
+  const start = src.search(/\bparam\s*\(/i); // tolerate `param (` with a space
   if (start < 0) return flags;
   const after = src.slice(start);
-  const end = after.search(/\n\)/);
+  const end = after.search(/\n\s*\)/); // closing `)` may be indented
   const block = end >= 0 ? after.slice(0, end) : after;
   const re = /\[(?:switch|string|int|bool|object(?:\[\])?)\]\s*\$(\w+)/gi;
   let m;
@@ -113,7 +115,7 @@ for (const t of targets) {
     continue;
   }
   verified++;
-  const src = readFileSync(file, 'utf8');
+  const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
   const accepted = isPs ? psAcceptedFlags(src) : shAcceptedFlags(src);
   const surfaced = t.flags.map((f) => f.flag);
 
