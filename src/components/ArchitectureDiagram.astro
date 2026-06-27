@@ -1,0 +1,217 @@
+---
+// ArchitectureDiagram — a static, data-driven SVG of the subtree topology.
+//
+// The one fact the site never SHOWED: dotfiles-core is authored once and vendored
+// into every machine repo via `git subtree` (full Core), while dotfiles-Windows
+// mirrors only nvim/ via nvim-sync.ps1 (dashed edge). Layout is computed from the
+// real repo list in src/data/repos.ts, so adding a repo there updates this diagram
+// — no hand-drawn drift. Pure inline SVG: no dependency, no hydration, Tokyo Night
+// tokens only (matches the interactive-features design constraints).
+import { repos, layerMeta } from '../data/repos';
+import type { Layer } from '../data/repos';
+
+const accentVar: Record<string, string> = {
+  purple: 'var(--tn-purple)',
+  blue: 'var(--tn-blue)',
+  cyan: 'var(--tn-cyan)',
+  red: 'var(--tn-red)',
+};
+
+const core = repos.find((r) => r.layer === 'core')!;
+const order: Layer[] = ['os', 'role', 'host'];
+const consumers = repos
+  .filter((r) => r.layer !== 'core')
+  .sort((a, b) => order.indexOf(a.layer) - order.indexOf(b.layer));
+
+const short = (n: string) => n.replace(/^dotfiles-/, '');
+
+// ── layout (viewBox units) ────────────────────────────────────────────────────
+const W = 980;
+const H = 470;
+const padX = 28;
+const N = consumers.length;
+// Defensive (component is data-driven from repos.ts): never divide by zero — a
+// core-only list renders just the hub — and never emit a negative/oversized node
+// width as the fleet grows. Below ~56px nodes start to crowd but the SVG stays valid.
+const slot = (W - 2 * padX) / Math.max(N, 1);
+const nodeW = Math.max(56, Math.min(112, slot - 14));
+const nodeH = 58;
+const rowY = 320; // top edge of the consumer-node row
+const coreW = 250;
+const coreH = 62;
+const coreX = W / 2 - coreW / 2;
+const coreY = 40;
+const coreCx = W / 2;
+const coreBottom = coreY + coreH;
+
+const nodes = consumers.map((r, i) => {
+  const cx = padX + slot * (i + 0.5);
+  return {
+    name: r.name,
+    label: short(r.name),
+    layer: r.layer,
+    sub: r.layer === 'role' ? 'OS + offensive' : r.layer === 'host' ? 'nvim only' : layerMeta[r.layer].label,
+    x: cx - nodeW / 2,
+    cx,
+    dashed: r.layer === 'host', // Windows: nvim mirror, not the full subtree
+    accent: accentVar[layerMeta[r.layer].accent],
+  };
+});
+
+// cubic bezier from the core hub's bottom-centre to each node's top-centre
+const edge = (cx: number) => {
+  const my = (coreBottom + rowY) / 2;
+  return `M ${coreCx} ${coreBottom} C ${coreCx} ${my}, ${cx} ${my}, ${cx} ${rowY}`;
+};
+---
+
+<figure class="arch-diagram">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="arch-dg-t arch-dg-d" preserveAspectRatio="xMidYMid meet">
+    <title id="arch-dg-t">Core vendoring topology</title>
+    <desc id="arch-dg-d">
+      dotfiles-core is vendored into {consumers.filter((c) => c.layer !== 'host').length} machine
+      repositories via git subtree (solid edges); dotfiles-Windows mirrors only the Neovim config
+      via nvim-sync.ps1 (dashed edge).
+    </desc>
+
+    <!-- edges: solid = full subtree, dashed = nvim-only mirror -->
+    {
+      nodes.map((n) => (
+        <path
+          d={edge(n.cx)}
+          class={n.dashed ? 'arch-edge arch-edge--mirror' : 'arch-edge'}
+          fill="none"
+        />
+      ))
+    }
+
+    <!-- core hub -->
+    <g>
+      <rect x={coreX} y={coreY} width={coreW} height={coreH} rx="10" class="arch-core" />
+      <text x={coreCx} y={coreY + 26} class="arch-node__name arch-node__name--core" text-anchor="middle">
+        {core.name}
+      </text>
+      <text x={coreCx} y={coreY + 45} class="arch-node__sub" text-anchor="middle">
+        authored once · vendored via git subtree
+      </text>
+    </g>
+
+    <!-- consumer nodes -->
+    {
+      nodes.map((n) => (
+        <g>
+          <rect
+            x={n.x}
+            y={rowY}
+            width={nodeW}
+            height={nodeH}
+            rx="9"
+            class="arch-node"
+            style={`--accent:${n.accent}`}
+          />
+          <rect x={n.x} y={rowY} width="4" height={nodeH} rx="2" style={`fill:${n.accent}`} />
+          <text x={n.cx} y={rowY + 26} class="arch-node__name" text-anchor="middle">
+            {n.label}
+          </text>
+          <text x={n.cx} y={rowY + 43} class="arch-node__sub" text-anchor="middle">
+            {n.sub}
+          </text>
+        </g>
+      ))
+    }
+
+    <!-- legend -->
+    <g transform={`translate(${padX}, ${H - 70})`}>
+      <line x1="0" y1="6" x2="34" y2="6" class="arch-edge" />
+      <text x="42" y="10" class="arch-legend">git subtree — full Core, self-contained</text>
+      <line x1="0" y1="30" x2="34" y2="30" class="arch-edge arch-edge--mirror" />
+      <text x="42" y="34" class="arch-legend">nvim mirror — nvim-sync.ps1 (Windows host)</text>
+
+      <g transform={`translate(${W - 2 * padX - 366}, 0)`}>
+        {
+        ([['core', 'Core'], ['os', 'OS-native'], ['host', 'Host'], ['role', 'Role']] as [Layer, string][]).map(
+          ([l, lbl], i) => (
+            <g transform={`translate(${i * 92}, 0)`}>
+              <rect x="0" y="0" width="12" height="12" rx="3" style={`fill:${accentVar[layerMeta[l].accent]}`} />
+              <text x="18" y="10" class="arch-legend">{lbl}</text>
+            </g>
+          )
+        )
+        }
+      </g>
+    </g>
+  </svg>
+  <figcaption>
+    One Core, vendored into {consumers.filter((c) => c.layer !== 'host').length} machine repos via
+    <code>git subtree</code> — each clone is self-contained (no submodule init).
+    <strong>dotfiles-Kali</strong> stacks a Role layer on its OS layer; <strong>dotfiles-Windows</strong>
+    carries no <code>core/</code> subtree and mirrors only the Neovim config.
+  </figcaption>
+</figure>
+
+<style>
+  .arch-diagram {
+    margin: 1.5rem 0 0;
+  }
+  .arch-diagram svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: var(--tn-bg);
+    border: 1px solid var(--tn-border);
+    border-radius: 12px;
+    padding: 0.5rem;
+  }
+  .arch-edge {
+    stroke: var(--tn-purple);
+    stroke-width: 1.6;
+    opacity: 0.5;
+  }
+  .arch-edge--mirror {
+    stroke: var(--tn-cyan);
+    stroke-dasharray: 5 5;
+    opacity: 0.7;
+  }
+  .arch-core {
+    fill: color-mix(in srgb, var(--tn-purple) 14%, var(--tn-surface));
+    stroke: var(--tn-purple);
+    stroke-width: 1.5;
+  }
+  .arch-node {
+    fill: var(--tn-surface);
+    stroke: var(--accent, var(--tn-blue));
+    stroke-width: 1.3;
+  }
+  .arch-node__name {
+    fill: var(--tn-fg);
+    font:
+      600 14px/1 ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+  .arch-node__name--core {
+    fill: var(--tn-purple);
+    font-size: 15px;
+  }
+  .arch-node__sub {
+    fill: var(--tn-muted);
+    font:
+      400 10.5px/1 ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+  .arch-legend {
+    fill: var(--tn-comment);
+    font:
+      400 11px/1 ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+  figcaption {
+    color: var(--tn-muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-top: 0.6rem;
+  }
+  figcaption code {
+    color: var(--tn-cyan);
+  }
+  figcaption strong {
+    color: var(--tn-fg);
+    font-weight: 600;
+  }
+</style>
