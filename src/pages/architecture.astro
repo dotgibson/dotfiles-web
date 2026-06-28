@@ -174,7 +174,8 @@ const deepDives = [
       <!-- how an OS repo consumes core -->
       <h2 class="mt">How an OS repo consumes Core</h2>
       <p>
-        Each machine repo vendors <code>dotfiles-core</code> under <code>core/</code> as a
+        Each machine repo (except Windows, which replicates Core natively in PowerShell)
+        vendors <code>dotfiles-core</code> under <code>core/</code> as a
         git subtree. That physically copies Core in and commits it, so the repo clones and
         works with no submodule flags — important, since these are public showcase repos
         people will browse.
