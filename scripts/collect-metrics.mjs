@@ -56,6 +56,7 @@ const osRepos = [
   'dotfiles-MacBook',
   'dotfiles-Windows',
   'dotfiles-Kali',
+  'dotfiles-Defense',
   'dotfiles-Fedora',
   'dotfiles-Arch',
   'dotfiles-openSUSE',

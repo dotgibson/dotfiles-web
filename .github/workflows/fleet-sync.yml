@@ -49,7 +49,7 @@ jobs:
           # All required: collect-metrics.mjs exits 0 (leaving generated.json untouched)
           # if a repo is missing, which would masquerade as "in step" — so a failed clone
           # must fail the job instead. (dotfiles-Debian is intentionally absent — no repo.)
-          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch \
+          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Defense \
                    dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
                    dotfiles-openSUSE dotfiles-Windows; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r"

@@ -83,7 +83,7 @@ jobs:
           fi
           root="${RUNNER_TEMP}/fleet"
           mkdir -p "$root"
-          repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Kali \
+          repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Kali dotfiles-Defense \
                  dotfiles-Fedora dotfiles-Arch dotfiles-openSUSE dotfiles-Alpine dotfiles-Gentoo"
           for r in $repos; do
             url="https://x-access-token:${GH_TOKEN}@github.com/${OWNER}/${r}.git"
