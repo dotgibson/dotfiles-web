@@ -1,4 +1,18 @@
-# dotfiles-web
+<div align="center">
+
+# 🌐 dotfiles-web
+
+### The front door to the whole system.
+
+The public showcase and docs site — Astro, Tokyo Night, GitHub Pages.
+
+`astro` · `tokyo-night` · `pages`
+
+[![live site](https://img.shields.io/badge/live-site-bb9af7?style=flat-square)](https://gerrrt.github.io/dotfiles-web/)
+
+</div>
+
+---
 
 The showcase + docs site for the [dotfiles ecosystem](https://github.com/Gerrrt) —
 a ten-repo, three-layer terminal environment (Core → OS-native → Role).
