@@ -12,6 +12,7 @@
     "metrics": "node scripts/collect-metrics.mjs",
     "snippets": "node scripts/collect-snippets.mjs",
     "data": "npm run metrics && npm run snippets",
+    "data:strict": "node scripts/collect-metrics.mjs --strict && npm run snippets",
     "verify:flags": "node scripts/verify-bootstrap-flags.mjs",
     "check": "astro check",
     "astro": "astro"
@@ -24,5 +25,9 @@
   },
   "overrides": {
     "esbuild": "^0.28.1"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "0.10.0",
+    "@xterm/xterm": "5.5.0"
   }
 }

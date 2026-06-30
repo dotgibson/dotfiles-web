@@ -148,6 +148,32 @@ const orderedRepos = [...repos];
     </div>
   </section>
 
+  <!-- ===================================================== playground teaser -->
+  <section class="section">
+    <div class="container">
+      <div class="playground-teaser card">
+        <div class="playground-teaser__copy">
+          <span class="eyebrow">Kick the tires</span>
+          <h2>Try the shell in your browser</h2>
+          <p class="lead">
+            A sandboxed, in-browser simulation of the dotfiles shell — the real aliases and
+            the modern-CLI stack (<code>eza</code>, <code>bat</code>, <code>zoxide</code>,
+            <code>fd</code>, <code>ripgrep</code>). No install, nothing leaves the page.
+          </p>
+          <div class="row" style="margin-top:1.25rem;">
+            <a class="btn btn-primary" href={withBase('/playground')}>Open the playground →</a>
+          </div>
+        </div>
+        <div class="playground-teaser__demo" aria-hidden="true">
+          <div class="mini-term">
+            <span class="mt-dir"> ~/dotfiles-core </span><span class="mt-git">  main </span>
+            <span class="mt-arrow">❯</span> <span class="mt-cmd">help</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================================================== install CTA -->
   <section class="section section--alt">
     <div class="container install-cta">
@@ -251,6 +277,46 @@ const orderedRepos = [...repos];
       grid-column: auto;
       text-align: right;
     }
+  }
+
+  .playground-teaser {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .playground-teaser {
+      grid-template-columns: 1.1fr 1fr;
+    }
+  }
+  .playground-teaser h2 {
+    margin-top: 0.4rem;
+  }
+  .mini-term {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    background: var(--tn-bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .mt-dir {
+    background: var(--tn-surface-2);
+    color: var(--tn-cyan);
+    border-radius: 4px;
+  }
+  .mt-git {
+    background: var(--tn-surface);
+    color: var(--tn-green);
+    border-radius: 4px;
+  }
+  .mt-arrow {
+    color: var(--tn-purple);
+  }
+  .mt-cmd {
+    color: var(--tn-fg);
   }
 
   .install-cta {

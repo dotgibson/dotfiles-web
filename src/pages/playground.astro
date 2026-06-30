@@ -1,0 +1,355 @@
+---
+import Base from '../layouts/Base.astro';
+import { COMMANDS } from '../data/terminal';
+import { withBase } from '../lib/url';
+
+// The playground is a SIMULATED interactive shell rendered with xterm.js — no VM,
+// no WASM, no real filesystem or network. It recognizes a curated set of the
+// system's REAL commands/aliases (pulled from dotfiles-core/zsh/aliases.zsh) and
+// prints deterministic, representative output. The command table lives in
+// src/data/terminal.ts and is shared by the client island below and this page's
+// no-JS fallback, so the two can't drift.
+
+// For the no-JS fallback we list the same commands the live banner advertises,
+// rendered as plain HTML rather than ANSI (xterm only runs with JS).
+const help = COMMANDS.filter((cmd) => cmd.name !== 'banner').map((cmd) => ({
+  name: cmd.name,
+  tool: cmd.tool,
+  blurb: cmd.blurb,
+}));
+---
+
+<Base
+  title="Playground — try the shell in your browser"
+  description="A simulated, in-browser interactive shell with the real modern-CLI stack: eza, bat, zoxide, fd, ripgrep, and the dotfiles aliases. No install required."
+>
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Try it live</span>
+        <h1>The shell, in your browser</h1>
+        <p class="lead">
+          A sandboxed simulation of the dotfiles shell — the real aliases and the modern-CLI
+          stack (<code>eza</code>, <code>bat</code>, <code>zoxide</code>, <code>fd</code>,
+          <code>ripgrep</code>), with canned but faithful output. Nothing runs on your machine,
+          nothing leaves the page. Type <code>help</code> to see what to try.
+        </p>
+      </div>
+
+      <!-- Live terminal (progressive enhancement). Hidden until the island boots, so
+           no-JS visitors never see an empty black box; the fallback below shows instead. -->
+      <div class="term-wrap" data-term-shell hidden>
+        <div class="term-bar" aria-hidden="true">
+          <span class="term-dot term-dot--red"></span>
+          <span class="term-dot term-dot--yellow"></span>
+          <span class="term-dot term-dot--green"></span>
+          <span class="term-title">zsh — dotfiles demo</span>
+        </div>
+        <div
+          id="term"
+          class="term"
+          role="application"
+          aria-label="Interactive shell demo. Type a command and press Enter. This is a simulation; no commands run on your computer."
+          tabindex="0"
+        ></div>
+        <p class="term-hint muted">
+          Tip: try <code>ls</code>, <code>cat core.version</code>, <code>git st</code>, or
+          <code>help</code>. <kbd>Ctrl</kbd>+<kbd>L</kbd> clears.
+        </p>
+      </div>
+
+      <!-- No-JS fallback: a static, accessible rundown of the same commands. Shown by
+           default; the script hides it and reveals the live terminal when it boots. -->
+      <div class="term-fallback" data-term-fallback>
+        <div class="term-static" role="img" aria-label="Example dotfiles shell prompt">
+          <span class="ps-dir"> ~/dotfiles-core </span><span class="ps-git">  main </span>
+          <span class="ps-arrow">❯</span> <span class="ps-cmd">ll</span>
+        </div>
+        <p class="muted">
+          This interactive demo needs JavaScript. Here is the command set it simulates —
+          every one is a real alias or tool from the dotfiles stack:
+        </p>
+        <ul class="cmd-list">
+          {
+            help.map((cmd) => (
+              <li>
+                <code>{cmd.name}</code>
+                <span class="cmd-tool">{cmd.tool}</span>
+                <span class="cmd-blurb">{cmd.blurb}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="muted">
+          Or browse the real config on the
+          <a href={withBase('/config')}>Config page</a> — those are the actual source files.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { Terminal } from '@xterm/xterm';
+  import { FitAddon } from '@xterm/addon-fit';
+  import '@xterm/xterm/css/xterm.css';
+  import {
+    COMMANDS,
+    TN,
+    banner,
+    unknown,
+    lookup,
+    prompt,
+  } from '../data/terminal';
+
+  const wrap = document.querySelector<HTMLElement>('[data-term-shell]');
+  const fallback = document.querySelector<HTMLElement>('[data-term-fallback]');
+  const host = document.getElementById('term');
+  if (wrap && host) {
+    // Reveal the live terminal, retire the static fallback.
+    wrap.hidden = false;
+    fallback?.setAttribute('hidden', '');
+
+    const reduceMotion =
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+
+    const term = new Terminal({
+      fontFamily:
+        "'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace",
+      fontSize: 14,
+      cursorBlink: !reduceMotion,
+      convertEol: true,
+      theme: {
+        background: TN.bgDark,
+        foreground: TN.fg,
+        cursor: TN.cyan,
+        cursorAccent: TN.bgDark,
+        selectionBackground: '#33467c',
+        black: TN.bg,
+        red: TN.red,
+        green: TN.green,
+        yellow: TN.yellow,
+        blue: TN.blue,
+        magenta: TN.purple,
+        cyan: TN.cyan,
+        white: TN.fg,
+        brightBlack: TN.comment,
+        brightWhite: '#ffffff',
+      },
+    });
+    const fit = new FitAddon();
+    term.loadAddon(fit);
+    term.open(host);
+    try {
+      fit.fit();
+    } catch {
+      /* zero-size container (e.g. hidden tab) — xterm keeps its default cols */
+    }
+    window.addEventListener('resize', () => {
+      try {
+        fit.fit();
+      } catch {
+        /* ignore */
+      }
+    });
+
+    let line = '';
+    const writePrompt = () => term.write('\r\n' + prompt());
+
+    // Sentinel emitted by the `clear` command in terminal.ts (NUL + "CLEAR").
+    const CLEAR_SENTINEL = '\x00CLEAR';
+
+    const writeBlock = (text: string) => {
+      if (text === CLEAR_SENTINEL) {
+        // Wipe scrollback + viewport and re-home the cursor (xterm clear keeps
+        // the current prompt line; reset gives a clean slate for the redraw).
+        term.reset();
+        return;
+      }
+      // Normalize to LF first so any existing CRLF in the canned output isn't
+      // doubled into "\r\r\n", then convert every LF to a CRLF for xterm.
+      const normalized = text.replace(/\r\n/g, '\n').replace(/\n/g, '\r\n');
+      term.write('\r\n' + normalized);
+    };
+
+    const handle = (raw: string) => {
+      const input = raw.trim();
+      if (!input) return;
+      const space = input.indexOf(' ');
+      const cmd = space === -1 ? input : input.slice(0, space);
+      const args = space === -1 ? '' : input.slice(space + 1);
+      // Match on the longest matching invocation (e.g. "git st" before "git").
+      const spec =
+        COMMANDS.find((s) => s.match.includes(input)) ??
+        lookup(cmd) ??
+        (cmd === 'help' || cmd === 'tldr' ? lookup('help') : undefined);
+      if (!spec) {
+        writeBlock(unknown(cmd));
+        return;
+      }
+      // Re-derive args relative to the matched alias when it's multi-word.
+      const matched = spec.match.find((m) => input === m || input.startsWith(m + ' ')) ?? cmd;
+      const restArgs = input.slice(matched.length).trim();
+      writeBlock(spec.run(spec.name === 'help' ? restArgs || args : restArgs));
+    };
+
+    // Boot banner, then an interactive prompt.
+    term.writeln(banner());
+    writePrompt();
+
+    term.onData((data) => {
+      for (const ch of data) {
+        const code = ch.charCodeAt(0);
+        if (ch === '\r') {
+          handle(line);
+          line = '';
+          writePrompt();
+        } else if (code === 127 || code === 8) {
+          // Backspace / Delete
+          if (line.length) {
+            line = line.slice(0, -1);
+            term.write('\b \b');
+          }
+        } else if (code === 12) {
+          // Ctrl+L — clear and redraw the prompt
+          term.clear();
+          term.write(prompt() + line);
+        } else if (code === 3) {
+          // Ctrl+C — abandon the current line
+          term.write('^C');
+          line = '';
+          writePrompt();
+        } else if (code >= 32) {
+          line += ch;
+          term.write(ch);
+        }
+      }
+    });
+
+    // Keep keystrokes flowing when a visitor clicks anywhere in the framed box.
+    wrap.addEventListener('click', () => term.focus());
+  }
+</script>
+
+<style>
+  .term-wrap {
+    max-width: 880px;
+    margin: 2rem auto 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--tn-bg-dark);
+    box-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.7);
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    background: var(--tn-surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .term-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .term-dot--red {
+    background: var(--tn-red);
+  }
+  .term-dot--yellow {
+    background: var(--tn-yellow);
+  }
+  .term-dot--green {
+    background: var(--tn-green);
+  }
+  .term-title {
+    margin-left: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .term {
+    height: 420px;
+    padding: 0.75rem 0.5rem 0.5rem 0.75rem;
+  }
+  .term:focus-visible {
+    outline: 2px solid var(--tn-blue);
+    outline-offset: -2px;
+  }
+  .term-hint {
+    text-align: center;
+    font-size: 0.85rem;
+    margin: 0.5rem auto 0;
+  }
+
+  /* No-JS fallback */
+  .term-fallback {
+    max-width: 760px;
+    margin: 2rem auto 0;
+  }
+  .term-static {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    background: var(--tn-bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .ps-dir {
+    background: var(--tn-surface-2);
+    color: var(--tn-cyan);
+    border-radius: 4px;
+  }
+  .ps-git {
+    background: var(--tn-surface);
+    color: var(--tn-green);
+    border-radius: 4px;
+  }
+  .ps-arrow {
+    color: var(--tn-purple);
+  }
+  .ps-cmd {
+    color: var(--tn-fg);
+  }
+  .cmd-list {
+    list-style: none;
+    margin: 1.25rem 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .cmd-list li {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    padding: 0.6rem 0.75rem;
+    background: var(--tn-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .cmd-list code {
+    color: var(--tn-cyan);
+    font-weight: 600;
+  }
+  .cmd-tool {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--tn-orange);
+  }
+  .cmd-blurb {
+    grid-column: 1 / -1;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+  }
+  @media (min-width: 620px) {
+    .cmd-blurb {
+      grid-column: 2;
+    }
+  }
+</style>

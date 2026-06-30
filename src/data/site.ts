@@ -90,6 +90,7 @@ export function cloneRef(channel: string): string {
 export const nav = [
   { label: "Home", href: "/" },
   { label: "Get Started", href: "/getting-started" },
+  { label: "Playground", href: "/playground" },
   { label: "Generator", href: "/generator" },
   { label: "Architecture", href: "/architecture" },
   { label: "Config", href: "/config" },

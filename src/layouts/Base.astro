@@ -20,6 +20,7 @@ const ogImage = new URL(withBase('/og.svg'), Astro.site).href;
 const kbdRoutes = {
   h: withBase('/'),
   s: withBase('/getting-started'),
+  p: withBase('/playground'),
   n: withBase('/generator'),
   a: withBase('/architecture'),
   c: withBase('/config'),
@@ -89,6 +90,7 @@ const kbdRoutes = {
             <tr><td><kbd>g</kbd> <kbd>g</kbd> / <kbd>G</kbd></td><td>jump to top / bottom</td></tr>
             <tr><td><kbd>g</kbd> <kbd>h</kbd></td><td>home</td></tr>
             <tr><td><kbd>g</kbd> <kbd>s</kbd></td><td>get started</td></tr>
+            <tr><td><kbd>g</kbd> <kbd>p</kbd></td><td>playground</td></tr>
             <tr><td><kbd>g</kbd> <kbd>n</kbd></td><td>generator</td></tr>
             <tr><td><kbd>g</kbd> <kbd>a</kbd></td><td>architecture</td></tr>
             <tr><td><kbd>g</kbd> <kbd>c</kbd></td><td>config explorer</td></tr>
