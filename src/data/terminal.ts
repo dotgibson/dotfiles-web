@@ -6,10 +6,10 @@
 // dotfiles-core/zsh/aliases.zsh so the demo stays honest: `ls`→eza, `cat`→bat,
 // `cd`/`z`→zoxide, etc. Keep the set small but representative of the modern-CLI stack.
 //
-// Output is plain text with embedded ANSI SGR escape sequences ([…m) so xterm.js
+// Output is plain text with embedded ANSI SGR escape sequences (\x1b[…m) so xterm.js
 // renders the Tokyo Night palette. A handful of helpers below keep the escapes readable.
 
-const ESC = "[";
+const ESC = "\x1b[";
 const R = `${ESC}0m`; // reset
 // 24-bit truecolor foreground from a hex string — xterm.js renders these against the
 // Tokyo Night theme we configure on the client. Falls back gracefully if unsupported.
@@ -265,7 +265,7 @@ export const COMMANDS: CommandSpec[] = [
     match: ["clear", "cls"],
     tool: "builtin",
     blurb: "clear the screen",
-    run: () => " CLEAR", // sentinel handled by the client
+    run: () => "\0CLEAR", // sentinel handled by the client
   },
 ];
 

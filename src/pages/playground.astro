@@ -156,12 +156,20 @@ const help = COMMANDS.filter((cmd) => cmd.name !== 'banner').map((cmd) => ({
     let line = '';
     const writePrompt = () => term.write('\r\n' + prompt());
 
+    // Sentinel emitted by the `clear` command in terminal.ts (NUL + "CLEAR").
+    const CLEAR_SENTINEL = '\x00CLEAR';
+
     const writeBlock = (text: string) => {
-      if (text === ' CLEAR') {
-        term.clear();
+      if (text === CLEAR_SENTINEL) {
+        // Wipe scrollback + viewport and re-home the cursor (xterm clear keeps
+        // the current prompt line; reset gives a clean slate for the redraw).
+        term.reset();
         return;
       }
-      term.write('\r\n' + text.replace(/\n/g, '\r\n'));
+      // Normalize to LF first so any existing CRLF in the canned output isn't
+      // doubled into "\r\r\n", then convert every LF to a CRLF for xterm.
+      const normalized = text.replace(/\r\n/g, '\n').replace(/\n/g, '\r\n');
+      term.write('\r\n' + normalized);
     };
 
     const handle = (raw: string) => {
