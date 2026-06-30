@@ -1,0 +1,83 @@
+name: Data freshness
+
+# The showcase restates facts that live in dotfiles-core — most load-bearing of
+# all, which Core RELEASE it claims to document. collect-metrics.mjs is lenient by
+# default (the Pages runner only clones THIS repo, so it can't read the fleet and
+# keeps the committed snapshot), which is also exactly how a stale generated.json
+# silently ships. This guard closes that gap WITHOUT needing the sibling repos: it
+# asks the GitHub API for the latest dotfiles-core release tag and compares it to
+# the Core version baked into the committed src/data/generated.json. If the data is
+# behind the latest Core release, it FAILS with a nudge to regenerate and commit.
+on:
+  schedule:
+    - cron: "17 6 * * 1" # Mondays 06:17 UTC — weekly drift sweep
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "src/data/generated.json"
+      - "scripts/collect-metrics.mjs"
+      - ".github/workflows/data-freshness.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Only meaningful on the canonical owner's repo — forks won't have the
+    # source repos under Gerrrt and shouldn't fail on this.
+    if: github.repository_owner == 'Gerrrt'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compare committed Core version against the latest dotfiles-core release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+
+          # Latest published release tag of dotfiles-core (built-in token, no PAT).
+          latest="$(gh api "repos/${OWNER}/dotfiles-core/releases/latest" \
+            --jq '.tag_name' 2>/dev/null || true)"
+          if [ -z "${latest:-}" ] || [ "${latest}" = "null" ]; then
+            echo "::warning::could not resolve the latest dotfiles-core release tag" \
+                 "(no releases yet, or the API is unreachable) — skipping the freshness check."
+            exit 0
+          fi
+
+          # What the committed snapshot claims. Tolerate a missing field rather than
+          # crashing the guard: a snapshot with no version is its own (separate) bug.
+          current="$(jq -r '.releases.current // empty' src/data/generated.json)"
+          core_ver="$(jq -r '.drift.coreVersion // .core.version // empty' src/data/generated.json)"
+
+          # Normalize to a bare semver (strip a leading v) for the comparison.
+          norm() { printf '%s' "${1#v}"; }
+          latest_n="$(norm "$latest")"
+          current_n="$(norm "${current:-}")"
+          core_n="$(norm "${core_ver:-}")"
+
+          echo "latest dotfiles-core release : ${latest} (${latest_n})"
+          echo "committed releases.current   : ${current:-<none>} (${current_n:-<none>})"
+          echo "committed drift.coreVersion  : ${core_ver:-<none>} (${core_n:-<none>})"
+
+          stale=0
+          if [ -n "${current_n}" ] && [ "${current_n}" != "${latest_n}" ]; then stale=1; fi
+          if [ -n "${core_n}" ] && [ "${core_n}" != "${latest_n}" ]; then stale=1; fi
+          if [ -z "${current_n}${core_n}" ]; then
+            echo "::error::src/data/generated.json has no Core version stamp" \
+                 "(releases.current / drift.coreVersion / core.version all empty)." \
+                 "Run 'npm run data' against the fleet and commit the result."
+            exit 1
+          fi
+
+          if [ "${stale}" -eq 1 ]; then
+            echo "::error::The committed src/data/generated.json is BEHIND the latest" \
+                 "dotfiles-core release (${latest}). The showcase would advertise a" \
+                 "stale Core version. Check out the fleet, run 'npm run data' (or" \
+                 "'npm run data:strict'), and commit the refreshed generated.json."
+            exit 1
+          fi
+
+          echo "OK — committed Core version matches the latest dotfiles-core release (${latest})."

@@ -12,6 +12,11 @@
 // The script is deliberately defensive: if the sibling repos aren't checked out
 // (e.g. on the Pages CI runner, which only clones dotfiles-web), it leaves the
 // committed generated.json untouched and exits 0 rather than zeroing everything.
+//
+// BUT that lenient default is also how stale data silently ships: a local
+// "I'm about to publish" run that can't see the fleet keeps the old snapshot and
+// exits clean. Pass --strict (or STRICT=1) on that path so a missing fleet is a
+// HARD ERROR (exit 1) instead — regenerate against the real repos, or fail loud.
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
@@ -68,14 +73,24 @@ const osRepos = [
 // present. A partial checkout would silently commit under-counted metrics — the
 // opposite of this script's "tracks the real repos" promise. The Core zsh/ tree
 // must exist too, since every Core metric is read from it.
+const strict = process.argv.includes('--strict') || process.env.STRICT === '1';
 const missing = [core, ...osRepos].filter((r) => !has(r));
 const coreZshMissing = has(core) && !existsSync(join(repoPath(core), 'zsh'));
 if (missing.length || coreZshMissing) {
   const why = missing.length ? `missing repos: ${missing.join(', ')}` : `${core}/zsh not found`;
+  const tail =
+    `Check out the full fleet beside this repo, or set DOTFILES_ROOT to point at it.`;
+  if (strict) {
+    // Publish path: refuse to leave a possibly-stale snapshot in place silently.
+    console.error(
+      `[collect-metrics] STRICT: ${why} under ${root} — cannot regenerate ` +
+        `${out.replace(webRepo + '/', '')}. ${tail}`
+    );
+    process.exit(1);
+  }
   console.warn(
     `[collect-metrics] ${why} under ${root} — keeping the committed ` +
-      `${out.replace(webRepo + '/', '')} as-is. Check out the full fleet beside this ` +
-      `repo, or set DOTFILES_ROOT to point at it.`
+      `${out.replace(webRepo + '/', '')} as-is. ${tail} (pass --strict to fail instead.)`
   );
   process.exit(0);
 }
