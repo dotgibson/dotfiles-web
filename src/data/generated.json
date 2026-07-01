@@ -1,73 +1,73 @@
 {
-  "generatedAt": "2026-06-30",
+  "generatedAt": "2026-07-01",
   "fleet": {
     "publicRepos": 10,
     "layers": 3,
     "loadOrderStages": 15
   },
   "releases": {
-    "current": "v2.4.1",
+    "current": "v2.6.0",
     "channels": [
+      "v2.6.0",
+      "v2.5.0",
       "v2.4.1",
-      "v2.4.0",
-      "v2.3.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "2.4.1",
+    "coreVersion": "2.6.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       },
       "dotfiles-Windows": {
-        "ref": "v2",
-        "carried": "2",
-        "status": "behind"
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
+        "status": "current"
       },
       "dotfiles-Kali": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v2.4.1",
-        "carried": "2.4.1",
+        "ref": "v2.6.0",
+        "carried": "2.6.0",
         "status": "current"
       }
     }
   },
   "core": {
-    "version": "2.4.1",
+    "version": "2.6.0",
     "sourcedModules": 13,
-    "zshLoc": 3115,
+    "zshLoc": 3158,
     "gitAliases": 57,
     "pinnedPlugins": 7,
     "completions": 28
@@ -97,11 +97,71 @@
   "changelog": [
     {
       "repo": "dotfiles-core",
-      "version": "Unreleased",
+      "version": "v2.6.0",
+      "date": "2026-06-30",
       "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "sesh detection (HAVE_SESH) — finishing wiring Core already half-shipped. sesh (joshmedeski's smart tmux session manager) was already driven by the Ctrl-G shell widget (fzf.zsh), the prefix + f tmux popup (tmux-sesh.sh), a seeded sesh/sesh.toml.example, and listed in core-doctor's integrations — but tools.zsh never set a HAVE_SESH flag for it the way it does for the other detected tools. (Detection itself still worked — the Ctrl-G/prefix + f fallback keys off command -v sesh, and core-doctor already probes sesh the same way.) tools.zsh now sets HAVE_SESH (like HAVE_GUM, no _core_wired arm — sesh registers no persistent shell hook, so presence ≈ wired), and PORTING-MATRIX.md gains a sesh row + footnote documenting the go install github.com/joshmedeski/sesh/v2@latest build path (the v2 module path; go is already a pinned mise runtime) for the distros that don't package it. No core.manifest change — the .example is already listed.",
+              "kind": "config"
+            },
+            {
+              "text": "RELEASE-RUNBOOK.md — the step-by-step, copy-paste recipe for cutting a release (Core, the OS-repo fan-out rollout, and htpx), plus a \"dry-run a new cross-repo workflow before relying on it\" habit and a troubleshooting table. Complements RELEASE-STRATEGY.md (the policy); cross-linked from it and CLAUDE.md.",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "nvim: disable <LeftDrag> and <LeftRelease> in all modes unconditionally. Previously these were suppressed only when inside a $TMUX session, in Normal and Visual modes. They are now <Nop> in Normal, Insert, and Visual modes regardless of environment, eliminating accidental mouse-drag selections during terminal use.",
+              "kind": "config"
+            },
+            {
+              "text": "bootstrap-test.yml retries the per-distro prep step (up to 5x with backoff). The reusable links-only job ran the dep install once; a transient distro-mirror timeout (notably openSUSE Tumbleweed's OSS CDN) then redded the job — and every Core fan-out PR — on a network blip. The retry is fleet-wide (one place, every caller); a genuinely broken prep still fails loud after the attempts are exhausted.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.5.0",
+      "date": "2026-06-29",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "jujutsu (jj) as an OPT-IN, colocated git companion. Additive — it never replaces git. New jujutsu/config.toml (symlinked to ~/.config/jj/config.toml, in core.manifest) sets a sensible colocated-friendly default (ui.default-command = \"log\", auto-local-bookmark; identity intentionally unset — jj does NOT inherit git's user.name/user.email, so an opt-in author sets it once with jj config set --user user.name/user.email). tools.zsh gains HAVE_JJ detection and aliases.zsh a few HAVE_JJ-guarded verbs (jjs/jjl/jjd); nothing is aliased over git. On a box without jj everything is inert. PORTING-MATRIX.md documents per-distro packaging (packaged on Arch/openSUSE/Gentoo/Fedora/Homebrew/nix; cargo install jujutsu on Alpine(musl)/Debian-Kali — same pattern as yazi/ouch).",
+              "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "zsh syntax highlighter swapped: fast-syntax-highlighting → zsh-users/zsh-syntax-highlighting (z-sy-h). The pin moves to z-sy-h (a maintained, first-party zsh-users plugin) and the load order is corrected per its README: the highlighter is now the LAST widget-wrapping plugin sourced, with zsh-history-substring-search deferred immediately after it so its widgets get wrapped. The FAST_THEME/FAST_HIGHLIGHT theming is replaced by minimal ZSH_HIGHLIGHT_HIGHLIGHTERS (main + brackets) and ZSH_HIGHLIGHT_STYLES recoloured to the Tokyo Night Storm palette.",
+              "kind": "perf"
+            },
+            {
+              "text": "fleet-drift.sh anchors to the latest released Core tag by default, not the working tip. Fan-out stamps each OS repo with the Core tag it carries, so the dashboard now measures against the newest vX.Y.Z (via git describe), falling back to origin/main/main/HEAD. An explicit --ref/$CORE_REF_SHA still wins. This stops the false \"BEHIND by N\" the report showed for every unreleased commit on main (CHANGELOG/auto-tag churn between releases); the fleet-drift.yml workflow drops its --ref HEAD accordingly.",
+              "kind": "config"
+            }
+          ]
+        },
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "auto-tag.sh exit-code contract hardened + tested. Added a defence-in-depth guard so _next_version fails loudly (non-zero) on a non-X.Y.Z input instead of producing a garbage component, and the call site now propagates that failure rather than tagging a bogus v. The behavioral suite (test-core.sh) now asserts the full exit-code contract hermetically (no network/gh): success → 0, no-op → 0, validation error → 2, and a real create failure (a --push onto an already-taken tag name, tripping Guard 2) → non-zero.",
+              "kind": "fix"
+            },
             {
               "text": "auto-tag.sh --release fails CI when an opted-in Release create actually fails. The gh release create error branch called fail but the script still exited 0, so a real failure (gh present, API error) went green with no Release. It now exit 1s there — the tag still stands (pushed above), but CI goes red so you create the Release manually. The two non-failure exits stay deliberate: gh absent → skip, Release already exists → no-op. Also added --release to the usage() synopsis line (it was only in the flag list) and clarified its gh/skip semantics.",
               "kind": "feature"
@@ -127,16 +187,19 @@
       ]
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v2.4.0",
-      "date": "2026-06-29",
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
       "groups": [
         {
-          "category": "Added",
+          "category": "Fixed",
           "items": [
             {
-              "text": "OS-repo / Windows auto-tags now publish a GitHub Release too (auto-tag.sh --release). Core releases already become Releases on tag push (release.yml), but the OS-repo tags auto-tag.sh cuts in CI were bare — no Releases page entry. A token-pushed tag can't trigger a separate on: push: tags workflow (GitHub anti-recursion), so the Release is now created in the SAME job: auto-tag.sh --release runs gh release create <tag> --generate-notes right after pushing (idempotent — a no-op if the Release exists; a missing gh just leaves the tag, never fails). auto-tag-call.yml gained a release input (default true) and passes --release, so every consumer of @v2 gets Releases on its next fan-out. Reusable beyond core/ consumers: any repo (e.g. dotfiles-Windows on an nvim//starship/ sync) can call the workflow to self-tag-and-release.",
-              "kind": "config"
+              "text": "Large multi-line pastes no longer switch modes / reorder text / run vim commands. Root cause: core/10-tools.ps1 sets EditMode Vi, and PSReadLine versions before 2.2.0 have no bracketed-paste support, so a pasted block is replayed keystroke-by-keystroke and :/d/i/a/o/Esc are taken as Vi commands. Fix: bumped the PSReadLine pin in packages/modules.ps1 from 2.2.0 to 2.3.6 (the current gallery release; first paste-safe release is 2.2.0), kept Vi mode (deliberate parity with Core's zsh-vi-mode), and added a cheap (Get-Module PSReadLine).Version guard that emits a one-line Write-DotWarn with the upgrade command if a stale in-box PSReadLine (< 2.2.0) is loaded, so a stale box self-diagnoses. tests/Repo.Tests.ps1 now asserts the >= 2.2.0 floor.",
+              "kind": "fix"
+            },
+            {
+              "text": "Windows nvim plugins are now pinned to Core's lazy-lock.json like the rest of the fleet. nvim-sync.ps1 previously excluded lazy-lock.json from the robocopy /MIR (/XF) as \"env-specific\" — but it pins plugin commit SHAs, which are cross-platform, so Windows nvim floated on plugin HEAD while every Unix repo (and Core's weekly nvim-lock bot) stayed pinned. The sync now mirrors it; the file is removed from .gitignore, committed (from Core v2.4.1), and the nvim parity gate (tests/Assert-NvimParity.ps1) now includes it so the pin can't drift. Also bumped stale nvim/.core-ref provenance from v2.3.0 (6e923f9) to v2.4.1 (75195df) so fleet-drift stops falsely reporting Windows behind.",
+              "kind": "perf"
             }
           ]
         }
@@ -316,12 +379,20 @@
   ],
   "feed": [
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
       "category": "Fixed",
-      "kind": "feature",
-      "text": "auto-tag.sh --release fails CI when an opted-in Release create actually fails. The gh release create error branch called fail but the script still exited 0, so a real failure (gh present, API error) went green with no Release. It now exit 1s there — the tag still stands (pushed above), but CI goes red so you create the Release manually. The two non-failure exits stay deliberate: gh absent → skip, Release already exists → no-op. Also added --release to the usage() synopsis line (it was only in the flag list) and clarified its gh/skip semantics.",
-      "core": true
+      "kind": "fix",
+      "text": "Large multi-line pastes no longer switch modes / reorder text / run vim commands. Root cause: core/10-tools.ps1 sets EditMode Vi, and PSReadLine versions before 2.2.0 have no bracketed-paste support, so a pasted block is replayed keystroke-by-keystroke and :/d/i/a/o/Esc are taken as Vi commands. Fix: bumped the PSReadLine pin in packages/modules.ps1 from 2.2.0 to 2.3.6 (the current gallery release; first paste-safe release is 2.2.0), kept Vi mode (deliberate parity with Core's zsh-vi-mode), and added a cheap (Get-Module PSReadLine).Version guard that emits a one-line Write-DotWarn with the upgrade command if a stale in-box PSReadLine (< 2.2.0) is loaded, so a stale box self-diagnoses. tests/Repo.Tests.ps1 now asserts the >= 2.2.0 floor.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "Windows nvim plugins are now pinned to Core's lazy-lock.json like the rest of the fleet. nvim-sync.ps1 previously excluded lazy-lock.json from the robocopy /MIR (/XF) as \"env-specific\" — but it pins plugin commit SHAs, which are cross-platform, so Windows nvim floated on plugin HEAD while every Unix repo (and Core's weekly nvim-lock bot) stayed pinned. The sync now mirrors it; the file is removed from .gitignore, committed (from Core v2.4.1), and the nvim parity gate (tests/Assert-NvimParity.ps1) now includes it so the pin can't drift. Also bumped stale nvim/.core-ref provenance from v2.3.0 (6e923f9) to v2.4.1 (75195df) so fleet-drift stops falsely reporting Windows behind.",
+      "core": false
     },
     {
       "repo": "dotfiles-Windows",
@@ -613,20 +684,92 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v2.6.0",
+      "date": "2026-06-30",
+      "category": "Added",
+      "kind": "config",
+      "text": "sesh detection (HAVE_SESH) — finishing wiring Core already half-shipped. sesh (joshmedeski's smart tmux session manager) was already driven by the Ctrl-G shell widget (fzf.zsh), the prefix + f tmux popup (tmux-sesh.sh), a seeded sesh/sesh.toml.example, and listed in core-doctor's integrations — but tools.zsh never set a HAVE_SESH flag for it the way it does for the other detected tools. (Detection itself still worked — the Ctrl-G/prefix + f fallback keys off command -v sesh, and core-doctor already probes sesh the same way.) tools.zsh now sets HAVE_SESH (like HAVE_GUM, no _core_wired arm — sesh registers no persistent shell hook, so presence ≈ wired), and PORTING-MATRIX.md gains a sesh row + footnote documenting the go install github.com/joshmedeski/sesh/v2@latest build path (the v2 module path; go is already a pinned mise runtime) for the distros that don't package it. No core.manifest change — the .example is already listed.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.6.0",
+      "date": "2026-06-30",
+      "category": "Added",
+      "kind": "feature",
+      "text": "RELEASE-RUNBOOK.md — the step-by-step, copy-paste recipe for cutting a release (Core, the OS-repo fan-out rollout, and htpx), plus a \"dry-run a new cross-repo workflow before relying on it\" habit and a troubleshooting table. Complements RELEASE-STRATEGY.md (the policy); cross-linked from it and CLAUDE.md.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.6.0",
+      "date": "2026-06-30",
+      "category": "Changed",
+      "kind": "config",
+      "text": "nvim: disable <LeftDrag> and <LeftRelease> in all modes unconditionally. Previously these were suppressed only when inside a $TMUX session, in Normal and Visual modes. They are now <Nop> in Normal, Insert, and Visual modes regardless of environment, eliminating accidental mouse-drag selections during terminal use.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.6.0",
+      "date": "2026-06-30",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "bootstrap-test.yml retries the per-distro prep step (up to 5x with backoff). The reusable links-only job ran the dep install once; a transient distro-mirror timeout (notably openSUSE Tumbleweed's OSS CDN) then redded the job — and every Core fan-out PR — on a network blip. The retry is fleet-wide (one place, every caller); a genuinely broken prep still fails loud after the attempts are exhausted.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.5.0",
+      "date": "2026-06-29",
+      "category": "Added",
+      "kind": "config",
+      "text": "jujutsu (jj) as an OPT-IN, colocated git companion. Additive — it never replaces git. New jujutsu/config.toml (symlinked to ~/.config/jj/config.toml, in core.manifest) sets a sensible colocated-friendly default (ui.default-command = \"log\", auto-local-bookmark; identity intentionally unset — jj does NOT inherit git's user.name/user.email, so an opt-in author sets it once with jj config set --user user.name/user.email). tools.zsh gains HAVE_JJ detection and aliases.zsh a few HAVE_JJ-guarded verbs (jjs/jjl/jjd); nothing is aliased over git. On a box without jj everything is inert. PORTING-MATRIX.md documents per-distro packaging (packaged on Arch/openSUSE/Gentoo/Fedora/Homebrew/nix; cargo install jujutsu on Alpine(musl)/Debian-Kali — same pattern as yazi/ouch).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.5.0",
+      "date": "2026-06-29",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "zsh syntax highlighter swapped: fast-syntax-highlighting → zsh-users/zsh-syntax-highlighting (z-sy-h). The pin moves to z-sy-h (a maintained, first-party zsh-users plugin) and the load order is corrected per its README: the highlighter is now the LAST widget-wrapping plugin sourced, with zsh-history-substring-search deferred immediately after it so its widgets get wrapped. The FAST_THEME/FAST_HIGHLIGHT theming is replaced by minimal ZSH_HIGHLIGHT_HIGHLIGHTERS (main + brackets) and ZSH_HIGHLIGHT_STYLES recoloured to the Tokyo Night Storm palette.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.5.0",
+      "date": "2026-06-29",
+      "category": "Changed",
+      "kind": "config",
+      "text": "fleet-drift.sh anchors to the latest released Core tag by default, not the working tip. Fan-out stamps each OS repo with the Core tag it carries, so the dashboard now measures against the newest vX.Y.Z (via git describe), falling back to origin/main/main/HEAD. An explicit --ref/$CORE_REF_SHA still wins. This stops the false \"BEHIND by N\" the report showed for every unreleased commit on main (CHANGELOG/auto-tag churn between releases); the fleet-drift.yml workflow drops its --ref HEAD accordingly.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.5.0",
+      "date": "2026-06-29",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "auto-tag.sh exit-code contract hardened + tested. Added a defence-in-depth guard so _next_version fails loudly (non-zero) on a non-X.Y.Z input instead of producing a garbage component, and the call site now propagates that failure rather than tagging a bogus v. The behavioral suite (test-core.sh) now asserts the full exit-code contract hermetically (no network/gh): success → 0, no-op → 0, validation error → 2, and a real create failure (a --push onto an already-taken tag name, tripping Guard 2) → non-zero.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v2.5.0",
+      "date": "2026-06-29",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "auto-tag.sh --release fails CI when an opted-in Release create actually fails. The gh release create error branch called fail but the script still exited 0, so a real failure (gh present, API error) went green with no Release. It now exit 1s there — the tag still stands (pushed above), but CI goes red so you create the Release manually. The two non-failure exits stay deliberate: gh absent → skip, Release already exists → no-op. Also added --release to the usage() synopsis line (it was only in the flag list) and clarified its gh/skip semantics.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v2.4.1",
       "date": "2026-06-29",
       "category": "Changed",
       "kind": "config",
       "text": "tag-release.sh recipe spells out the land-then-tag order. The printed next-steps now make the sequence explicit — land the release commit via PR (a merge commit), then tag origin/main (the merged tip) so the tag sits on main's HEAD and git describe stays clean — instead of tagging the pre-merge commit and re-pointing. The two tag pushes use ;, not && (an \"already exists\" on the first must not skip the second — the vN move). PUSH=1 now warns that it tags the pre-merge commit and prints the re-point steps.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.4.0",
-      "date": "2026-06-29",
-      "category": "Added",
-      "kind": "config",
-      "text": "OS-repo / Windows auto-tags now publish a GitHub Release too (auto-tag.sh --release). Core releases already become Releases on tag push (release.yml), but the OS-repo tags auto-tag.sh cuts in CI were bare — no Releases page entry. A token-pushed tag can't trigger a separate on: push: tags workflow (GitHub anti-recursion), so the Release is now created in the SAME job: auto-tag.sh --release runs gh release create <tag> --generate-notes right after pushing (idempotent — a no-op if the Release exists; a missing gh just leaves the tag, never fails). auto-tag-call.yml gained a release input (default true) and passes --release, so every consumer of @v2 gets Releases on its next fan-out. Reusable beyond core/ consumers: any repo (e.g. dotfiles-Windows on an nvim//starship/ sync) can call the workflow to self-tag-and-release.",
       "core": true
     }
   ]
