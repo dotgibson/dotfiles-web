@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
   <div class="container site-footer__inner">
     <div class="site-footer__brand">
       <a class="brand" href={withBase('/')}>
-        <span class="brand__glyph">~/</span><span>{site.name}</span>
+        <img class="brand__mark" src={withBase('/logo.svg')} alt="" width="20" height="20" decoding="async" /><span>{site.name}</span>
       </a>
       <p class="muted">{site.tagline}</p>
     </div>
@@ -45,8 +45,12 @@ const year = new Date().getFullYear();
     font-weight: 700;
     color: #fff;
   }
-  .brand__glyph {
-    color: var(--tn-purple);
+  .brand__mark {
+    width: 1.3rem;
+    height: 1.3rem;
+    display: block;
+    margin-right: 0.35rem;
+    border-radius: 5px;
   }
   .site-footer__brand p {
     margin: 0.4rem 0 0;
