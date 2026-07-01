@@ -20,7 +20,7 @@ const coreVersion = metrics.core.version;
   <div class="container site-header__inner">
     <div class="brand-wrap">
       <a class="brand" href={withBase('/')}>
-        <span class="brand__glyph">~/</span>
+        <img class="brand__mark" src={withBase('/logo.svg')} alt="" width="26" height="26" decoding="async" />
         <span class="brand__name">{site.name}</span>
         <span class="brand__cursor"></span>
       </a>
@@ -95,8 +95,12 @@ const coreVersion = metrics.core.version;
     font-size: 1.05rem;
     color: #fff;
   }
-  .brand__glyph {
-    color: var(--tn-purple);
+  .brand__mark {
+    width: 1.6rem;
+    height: 1.6rem;
+    display: block;
+    margin-right: 0.3rem;
+    border-radius: 6px;
   }
   .brand__name {
     color: var(--tn-fg);

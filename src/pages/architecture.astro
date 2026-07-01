@@ -30,7 +30,7 @@ const comparisons = [
   },
   {
     title: 'vs chezmoi / yadm',
-    body: 'One repo + per-OS templates is the most DRY answer, and the right move the day you want to collapse ten repos into one. This system keeps the ten-repo portfolio instead — each machine is a clean, public, self-contained artifact. Because Core is already plain and OS-agnostic, moving to chezmoi later is a content migration, not a rewrite.',
+    body: 'One repo + per-OS templates is the most DRY answer, and the right move the day you want to collapse the whole fleet into one. This system keeps the multi-repo portfolio instead — each machine is a clean, public, self-contained artifact. Because Core is already plain and OS-agnostic, moving to chezmoi later is a content migration, not a rewrite.',
   },
   {
     title: 'vs GNU stow',
@@ -47,8 +47,8 @@ const comparisons = [
 // lighter.
 const notForYou = [
   'You have one or two machines with no real OS spread — this is over-engineered for that; a bare $HOME repo or stow is far less ceremony.',
-  'You want ONE repo, not ten — reach for chezmoi or yadm. (The migration is content, not a rewrite, because Core is already plain.)',
-  'You can’t stomach any vendored duplication — the ten-repo + vendored-Core model deliberately trades a little duplication for clone-and-go self-containment and a public per-machine portfolio.',
+  'You want ONE repo, not a fleet — reach for chezmoi or yadm. (The migration is content, not a rewrite, because Core is already plain.)',
+  'You can’t stomach any vendored duplication — the multi-repo + vendored-Core model deliberately trades a little duplication for clone-and-go self-containment and a public per-machine portfolio.',
 ];
 
 // The macOS desktop layer — committed GUI tooling the OS-native layer owns, themed to match
@@ -128,7 +128,7 @@ const deepDives = [
         <p class="lead">
           The system is built on one decision repeated consistently: draw a hard boundary
           between what is identical on every machine and what changes with the OS or the
-          operator. Get the boundary right and a single Core can serve ten machines with
+          operator. Get the boundary right and a single Core can serve every machine with
           zero special-casing.
         </p>
         <p class="lead mt">

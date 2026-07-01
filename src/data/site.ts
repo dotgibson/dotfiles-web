@@ -2,8 +2,8 @@ import generated from "./generated.json";
 
 // Central site metadata. Edit these and the whole site updates.
 export const site = {
-  name: "dotfiles",
-  title: "dotfiles — a ten-repo terminal ecosystem",
+  name: "dotgibson",
+  title: "dotgibson — a layered terminal ecosystem",
   description:
     "A portable, layered dotfiles ecosystem: one vendored Core (zsh, tmux, Neovim, git, starship, mise) shared across every machine, OS-native layers per platform, and operator role layers — offensive for Kali, defensive for Defense. Clone-and-go, fully reproducible.",
   owner: "dotgibson",
