@@ -26,8 +26,11 @@ const strict = process.argv.includes('--strict') || process.env.STRICT === '1';
 const out = join(webRepo, 'src', 'data', 'corpus.json');
 
 const htpx = join(root, 'htpx', 'entries');
-if (!existsSync(htpx)) {
-  const msg = `collect-corpus: htpx entries not found at ${htpx}`;
+// Require both colour dirs — a bare entries/ (or a partial checkout) takes the
+// defensive path rather than crashing in readdirSync below.
+const missing = !existsSync(join(htpx, 'red')) || !existsSync(join(htpx, 'blue'));
+if (missing) {
+  const msg = `collect-corpus: htpx entries/{red,blue} not found under ${htpx}`;
   if (strict) {
     console.error(`${msg} — refusing to ship stale corpus (--strict).`);
     process.exit(1);
