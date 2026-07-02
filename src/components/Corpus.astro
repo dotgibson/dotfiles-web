@@ -1,0 +1,317 @@
+---
+// Corpus.astro — renders the htpx red↔blue "purple" corpus: a coverage stat row +
+// a platform-filterable table of attacks paired with their detections. Data comes
+// from src/data/corpus.json, generated from the htpx entries by
+// scripts/collect-corpus.mjs (never hand-typed).
+import corpus from '../data/corpus.json';
+
+type Pair = {
+  id: string;
+  attack: string;
+  detection: string;
+  group: string;
+  phase: string | null;
+  tactic: string | null;
+  techniques: string[];
+};
+
+const data = corpus as {
+  totalPairs: number;
+  groupCount: number;
+  techniqueCount: number;
+  tacticCount: number;
+  groups: { label: string; count: number }[];
+  pairs: Pair[];
+};
+
+const TACTICS: Record<string, string> = {
+  TA0001: 'Initial Access',
+  TA0002: 'Execution',
+  TA0003: 'Persistence',
+  TA0004: 'Privilege Escalation',
+  TA0005: 'Defense Evasion',
+  TA0006: 'Credential Access',
+  TA0007: 'Discovery',
+  TA0008: 'Lateral Movement',
+  TA0009: 'Collection',
+  TA0010: 'Exfiltration',
+  TA0040: 'Impact',
+};
+
+// Group pairs in the order they already arrive (collector sorts on-prem → SaaS).
+const grouped: { label: string; count: number; pairs: Pair[] }[] = [];
+for (const g of data.groups) {
+  grouped.push({ ...g, pairs: data.pairs.filter((p) => p.group === g.label) });
+}
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const stats = [
+  { n: data.totalPairs, label: 'paired attack ↔ detection concepts' },
+  { n: data.groupCount, label: 'platforms & data sources' },
+  { n: data.techniqueCount, label: 'ATT&CK techniques' },
+  { n: data.tacticCount, label: 'ATT&CK tactics' },
+];
+---
+
+<section class="corpus">
+  <div class="corpus__stats">
+    {
+      stats.map((s) => (
+        <div class="stat">
+          <span class="stat__n">{s.n}</span>
+          <span class="stat__label">{s.label}</span>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="corpus__filters" role="group" aria-label="Filter by platform">
+    <button class="chip chip--active" data-filter="all" aria-pressed="true">All</button>
+    {
+      grouped.map((g) => (
+        <button class="chip" data-filter={slug(g.label)} aria-pressed="false">
+          {g.label} <span class="chip__n">{g.count}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="corpus__groups">
+    {
+      grouped.map((g) => (
+        <section class="grp" data-group={slug(g.label)}>
+          <h3 class="grp__title">
+            {g.label} <span class="grp__n">{g.count}</span>
+          </h3>
+          <div class="grp__table" role="table">
+            <div class="row row--head" role="row">
+              <span role="columnheader">Attack</span>
+              <span role="columnheader">Detection</span>
+              <span role="columnheader">ATT&amp;CK</span>
+            </div>
+            {g.pairs.map((p) => (
+              <div class="row" role="row">
+                <span class="cell cell--red" role="cell">
+                  <span class="dot dot--red" aria-hidden="true" />
+                  {p.attack}
+                </span>
+                <span class="cell cell--blue" role="cell">
+                  <span class="dot dot--blue" aria-hidden="true" />
+                  {p.detection}
+                </span>
+                <span class="cell cell--attack" role="cell">
+                  {p.techniques.map((t) => (
+                    <a
+                      class="tech"
+                      href={`https://attack.mitre.org/techniques/${t.replace('.', '/')}/`}
+                      target="_blank"
+                      rel="noopener"
+                      title={p.tactic ? TACTICS[p.tactic] : undefined}
+                    >
+                      {t}
+                    </a>
+                  ))}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .corpus__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--tn-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .stat__n {
+    font-family: var(--font-mono);
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--tn-cyan);
+    line-height: 1;
+  }
+  .stat__label {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  .corpus__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    background: var(--tn-surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .chip:hover {
+    color: #fff;
+    border-color: var(--tn-border-bright);
+  }
+  .chip--active {
+    color: var(--tn-bg-dark, #16161e);
+    background: var(--tn-purple);
+    border-color: var(--tn-purple);
+    font-weight: 600;
+  }
+  .chip__n {
+    opacity: 0.7;
+  }
+
+  .grp {
+    margin-bottom: 2.25rem;
+  }
+  .grp__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    color: var(--tn-fg);
+    margin: 0 0 0.85rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .grp__n {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  .grp__table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr minmax(6.5rem, auto);
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .row:first-child {
+    border-top: none;
+  }
+  .row--head {
+    background: var(--tn-surface);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+  }
+  .cell {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .cell--red {
+    color: var(--tn-fg);
+  }
+  .cell--blue {
+    color: var(--tn-fg-dim);
+  }
+  .dot {
+    flex: none;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    transform: translateY(1px);
+  }
+  .dot--red {
+    background: var(--tn-red);
+    box-shadow: 0 0 8px rgba(247, 118, 142, 0.5);
+  }
+  .dot--blue {
+    background: var(--tn-blue);
+    box-shadow: 0 0 8px rgba(122, 162, 247, 0.5);
+  }
+  .cell--attack {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .tech {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--tn-purple);
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .tech:hover {
+    color: #fff;
+    border-color: var(--tn-purple);
+  }
+
+  .grp[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .corpus__stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .row {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+    .row--head {
+      display: none;
+    }
+    .cell--attack {
+      padding-left: 1.05rem;
+    }
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const groups = document.querySelectorAll<HTMLElement>('.grp');
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const filter = chip.dataset.filter;
+      chips.forEach((c) => {
+        const active = c === chip;
+        c.classList.toggle('chip--active', active);
+        c.setAttribute('aria-pressed', String(active));
+      });
+      groups.forEach((g) => {
+        g.hidden = filter !== 'all' && g.dataset.group !== filter;
+      });
+    })
+  );
+</script>

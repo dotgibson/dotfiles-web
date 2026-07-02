@@ -92,6 +92,7 @@ export const nav = [
   { label: "Get Started", href: "/getting-started" },
   { label: "Playground", href: "/playground" },
   { label: "Generator", href: "/generator" },
+  { label: "Purple", href: "/purple" },
   { label: "Architecture", href: "/architecture" },
   { label: "Config", href: "/config" },
   { label: "Repos", href: "/#repos" },
