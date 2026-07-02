@@ -1,0 +1,671 @@
+{
+  "totalPairs": 56,
+  "groupCount": 11,
+  "techniqueCount": 38,
+  "tacticCount": 7,
+  "groups": [
+    {
+      "label": "On-prem AD / Windows",
+      "count": 24
+    },
+    {
+      "label": "Cloud IAM (Entra · AWS · GCP)",
+      "count": 5
+    },
+    {
+      "label": "Okta",
+      "count": 3
+    },
+    {
+      "label": "Kubernetes",
+      "count": 3
+    },
+    {
+      "label": "GitHub Actions",
+      "count": 3
+    },
+    {
+      "label": "GitLab CI/CD",
+      "count": 3
+    },
+    {
+      "label": "Jenkins",
+      "count": 3
+    },
+    {
+      "label": "Harbor registry",
+      "count": 3
+    },
+    {
+      "label": "HashiCorp Vault",
+      "count": 3
+    },
+    {
+      "label": "Terraform Cloud",
+      "count": 3
+    },
+    {
+      "label": "Snowflake",
+      "count": 3
+    }
+  ],
+  "pairs": [
+    {
+      "id": "adcs-esc1-certipy",
+      "attack": "AD CS ESC1 (request a cert as admin via arbitrary SAN)",
+      "detection": "Detect AD CS SAN abuse (4886 ESC1/relay)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1649"
+      ]
+    },
+    {
+      "id": "asreproast-getnpusers",
+      "attack": "AS-REP roast (no-preauth accounts)",
+      "detection": "Detect AS-REP / Kerbrute probing (4771 0x18)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1558.004"
+      ]
+    },
+    {
+      "id": "coerce-petitpotam",
+      "attack": "Coerce DC auth (PetitPotam / printerbug)",
+      "detection": "Detect coercion (5145 named-pipe access)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1187"
+      ]
+    },
+    {
+      "id": "dcshadow",
+      "attack": "DCShadow (register a rogue DC, push directory changes)",
+      "detection": "Detect DCShadow (rogue DC registration, 4742 GC SPN)",
+      "group": "On-prem AD / Windows",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1207"
+      ]
+    },
+    {
+      "id": "dcsync-secretsdump",
+      "attack": "DCSync — dump domain hashes via replication",
+      "detection": "Detect DCSync / NTDS replication (4662)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1003.006"
+      ]
+    },
+    {
+      "id": "device-code-phish",
+      "attack": "Device-code phishing (steal M365/Entra tokens)",
+      "detection": "Detect device-code phishing (Entra sign-in, deviceCode flow)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1528"
+      ]
+    },
+    {
+      "id": "dpapi-backupkey",
+      "attack": "DPAPI domain backup key (decrypt any user's secrets)",
+      "detection": "Detect DPAPI backup-key theft (protected_storage pipe, 5145)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1555"
+      ]
+    },
+    {
+      "id": "golden-ticket",
+      "attack": "Golden Ticket (forge a TGT from the krbtgt hash)",
+      "detection": "Detect Golden Ticket (4769 with no preceding 4768)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1558.001"
+      ]
+    },
+    {
+      "id": "gpp-cpassword",
+      "attack": "GPP cpassword (decrypt the SYSVOL AES key)",
+      "detection": "Detect GPP cpassword hunt (5145 SYSVOL Groups.xml read)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1552.006"
+      ]
+    },
+    {
+      "id": "kerberoast-getuserspns",
+      "attack": "Kerberoast SPNs (request + crack offline)",
+      "detection": "Detect Kerberoasting (4769 RC4 TGS)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1558.003"
+      ]
+    },
+    {
+      "id": "ntds-ntdsutil",
+      "attack": "NTDS.dit dump on the DC (ntdsutil / VSS, offline)",
+      "detection": "Detect NTDS theft via ntdsutil/VSS (4688 + 8222)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1003.003"
+      ]
+    },
+    {
+      "id": "ntlm-relay-ntlmrelayx",
+      "attack": "NTLM relay (ntlmrelayx → SMB, no signing)",
+      "detection": "Detect NTLM relay (4624 workstation mismatch)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1557.001"
+      ]
+    },
+    {
+      "id": "pth-lateral-nxc",
+      "attack": "Pass-the-hash lateral movement (SMB / WinRM / psexec)",
+      "detection": "Detect lateral movement (4624 type-3 fan-out)",
+      "group": "On-prem AD / Windows",
+      "phase": "Lateral Movement",
+      "tactic": "TA0008",
+      "techniques": [
+        "T1550.002"
+      ]
+    },
+    {
+      "id": "password-spray-kerbrute",
+      "attack": "Password spray (kerbrute, low & slow)",
+      "detection": "Detect password spray (4625 one source, many accounts)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1110.003"
+      ]
+    },
+    {
+      "id": "rdp-hijack-tscon",
+      "attack": "RDP session hijack (tscon as SYSTEM)",
+      "detection": "Detect RDP session hijack (4688 tscon)",
+      "group": "On-prem AD / Windows",
+      "phase": "Lateral Movement",
+      "tactic": "TA0008",
+      "techniques": [
+        "T1563.002"
+      ]
+    },
+    {
+      "id": "lsass-dump-lsassy",
+      "attack": "Remote LSASS dump (NetExec lsassy)",
+      "detection": "Detect LSASS access (4656 dump-shaped handle)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1003.001"
+      ]
+    },
+    {
+      "id": "rbcd-impacket",
+      "attack": "Resource-based constrained delegation (RBCD)",
+      "detection": "Detect RBCD abuse (5136 msDS-AllowedToActOnBehalfOfOtherIdentity write)",
+      "group": "On-prem AD / Windows",
+      "phase": "Privilege Escalation",
+      "tactic": "TA0004",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "schtask-persist",
+      "attack": "Scheduled-task persistence (schtasks /create)",
+      "detection": "Detect scheduled-task persistence (4698 task created)",
+      "group": "On-prem AD / Windows",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1053.005"
+      ]
+    },
+    {
+      "id": "potato-seimpersonate",
+      "attack": "SeImpersonate → SYSTEM (PrintSpoofer / GodPotato)",
+      "detection": "Detect Potato privesc (service account → SYSTEM shell, 4688)",
+      "group": "On-prem AD / Windows",
+      "phase": "Privilege Escalation",
+      "tactic": "TA0004",
+      "techniques": [
+        "T1134.001"
+      ]
+    },
+    {
+      "id": "shadow-credentials-certipy",
+      "attack": "Shadow Credentials (certipy shadow auto)",
+      "detection": "Detect Shadow Credentials (5136 msDS-KeyCredentialLink write)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1556"
+      ]
+    },
+    {
+      "id": "silver-ticket",
+      "attack": "Silver Ticket (forge a TGS from a service account hash)",
+      "detection": "Detect Silver Ticket (Kerberos service logon with no 4769)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1558.002"
+      ]
+    },
+    {
+      "id": "unconstrained-deleg-tgt",
+      "attack": "Unconstrained delegation — capture a DC TGT",
+      "detection": "Detect unconstrained-deleg abuse (DC machine-account auth to a non-DC, 4624)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1558"
+      ]
+    },
+    {
+      "id": "wmi-subscription",
+      "attack": "WMI event-subscription persistence (permanent consumer)",
+      "detection": "Detect WMI subscription persistence (Sysmon 20 consumer)",
+      "group": "On-prem AD / Windows",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1546.003"
+      ]
+    },
+    {
+      "id": "wmiexec-impacket",
+      "attack": "WMI remote exec (impacket-wmiexec, no service dropped)",
+      "detection": "Detect WMI exec (4688 WmiPrvSE child process)",
+      "group": "On-prem AD / Windows",
+      "phase": "Lateral Movement",
+      "tactic": "TA0008",
+      "techniques": [
+        "T1047"
+      ]
+    },
+    {
+      "id": "aws-console-login-profile",
+      "attack": "AWS console takeover (Create/UpdateLoginProfile)",
+      "detection": "Detect console takeover (CloudTrail Create/UpdateLoginProfile)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "aws-iam-backdoor-key",
+      "attack": "AWS IAM access-key backdoor (CreateAccessKey on another user)",
+      "detection": "Detect IAM access-key backdoor (CloudTrail CreateAccessKey)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.001"
+      ]
+    },
+    {
+      "id": "gcp-sa-key",
+      "attack": "GCP service-account key creation (long-lived backdoor)",
+      "detection": "Detect SA key creation (GCP audit, CreateServiceAccountKey)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.001"
+      ]
+    },
+    {
+      "id": "consent-grant",
+      "attack": "Illicit consent grant (malicious OAuth app)",
+      "detection": "Detect illicit consent grant (Entra audit, Consent to application)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1528"
+      ]
+    },
+    {
+      "id": "sp-cred-backdoor",
+      "attack": "Service-principal credential backdoor (add app secret)",
+      "detection": "Detect SP credential backdoor (Entra audit, Add credentials)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.001"
+      ]
+    },
+    {
+      "id": "okta-api-token",
+      "attack": "Okta API token (long-lived tenant persistence)",
+      "detection": "Detect API token creation (Okta System Log)",
+      "group": "Okta",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "okta-mfa-reset",
+      "attack": "Okta MFA reset → enroll attacker factor (account takeover)",
+      "detection": "Detect MFA factor reset / deactivate (Okta System Log)",
+      "group": "Okta",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1556.006"
+      ]
+    },
+    {
+      "id": "okta-idp-backdoor",
+      "attack": "Rogue IdP → federation backdoor (sign in as anyone)",
+      "detection": "Detect IdP create / activate (Okta System Log)",
+      "group": "Okta",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1556"
+      ]
+    },
+    {
+      "id": "k8s-clusteradmin-binding",
+      "attack": "Bind to cluster-admin (RBAC privesc / persistence)",
+      "detection": "Detect cluster-admin binding (K8s audit)",
+      "group": "Kubernetes",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "k8s-exec",
+      "attack": "kubectl exec into a running pod",
+      "detection": "Detect pod exec / attach (K8s audit)",
+      "group": "Kubernetes",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1609"
+      ]
+    },
+    {
+      "id": "k8s-privileged-pod",
+      "attack": "Privileged pod → node escape (nsenter into PID 1)",
+      "detection": "Detect privileged / host-namespace pod (K8s audit)",
+      "group": "Kubernetes",
+      "phase": "Privilege Escalation",
+      "tactic": "TA0004",
+      "techniques": [
+        "T1610",
+        "T1611"
+      ]
+    },
+    {
+      "id": "gh-deploy-key-backdoor",
+      "attack": "Deploy key / fine-grained PAT backdoor (durable repo access)",
+      "detection": "Detect deploy-key / PAT credential backdoor (GitHub audit log)",
+      "group": "GitHub Actions",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "gh-branch-protection-off",
+      "attack": "Disable/override branch protection (merge unreviewed code)",
+      "detection": "Detect branch-protection tamper (GitHub audit log)",
+      "group": "GitHub Actions",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "gh-self-hosted-runner",
+      "attack": "Rogue self-hosted runner (capture jobs + secrets)",
+      "detection": "Detect self-hosted runner registration (GitHub audit log)",
+      "group": "GitHub Actions",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1543"
+      ]
+    },
+    {
+      "id": "gl-runner-hijack",
+      "attack": "Attach a rogue GitLab Runner (capture CI jobs + secrets)",
+      "detection": "Detect rogue runner association (GitLab audit events)",
+      "group": "GitLab CI/CD",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1543"
+      ]
+    },
+    {
+      "id": "gl-token-backdoor",
+      "attack": "Project/deploy token backdoor (durable GitLab access)",
+      "detection": "Detect access/deploy token backdoor (GitLab audit events)",
+      "group": "GitLab CI/CD",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "gl-protected-branch-off",
+      "attack": "Remove protected-branch rules (merge unreviewed code)",
+      "detection": "Detect protected-branch tamper (GitLab audit events)",
+      "group": "GitLab CI/CD",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "jenkins-job-backdoor",
+      "attack": "Jenkins job/pipeline backdoor (run code on controller + agents)",
+      "detection": "Detect job create/reconfigure (Jenkins audit log)",
+      "group": "Jenkins",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1072"
+      ]
+    },
+    {
+      "id": "jenkins-script-console",
+      "attack": "Jenkins Script Console RCE (controller code exec + cred dump)",
+      "detection": "Detect Script Console use (Jenkins audit log)",
+      "group": "Jenkins",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1059"
+      ]
+    },
+    {
+      "id": "jenkins-api-token",
+      "attack": "Jenkins user API token (durable non-interactive access)",
+      "detection": "Detect API token creation (Jenkins audit log)",
+      "group": "Jenkins",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "harbor-image-backdoor",
+      "attack": "Backdoored image over a trusted tag (poison the registry)",
+      "detection": "Detect image push over a trusted tag (Harbor audit log)",
+      "group": "Harbor registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1525"
+      ]
+    },
+    {
+      "id": "harbor-artifact-delete",
+      "attack": "Delete the trusted artifact (force re-pull + anti-forensics)",
+      "detection": "Detect artifact deletion (Harbor audit log)",
+      "group": "Harbor registry",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1070"
+      ]
+    },
+    {
+      "id": "harbor-robot-backdoor",
+      "attack": "Harbor robot account (durable registry credential)",
+      "detection": "Detect robot-account creation (Harbor audit log)",
+      "group": "Harbor registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "vault-secret-exfil",
+      "attack": "Bulk KV secret read (exfil the vault)",
+      "detection": "Detect bulk secret read (Vault audit log)",
+      "group": "HashiCorp Vault",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1555"
+      ]
+    },
+    {
+      "id": "vault-audit-disable",
+      "attack": "Disable the Vault audit device (blind the SIEM)",
+      "detection": "Detect audit-device disable (Vault audit log)",
+      "group": "HashiCorp Vault",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "vault-approle-backdoor",
+      "attack": "Rogue AppRole (durable machine auth to Vault)",
+      "detection": "Detect rogue AppRole / auth backdoor (Vault audit log)",
+      "group": "HashiCorp Vault",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "tfc-agent-hijack",
+      "attack": "Rogue Terraform Cloud agent (capture runs + cloud creds)",
+      "detection": "Detect rogue agent pool (Terraform Cloud audit trail)",
+      "group": "Terraform Cloud",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1543"
+      ]
+    },
+    {
+      "id": "tfc-token-backdoor",
+      "attack": "Terraform Cloud org/team token backdoor (durable API access)",
+      "detection": "Detect org/team token creation (Terraform Cloud audit trail)",
+      "group": "Terraform Cloud",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "tfc-var-injection",
+      "attack": "Terraform Cloud variable injection (run code / exfil at apply)",
+      "detection": "Detect workspace variable injection (Terraform Cloud audit trail)",
+      "group": "Terraform Cloud",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1072"
+      ]
+    },
+    {
+      "id": "snowflake-rogue-user",
+      "attack": "Snowflake backdoor user + ACCOUNTADMIN grant",
+      "detection": "Detect user creation / ACCOUNTADMIN grant (Snowflake QUERY_HISTORY)",
+      "group": "Snowflake",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1136.003"
+      ]
+    },
+    {
+      "id": "snowflake-exfil-stage",
+      "attack": "Snowflake data exfil via COPY INTO external stage",
+      "detection": "Detect COPY INTO external unload (Snowflake QUERY_HISTORY)",
+      "group": "Snowflake",
+      "phase": "Exfiltration",
+      "tactic": "TA0010",
+      "techniques": [
+        "T1567.002"
+      ]
+    },
+    {
+      "id": "snowflake-network-policy",
+      "attack": "Snowflake network-policy tamper (open the IP allowlist)",
+      "detection": "Detect network-policy change (Snowflake QUERY_HISTORY)",
+      "group": "Snowflake",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.007"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import Corpus from '../components/Corpus.astro';
+import { withBase } from '../lib/url';
+---
+
+<Base
+  title="Purple corpus"
+  description="Every attack, beside its detection. An ATT&CK-tagged, red↔blue paired corpus spanning on-prem AD, cloud IAM, Kubernetes, CI/CD (GitHub, GitLab, Jenkins), Harbor, Vault, Terraform, and Snowflake — authored in htpx, executed from dotfiles-Kali, detected by dotfiles-Defense."
+>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Purple team</span>
+        <h1>Every attack, beside its detection</h1>
+        <p class="lead">
+          The role layers are two halves of one loop. <strong>dotfiles-Kali</strong> runs the
+          attack; <strong>dotfiles-Defense</strong> ships the Sigma rule that catches it. The
+          pairing itself is the source of truth: it lives in
+          <a href="https://github.com/dotgibson/htpx" target="_blank" rel="noopener">htpx</a>
+          as ATT&CK-tagged red↔blue entries, and this table is generated straight from them.
+        </p>
+        <p class="lead mt">
+          Each row is a technique you can execute on demand from Kali and confirm firing in
+          Defense — the purple loop closed in a single line. Filter by platform, and follow a
+          badge to its ATT&CK page. See the
+          <a href={withBase('/architecture')}>three-layer architecture →</a> for how the
+          layers fit together.
+        </p>
+      </div>
+
+      <Corpus />
+
+      <p class="corpus-foot">
+        Generated from the htpx <code>entries/</code> by
+        <code>scripts/collect-corpus.mjs</code>. The blue side compiles to a
+        drift-gated Splunk deploy form and an ATT&amp;CK Navigator coverage layer in
+        <a href="https://github.com/dotgibson/dotfiles-Defense" target="_blank" rel="noopener"
+          >dotfiles-Defense</a
+        >.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .corpus-foot {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+  .mt {
+    margin-top: 0.75rem;
+  }
+</style>
