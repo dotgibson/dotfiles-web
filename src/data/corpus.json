@@ -1,8 +1,8 @@
 {
-  "totalPairs": 56,
-  "groupCount": 11,
-  "techniqueCount": 38,
-  "tacticCount": 7,
+  "totalPairs": 71,
+  "groupCount": 16,
+  "techniqueCount": 43,
+  "tacticCount": 8,
   "groups": [
     {
       "label": "On-prem AD / Windows",
@@ -14,6 +14,10 @@
     },
     {
       "label": "Okta",
+      "count": 3
+    },
+    {
+      "label": "Google Workspace",
       "count": 3
     },
     {
@@ -46,6 +50,22 @@
     },
     {
       "label": "Snowflake",
+      "count": 3
+    },
+    {
+      "label": "Cloudflare edge",
+      "count": 3
+    },
+    {
+      "label": "npm registry",
+      "count": 3
+    },
+    {
+      "label": "PyPI registry",
+      "count": 3
+    },
+    {
+      "label": "Slack",
       "count": 3
     }
   ],
@@ -403,6 +423,39 @@
       ]
     },
     {
+      "id": "gws-mail-forward",
+      "attack": "Google Workspace external mail forwarding (BEC exfil)",
+      "detection": "Detect external mail forwarding (Google Workspace audit)",
+      "group": "Google Workspace",
+      "phase": "Collection",
+      "tactic": "TA0009",
+      "techniques": [
+        "T1114.003"
+      ]
+    },
+    {
+      "id": "gws-oauth-grant",
+      "attack": "Google Workspace malicious OAuth grant (consent phish)",
+      "detection": "Detect illicit OAuth grant (Google Workspace token audit)",
+      "group": "Google Workspace",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1528"
+      ]
+    },
+    {
+      "id": "gws-super-admin",
+      "attack": "Google Workspace super-admin grant (tenant persistence)",
+      "detection": "Detect admin-role grant (Google Workspace admin audit)",
+      "group": "Google Workspace",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.003"
+      ]
+    },
+    {
       "id": "k8s-clusteradmin-binding",
       "attack": "Bind to cluster-admin (RBAC privesc / persistence)",
       "detection": "Detect cluster-admin binding (K8s audit)",
@@ -665,6 +718,138 @@
       "tactic": "TA0005",
       "techniques": [
         "T1562.007"
+      ]
+    },
+    {
+      "id": "cf-api-token",
+      "attack": "Cloudflare API token backdoor (durable account access)",
+      "detection": "Detect API token creation (Cloudflare audit log)",
+      "group": "Cloudflare edge",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "cf-waf-disable",
+      "attack": "Cloudflare WAF/firewall rule disable (open the edge)",
+      "detection": "Detect WAF/firewall rule disable (Cloudflare audit log)",
+      "group": "Cloudflare edge",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "cf-worker-deploy",
+      "attack": "Cloudflare Worker deploy (serverless edge code exec)",
+      "detection": "Detect Worker deploy (Cloudflare audit log)",
+      "group": "Cloudflare edge",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1648"
+      ]
+    },
+    {
+      "id": "npm-malicious-publish",
+      "attack": "npm malicious package publish (supply-chain implant)",
+      "detection": "Detect package publish (npm audit log)",
+      "group": "npm registry",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1195.002"
+      ]
+    },
+    {
+      "id": "npm-2fa-disable",
+      "attack": "npm publish-2FA disable (open the publish path)",
+      "detection": "Detect publish-2FA disable (npm audit log)",
+      "group": "npm registry",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "npm-owner-add",
+      "attack": "npm rogue maintainer add (durable publish rights)",
+      "detection": "Detect maintainer add (npm audit log)",
+      "group": "npm registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "pypi-malicious-publish",
+      "attack": "PyPI malicious release upload (supply-chain implant)",
+      "detection": "Detect token release upload (PyPI journal)",
+      "group": "PyPI registry",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1195.002"
+      ]
+    },
+    {
+      "id": "pypi-role-add",
+      "attack": "PyPI rogue collaborator add (durable publish rights)",
+      "detection": "Detect collaborator add (PyPI journal)",
+      "group": "PyPI registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "pypi-trusted-publisher",
+      "attack": "PyPI rogue trusted publisher (credential-less publish backdoor)",
+      "detection": "Detect trusted publisher add (PyPI journal)",
+      "group": "PyPI registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "slack-2fa-disable",
+      "attack": "Slack 2FA enforcement disable (weaken workspace auth)",
+      "detection": "Detect 2FA enforcement disable (Slack audit log)",
+      "group": "Slack",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "slack-external-share",
+      "attack": "Slack Connect external share (channel exfil)",
+      "detection": "Detect external shared channel (Slack audit log)",
+      "group": "Slack",
+      "phase": "Exfiltration",
+      "tactic": "TA0010",
+      "techniques": [
+        "T1567"
+      ]
+    },
+    {
+      "id": "slack-malicious-app",
+      "attack": "Slack malicious app install (durable data access)",
+      "detection": "Detect app install (Slack audit log)",
+      "group": "Slack",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
       ]
     }
   ]

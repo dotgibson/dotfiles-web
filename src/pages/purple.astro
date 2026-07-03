@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Corpus from '../components/Corpus.astro';
+import Coverage from '../components/Coverage.astro';
 import { withBase } from '../lib/url';
 ---
 
@@ -31,13 +32,26 @@ import { withBase } from '../lib/url';
 
       <Corpus />
 
+      <div class="cov-head">
+        <h2>What the blue side actually detects</h2>
+        <p class="lead">
+          The other half of the loop: the Sigma rules <strong>dotfiles-Defense</strong> ships,
+          rolled up across the ATT&CK matrix. Every rule is drift-gated in CI and generates its
+          own <a href="https://mitre-attack.github.io/attack-navigator/" target="_blank" rel="noopener"
+            >ATT&CK Navigator</a
+          > layer plus a <code>COVERAGE.md</code> report — this is that same roll-up, live.
+        </p>
+      </div>
+
+      <Coverage />
+
       <p class="corpus-foot">
-        Generated from the htpx <code>entries/</code> by
-        <code>scripts/collect-corpus.mjs</code>. The blue side compiles to a
-        drift-gated Splunk deploy form and an ATT&amp;CK Navigator coverage layer in
+        The corpus is generated from the htpx <code>entries/</code> by
+        <code>scripts/collect-corpus.mjs</code>, and the coverage roll-up is generated from the
         <a href="https://github.com/dotgibson/dotfiles-Defense" target="_blank" rel="noopener"
           >dotfiles-Defense</a
-        >.
+        > Sigma rules by <code>scripts/collect-coverage.mjs</code> (mirroring that repo's
+        drift-gated <code>gen-coverage.sh</code>). Neither is hand-typed.
       </p>
     </div>
   </section>
@@ -53,5 +67,13 @@ import { withBase } from '../lib/url';
   }
   .mt {
     margin-top: 0.75rem;
+  }
+  .cov-head {
+    margin: 3rem 0 1.75rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .cov-head h2 {
+    margin: 0 0 0.75rem;
   }
 </style>

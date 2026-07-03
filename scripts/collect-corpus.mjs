@@ -47,6 +47,7 @@ const GROUPS = {
   network: 'On-prem AD / Windows',
   cloud: 'Cloud IAM (Entra · AWS · GCP)',
   okta: 'Okta',
+  gws: 'Google Workspace',
   kubernetes: 'Kubernetes',
   github: 'GitHub Actions',
   gitlab: 'GitLab CI/CD',
@@ -55,12 +56,17 @@ const GROUPS = {
   vault: 'HashiCorp Vault',
   terraform: 'Terraform Cloud',
   snowflake: 'Snowflake',
+  cloudflare: 'Cloudflare edge',
+  npm: 'npm registry',
+  pypi: 'PyPI registry',
+  slack: 'Slack',
 };
 // Display order for the groups (on-prem first, then cloud/SaaS by theme).
 const ORDER = [
-  'On-prem AD / Windows', 'Cloud IAM (Entra · AWS · GCP)', 'Okta', 'Kubernetes',
-  'GitHub Actions', 'GitLab CI/CD', 'Jenkins', 'Harbor registry',
-  'HashiCorp Vault', 'Terraform Cloud', 'Snowflake',
+  'On-prem AD / Windows', 'Cloud IAM (Entra · AWS · GCP)', 'Okta', 'Google Workspace',
+  'Kubernetes', 'GitHub Actions', 'GitLab CI/CD', 'Jenkins', 'Harbor registry',
+  'HashiCorp Vault', 'Terraform Cloud', 'Snowflake', 'Cloudflare edge',
+  'npm registry', 'PyPI registry', 'Slack',
 ];
 
 function frontmatter(text) {
