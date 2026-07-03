@@ -1,0 +1,295 @@
+---
+// Coverage.astro — renders the blue side's ATT&CK detection coverage: a stat row, a
+// per-tactic bar chart, a logsource grid, and the full technique set. Data comes from
+// src/data/coverage.json, generated from the dotfiles-Defense Sigma rules by
+// scripts/collect-coverage.mjs (never hand-typed) — the same roll-up Defense ships as
+// detections/navigator/COVERAGE.md.
+import coverage from '../data/coverage.json';
+
+type Tactic = { id: string; name: string; techniques: number; rules: number };
+type Technique = { id: string; rules: number; ruleNames: string[] };
+type Logsource = { dir: string; products: string[]; rules: number };
+
+const data = coverage as {
+  ruleCount: number;
+  documentCount: number;
+  techniqueCount: number;
+  tacticCount: number;
+  logsourceCount: number;
+  tactics: Tactic[];
+  techniques: Technique[];
+  logsources: Logsource[];
+};
+
+const stats = [
+  { n: data.ruleCount, label: 'Sigma detection rules' },
+  { n: data.techniqueCount, label: 'ATT&CK techniques' },
+  { n: data.tacticCount, label: 'ATT&CK tactics' },
+  { n: data.logsourceCount, label: 'logsources' },
+];
+
+const maxTacticRules = Math.max(1, ...data.tactics.map((t) => t.rules));
+const attackUrl = (t: string) => `https://attack.mitre.org/techniques/${t.replace('.', '/')}/`;
+---
+
+<section class="cov">
+  <div class="cov__stats">
+    {
+      stats.map((s) => (
+        <div class="stat">
+          <span class="stat__n">{s.n}</span>
+          <span class="stat__label">{s.label}</span>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="cov__cols">
+    <section class="cov__block">
+      <h3 class="cov__h">By ATT&amp;CK tactic</h3>
+      <div class="bars">
+        {
+          data.tactics.map((t) => (
+            <div class="bar">
+              <span class="bar__name">
+                {t.name} <span class="bar__id">{t.id}</span>
+              </span>
+              <span class="bar__track">
+                <span class="bar__fill" style={`width:${(t.rules / maxTacticRules) * 100}%`} />
+              </span>
+              <span class="bar__n" title={`${t.rules} rules · ${t.techniques} techniques`}>
+                {t.rules}
+                <span class="bar__sub">/{t.techniques}t</span>
+              </span>
+            </div>
+          ))
+        }
+      </div>
+      <p class="cov__note">Rules per tactic (bar) and distinct techniques (·/Nt). A rule spanning two tactics counts in both.</p>
+    </section>
+
+    <section class="cov__block">
+      <h3 class="cov__h">By logsource</h3>
+      <div class="logs">
+        {
+          data.logsources.map((l) => (
+            <div class="log">
+              <span class="log__dir">{l.dir}</span>
+              <span class="log__prod">{l.products.join(', ')}</span>
+              <span class="log__n">{l.rules}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+
+  <section class="cov__block">
+    <h3 class="cov__h">
+      Techniques detected <span class="cov__count">{data.techniqueCount}</span>
+    </h3>
+    <div class="techs">
+      {
+        data.techniques.map((t) => (
+          <a
+            class="techcap"
+            href={attackUrl(t.id)}
+            target="_blank"
+            rel="noopener"
+            title={`${t.rules} rule(s): ${t.ruleNames.join(', ')}`}
+          >
+            {t.id}
+            {t.rules > 1 && <span class="techcap__n">{t.rules}</span>}
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</section>
+
+<style>
+  .cov__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--tn-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .stat__n {
+    font-family: var(--font-mono);
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--tn-blue);
+    line-height: 1;
+  }
+  .stat__label {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  .cov__cols {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  .cov__block {
+    min-width: 0;
+  }
+  .cov__h {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    color: var(--tn-fg);
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .cov__count {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  .cov__note {
+    margin: 0.9rem 0 0;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  .bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .bar {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, auto) 1fr minmax(2.6rem, auto);
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .bar__name {
+    font-size: 0.82rem;
+    color: var(--tn-fg-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar__id {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+  }
+  .bar__track {
+    height: 0.6rem;
+    background: var(--tn-surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar__fill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--tn-blue), var(--tn-cyan));
+    border-radius: 999px;
+  }
+  .bar__n {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--tn-fg);
+    text-align: right;
+  }
+  .bar__sub {
+    font-size: 0.66rem;
+    color: var(--text-dim);
+  }
+
+  .logs {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .log {
+    display: grid;
+    grid-template-columns: minmax(6rem, auto) 1fr auto;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.5rem 0.85rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+  .log:first-child {
+    border-top: none;
+  }
+  .log__dir {
+    font-family: var(--font-mono);
+    color: var(--tn-fg);
+  }
+  .log__prod {
+    color: var(--text-dim);
+    font-size: 0.76rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .log__n {
+    font-family: var(--font-mono);
+    color: var(--tn-cyan);
+  }
+
+  .techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .techcap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--tn-purple);
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .techcap:hover {
+    color: #fff;
+    border-color: var(--tn-purple);
+  }
+  .techcap__n {
+    font-size: 0.64rem;
+    color: var(--tn-bg-dark, #16161e);
+    background: var(--tn-purple);
+    border-radius: 999px;
+    padding: 0 0.35rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 860px) {
+    .cov__cols {
+      grid-template-columns: 1fr;
+      gap: 2.25rem;
+    }
+  }
+  @media (max-width: 720px) {
+    .cov__stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

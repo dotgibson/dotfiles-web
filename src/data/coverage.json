@@ -1,0 +1,503 @@
+{
+  "ruleCount": 64,
+  "documentCount": 66,
+  "techniqueCount": 39,
+  "tacticCount": 8,
+  "logsourceCount": 20,
+  "tactics": [
+    {
+      "id": "TA0002",
+      "name": "Execution",
+      "techniques": 8,
+      "rules": 10
+    },
+    {
+      "id": "TA0003",
+      "name": "Persistence",
+      "techniques": 11,
+      "rules": 29
+    },
+    {
+      "id": "TA0004",
+      "name": "Privilege Escalation",
+      "techniques": 6,
+      "rules": 6
+    },
+    {
+      "id": "TA0005",
+      "name": "Defense Evasion",
+      "techniques": 6,
+      "rules": 10
+    },
+    {
+      "id": "TA0006",
+      "name": "Credential Access",
+      "techniques": 11,
+      "rules": 12
+    },
+    {
+      "id": "TA0008",
+      "name": "Lateral Movement",
+      "techniques": 4,
+      "rules": 5
+    },
+    {
+      "id": "TA0009",
+      "name": "Collection",
+      "techniques": 1,
+      "rules": 1
+    },
+    {
+      "id": "TA0010",
+      "name": "Exfiltration",
+      "techniques": 2,
+      "rules": 2
+    }
+  ],
+  "techniques": [
+    {
+      "id": "T1003.001",
+      "rules": 1,
+      "ruleNames": [
+        "lsass_handle_access"
+      ]
+    },
+    {
+      "id": "T1003.003",
+      "rules": 1,
+      "ruleNames": [
+        "ntds_dump_ntdsutil_vss_4688"
+      ]
+    },
+    {
+      "id": "T1003.006",
+      "rules": 1,
+      "ruleNames": [
+        "dcsync_replication_4662"
+      ]
+    },
+    {
+      "id": "T1047",
+      "rules": 1,
+      "ruleNames": [
+        "wmiexec_wmiprvse_child_4688"
+      ]
+    },
+    {
+      "id": "T1053.005",
+      "rules": 1,
+      "ruleNames": [
+        "scheduled_task_suspicious_4698"
+      ]
+    },
+    {
+      "id": "T1059",
+      "rules": 1,
+      "ruleNames": [
+        "jenkins_script_console"
+      ]
+    },
+    {
+      "id": "T1070",
+      "rules": 1,
+      "ruleNames": [
+        "harbor_artifact_deleted"
+      ]
+    },
+    {
+      "id": "T1072",
+      "rules": 2,
+      "ruleNames": [
+        "jenkins_job_backdoor",
+        "tfc_variable_injection"
+      ]
+    },
+    {
+      "id": "T1098",
+      "rules": 15,
+      "ruleNames": [
+        "aws_login_profile_created",
+        "cloudflare_api_token_created",
+        "github_credential_backdoor",
+        "gitlab_token_backdoor",
+        "harbor_robot_account_created",
+        "jenkins_api_token_created",
+        "k8s_clusteradmin_binding",
+        "npm_maintainer_added",
+        "okta_api_token_created",
+        "pypi_collaborator_added",
+        "pypi_trusted_publisher_added",
+        "rbcd_allowedtoact_5136",
+        "slack_app_installed",
+        "tfc_token_backdoor",
+        "vault_approle_backdoor"
+      ]
+    },
+    {
+      "id": "T1098.001",
+      "rules": 3,
+      "ruleNames": [
+        "aws_iam_access_key_created",
+        "entra_sp_credential_backdoor",
+        "gcp_service_account_key_created"
+      ]
+    },
+    {
+      "id": "T1098.003",
+      "rules": 1,
+      "ruleNames": [
+        "gws_admin_role_grant"
+      ]
+    },
+    {
+      "id": "T1110.003",
+      "rules": 1,
+      "ruleNames": [
+        "password_spray_4625"
+      ]
+    },
+    {
+      "id": "T1114.003",
+      "rules": 1,
+      "ruleNames": [
+        "gws_external_mail_forwarding"
+      ]
+    },
+    {
+      "id": "T1134.001",
+      "rules": 1,
+      "ruleNames": [
+        "potato_seimpersonate_4688"
+      ]
+    },
+    {
+      "id": "T1136.003",
+      "rules": 1,
+      "ruleNames": [
+        "snowflake_user_created"
+      ]
+    },
+    {
+      "id": "T1195.002",
+      "rules": 2,
+      "ruleNames": [
+        "npm_malicious_package_publish",
+        "pypi_token_release_upload"
+      ]
+    },
+    {
+      "id": "T1207",
+      "rules": 1,
+      "ruleNames": [
+        "dcshadow_rogue_dc_4742"
+      ]
+    },
+    {
+      "id": "T1484.002",
+      "rules": 1,
+      "ruleNames": [
+        "okta_idp_created"
+      ]
+    },
+    {
+      "id": "T1525",
+      "rules": 1,
+      "ruleNames": [
+        "harbor_image_pushed_trusted_tag"
+      ]
+    },
+    {
+      "id": "T1528",
+      "rules": 2,
+      "ruleNames": [
+        "entra_illicit_consent_grant",
+        "gws_illicit_oauth_grant"
+      ]
+    },
+    {
+      "id": "T1543",
+      "rules": 3,
+      "ruleNames": [
+        "github_self_hosted_runner_registered",
+        "gitlab_rogue_runner_associated",
+        "tfc_rogue_agent_pool"
+      ]
+    },
+    {
+      "id": "T1546.003",
+      "rules": 1,
+      "ruleNames": [
+        "wmi_event_subscription_consumer"
+      ]
+    },
+    {
+      "id": "T1552.006",
+      "rules": 1,
+      "ruleNames": [
+        "gpp_cpassword_sysvol_5145"
+      ]
+    },
+    {
+      "id": "T1555",
+      "rules": 1,
+      "ruleNames": [
+        "vault_bulk_secret_read"
+      ]
+    },
+    {
+      "id": "T1556",
+      "rules": 2,
+      "ruleNames": [
+        "okta_idp_created",
+        "shadow_credentials_keycredentiallink_5136"
+      ]
+    },
+    {
+      "id": "T1556.006",
+      "rules": 1,
+      "ruleNames": [
+        "okta_mfa_factor_reset"
+      ]
+    },
+    {
+      "id": "T1558.003",
+      "rules": 1,
+      "ruleNames": [
+        "kerberoasting_rc4_tgs"
+      ]
+    },
+    {
+      "id": "T1558.004",
+      "rules": 1,
+      "ruleNames": [
+        "asrep_roast_probing_4771"
+      ]
+    },
+    {
+      "id": "T1562.001",
+      "rules": 6,
+      "ruleNames": [
+        "cloudflare_waf_rule_disabled",
+        "github_branch_protection_tamper",
+        "gitlab_protected_branch_tamper",
+        "npm_publish_2fa_disabled",
+        "slack_2fa_enforcement_disabled",
+        "vault_audit_device_disabled"
+      ]
+    },
+    {
+      "id": "T1562.007",
+      "rules": 1,
+      "ruleNames": [
+        "snowflake_network_policy_change"
+      ]
+    },
+    {
+      "id": "T1563.002",
+      "rules": 1,
+      "ruleNames": [
+        "rdp_hijack_tscon_4688"
+      ]
+    },
+    {
+      "id": "T1567",
+      "rules": 1,
+      "ruleNames": [
+        "slack_external_shared_channel"
+      ]
+    },
+    {
+      "id": "T1567.002",
+      "rules": 1,
+      "ruleNames": [
+        "snowflake_data_unload"
+      ]
+    },
+    {
+      "id": "T1569.002",
+      "rules": 1,
+      "ruleNames": [
+        "service_creation_psexec_7045"
+      ]
+    },
+    {
+      "id": "T1609",
+      "rules": 1,
+      "ruleNames": [
+        "k8s_pod_exec_attach"
+      ]
+    },
+    {
+      "id": "T1610",
+      "rules": 1,
+      "ruleNames": [
+        "k8s_privileged_pod_created"
+      ]
+    },
+    {
+      "id": "T1611",
+      "rules": 1,
+      "ruleNames": [
+        "k8s_privileged_pod_created"
+      ]
+    },
+    {
+      "id": "T1648",
+      "rules": 1,
+      "ruleNames": [
+        "cloudflare_worker_deployed"
+      ]
+    },
+    {
+      "id": "T1649",
+      "rules": 1,
+      "ruleNames": [
+        "adcs_esc1_san_mismatch_4886"
+      ]
+    }
+  ],
+  "logsources": [
+    {
+      "dir": "cloud",
+      "products": [
+        "aws",
+        "azure",
+        "gcp"
+      ],
+      "rules": 5
+    },
+    {
+      "dir": "cloudflare",
+      "products": [
+        "cloudflare"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "credential_access",
+      "products": [
+        "windows"
+      ],
+      "rules": 7
+    },
+    {
+      "dir": "defense_evasion",
+      "products": [
+        "windows"
+      ],
+      "rules": 1
+    },
+    {
+      "dir": "github",
+      "products": [
+        "github"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "gitlab",
+      "products": [
+        "gitlab"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "google_workspace",
+      "products": [
+        "google_workspace"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "jenkins",
+      "products": [
+        "jenkins"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "kubernetes",
+      "products": [
+        "kubernetes"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "lateral_movement",
+      "products": [
+        "windows"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "npm",
+      "products": [
+        "npm"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "okta",
+      "products": [
+        "okta"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "persistence",
+      "products": [
+        "windows"
+      ],
+      "rules": 2
+    },
+    {
+      "dir": "privilege_escalation",
+      "products": [
+        "windows"
+      ],
+      "rules": 4
+    },
+    {
+      "dir": "pypi",
+      "products": [
+        "pypi"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "registry",
+      "products": [
+        "harbor"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "slack",
+      "products": [
+        "slack"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "snowflake",
+      "products": [
+        "snowflake"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "terraform",
+      "products": [
+        "terraform"
+      ],
+      "rules": 3
+    },
+    {
+      "dir": "vault",
+      "products": [
+        "vault"
+      ],
+      "rules": 3
+    }
+  ]
+}

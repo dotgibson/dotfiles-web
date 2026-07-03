@@ -12,8 +12,9 @@
     "metrics": "node scripts/collect-metrics.mjs",
     "snippets": "node scripts/collect-snippets.mjs",
     "corpus": "node scripts/collect-corpus.mjs",
-    "data": "npm run metrics && npm run snippets && npm run corpus",
-    "data:strict": "node scripts/collect-metrics.mjs --strict && npm run snippets && node scripts/collect-corpus.mjs --strict",
+    "coverage": "node scripts/collect-coverage.mjs",
+    "data": "npm run metrics && npm run snippets && npm run corpus && npm run coverage",
+    "data:strict": "node scripts/collect-metrics.mjs --strict && npm run snippets && node scripts/collect-corpus.mjs --strict && node scripts/collect-coverage.mjs --strict",
     "verify:flags": "node scripts/verify-bootstrap-flags.mjs",
     "check": "astro check",
     "astro": "astro"
