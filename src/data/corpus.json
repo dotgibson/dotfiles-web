@@ -17,6 +17,10 @@
       "count": 3
     },
     {
+      "label": "Google Workspace",
+      "count": 3
+    },
+    {
       "label": "Kubernetes",
       "count": 3
     },
@@ -62,10 +66,6 @@
     },
     {
       "label": "Slack",
-      "count": 3
-    },
-    {
-      "label": "Gws",
       "count": 3
     }
   ],
@@ -420,6 +420,39 @@
       "tactic": "TA0003",
       "techniques": [
         "T1556"
+      ]
+    },
+    {
+      "id": "gws-mail-forward",
+      "attack": "Google Workspace external mail forwarding (BEC exfil)",
+      "detection": "Detect external mail forwarding (Google Workspace audit)",
+      "group": "Google Workspace",
+      "phase": "Collection",
+      "tactic": "TA0009",
+      "techniques": [
+        "T1114.003"
+      ]
+    },
+    {
+      "id": "gws-oauth-grant",
+      "attack": "Google Workspace malicious OAuth grant (consent phish)",
+      "detection": "Detect illicit OAuth grant (Google Workspace token audit)",
+      "group": "Google Workspace",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1528"
+      ]
+    },
+    {
+      "id": "gws-super-admin",
+      "attack": "Google Workspace super-admin grant (tenant persistence)",
+      "detection": "Detect admin-role grant (Google Workspace admin audit)",
+      "group": "Google Workspace",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.003"
       ]
     },
     {
@@ -817,39 +850,6 @@
       "tactic": "TA0003",
       "techniques": [
         "T1098"
-      ]
-    },
-    {
-      "id": "gws-mail-forward",
-      "attack": "Google Workspace external mail forwarding (BEC exfil)",
-      "detection": "Detect external mail forwarding (Google Workspace audit)",
-      "group": "Gws",
-      "phase": "Collection",
-      "tactic": "TA0009",
-      "techniques": [
-        "T1114.003"
-      ]
-    },
-    {
-      "id": "gws-oauth-grant",
-      "attack": "Google Workspace malicious OAuth grant (consent phish)",
-      "detection": "Detect illicit OAuth grant (Google Workspace token audit)",
-      "group": "Gws",
-      "phase": "Credential Access",
-      "tactic": "TA0006",
-      "techniques": [
-        "T1528"
-      ]
-    },
-    {
-      "id": "gws-super-admin",
-      "attack": "Google Workspace super-admin grant (tenant persistence)",
-      "detection": "Detect admin-role grant (Google Workspace admin audit)",
-      "group": "Gws",
-      "phase": "Persistence",
-      "tactic": "TA0003",
-      "techniques": [
-        "T1098.003"
       ]
     }
   ]
