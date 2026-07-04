@@ -11,29 +11,46 @@
  *
  * The four `styles` pills mirror tokyonight's built-in styles that the Neovim config
  * can flip between in one line (nvim/lua/gerrrt/plugins/theme.lua → `style = ...`).
+ *
+ * NO-DRIFT: both the swatch fill AND its printed hex trace to the SAME source —
+ * src/styles/global.css. The chip paints `var(--tn-*)` live; the label is the same
+ * token read out of global.css at BUILD time (hexOf below), so the two can't disagree
+ * and the printed value can't drift from the shipped token. No client-side JS needed.
  */
+// Inline the canonical stylesheet's TEXT at build time. Vite's `?raw` returns the
+// file as a string (and does NOT register it as a stylesheet — Base.astro already
+// imports global.css normally for the real styles), and it's bundler-safe, unlike a
+// runtime fs read whose relative path breaks once the frontmatter is chunked.
+import globalCss from '../styles/global.css?raw';
 
-// Accent ramp — the "theme highlights". `var` is the canonical token in global.css;
-// `hex` is the same value, shown as the label. Both come from this single source.
+// Pull a `--tn-name: #hex;` declaration out of global.css. The trailing colon in the
+// pattern makes it exact — `--tn-bg:` never matches `--tn-bg-dark:`.
+function hexOf(cssVar: string): string {
+  const m = globalCss.match(new RegExp(`${cssVar}:\\s*(#[0-9a-fA-F]{3,8})`));
+  return m ? m[1].toLowerCase() : '#000000';
+}
+
+// Accent ramp — the "theme highlights". `var` is the canonical token; the printed
+// hex is derived from it via hexOf(), so global.css stays the single source of truth.
 const accents = [
-  { name: 'Blue', var: '--tn-blue', hex: '#7aa2f7', role: 'primary · links · keywords' },
-  { name: 'Cyan', var: '--tn-cyan', hex: '#7dcfff', role: 'hover · inline code' },
-  { name: 'Purple', var: '--tn-purple', hex: '#bb9af7', role: 'accent · eyebrows' },
-  { name: 'Magenta', var: '--tn-magenta', hex: '#c678dd', role: 'constants' },
-  { name: 'Green', var: '--tn-green', hex: '#9ece6a', role: 'strings · git add' },
-  { name: 'Teal', var: '--tn-teal', hex: '#73daca', role: 'types · regex' },
-  { name: 'Red', var: '--tn-red', hex: '#f7768e', role: 'errors · git del' },
-  { name: 'Orange', var: '--tn-orange', hex: '#ff9e64', role: 'numbers · params' },
-  { name: 'Yellow', var: '--tn-yellow', hex: '#e0af68', role: 'warnings · modified' },
+  { name: 'Blue', var: '--tn-blue', role: 'primary · links · keywords' },
+  { name: 'Cyan', var: '--tn-cyan', role: 'hover · inline code' },
+  { name: 'Purple', var: '--tn-purple', role: 'accent · eyebrows' },
+  { name: 'Magenta', var: '--tn-magenta', role: 'constants' },
+  { name: 'Green', var: '--tn-green', role: 'strings · git add' },
+  { name: 'Teal', var: '--tn-teal', role: 'types · regex' },
+  { name: 'Red', var: '--tn-red', role: 'errors · git del' },
+  { name: 'Orange', var: '--tn-orange', role: 'numbers · params' },
+  { name: 'Yellow', var: '--tn-yellow', role: 'warnings · modified' },
 ];
 
 // The surfaces the accents sit on — the depth ramp behind every panel on the fleet.
 const surfaces = [
-  { name: 'bg', var: '--tn-bg', hex: '#1a1b26' },
-  { name: 'bg-dark', var: '--tn-bg-dark', hex: '#16161e' },
-  { name: 'surface', var: '--tn-surface', hex: '#1f2335' },
-  { name: 'surface-2', var: '--tn-surface-2', hex: '#292e42' },
-  { name: 'border', var: '--tn-border-bright', hex: '#3b4261' },
+  { name: 'bg', var: '--tn-bg' },
+  { name: 'bg-dark', var: '--tn-bg-dark' },
+  { name: 'surface', var: '--tn-surface' },
+  { name: 'surface-2', var: '--tn-surface-2' },
+  { name: 'border', var: '--tn-border-bright' },
 ];
 
 // tokyonight styles the Neovim config can switch to with a one-line edit.
@@ -65,7 +82,7 @@ const styles = [
             <span class="swatch__chip" style={`background: var(${c.var});`} aria-hidden="true"></span>
             <div class="swatch__meta">
               <span class="swatch__name">{c.name}</span>
-              <code class="swatch__hex">{c.hex}</code>
+              <code class="swatch__hex">{hexOf(c.var)}</code>
               <span class="swatch__role">{c.role}</span>
             </div>
           </article>
@@ -82,7 +99,7 @@ const styles = [
             surfaces.map((s) => (
               <div class="surface" style={`background: var(${s.var});`}>
                 <span class="surface__name text-mono">{s.name}</span>
-                <span class="surface__hex text-mono">{s.hex}</span>
+                <span class="surface__hex text-mono">{hexOf(s.var)}</span>
               </div>
             ))
           }
