@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CommandBlock from '../components/CommandBlock.astro';
+import Callout from '../components/Callout.astro';
 import { platforms } from '../data/install';
 import { site, release } from '../data/site';
 
@@ -39,15 +40,20 @@ const showSelect = channels.length > 1 || release.current !== 'main';
       </div>
 
       <!-- prerequisites -->
-      <div class="card prereq">
-        <h3>Before you start</h3>
+      <Callout type="note" title="Before you start">
         <ul>
           <li><code>git</code> installed and your identity ready (name + email).</li>
           <li><strong>macOS:</strong> Command Line Tools (the bootstrap installs Homebrew).</li>
           <li><strong>Windows:</strong> PowerShell 7 (<code>pwsh</code>) and Developer Mode (or run elevated) so symlinks work.</li>
           <li><strong>Kali:</strong> running under WSL2; engagement data is kept out of the repo by design.</li>
         </ul>
-      </div>
+      </Callout>
+
+      <Callout type="tip" title="Preview before you commit">
+        Every bootstrap takes <code>--links-only --dry-run</code> — it prints the exact
+        symlink plan (and any conflicts) without touching your machine. Run it first, read
+        the plan, then bootstrap for real.
+      </Callout>
 
       <!-- version channel switcher -->
       <div class="card verbar">
@@ -137,22 +143,23 @@ const showSelect = channels.length > 1 || release.current !== 'main';
       </div>
 
       <!-- updating core -->
-      <div class="card afterword">
-        <h3>Keeping Core current</h3>
-        <p>
-          Core is authored in <code>dotfiles-core</code> and vendored into every OS repo. To
-          pull the latest Core into a machine repo and re-wire links:
-        </p>
-        <CommandBlock
-          code={`git subtree pull --prefix=core https://github.com/dotgibson/dotfiles-core main --squash
+      <div class="afterword">
+        <Callout type="important" title="Keeping Core current">
+          <p>
+            Core is authored in <code>dotfiles-core</code> and vendored into every OS repo. To
+            pull the latest Core into a machine repo and re-wire links:
+          </p>
+          <CommandBlock
+            code={`git subtree pull --prefix=core https://github.com/dotgibson/dotfiles-core main --squash
 ./bootstrap.sh --links-only`}
-        />
-        <p class="muted" style="margin-bottom:0;">
-          Tracking a pinned release instead? Re-clone the new tag (or
-          <code>git fetch --tags && git checkout vX.Y.Z</code>) — the vendored Core moves
-          with it. Maintainers can fan a Core change out to every OS repo at once with
-          <code>scripts/sync-core.sh</code> from <code>dotfiles-core</code>.
-        </p>
+          />
+          <p class="muted" style="margin-bottom:0;">
+            Tracking a pinned release instead? Re-clone the new tag (or
+            <code>git fetch --tags && git checkout vX.Y.Z</code>) — the vendored Core moves
+            with it. Maintainers can fan a Core change out to every OS repo at once with
+            <code>scripts/sync-core.sh</code> from <code>dotfiles-core</code>.
+          </p>
+        </Callout>
       </div>
     </div>
   </section>
@@ -173,21 +180,6 @@ const showSelect = channels.length > 1 || release.current !== 'main';
     color: var(--accent);
     font-weight: 600;
   }
-  .prereq {
-    margin-bottom: 1.5rem;
-  }
-  .prereq h3 {
-    margin-top: 0;
-  }
-  .prereq ul {
-    margin: 0;
-    padding-left: 1.2rem;
-    color: var(--text-dim);
-  }
-  .prereq li {
-    margin-bottom: 0.4rem;
-  }
-
   .verbar {
     display: flex;
     flex-wrap: wrap;
@@ -317,9 +309,6 @@ const showSelect = channels.length > 1 || release.current !== 'main';
   }
   .afterword {
     margin-top: 3rem;
-  }
-  .afterword h3 {
-    margin-top: 0;
   }
   @media (max-width: 520px) {
     .step {

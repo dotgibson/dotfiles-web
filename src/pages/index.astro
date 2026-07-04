@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import HeroBanner from '../components/HeroBanner.astro';
 import Metrics from '../components/Metrics.astro';
 import Features from '../components/Features.astro';
 import Palette from '../components/Palette.astro';
@@ -20,6 +21,8 @@ const orderedRepos = [...repos];
 
 <Base>
   <Hero />
+
+  <HeroBanner />
 
   <Metrics />
 
