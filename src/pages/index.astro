@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Metrics from '../components/Metrics.astro';
+import Palette from '../components/Palette.astro';
 import RepoCard from '../components/RepoCard.astro';
 import InstallBuilder from '../components/InstallBuilder.astro';
 import { repos, layerMeta } from '../data/repos';
@@ -127,6 +128,9 @@ const orderedRepos = [...repos];
       </div>
     </div>
   </section>
+
+  <!-- ===================================================== theme / palette -->
+  <Palette />
 
   <!-- ===================================================== repos -->
   <section class="section" id="repos">

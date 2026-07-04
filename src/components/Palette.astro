@@ -1,0 +1,285 @@
+---
+/*
+ * Palette.astro — "theme highlights", NvChad-style.
+ *
+ * NvChad's signature website element is its theme gallery: a soft-shadow, rounded
+ * card grid that shows the colours off. This adapts that content format to the one
+ * palette that themes the WHOLE fleet — Tokyo Night (Storm): the same colours in
+ * Neovim (tokyonight.nvim), tmux, starship, and this very page. Every swatch below
+ * renders a real CSS custom property from src/styles/global.css, so the gallery can
+ * never drift from the colours the site actually ships.
+ *
+ * The four `styles` pills mirror tokyonight's built-in styles that the Neovim config
+ * can flip between in one line (nvim/lua/gerrrt/plugins/theme.lua → `style = ...`).
+ */
+
+// Accent ramp — the "theme highlights". `var` is the canonical token in global.css;
+// `hex` is the same value, shown as the label. Both come from this single source.
+const accents = [
+  { name: 'Blue', var: '--tn-blue', hex: '#7aa2f7', role: 'primary · links · keywords' },
+  { name: 'Cyan', var: '--tn-cyan', hex: '#7dcfff', role: 'hover · inline code' },
+  { name: 'Purple', var: '--tn-purple', hex: '#bb9af7', role: 'accent · eyebrows' },
+  { name: 'Magenta', var: '--tn-magenta', hex: '#c678dd', role: 'constants' },
+  { name: 'Green', var: '--tn-green', hex: '#9ece6a', role: 'strings · git add' },
+  { name: 'Teal', var: '--tn-teal', hex: '#73daca', role: 'types · regex' },
+  { name: 'Red', var: '--tn-red', hex: '#f7768e', role: 'errors · git del' },
+  { name: 'Orange', var: '--tn-orange', hex: '#ff9e64', role: 'numbers · params' },
+  { name: 'Yellow', var: '--tn-yellow', hex: '#e0af68', role: 'warnings · modified' },
+];
+
+// The surfaces the accents sit on — the depth ramp behind every panel on the fleet.
+const surfaces = [
+  { name: 'bg', var: '--tn-bg', hex: '#1a1b26' },
+  { name: 'bg-dark', var: '--tn-bg-dark', hex: '#16161e' },
+  { name: 'surface', var: '--tn-surface', hex: '#1f2335' },
+  { name: 'surface-2', var: '--tn-surface-2', hex: '#292e42' },
+  { name: 'border', var: '--tn-border-bright', hex: '#3b4261' },
+];
+
+// tokyonight styles the Neovim config can switch to with a one-line edit.
+const styles = [
+  { name: 'Storm', note: 'default', active: true },
+  { name: 'Moon', note: 'softer', active: false },
+  { name: 'Night', note: 'darker', active: false },
+  { name: 'Day', note: 'light', active: false },
+];
+---
+
+<section class="section palette">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">Theme highlights</span>
+      <h2>One palette, every surface</h2>
+      <p class="lead">
+        The whole fleet wears <strong>Tokyo Night (Storm)</strong> — the same colours light
+        up Neovim, tmux, starship, and this page. Nine accents over a five-step surface ramp,
+        and in Neovim it’s a one-line flip to the other built-in styles.
+      </p>
+    </div>
+
+    <!-- accent gallery — the theme-gallery content format, as colour swatches -->
+    <div class="swatch-grid">
+      {
+        accents.map((c) => (
+          <article class="swatch">
+            <span class="swatch__chip" style={`background: var(${c.var});`} aria-hidden="true"></span>
+            <div class="swatch__meta">
+              <span class="swatch__name">{c.name}</span>
+              <code class="swatch__hex">{c.hex}</code>
+              <span class="swatch__role">{c.role}</span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="palette__split">
+      <!-- surfaces ramp -->
+      <div class="surfaces">
+        <span class="palette__label text-mono">Surfaces</span>
+        <div class="surface-row">
+          {
+            surfaces.map((s) => (
+              <div class="surface" style={`background: var(${s.var});`}>
+                <span class="surface__name text-mono">{s.name}</span>
+                <span class="surface__hex text-mono">{s.hex}</span>
+              </div>
+            ))
+          }
+        </div>
+
+        <span class="palette__label text-mono">Styles · <span class="muted">nvim theme.lua</span></span>
+        <div class="row style-pills">
+          {
+            styles.map((s) => (
+              <span class:list={['style-pill', s.active && 'style-pill--active']}>
+                {s.name}
+                <span class="style-pill__note">{s.note}</span>
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- the palette "in action" — NvChad's gallery is screenshot-forward; this is
+           the same idea rendered live, so the swatches above have obvious meaning -->
+      <div class="preview terminal" aria-hidden="true">
+        <div class="terminal__bar">
+          <span class="terminal__dot terminal__dot--r"></span>
+          <span class="terminal__dot terminal__dot--y"></span>
+          <span class="terminal__dot terminal__dot--g"></span>
+          <span class="terminal__title">nvim — theme.lua</span>
+        </div>
+        <div class="terminal__body preview__body">
+          <div><span class="c-comment">-- tokyonight, the fleet-wide palette</span></div>
+          <div><span class="c-kw">require</span><span class="c-fg">(</span><span class="c-str">"tokyonight"</span><span class="c-fg">).</span><span class="c-fn">setup</span><span class="c-fg">({</span></div>
+          <div>&nbsp;&nbsp;<span class="c-param">style</span><span class="c-fg"> = </span><span class="c-str">"storm"</span><span class="c-fg">,</span></div>
+          <div>&nbsp;&nbsp;<span class="c-param">transparent</span><span class="c-fg"> = </span><span class="c-const">true</span><span class="c-fg">,</span></div>
+          <div>&nbsp;&nbsp;<span class="c-param">styles</span><span class="c-fg"> = { </span><span class="c-param">float</span><span class="c-fg"> = </span><span class="c-str">"transparent"</span><span class="c-fg"> },</span></div>
+          <div><span class="c-fg">})</span></div>
+          <div class="preview__spacer"></div>
+          <div><span class="c-num">1</span><span class="c-fg"> · </span><span class="c-type">NORMAL</span><span class="c-fg"> · </span><span class="c-green"> main</span><span class="c-fg"> · </span><span class="c-red">✗ 1</span><span class="c-fg"> </span><span class="c-yellow">● 2</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* accent gallery: soft-shadow rounded cards that lift on hover — NvChad gallery feel */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+  }
+  @media (min-width: 640px) {
+    .swatch-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 960px) {
+    .swatch-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    background: linear-gradient(180deg, var(--tn-surface), var(--tn-bg-dark));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .swatch:hover {
+    transform: translateY(-3px);
+    border-color: var(--tn-border-bright);
+    box-shadow: var(--shadow);
+  }
+  .swatch__chip {
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 10px;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+      0 4px 12px -4px rgba(0, 0, 0, 0.6);
+  }
+  .swatch__meta {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .swatch__name {
+    font-weight: 600;
+    color: #fff;
+    font-size: 0.95rem;
+  }
+  .swatch__hex {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+  .swatch__role {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* surfaces + styles + live preview */
+  .palette__split {
+    display: grid;
+    gap: var(--gap);
+    margin-top: var(--gap);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .palette__split {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .palette__label {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+  }
+  .surfaces .palette__label + .palette__label {
+    margin-top: 1.5rem;
+  }
+  .surface-row {
+    display: flex;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .surface {
+    flex: 1;
+    min-width: 0;
+    padding: 1.4rem 0.6rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .surface__name {
+    font-size: 0.72rem;
+    color: var(--tn-fg);
+  }
+  .surface__hex {
+    font-size: 0.64rem;
+    color: var(--text-muted);
+  }
+  .style-pills {
+    gap: 0.5rem;
+  }
+  .style-pill {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--tn-bg-dark);
+    color: var(--text-dim);
+  }
+  .style-pill--active {
+    border-color: var(--tn-blue);
+    color: #fff;
+    box-shadow: var(--glow-blue);
+  }
+  .style-pill__note {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+  }
+
+  /* live syntax preview — reuses the global .terminal chrome */
+  .preview__body {
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+  .preview__spacer {
+    height: 0.6rem;
+  }
+  .c-comment { color: var(--tn-comment); font-style: italic; }
+  .c-kw { color: var(--tn-magenta); }
+  .c-fn { color: var(--tn-blue); }
+  .c-fg { color: var(--tn-fg); }
+  .c-str { color: var(--tn-green); }
+  .c-param { color: var(--tn-orange); }
+  .c-const { color: var(--tn-orange); }
+  .c-num { color: var(--tn-orange); }
+  .c-type { color: var(--tn-teal); }
+  .c-green { color: var(--tn-green); }
+  .c-red { color: var(--tn-red); }
+  .c-yellow { color: var(--tn-yellow); }
+</style>
