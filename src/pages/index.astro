@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Metrics from '../components/Metrics.astro';
+import Features from '../components/Features.astro';
 import Palette from '../components/Palette.astro';
 import RepoCard from '../components/RepoCard.astro';
 import InstallBuilder from '../components/InstallBuilder.astro';
@@ -14,45 +15,6 @@ import { withBase } from '../lib/url';
 // omit the live badges — the build never fails on it.
 const live = await getRepoLiveMap(repos.map((r) => r.name));
 
-const features = [
-  {
-    icon: '◆',
-    accent: 'purple',
-    title: 'Authored once, everywhere',
-    body: 'Core lives in one repo and is vendored into every OS repo via git subtree. No N-way reconciliation, no drift — edit once, sync out.',
-  },
-  {
-    icon: '⧉',
-    accent: 'blue',
-    title: 'Clone-and-go',
-    body: 'Subtree vendors the actual files, so a fresh clone just works. No submodule init, no flags. Perfect for public portfolio repos.',
-  },
-  {
-    icon: '⚡',
-    accent: 'cyan',
-    title: 'Same shell, every OS',
-    body: 'The zsh module chain loads in one canonical order on macOS, Linux, and WSL — PowerShell mirrors it. Muscle memory transfers everywhere.',
-  },
-  {
-    icon: '🛡',
-    accent: 'green',
-    title: 'Audited & benchmarked',
-    body: 'A manifest-driven audit gate, hermetic behavioral tests, pinned plugin SHAs, and a startup-perf budget keep every sync honest.',
-  },
-  {
-    icon: '◑',
-    accent: 'orange',
-    title: 'Three clean layers',
-    body: 'Core (identical everywhere), OS-native (changes with the OS), and Role (offensive scaffolding for Kali, defensive tooling for Defense). Every file has exactly one home.',
-  },
-  {
-    icon: '⌘',
-    accent: 'red',
-    title: 'Discoverable by design',
-    body: 'core-help cheat sheets, core-doctor health checks, did-you-mean command handling, and first-party completions for every verb.',
-  },
-];
-
 const orderedRepos = [...repos];
 ---
 
@@ -62,31 +24,7 @@ const orderedRepos = [...repos];
   <Metrics />
 
   <!-- ===================================================== features -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head center">
-        <span class="eyebrow">Why it’s built this way</span>
-        <h2>A system, not a pile of config</h2>
-        <p class="lead">
-          Ten repositories, one philosophy: if it changes with the operating system it
-          isn’t Core; if it changes with you as an operator it isn’t Core. Everything left
-          over is Core — and it lives in exactly one place.
-        </p>
-      </div>
-
-      <div class="grid grid-3">
-        {
-          features.map((f) => (
-            <article class="card feature">
-              <span class:list={['feature__icon', `tone-${f.accent}`]}>{f.icon}</span>
-              <h3>{f.title}</h3>
-              <p>{f.body}</p>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+  <Features />
 
   <!-- ===================================================== layers -->
   <section class="section section--alt">
@@ -203,28 +141,6 @@ const orderedRepos = [...repos];
   .section--alt {
     background: var(--tn-bg-dark);
     border-block: 1px solid var(--border);
-  }
-  .feature {
-    height: 100%;
-  }
-  .feature__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: 10px;
-    background: var(--tn-bg-dark);
-    border: 1px solid var(--border);
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-  .feature h3 {
-    font-size: 1.1rem;
-  }
-  .feature p {
-    font-size: 0.92rem;
-    margin: 0;
   }
 
   .layers {
