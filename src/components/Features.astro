@@ -146,7 +146,10 @@ const features = [
     height: 3.6rem;
     margin-bottom: 0.8rem;
     border-radius: 999px;
-    color: var(--accent); /* overridden per-card by the tone-* class */
+    /* NO `color` here on purpose: the per-card `tone-*` class (global.css) owns it, and
+       Astro's scoping would give a `.nv-feature__badge { color }` rule higher specificity
+       than `.tone-purple`, pinning every badge to one accent. Everything below keys off
+       `currentColor`, so the icon, halo, and border all inherit the tone-* colour. */
     background:
       radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, currentColor 16%, transparent), transparent 70%),
       var(--tn-bg-dark);
