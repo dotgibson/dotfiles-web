@@ -1,0 +1,109 @@
+---
+/*
+ * Callout.astro — NvChad-style docs admonition (note / tip / warning / important).
+ *
+ * NvChad's docs lean on coloured callout boxes to make caveats scannable. This is the
+ * reusable version: an accent left-border, a matching inline SVG icon, an optional
+ * title, and a <slot> for the body. Dependency-free (inline Feather-style SVG), and it
+ * keys everything off one accent variable so a variant is one line.
+ *
+ * Usage:
+ *   <Callout type="warning" title="Windows symlinks">…body…</Callout>
+ */
+interface Props {
+  type?: 'note' | 'tip' | 'warning' | 'important';
+  title?: string;
+}
+const { type = 'note', title } = Astro.props;
+
+// variant → accent token + default title + Feather (MIT) icon paths
+const variants = {
+  note: {
+    accent: 'var(--tn-blue)',
+    label: 'Note',
+    icon: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+  },
+  tip: {
+    accent: 'var(--tn-green)',
+    label: 'Tip',
+    icon: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 12 3.5 4.65 4.65 0 0 0 7.5 11.5c.76.76 1.23 1.52 1.41 2.5"/>',
+  },
+  warning: {
+    accent: 'var(--tn-orange)',
+    label: 'Warning',
+    icon: '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  },
+  important: {
+    accent: 'var(--tn-purple)',
+    label: 'Important',
+    icon: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+  },
+};
+// Fallback to `note` if an unexpected `type` slips past TS at runtime — Astro props
+// aren't runtime-validated, and an undefined variant would throw on v.label below.
+const v = variants[type] ?? variants.note;
+const heading = title ?? v.label;
+---
+
+<aside class="callout" style={`--callout-accent: ${v.accent};`} role="note">
+  <div class="callout__head">
+    <svg
+      class="callout__icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.9"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      set:html={v.icon}
+    />
+    <span class="callout__title">{heading}</span>
+  </div>
+  <div class="callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .callout {
+    margin: 1.25rem 0;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--callout-accent);
+    border-radius: var(--radius-sm);
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--callout-accent) 7%, transparent), transparent 45%),
+      var(--tn-bg-dark);
+  }
+  .callout__head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--callout-accent);
+  }
+  .callout__icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: none;
+  }
+  .callout__title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+  }
+  .callout__body {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+  /* let the body host lists / code / paragraphs without fighting page styles */
+  .callout__body :global(:first-child) { margin-top: 0; }
+  .callout__body :global(:last-child) { margin-bottom: 0; }
+  .callout__body :global(ul) {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+  .callout__body :global(li) { margin-bottom: 0.35rem; }
+</style>
