@@ -24,7 +24,9 @@ const codeHtml = [
 ].join('\n');
 ---
 
-<section class="hb">
+<!-- a plain <div>, not <section>: this banner is purely decorative, so it must not
+     be an (unnamed) sectioning landmark. The figure itself is aria-hidden below. -->
+<div class="hb">
   <div class="container">
     <div class="hb__frame" aria-hidden="true">
       <!-- window chrome -->
@@ -64,7 +66,7 @@ const codeHtml = [
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <style>
   .hb {

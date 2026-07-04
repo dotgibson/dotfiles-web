@@ -39,7 +39,9 @@ const variants = {
     icon: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
   },
 };
-const v = variants[type];
+// Fallback to `note` if an unexpected `type` slips past TS at runtime — Astro props
+// aren't runtime-validated, and an undefined variant would throw on v.label below.
+const v = variants[type] ?? variants.note;
 const heading = title ?? v.label;
 ---
 
