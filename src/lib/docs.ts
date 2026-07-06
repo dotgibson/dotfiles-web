@@ -6,8 +6,15 @@ export const SECTION_ORDER = ['Introduction', 'Concepts', 'Guides', 'Reference',
 export type DocLink = { title: string; slug: string; order: number };
 export type DocSection = { section: string; items: DocLink[] };
 
+// Built once per process and reused. The docs collection is fixed for a production
+// build, so every page render (and the sidebar in DocsLayout) shares one computed tree
+// instead of rebuilding it. Only cached in PROD — in dev, HMR should reflect new pages.
+let navCache: DocSection[] | null = null;
+
 // Build the grouped, ordered sidebar tree from the `docs` collection.
 export async function getDocsNav(): Promise<DocSection[]> {
+  if (navCache && import.meta.env.PROD) return navCache;
+
   const entries: CollectionEntry<'docs'>[] = await getCollection('docs');
   const groups = new Map<string, DocLink[]>();
 
@@ -23,10 +30,13 @@ export async function getDocsNav(): Promise<DocSection[]> {
     return i === -1 ? SECTION_ORDER.length : i;
   };
 
-  return [...groups.entries()]
+  const result = [...groups.entries()]
     .sort(([a], [b]) => rank(a) - rank(b) || a.localeCompare(b))
     .map(([section, items]) => ({
       section,
       items: items.sort((x, y) => x.order - y.order || x.title.localeCompare(y.title)),
     }));
+
+  navCache = result;
+  return result;
 }
