@@ -1,154 +1,210 @@
-# 🌐 dotfiles-web
+<!-- Back to top link -->
+<a id="readme-top"></a>
 
-**The front door to the whole system.** The public showcase and docs site —
-Astro, Tokyo Night, GitHub Pages.
+<!-- Project Shields -->
+<div align="center"><nobr>
 
-`astro` · `tokyo-night` · `pages`
+[![dotgibson][dotgibson-shield]][dotgibson-url]<!--
+-->[![CI][ci-shield]][ci-url]<!--
+-->![Last Commit][lastcommit-shield]<!--
+-->[![Contributors][contributors-shield]][contributors-url]<!--
+-->[![Forks][forks-shield]][forks-url]<!--
+-->[![Stargazers][stars-shield]][stars-url]<!--
+-->[![Issues][issues-shield]][issues-url]<!--
+-->[![MIT License][license-shield]][license-url]
 
-[![live site](https://img.shields.io/badge/live-site-bb9af7?style=flat-square)](https://dotgibson.github.io/dotfiles-web/)
+</nobr></div>
 
----
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/dotgibson/">
+    <img src="https://raw.githubusercontent.com/dotgibson/.github/main/profile/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-The showcase + docs site for the [dotfiles ecosystem](https://github.com/dotgibson) —
-a ten-repo, three-layer terminal environment (Core → OS-native → Role).
+  <h3 align="center">🌐 dotfiles-web</h3>
 
-Built with [Astro](https://astro.build), themed in **Tokyo Night**, and deployed to
-**GitHub Pages** at `https://dotgibson.github.io/dotfiles-web/`.
+  <p align="center">
+    The public showcase and documentation hub for the whole system — Astro, Tokyo Night, GitHub Pages.
+    <br />
+    <a href="https://dotgibson.github.io/dotfiles-web/docs"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://dotgibson.github.io/dotfiles-web/">View Demo</a>
+    &middot;
+    <a href="https://github.com/dotgibson/dotfiles-web/issues/new?labels=bug">Report Bug</a>
+    &middot;
+    <a href="https://github.com/dotgibson/dotfiles-web/issues/new?labels=enhancement">Request Feature</a>
+  </p>
+</div>
 
-## What's here
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#languages">Languages</a></li>
+        <li><a href="#tools">Tools</a></li>
+      </ul>
+    </li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#developing">Developing</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-| Page              | Path                | Purpose                                                        |
-| ----------------- | ------------------- | ------------------------------------------------------------- |
-| Landing           | `/`                 | Hero, value props, the three-layer model, repo map, install   |
-| Getting started   | `/getting-started`  | Per-platform install guide (macOS / Windows / Kali / Linux)   |
-| Architecture      | `/architecture`     | The Core → OS-native → Role model, subtree rationale, loader   |
-| Changelog         | `/changelog`        | Curated mirror of the per-repo `CHANGELOG.md` files           |
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-## Develop
+**`dotfiles-web` is the public showcase + documentation hub** for the
+[dotgibson](https://github.com/dotgibson/) dotfiles system — a ten-repo,
+three-layer terminal environment (Core → OS-native → Role). It **documents** the
+system rather than configuring a machine, so it is **not** itself one of the three
+layers. Built with [Astro](https://astro.build), themed in **Tokyo Night**, and
+deployed to **GitHub Pages** at
+[dotgibson.github.io/dotfiles-web](https://dotgibson.github.io/dotfiles-web/).
+
+The site is data-driven and largely source-derived: the showcase cards, the
+per-repo docs pages, the "by the numbers" strip, and the changelog are generated
+from `src/data/*` and from the sibling repos — so the docs can't silently drift
+from the code they describe.
+
+| Page | Path | Purpose |
+| --- | --- | --- |
+| Landing | `/` | Hero, the three-layer model, the repo map, install |
+| Getting started | `/getting-started` | Per-platform install guide |
+| Architecture | `/architecture` | The layer model, subtree rationale, the loader, deep dives |
+| Docs hub | `/docs` | Concepts, guides, reference, and a generated page per repo |
+| Changelog | `/changelog` | A mirror of each repo's `CHANGELOG.md` |
+
+### Languages
+
+- [![TypeScript][typescript-shield]][typescript-url]
+- [![Astro][astro-shield]][astro-url]
+- [![JavaScript][javascript-shield]][javascript-url]
+
+### Tools
+
+- [![Astro][astro-shield]][astro-url]
+- [![Node.js][node-shield]][node-url]
+- [![GitHub Pages][pages-shield]][pages-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+### Prerequisites
+
+**Node.js** (with `npm`). The site is a standard Astro project — no global tooling
+beyond that.
+
+### Installation
 
 ```bash
-npm install        # install dependencies
+git clone https://github.com/dotgibson/dotfiles-web ~/dotfiles-web
+cd ~/dotfiles-web
+npm install
 npm run dev        # local dev server at http://localhost:4321/dotfiles-web
-npm run build      # production build into dist/
-npm run preview    # preview the production build locally
 ```
 
-## Editing content
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- DEVELOPING -->
+## Developing
+
+```bash
+npm run dev        # local dev server
+npm run build      # production build into dist/
+npm run preview    # preview the production build
+npm run check      # astro check (types + content collections)
+```
 
 Content is data-driven — edit these and the site updates:
 
 - `src/data/site.ts` — site name, owner, nav, GitHub links
-- `src/data/repos.ts` — the repository map / showcase cards (prose + status)
+- `src/data/repos.ts` — the repository map / per-repo pages (prose + status)
 - `src/data/install.ts` — per-platform install steps
+- `src/content/docs/**/*.md` — the documentation hub pages
 
-The **changelog** is no longer hand-edited: `src/data/changelog.ts` just re-exports
-the entries parsed from each repo's `CHANGELOG.md` into `generated.json` (see below).
-
-Styling lives in `src/styles/global.css` (Tokyo Night design tokens at the top).
-
-## Source-derived data (metrics + changelog)
-
-The "by the numbers" strip, the per-card package counts, and the **changelog** are
-**not** hand-typed — they come from `src/data/generated.json`, which
-`scripts/collect-metrics.mjs` derives by reading the sibling repos (`../dotfiles-core`,
-`../dotfiles-Fedora`, …). The changelog is parsed from each repo's `CHANGELOG.md`
-(newest version block, Keep a Changelog format):
+The "by the numbers" strip, per-card package counts, and the changelog are **not**
+hand-typed — they come from `src/data/generated.json`, which
+`scripts/collect-metrics.mjs` derives by reading the sibling repos. Regenerate and
+commit it whenever a source repo changes:
 
 ```bash
-npm run metrics      # checkout the sibling repos next to this one first
-# or point it elsewhere:
-DOTFILES_ROOT=/path/to/repos npm run metrics
+npm run metrics    # checkout the sibling repos next to this one first
 ```
 
-Regenerate and commit `generated.json` whenever Core or an OS repo changes. The script
-is defensive: if the sibling repos aren't checked out (e.g. on the Pages CI runner,
-which clones only this repo), it leaves the committed JSON untouched.
+Pushing to `main` triggers `.github/workflows/deploy.yml` (Astro build → GitHub
+Pages). A source repo can ping a rebuild via `repository_dispatch`; the token and
+secret walkthrough lives in [`docs/WEBHOOK-SETUP.md`](docs/WEBHOOK-SETUP.md).
 
-## Deployment
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds with Astro and
-publishes to GitHub Pages. **One-time setup:** in the repo's
-**Settings → Pages**, set **Source** to **GitHub Actions**.
+<!-- CONTRIBUTING -->
+## Contributing
 
-### Refreshing the showcase when a source repo changes (the "cache purge")
+Because this site restates facts that live elsewhere — the repo count, the
+three-layer model, per-platform install commands — it is the easiest place for
+documentation to **drift** from reality.
 
-This site is **static** — there is no server runtime and therefore no per-request
-cache to invalidate. The equivalent of "clear the cache" is to **rebuild and
-re-publish the Pages artifact**, which the deploy workflow already exposes as a
-[`repository_dispatch`](https://docs.github.com/actions/using-workflows/events-that-trigger-workflows#repository_dispatch)
-receiver. A source repo (`dotfiles-core`, an OS repo, …) pings it on push.
+1. **Treat the source-of-truth repos as canonical** and keep the site in step; the
+   `/doc-audit` routine in `dotfiles-core` checks exactly this cross-repo
+   consistency.
+2. **Keep content in the data files** (`src/data/*`, `src/content/docs/*`) rather
+   than hard-coding it into pages.
+3. **Green the gate.** `npm run check` (0 errors) and `npm run build` before you
+   push.
 
-> **Activating it:** the dispatchers are inert until a `WEBHOOK_SECRET`
-> secret is added to each source repo. See [`docs/WEBHOOK-SETUP.md`](docs/WEBHOOK-SETUP.md)
-> for the one-time token + secret walkthrough.
+Bugs and ideas: open an
+[issue](https://github.com/dotgibson/dotfiles-web/issues).
 
-Under the hood, the dispatch is:
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-```bash
-curl -fsS -X POST \
-  --max-time 30 --retry 3 --retry-delay 5 --retry-connrefused \
-  -H "Authorization: Bearer $WEBHOOK_SECRET" \
-  -H "Accept: application/vnd.github+json" \
-  -H "Content-Type: application/json" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/dotgibson/dotfiles-web/dispatches \
-  -d '{"event_type":"refresh"}'
-```
+<!-- LICENSE -->
+## License
 
-- **`refresh`** rebuilds from each repo's **default branch** (regenerates
-  `src/data/generated.json` from the live fleet, then redeploys) — use this for an
-  ordinary push.
-- **`release`** pins the whole fleet to a tag first
-  (`{"event_type":"release","client_payload":{"ref":"v1.0.0"}}`) — used by
-  dotfiles-core's release workflow.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
-As a drop-in for a source repo (`.github/workflows/notify-web.yml`):
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-```yaml
-name: Refresh showcase
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-permissions:
-  contents: read
-jobs:
-  dispatch:
-    # Any repo under the canonical owner may dispatch; forks are excluded.
-    if: github.repository_owner == 'dotgibson'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - env:
-          TOKEN: ${{ secrets.WEBHOOK_SECRET }}
-        run: |
-          set -euo pipefail
-          if [ -z "${TOKEN:-}" ]; then
-            echo "::warning::WEBHOOK_SECRET not set — skipping showcase refresh"
-            exit 0
-          fi
-          curl -fsS -X POST \
-            --max-time 30 --retry 3 --retry-delay 5 --retry-connrefused \
-            -H "Authorization: Bearer ${TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "Content-Type: application/json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/dotgibson/dotfiles-web/dispatches \
-            -d '{"event_type":"refresh"}'
-```
+<!-- CONTACT -->
+## Contact
 
-This mirrors the `notify-web.yml` that ships in each source repo (core + the nine
-other source repos).
+Garrett Allen - [@gerrrrt](https://x.com/gerrrrt) - <garrettallen2@gmail.com> - [LinkedIn](https://linkedin.com/in/garrettallen2)
 
-### Environment variables / secrets
+Project Link: [dotgibson](https://github.com/dotgibson/)
 
-| Variable                | Where it lives                          | Purpose                                                                                                              |
-| ----------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `GITHUB_TOKEN`          | auto-injected in **this** repo's CI     | Higher GitHub API rate limit + Actions access for the live repo-card badges during the Astro build. Build is resilient if unset. |
-| `WEBHOOK_SECRET` | a **secret in each dispatching** source repo | A fine-grained **PAT** scoped **Contents: Read and write** (`contents:write`) on `dotfiles-web`, used as the `Authorization: Bearer` token on the `repository_dispatch` POST that triggers a rebuild. GitHub authenticates the caller via this token, so the static site needs no HMAC signature-verification layer of its own. |
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Changing the URL
-
-The site is configured for a GitHub Pages *project* path in `astro.config.mjs`
-(`site` + `base`). To serve from a custom domain or a user site (`dotgibson.github.io`),
-set `base: '/'`, update `site`, and add a `public/CNAME` for a custom domain.
+<!-- Markdown Links & Images -->
+[dotgibson-shield]: https://img.shields.io/github/v/release/dotgibson/dotfiles-core?style=flat-square&label=dotgibson&labelColor=181717&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAF1klEQVR4nLSWbUxT7RnHr9PT09MXSltaoC9QXkqR16Iwhb0Iw8VYYE7jPri5aBaZzpmFZbpolpn4QeMyM%2BM%2B7MVt0Q9LNJIlxCzqxGWS6aKAig51vBQKIi3QltpCS0%2Fbc879pD1N3%2Bnz4fG5Pl2977v%2F331d131f5%2BZrddWQZAgAgy9uCRlefICzT6GeIsP%2FXF15kahmu9JglGmLRQoRQdIQWgu77BuWGe%2Fo%2BOqym8odApaWomTT1%2Bl2HqirahaTuJ9kQMggkgYhDRGfRiQDZBi9fuf52%2BD7l1b3ZhRcmq%2FMnBHmibuO7fvWoTalVoDjQRwL8RGgEOtzB0MbtBDnkRjGR0AgTK%2BQfNukr1LKXlhXKZpJSxTKGoFSq9vf16tQ8%2FiEh094Vu0L449mLGMup20DRWuFYVCiFm%2BvU36nTbOlMB%2BnCDxIOBzhvv6nFpc3TS0dUKDRHzh1Jk9O8wlPYN326Oa%2FJobnN8shAOxqKjrdXa8WSnGKWPewR%2FuHLG5P8oKUFJHi%2FH19F6UKEQ%2BnbJap27%2B%2BtWR15VAHgLkV%2F%2F0xW6OuQCfNE4PgmyX6f0xZKYbJDuj43lmtoYqHU%2FaZdwNXr4eoUG51zqgw%2B%2FCtrbm0UCeRynBhqVj2YC4RNC%2FuqStbKkydAODzeO7%2B6QYTpnOIYgB729R729RY9DAGafb0wDOHLwAA5vKK1mJNFoCpsxeLLn%2Fy91uU359719%2FfVXL%2BSM35IzU9rcXciCcQujz0imOfbGhOB0jkGo2hFQBW7Quzr0Zzq6vyBT%2FuKY%2BHErfBmQWLK1Lhr6l1OkleCqC0poPb%2FuTwv3OrA8DPDhgkokgLmLX77o86kqcGJmaj5xjr1JWlAAr1Js75MDEGAAI%2B1mvWX%2F1JY29XmYDPS5ZoNsrM24si1xSh3%2FRbGBYlz%2F73g41ztqliqYv1onyVHgDocMjjXASAKycavlqnZBHa2ajcasjv%2B8MbAPhRV9nI5MezB41crIPPHWOW9Gtl9XhDDCMCokIqSwGQ4shvyucFhEQCnqlSdm9k%2BdKt6XM%2FqO7aof7t8YbIIW5SHdpVIhUTAOAP0L8bmM3MHgJwByidQCgnhSmAqOEYnQ8AgRBr%2FuUzKsgggIs3pyVCfkeTCgAmFtaNOgm39C%2F3511r2W8JYvIAJbIaAwQ3vKAEoVgRaTQIBYKxqxgMs6euvdUXiQDgeHd5rV7K1fb2kC2rOgaYghQBMJ5grI3HUGuuhQiNIOWq8sy%2FLTgCKplgT0ZtCyprWw7%2FvKCyNr6yQqYg8cim59a9KQDnwv84R1%2F99UwAzsMya4vxeOYLN7YePGG%2BcAPjxXS%2BoavknFfOlRTAh8nHKNqLa1v2ZwK6dxQZtHk5ahu3%2FcYmLsoh%2B%2FsUgN%2BztDQzEvkYFBurGnan%2FS1%2B1P98L1FbxLIPzh193X%2FtwbmjiGUBYHd5nVFRCABPlxdtfh%2B3LHGKxof%2Bqo90C6yj58yi9Tm1kWjr94ZXsGhTuDuynAx2z0245yY4X06Kf9HWFd0N%2BuPbsUR64%2B3a57Erig2qIoOIlJSUNE69GWTZRFufXvRNL%2Fo2ywyJE1fMP6xWqHBEP5yfvP7%2FbAAAsFufG01mkVCqkGvLyrbNTD2mw9kfDckmE0oudx9rUZfhiF5Zd%2F%2F00QDF0NkBTJhanB3e0riHJIRKhXarqWfdu%2Bx0WnOot1ftuNR90lhQzEO0L7B2YvCm3b%2BWNI%2ByffSLq757%2BPcquYaIvBtgdcXycuzO9MzTFdccd9IwDNMVlDaXbzPXtxsVhQRDEQzl8i6d%2Buf12Y%2BONDVMo6vOfHWJxHLz3l811u8WAEZABCNAAHSI8n8k2HABKRJjLJ8JECxFMAE%2BHXhiGb7yn35vcCNDKVsEcSuv%2BEpn%2B7Etla0CwAQIOBLBhrkt85kAnwm8mX95e%2FTOa9vUZiIxQI43r0Kura9uN5SYNMoyuVDGZ2nK73C65iy28Rezo44152bSKYAvz3ifVA1lDn0WAAD%2F%2F%2FWvXexgMwqgAAAAAElFTkSuQmCC
+[dotgibson-url]: https://github.com/dotgibson/dotfiles-core/releases/latest
+[ci-shield]: https://img.shields.io/github/actions/workflow/status/dotgibson/dotfiles-web/deploy.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI
+[ci-url]: https://github.com/dotgibson/dotfiles-web/actions/workflows/deploy.yml
+[lastcommit-shield]: https://img.shields.io/github/last-commit/dotgibson/dotfiles-web?branch=main&style=flat-square&logo=git&logoColor=white
+[contributors-shield]: https://img.shields.io/github/contributors/dotgibson/dotfiles-web.svg?style=flat-square&logo=github
+[contributors-url]: https://github.com/dotgibson/dotfiles-web/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/dotgibson/dotfiles-web.svg?style=flat-square&logo=github
+[forks-url]: https://github.com/dotgibson/dotfiles-web/network/members
+[stars-shield]: https://img.shields.io/github/stars/dotgibson/dotfiles-web.svg?style=flat-square&logo=github
+[stars-url]: https://github.com/dotgibson/dotfiles-web/stargazers
+[issues-shield]: https://img.shields.io/github/issues/dotgibson/dotfiles-web?style=flat-square&logo=github
+[issues-url]: https://github.com/dotgibson/dotfiles-web/issues
+[license-shield]: https://img.shields.io/github/license/dotgibson/dotfiles-web.svg?style=flat-square
+[license-url]: https://github.com/dotgibson/dotfiles-web/blob/main/LICENSE
+[typescript-shield]: https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white
+[typescript-url]: https://www.typescriptlang.org
+[astro-shield]: https://img.shields.io/badge/Astro-BC52EE?style=flat-square&logo=astro&logoColor=white
+[astro-url]: https://astro.build
+[javascript-shield]: https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black
+[javascript-url]: https://developer.mozilla.org/docs/Web/JavaScript
+[node-shield]: https://img.shields.io/badge/Node.js-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white
+[node-url]: https://nodejs.org
+[pages-shield]: https://img.shields.io/badge/GitHub_Pages-222222?style=flat-square&logo=githubpages&logoColor=white
+[pages-url]: https://pages.github.com
