@@ -12,4 +12,10 @@ export default defineConfig({
   build: {
     format: "directory",
   },
+  markdown: {
+    // Match the docs-hub Markdown code blocks to the site's Tokyo Night theme.
+    shikiConfig: {
+      theme: "tokyo-night",
+    },
+  },
 });

@@ -1,0 +1,69 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import { getDocsNav } from '../../lib/docs';
+import { withBase } from '../../lib/url';
+
+const nav = await getDocsNav();
+---
+
+<DocsLayout
+  title="Documentation"
+  description="The documentation hub for the dotgibson dotfiles system — concepts, guides, and reference for the Core → OS-native → Role layers."
+>
+  <h1>Documentation</h1>
+  <p>
+    The deep reference for the <strong>dotgibson</strong> dotfiles system — the material the
+    per-repo READMEs stay lean by deferring to. Start with the concepts to understand the
+    three-layer model, follow the guides to work in it, or jump straight to a section below.
+  </p>
+
+  <div class="doc-sections">
+    {
+      nav.map((group) => (
+        <section class="doc-sections__group">
+          <h2>{group.section}</h2>
+          <ul>
+            {group.items.map((item) => (
+              <li>
+                <a href={withBase(`/docs/${item.slug}`)}>{item.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</DocsLayout>
+
+<style>
+  .doc-sections {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  @media (min-width: 640px) {
+    .doc-sections {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .doc-sections__group {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
+    background: var(--bg-elevated);
+  }
+  .doc-sections__group h2 {
+    margin: 0 0 0.6rem;
+    padding: 0;
+    border: 0;
+    font-size: 1.05rem;
+  }
+  .doc-sections__group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .doc-sections__group li {
+    margin: 0.35rem 0;
+  }
+</style>

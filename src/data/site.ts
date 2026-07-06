@@ -94,6 +94,7 @@ export const nav = [
   { label: "Generator", href: "/generator" },
   { label: "Purple", href: "/purple" },
   { label: "Architecture", href: "/architecture" },
+  { label: "Docs", href: "/docs" },
   { label: "Config", href: "/config" },
   { label: "Repos", href: "/#repos" },
   { label: "Changelog", href: "/changelog" },

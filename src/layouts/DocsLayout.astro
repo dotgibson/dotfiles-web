@@ -1,0 +1,230 @@
+---
+import Base from './Base.astro';
+import { withBase } from '../lib/url';
+import { getDocsNav } from '../lib/docs';
+
+interface Props {
+  title: string;
+  description?: string;
+  slug?: string; // active doc id, e.g. "concepts/three-layer-model"; omit on the hub index
+}
+const { title, description, slug } = Astro.props;
+const nav = await getDocsNav();
+---
+
+<Base title={title} description={description}>
+  <div class="docs container">
+    <aside class="docs__sidebar" aria-label="Documentation">
+      <a class="docs__home" href={withBase('/docs')}>Documentation</a>
+      <nav class="docs__nav">
+        {
+          nav.map((group) => (
+            <div class="docs__group">
+              <span class="docs__group-title">{group.section}</span>
+              <ul>
+                {group.items.map((item) => (
+                  <li>
+                    <a
+                      class:list={['docs__link', { 'is-active': item.slug === slug }]}
+                      href={withBase(`/docs/${item.slug}`)}
+                      aria-current={item.slug === slug ? 'page' : undefined}
+                    >
+                      {item.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </aside>
+
+    <article class="docs__content prose">
+      <slot />
+    </article>
+  </div>
+</Base>
+
+<style>
+  .docs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap);
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+  }
+  @media (min-width: 900px) {
+    .docs {
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 3rem;
+      align-items: start;
+    }
+  }
+
+  /* Sidebar */
+  .docs__sidebar {
+    font-size: 0.925rem;
+  }
+  @media (min-width: 900px) {
+    .docs__sidebar {
+      position: sticky;
+      top: 1.5rem;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding-right: 1rem;
+    }
+  }
+  .docs__home {
+    display: inline-block;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  .docs__home:hover {
+    color: var(--accent);
+  }
+  .docs__group {
+    margin-bottom: 1.5rem;
+  }
+  .docs__group-title {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .docs__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .docs__link {
+    display: block;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-dim);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition:
+      color 0.15s ease,
+      background 0.15s ease;
+  }
+  .docs__link:hover {
+    color: var(--text);
+    background: var(--bg-elevated);
+  }
+  .docs__link.is-active {
+    color: var(--accent);
+    background: var(--bg-elevated);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Prose — rendered Markdown */
+  .docs__content {
+    min-width: 0;
+    max-width: 46rem;
+  }
+  .prose :global(h1) {
+    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+  }
+  .prose :global(h2) {
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    margin: 2.5rem 0 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+  .prose :global(h3) {
+    font-size: 1.18rem;
+    margin: 1.75rem 0 0.5rem;
+  }
+  .prose :global(p),
+  .prose :global(li) {
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .prose :global(a) {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .prose :global(a:hover) {
+    border-bottom-color: var(--accent);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.25rem;
+  }
+  .prose :global(li) {
+    margin: 0.3rem 0;
+  }
+  .prose :global(strong) {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.1rem 0.35rem;
+  }
+  .prose :global(pre) {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    margin: 1.15rem 0;
+  }
+  .prose :global(pre code) {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 0.86rem;
+  }
+  .prose :global(blockquote) {
+    margin: 1.25rem 0;
+    padding: 0.25rem 1.1rem;
+    border-left: 3px solid var(--accent-2);
+    color: var(--text-muted);
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.92rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+  }
+  .prose :global(th) {
+    background: var(--bg-elevated);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+</style>
