@@ -1,0 +1,97 @@
+---
+title: Offensive methodology
+description: The TTP map behind the Kali role layer — how the tools line up against a real engagement and MITRE ATT&CK, gated on written authorization and scope.
+section: Reference
+order: 4
+---
+
+# Offensive Methodology — the TTP map behind the tool layer
+
+This is the "why" for `offensive/offensive.zsh` and `install/offensive-packages.txt`:
+how the tools line up against a real engagement and against **MITRE ATT&CK**, which
+is the through-line the whole industry (and adversary-emulation tooling like
+Caldera) organizes around. It's a reference, not a runbook — every step is gated
+on **written authorization and a defined scope**.
+
+> Looking for the concrete, copy-paste command syntax per service/port? That's
+> the field reference in [`offensive/hacktheplanet`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/hacktheplanet) —
+> this doc is the map, that file is the commands. (Symlinked to `~/hacktheplanet`
+> by `bootstrap.sh`; `htp` opens it.) Companion field references sit at the
+> same altitude: [`offensive/exploitdev`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/exploitdev) (`xdev`) for binary
+> exploitation, and [`offensive/evasion`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/evasion) (`evade`) for AV/AMSI/
+> AppLocker evasion and breaching hardened defenses. One altitude *up* — the
+> working **method** that decides which command you reach for and what to do when
+> you're stuck (the "always be running recon" loop, shell stabilization, the
+> scripted pseudo-shell) — is [`offensive/ippsec`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/ippsec) (`ipp`),
+> distilled from IppSec's HTB catalog. The defensive mirror — what each attack
+> trips, as Splunk/Sentinel detections — is in [`PURPLE-TEAM.md`](https://github.com/dotgibson/dotfiles-Kali/blob/main/PURPLE-TEAM.md).
+
+> Rule zero: `mkengagement` writes `scope/scope.txt` *before* anything else and
+> opens it in your editor. Fill it in first. Installing a tool is not permission
+> to point it at anything.
+
+---
+
+## The phase → ATT&CK → tool map
+
+| Phase | ATT&CK tactic(s) | Go-to tools (this layer) | Workspace dir |
+|-------|------------------|--------------------------|----------------|
+| **Recon** | Reconnaissance (TA0043) | amass, subfinder, dnsx, bbot, theharvester, masscan | `recon/` |
+| **Scanning / enum** | Discovery (TA0007) | `nmapsweep`, nxc (smb/ldap/winrm), enum4linux-ng, ldapdomaindump | `scans/` |
+| **Initial access** | Initial Access (TA0001) | nuclei/httpx/katana, ffuf/feroxbuster, sqlmap, Burp, responder | `web/`, `exploit/` |
+| **Cred access** | Credential Access (TA0006) | nxc, impacket (secretsdump), responder, hashcat/john, certipy-ad | `loot/creds`, `loot/hashes` |
+| **AD attack-path mapping** | Discovery / PrivEsc | **`bhce`** → BloodHound CE, bloodhound.py, SharpHound | `loot/bloodhound` |
+| **Lateral movement** | Lateral Movement (TA0008) | nxc (exec over smb/winrm/mssql), impacket-psexec, evil-winrm | `notes.md` |
+| **Privilege escalation** | Privilege Escalation (TA0004) | certipy-ad (AD CS), BloodHound paths, impacket | — |
+| **C2 / persistence** | Command & Control (TA0011) | Sliver, Havoc, Metasploit, Caldera (emulation) | — |
+| **Pivoting** | Lateral Movement | ligolo-ng, chisel, proxychains4, socat | — |
+| **Reporting** | — | your notes + `logshell` transcript | `report/`, `notes.md` |
+
+### The one naming change that bites people
+**CrackMapExec is gone — it's `nxc` (NetExec) now.** CME was archived in 2023; the
+community fork NetExec is the maintained successor and the single highest-leverage
+tool in the kit: SMB / LDAP / WinRM / MSSQL / RDP / FTP / SSH auth, enumeration,
+lateral movement, credential extraction, *and* BloodHound collection — one
+scriptable interface. The old `crackmapexec`/`cme` muscle memory just becomes `nxc`.
+
+### BloodHound is now BloodHound CE
+The legacy BloodHound 4.x collectors don't cleanly ingest into Community Edition.
+Use a **CE-compatible collector** — the `bhce` helper drives nxc's `--bloodhound`
+module, which packages a CE-ready zip into `loot/bloodhound/`. Run BloodHound CE
+itself from its official docker-compose (it's a Postgres-backed web app, not an
+apt package).
+
+---
+
+## OPSEC / engagement hygiene baked into the layer
+
+- **Scope first.** `scope/scope.txt` lists in-scope, out-of-scope, the auth
+  reference, the time window, and an emergency "stop" contact. If it's blank,
+  you're not ready to run.
+- **Everything in `~/engagements`, never in the repo.** `$ENGAGEMENTS_DIR` lives
+  outside any git tree; the Kali repo's paranoid `.gitignore` is only a backstop.
+  Client data in a public showcase repo is a career-ender.
+- **Audit trail.** `logshell` records a `script(1)` transcript into the
+  engagement's `notes/` so you can reconstruct exactly what you ran and when —
+  for the report and for deconfliction. `note "<text>"` adds timestamped
+  observations to `notes.md` as you go (IppSec's note discipline — see
+  [`offensive/ippsec`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/ippsec)): capture every state change, cred, and
+  host the instant it happens so the report writes itself.
+- **WSL2 gotcha (already in PORTING-MATRIX).** A listener / reverse shell in Kali
+  under WSL2 isn't reachable from your LAN until you set
+  `networkingMode=mirrored` in the **Windows-side** `%UserProfile%\.wslconfig`
+  (Win11 22H2+) — not `/etc/wsl.conf`. Bites every Sliver/Responder/C2 setup.
+
+---
+
+## What I deliberately did NOT put in the repo
+
+- No payloads, implants, shellcode, or exploit code. Those are generated
+  per-engagement, live in `exploit/` under `~/engagements`, and never sync.
+- No target lists, creds, or loot. Same reason.
+- Sliver / Havoc / Caldera are install *pointers*, not vendored — they move fast
+  and carry their own update cadence.
+
+The dotfiles job is to make the **toolset and workspace** reproducible across
+boxes. The tradecraft stays in your head and in the (private, out-of-repo)
+engagement notes.
