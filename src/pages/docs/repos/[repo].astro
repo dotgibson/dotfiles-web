@@ -1,0 +1,71 @@
+---
+import DocsLayout from '../../../layouts/DocsLayout.astro';
+import { withBase } from '../../../lib/url';
+import { repos, layerMeta, statusMeta } from '../../../data/repos';
+
+// One page per repo, generated from the repos data — no hand-written prose to drift.
+export function getStaticPaths() {
+  return repos.map((repo) => ({ params: { repo: repo.name }, props: { repo } }));
+}
+
+const { repo } = Astro.props;
+const layer = layerMeta[repo.layer];
+const status = statusMeta[repo.status];
+const gh = `https://github.com/dotgibson/${repo.name}`;
+---
+
+<DocsLayout title={repo.name} description={repo.blurb} slug={`repos/${repo.name}`}>
+  <h1>{repo.name}</h1>
+
+  <p class="repo-meta">
+    <span class="badge" style={`--c: var(--tn-${layer.accent})`}>{layer.label}</span>
+    <span class="badge" style={`--c: var(--tn-${status.tone})`}>{status.label}</span>
+  </p>
+
+  <p>{repo.blurb}</p>
+
+  <h2>Highlights</h2>
+  <ul>
+    {repo.highlights.map((h) => <li>{h}</li>)}
+  </ul>
+
+  <h2>How it fits</h2>
+  {
+    repo.layer === 'core' ? (
+      <p>
+        The keystone. Every OS repo vendors this into its <code>core/</code> directory via
+        <code>git subtree</code>, so a change here fans out to the whole fleet. See{' '}
+        <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> and{' '}
+        <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring with git subtree</a>.
+      </p>
+    ) : (
+      <p>
+        The <strong>{layer.label}</strong> layer — {layer.desc} It builds on Core, which is vendored
+        into its <code>core/</code> directory. See{' '}
+        <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> for how the
+        layers compose.
+      </p>
+    )
+  }
+
+  <p><a href={gh} target="_blank" rel="noopener">View {repo.name} on GitHub ↗</a></p>
+</DocsLayout>
+
+<style>
+  .repo-meta {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--c);
+    border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+    background: color-mix(in srgb, var(--c) 12%, transparent);
+  }
+</style>
