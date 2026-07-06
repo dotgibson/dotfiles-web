@@ -1,7 +1,20 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { repos, type Layer } from '../data/repos';
 
 // Sidebar section order. Sections not listed here sort to the end, alphabetically.
 export const SECTION_ORDER = ['Introduction', 'Concepts', 'Guides', 'Reference', 'Repositories'];
+
+// The Repositories section is generated from src/data/repos.ts (single source of truth for
+// repo prose), grouped by layer so it reads Core → OS → host → role.
+const LAYER_RANK: Record<Layer, number> = { core: 0, os: 1, host: 2, role: 3 };
+function repositoriesSection(): DocSection {
+  return {
+    section: 'Repositories',
+    items: [...repos]
+      .sort((a, b) => LAYER_RANK[a.layer] - LAYER_RANK[b.layer])
+      .map((r, i) => ({ title: r.name, slug: `repos/${r.name}`, order: i })),
+  };
+}
 
 export type DocLink = { title: string; slug: string; order: number };
 export type DocSection = { section: string; items: DocLink[] };
@@ -36,6 +49,9 @@ export async function getDocsNav(): Promise<DocSection[]> {
       section,
       items: items.sort((x, y) => x.order - y.order || x.title.localeCompare(y.title)),
     }));
+
+  // Append the generated Repositories section (last per SECTION_ORDER).
+  result.push(repositoriesSection());
 
   navCache = result;
   return result;
