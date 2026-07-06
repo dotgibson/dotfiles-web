@@ -38,6 +38,14 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> and{' '}
         <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring with git subtree</a>.
       </p>
+    ) : repo.name === 'dotfiles-Windows' ? (
+      <p>
+        The <strong>{layer.label}</strong> layer — {layer.desc} Unlike the OS repos it does{' '}
+        <strong>not</strong> vendor Core as a <code>git subtree</code>; the host config is replicated
+        natively in PowerShell (only <code>nvim</code> and <code>starship</code> are mirrored). See{' '}
+        <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> for how the
+        layers compose.
+      </p>
     ) : (
       <p>
         The <strong>{layer.label}</strong> layer — {layer.desc} It builds on Core, which is vendored
@@ -48,7 +56,49 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
     )
   }
 
-  <p><a href={gh} target="_blank" rel="noopener">View {repo.name} on GitHub ↗</a></p>
+  {
+    (repo.install || repo.installNote) && (
+      <>
+        <h2>Getting started</h2>
+        {repo.install && (
+          <pre><code>{repo.install}</code></pre>
+        )}
+        {repo.installNote && <p class="note">{repo.installNote}</p>}
+      </>
+    )
+  }
+
+  {
+    repo.specifics && repo.specifics.length > 0 && (
+      <>
+        <h2>What actually bites</h2>
+        <ul class="specifics">
+          {repo.specifics.map((s) => (
+            <li>
+              <strong>{s.label}</strong> — {s.detail}
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+
+  {
+    repo.docs && repo.docs.length > 0 && (
+      <>
+        <h2>Read next</h2>
+        <ul>
+          {repo.docs.map((d) => (
+            <li>
+              <a href={withBase(`/docs/${d.slug}`)}>{d.label}</a>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+
+  <p class="gh-link"><a href={gh} target="_blank" rel="noopener">View {repo.name} on GitHub ↗</a></p>
 </DocsLayout>
 
 <style>
@@ -67,5 +117,15 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
     color: var(--c);
     border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
     background: color-mix(in srgb, var(--c) 12%, transparent);
+  }
+  .note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .specifics :global(li) {
+    margin: 0.5rem 0;
+  }
+  .gh-link {
+    margin-top: 2rem;
   }
 </style>
