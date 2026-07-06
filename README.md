@@ -200,7 +200,7 @@ Project Link: [dotgibson](https://github.com/dotgibson/)
 [license-url]: https://github.com/dotgibson/dotfiles-web/blob/main/LICENSE
 [typescript-shield]: https://img.shields.io/github/v/release/microsoft/TypeScript?style=flat-square&logo=typescript&logoColor=white&label=TypeScript&labelColor=3178C6&color=3D59A1
 [typescript-url]: https://github.com/microsoft/TypeScript
-[astro-shield]: https://img.shields.io/github/v/release/withastro/astro?style=flat-square&logo=astro&logoColor=white&label=Astro&labelColor=BC52EE&color=3D59A1
+[astro-shield]: https://img.shields.io/npm/v/astro?style=flat-square&logo=astro&logoColor=white&label=Astro&labelColor=BC52EE&color=3D59A1
 [astro-url]: https://github.com/withastro/astro
 [javascript-shield]: https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black
 [javascript-url]: https://developer.mozilla.org/docs/Web/JavaScript
