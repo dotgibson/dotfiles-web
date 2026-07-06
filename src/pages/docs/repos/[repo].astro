@@ -40,7 +40,7 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
       </p>
     ) : repo.name === 'dotfiles-Windows' ? (
       <p>
-        The <strong>{layer.label}</strong> layer — {layer.desc} Unlike the OS repos it does{' '}
+        The <strong>{layer.label}</strong> layer — {layer.desc} Unlike the OS repos, it does{' '}
         <strong>not</strong> vendor Core as a <code>git subtree</code>; the host config is replicated
         natively in PowerShell (only <code>nvim</code> and <code>starship</code> are mirrored). See{' '}
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> for how the
