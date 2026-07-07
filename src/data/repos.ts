@@ -231,7 +231,7 @@ wsl.exe --shutdown             # from Windows, after dropping windows.wslconfig.
   {
     name: 'dotfiles-Defense',
     layer: 'role',
-    status: 'stable',
+    status: 'planned',
     icon: '⛨',
     blurb:
       'The blue mirror of Kali — the defensive role. Detection engineering & investigation: hunt/triage tooling, version-controlled detection content (Sigma, Sysmon, Zeek/Suricata, SIEM), and a Dockerized detection lab. Distro-agnostic.',
