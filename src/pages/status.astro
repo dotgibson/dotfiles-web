@@ -28,6 +28,15 @@ const generated = new Date(fleet.generatedAt).toLocaleDateString('en-US', {
 // rather than render an empty, misleading board.
 const anyData = fleet.coreLatest != null || fleet.repos.some((r) => r.release || r.vendoredCore);
 const behind = rows.filter((r) => r.drift === 'behind').length;
+const unknown = rows.filter((r) => r.drift === 'unknown').length;
+// Only claim "all current" when nothing is behind AND nothing is unresolved — an
+// unknown (a core.lock fetch that failed while Core's latest resolved) is not "current".
+const summary =
+  behind === 0 && unknown === 0
+    ? 'all vendoring repos current'
+    : [behind ? `${behind} behind` : null, unknown ? `${unknown} unknown` : null]
+        .filter(Boolean)
+        .join(', ');
 ---
 
 <Base
@@ -44,7 +53,7 @@ const behind = rows.filter((r) => r.drift === 'behind').length;
       </p>
       <p class="meta">
         Reference: Core <strong>{fleet.coreLatest ?? '—'}</strong>
-        {anyData && <> · {behind === 0 ? 'all vendoring repos current' : `${behind} behind`}</>}
+        {anyData && <> · {summary}</>}
         · as of {generated}
       </p>
     </header>
@@ -74,7 +83,7 @@ const behind = rows.filter((r) => r.drift === 'behind').length;
               {rows.map((r) => (
                 <tr>
                   <td>
-                    <a href={`https://github.com/dotgibson/${r.name}`} target="_blank" rel="noopener">
+                    <a href={`https://github.com/dotgibson/${r.name}`} target="_blank" rel="noopener noreferrer">
                       {r.name}
                     </a>
                   </td>
