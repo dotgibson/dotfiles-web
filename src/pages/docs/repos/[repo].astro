@@ -12,6 +12,9 @@ const { repo } = Astro.props;
 const layer = layerMeta[repo.layer];
 const status = statusMeta[repo.status];
 const gh = `https://github.com/dotgibson/${repo.name}`;
+// Mirrors RepoCard: only stable/beta repos are public, so only they get an
+// outbound GitHub link and a clone snippet. A planned/wip repo would 404.
+const isLive = repo.status === 'stable' || repo.status === 'beta';
 ---
 
 <DocsLayout title={repo.name} description={repo.blurb} slug={`repos/${repo.name}`}>
@@ -57,7 +60,7 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
   }
 
   {
-    (repo.install || repo.installNote) && (
+    isLive && (repo.install || repo.installNote) && (
       <>
         <h2>Getting started</h2>
         {repo.install && (
@@ -98,7 +101,13 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
     )
   }
 
-  <p class="gh-link"><a href={gh} target="_blank" rel="noopener">View {repo.name} on GitHub ↗</a></p>
+  {
+    isLive ? (
+      <p class="gh-link"><a href={gh} target="_blank" rel="noopener">View {repo.name} on GitHub ↗</a></p>
+    ) : (
+      <p class="gh-link muted">{repo.name} is on the roadmap — not public yet.</p>
+    )
+  }
 </DocsLayout>
 
 <style>
