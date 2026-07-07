@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+import { getFleetStatus } from '../lib/fleet-status';
+import { layerMeta } from '../data/repos';
+import { withBase } from '../lib/url';
+
+const fleet = await getFleetStatus();
+
+// Layer-model order: Core first, then OS-native, Role, Host.
+const layerOrder: Record<string, number> = { core: 0, os: 1, role: 2, host: 3 };
+const rows = [...fleet.repos].sort(
+  (a, b) => (layerOrder[a.layer] ?? 9) - (layerOrder[b.layer] ?? 9) || a.name.localeCompare(b.name)
+);
+
+const driftText = (d: string | null) =>
+  d === 'current' ? 'current' : d === 'behind' ? 'behind' : d === 'unknown' ? 'unknown' : '—';
+
+const vendoredText = (r: (typeof rows)[number]) =>
+  r.vendoredCore ?? (r.layer === 'core' ? 'reference' : r.layer === 'host' ? 'replicated' : '—');
+
+const generated = new Date(fleet.generatedAt).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
+// If GitHub was unreachable at build time everything is null — say so plainly
+// rather than render an empty, misleading board.
+const anyData = fleet.coreLatest != null || fleet.repos.some((r) => r.release || r.vendoredCore);
+const behind = rows.filter((r) => r.drift === 'behind').length;
+---
+
+<Base
+  title="Fleet status"
+  description="Live per-repo release and vendored-Core drift across the ten-repo dotfiles fleet, read from GitHub at build time."
+>
+  <section class="container status">
+    <header class="status__head">
+      <h1>Fleet status</h1>
+      <p class="lede">
+        Every repo carries two version lines — its own release tag and the Core it vendors. This
+        board reads both from GitHub when the site is built and flags any repo behind the latest
+        Core release.
+      </p>
+      <p class="meta">
+        Reference: Core <strong>{fleet.coreLatest ?? '—'}</strong>
+        {anyData && <> · {behind === 0 ? 'all vendoring repos current' : `${behind} behind`}</>}
+        · as of {generated}
+      </p>
+    </header>
+
+    {
+      !anyData && (
+        <p class="unavailable">
+          Live fleet data was unavailable at build time — it refreshes on the next deploy.
+        </p>
+      )
+    }
+
+    {
+      anyData && (
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Repo</th>
+                <th>Layer</th>
+                <th>Release</th>
+                <th>Vendored Core</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr>
+                  <td>
+                    <a href={`https://github.com/dotgibson/${r.name}`} target="_blank" rel="noopener">
+                      {r.name}
+                    </a>
+                  </td>
+                  <td>{layerMeta[r.layer]?.label ?? r.layer}</td>
+                  <td class="mono">{r.release ?? '—'}</td>
+                  <td class="mono">{vendoredText(r)}</td>
+                  <td>
+                    <span class:list={['badge', r.drift ?? 'none']}>{driftText(r.drift)}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+
+    <p class="note">
+      Drift, integrity, and pin freshness are <em>enforced</em> in CI (fleet-drift, core-integrity,
+      freshness); this page is the read-only glance. See the
+      <a href={withBase('/architecture')}>architecture</a> for how Core vendoring works.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .status {
+    padding: 4rem 0 5rem;
+  }
+  .status__head {
+    margin-bottom: 2rem;
+  }
+  .status h1 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    margin: 0 0 0.5rem;
+  }
+  .lede {
+    color: var(--text-muted);
+    max-width: 62ch;
+  }
+  .meta {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+  }
+  .tablewrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  thead th {
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  td a {
+    color: var(--tn-blue);
+    text-decoration: none;
+  }
+  td a:hover {
+    text-decoration: underline;
+  }
+  .mono {
+    font-family: var(--font-mono);
+    color: var(--text);
+  }
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .badge.current {
+    color: var(--tn-green);
+    background: color-mix(in srgb, var(--tn-green) 15%, transparent);
+  }
+  .badge.behind {
+    color: var(--tn-orange);
+    background: color-mix(in srgb, var(--tn-orange) 15%, transparent);
+  }
+  .badge.unknown,
+  .badge.none {
+    color: var(--text-dim);
+    background: var(--bg-code);
+  }
+  .unavailable {
+    color: var(--text-muted);
+    padding: 2rem 0;
+  }
+  .note {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-top: 1.5rem;
+    max-width: 72ch;
+  }
+  .note a {
+    color: var(--tn-blue);
+  }
+</style>
