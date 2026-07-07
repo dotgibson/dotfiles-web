@@ -1,71 +1,71 @@
 {
-  "generatedAt": "2026-07-01",
+  "generatedAt": "2026-07-07",
   "fleet": {
     "publicRepos": 10,
     "layers": 3,
     "loadOrderStages": 15
   },
   "releases": {
-    "current": "v2.6.0",
+    "current": "v3.1.0",
     "channels": [
-      "v2.6.0",
-      "v2.5.0",
-      "v2.4.1",
+      "v3.1.0",
+      "v3.0.1",
+      "v3.0.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "2.6.0",
+    "coreVersion": "3.1.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-Windows": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-Kali": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v2.6.0",
-        "carried": "2.6.0",
+        "ref": "v3.1.0-2-g8acc1c0",
+        "carried": "3.1.0",
         "status": "current"
       }
     }
   },
   "core": {
-    "version": "2.6.0",
+    "version": "3.1.0",
     "sourcedModules": 13,
     "zshLoc": 3158,
     "gitAliases": 57,
@@ -97,18 +97,37 @@
   "changelog": [
     {
       "repo": "dotfiles-core",
-      "version": "v2.6.0",
-      "date": "2026-06-30",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "maint: the daily runner now reconciles pinned zsh plugins by CONFIG, not checkout state. maint/dotfiles-maint.sh decided \"pinned vs unpinned\" by asking whether a plugin's HEAD was detached — but a plugin cloned before plugins.zsh began pinning (or by the old floating --depth=1 path) sits on a branch even though it IS pinned in ZPLUGIN_PINS. Those were wrongly git pull --ff-only'd every run: floating them off their pins, and logging a false ✗ … (pull failed) for any whose branch couldn't fast-forward (e.g. zsh-syntax-highlighting). The loop now reads the pins straight from plugins.zsh (same grep update-plugins.sh uses — bash-3.2 safe) and, for any pinned plugin, re-asserts the recorded SHA (fetch + detach, mirroring zplugin-update): a branch checkout is reconciled back onto its pin, a rolled pin is now actually applied by the runner, and plugins already at their pin do zero network. Only genuinely unpinned plugins still fast-forward.",
+              "kind": "config"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
       "groups": [
         {
           "category": "Added",
           "items": [
             {
-              "text": "sesh detection (HAVE_SESH) — finishing wiring Core already half-shipped. sesh (joshmedeski's smart tmux session manager) was already driven by the Ctrl-G shell widget (fzf.zsh), the prefix + f tmux popup (tmux-sesh.sh), a seeded sesh/sesh.toml.example, and listed in core-doctor's integrations — but tools.zsh never set a HAVE_SESH flag for it the way it does for the other detected tools. (Detection itself still worked — the Ctrl-G/prefix + f fallback keys off command -v sesh, and core-doctor already probes sesh the same way.) tools.zsh now sets HAVE_SESH (like HAVE_GUM, no _core_wired arm — sesh registers no persistent shell hook, so presence ≈ wired), and PORTING-MATRIX.md gains a sesh row + footnote documenting the go install github.com/joshmedeski/sesh/v2@latest build path (the v2 module path; go is already a pinned mise runtime) for the distros that don't package it. No core.manifest change — the .example is already listed.",
+              "text": "assets/: a reproducible VHS tape for the README hero demo. assets/demo.tape scripts a short terminal tour (eza, bat, zoxide, core help, glog) that renders to assets/demo.gif via vhs assets/demo.tape, so the hero can be regenerated rather than hand-recorded. assets/README.md documents the render steps; assets/ is allowlisted in audit-core.sh as repo-meta (it rides along in the subtree copy but is never symlinked).",
+              "kind": "feature"
+            },
+            {
+              "text": "README: a structured four-row badge block at the top. Row 1 is repo status & automation — live ci and core-integrity Actions status, open-issue / open-PR counts, repo size, and latest release. Row 2 is the MIT license (auto-detected from LICENSE) plus last-commit / commit-activity. Row 3 is the languages (Zsh, Bash, Lua, TOML, YAML, JSON) and Row 4 the tooling (Neovim, Vim, tmux, Starship, Git, 1Password). Tools with no simpleicon (mise, lazygit, jujutsu, sesh, fzf) share a substitute gnometerminal glyph on a Tokyo Night purple label. Every brand color is taken from the simple-icons dataset (e.g. Lua 000080, Git F03C2E, 1Password 145FE4). Vim is the vim/vimrc fallback editor for boxes with no nvim, not just the vim=nvim alias; the tooling row covers every tool Core ships a dedicated config for. Each Row 3/4 badge links to its upstream project on GitHub and, where the project publishes releases/tags, shows the current upstream version live (Neovim, Vim, tmux, Starship, Git, Lua, TOML, mise, lazygit, jujutsu, sesh, fzf); Zsh, Bash, YAML, JSON, and 1Password have no clean upstream version and stay plain. On the versioned badges the name side carries the brand color and the version side is a Tokyo Night blue (not grey). Row 1 leads with a dotgibson badge that shows the current release version (dynamic github/v/release) with the org avatar as its icon (base64 data-URI logo) and links to the latest release. All flat-square; the old hardcoded audit-passing shield is replaced by the live ci status it stood in for.",
               "kind": "config"
             },
             {
-              "text": "RELEASE-RUNBOOK.md — the step-by-step, copy-paste recipe for cutting a release (Core, the OS-repo fan-out rollout, and htpx), plus a \"dry-run a new cross-repo workflow before relying on it\" habit and a troubleshooting table. Complements RELEASE-STRATEGY.md (the policy); cross-linked from it and CLAUDE.md.",
+              "text": "nvim: utils/ui-highlights.lua — a flat table of NvChad-flavored highlight overrides. Hairline window splits (WinSeparator/VertSplit), minimal rounded floats (NormalFloat/FloatBorder/FloatTitle), a border-tinted fzf-lua palette (FzfLua*), a matching blink.cmp menu/docs palette (BlinkCmp*), and NvChad's dim-linenr / bright-current-line gutter. Applied through tokyonight's on_highlights in plugins/theme.lua, so it re-runs on every :colorscheme and recolors from whatever style/theme is active — no ColorScheme autocmd, no per-plugin hardcoded hexes. Deliberately one flat function, not a helper framework.",
               "kind": "feature"
             }
           ]
@@ -117,12 +136,20 @@
           "category": "Changed",
           "items": [
             {
-              "text": "nvim: disable <LeftDrag> and <LeftRelease> in all modes unconditionally. Previously these were suppressed only when inside a $TMUX session, in Normal and Visual modes. They are now <Nop> in Normal, Insert, and Visual modes regardless of environment, eliminating accidental mouse-drag selections during terminal use.",
+              "text": "README: reworked into a lean public landing page. Replaced the long-form technical README with a concise landing page — a lead stating Core is the vendored foundation layer (you install an OS repo, not this one), an at-a-glance three-layer table, a modern-CLI Usage section framed by the HAVE_* detection-flag fallback, and the repo's real contribution contract. The deep architecture and reference material now lives on the documentation hub at dotfiles-web. Fixed broken links along the way (LICENSE, aliases.md, the issue-template deep-links, a malformed acknowledgment link), and scoped MD033 in .markdownlint.jsonc with allowed_elements so the intentional showcase inline HTML passes the markdown gate while the rule still catches unexpected tags. The hero image is now the rendered terminal demo (assets/demo.gif, produced from assets/demo.tape).",
+              "kind": "fix"
+            },
+            {
+              "text": "nvim: the statusline now wears NvChad's rounded block look. plugins/lualine-nvim.lua keeps its sections and (intentionally) its existing diagnostic glyphs — which stay in lockstep with utils/diagnostics.lua and the tabline — but swaps powerline arrows for NvChad's half-circle bubble caps (U+E0B6 / U+E0B4) and drops inner component separators so each half reads as one clean run of blocks. Adds a cwd (project basename) segment on the right, the cue a global statusline otherwise loses. Still a standard lualine config — no NvChad backend, no statusline caching, no managed toggle state.",
               "kind": "config"
             },
             {
-              "text": "bootstrap-test.yml retries the per-distro prep step (up to 5x with backoff). The reusable links-only job ran the dep install once; a transient distro-mirror timeout (notably openSUSE Tumbleweed's OSS CDN) then redded the job — and every Core fan-out PR — on a network blip. The retry is fleet-wide (one place, every caller); a genuinely broken prep still fails loud after the attempts are exhausted.",
-              "kind": "fix"
+              "text": "nvim: fzf-lua now mirrors NvChad's telescope layout. plugins/fzf-lua.lua gains winopts/fzf_opts translated 1:1 from nvchad/configs/telescope.lua (width 0.87, height 0.80, 55% preview on the right, prompt on top, a U+F002 magnifier prompt prefix, a U+F0DA selection caret) with rounded borders — the minimal NvChad finder look, on the finder you actually run (fzf-lua, not telescope).",
+              "kind": "config"
+            },
+            {
+              "text": "nvim: the bufferline tabline picks up NvChad's flat-tab modified dot. plugins/bufferline-nvim.lua sets modified_icon to the same ● (f111) used by lualine and incline, and annotates separator_style = \"thin\" as the flat, NvChad-tabufline-style rectangular tabs it already produces.",
+              "kind": "config"
             }
           ]
         }
@@ -130,28 +157,15 @@
     },
     {
       "repo": "dotfiles-core",
-      "version": "v2.5.0",
-      "date": "2026-06-29",
+      "version": "v3.0.1",
+      "date": "2026-07-03",
       "groups": [
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "jujutsu (jj) as an OPT-IN, colocated git companion. Additive — it never replaces git. New jujutsu/config.toml (symlinked to ~/.config/jj/config.toml, in core.manifest) sets a sensible colocated-friendly default (ui.default-command = \"log\", auto-local-bookmark; identity intentionally unset — jj does NOT inherit git's user.name/user.email, so an opt-in author sets it once with jj config set --user user.name/user.email). tools.zsh gains HAVE_JJ detection and aliases.zsh a few HAVE_JJ-guarded verbs (jjs/jjl/jjd); nothing is aliased over git. On a box without jj everything is inert. PORTING-MATRIX.md documents per-distro packaging (packaged on Arch/openSUSE/Gentoo/Fedora/Homebrew/nix; cargo install jujutsu on Alpine(musl)/Debian-Kali — same pattern as yazi/ouch).",
-              "kind": "config"
-            }
-          ]
-        },
         {
           "category": "Changed",
           "items": [
             {
-              "text": "zsh syntax highlighter swapped: fast-syntax-highlighting → zsh-users/zsh-syntax-highlighting (z-sy-h). The pin moves to z-sy-h (a maintained, first-party zsh-users plugin) and the load order is corrected per its README: the highlighter is now the LAST widget-wrapping plugin sourced, with zsh-history-substring-search deferred immediately after it so its widgets get wrapped. The FAST_THEME/FAST_HIGHLIGHT theming is replaced by minimal ZSH_HIGHLIGHT_HIGHLIGHTERS (main + brackets) and ZSH_HIGHLIGHT_STYLES recoloured to the Tokyo Night Storm palette.",
+              "text": "nvim: the cheatsheet's three entry points now share one opener. <leader>? and the :Cheatsheet / :Cheat user commands each inlined the same require(\"gerrrt.cheatsheet\").open() thunk; they now call a single local open_cheatsheet, so the three can't drift and a future option/argument is a one-line edit. No user-visible change — require is still deferred to first open.",
               "kind": "perf"
-            },
-            {
-              "text": "fleet-drift.sh anchors to the latest released Core tag by default, not the working tip. Fan-out stamps each OS repo with the Core tag it carries, so the dashboard now measures against the newest vX.Y.Z (via git describe), falling back to origin/main/main/HEAD. An explicit --ref/$CORE_REF_SHA still wins. This stops the false \"BEHIND by N\" the report showed for every unreleased commit on main (CHANGELOG/auto-tag churn between releases); the fleet-drift.yml workflow drops its --ref HEAD accordingly.",
-              "kind": "config"
             }
           ]
         },
@@ -159,28 +173,8 @@
           "category": "Fixed",
           "items": [
             {
-              "text": "auto-tag.sh exit-code contract hardened + tested. Added a defence-in-depth guard so _next_version fails loudly (non-zero) on a non-X.Y.Z input instead of producing a garbage component, and the call site now propagates that failure rather than tagging a bogus v. The behavioral suite (test-core.sh) now asserts the full exit-code contract hermetically (no network/gh): success → 0, no-op → 0, validation error → 2, and a real create failure (a --push onto an already-taken tag name, tripping Guard 2) → non-zero.",
-              "kind": "fix"
-            },
-            {
-              "text": "auto-tag.sh --release fails CI when an opted-in Release create actually fails. The gh release create error branch called fail but the script still exited 0, so a real failure (gh present, API error) went green with no Release. It now exit 1s there — the tag still stands (pushed above), but CI goes red so you create the Release manually. The two non-failure exits stay deliberate: gh absent → skip, Release already exists → no-op. Also added --release to the usage() synopsis line (it was only in the flag list) and clarified its gh/skip semantics.",
+              "text": "gsync was undocumented in aliases.md. The upstream-sync helper (zsh/aliases.zsh, pushes an OS repo's vendored core/ back to dotfiles-core) had no entry in the aliases cheat sheet. Added an \"Upstream Sync\" section.",
               "kind": "feature"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.4.1",
-      "date": "2026-06-29",
-      "groups": [
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "tag-release.sh recipe spells out the land-then-tag order. The printed next-steps now make the sequence explicit — land the release commit via PR (a merge commit), then tag origin/main (the merged tip) so the tag sits on main's HEAD and git describe stays clean — instead of tagging the pre-merge commit and re-pointing. The two tag pushes use ;, not && (an \"already exists\" on the first must not skip the second — the vN move). PUSH=1 now warns that it tags the pre-merge commit and prints the re-point steps.",
-              "kind": "config"
             }
           ]
         }
@@ -191,8 +185,29 @@
       "version": "Unreleased",
       "groups": [
         {
+          "category": "Documentation",
+          "items": [
+            {
+              "text": "README second-pass polish. The dotgibson shield now tracks the dotfiles-core release version (the system's version); dropped the showcase and LinkedIn shields for a one-line header (LinkedIn moved to Contact); \"Explore the docs »\" and the [docs] link now point at the documentation hub root (/docs); and About gained Languages (PowerShell) + Tools (Windows Terminal, Scoop, WinGet, psmux) subsections. The machine-checked Layout box and bootstrap SHA marker are unchanged.",
+              "kind": "other"
+            },
+            {
+              "text": "README rebuilt as a lean showcase landing page. Brought the README up to the dotfiles-core exemplar bar — a reference-style shields header, the org logo, a collapsible TOC, then a lean body (lead, three-layer at-a-glance, real Getting Started, a host-specific contribution contract, License/Contact). The lead states plainly that this host replicates Core in PowerShell rather than vendoring it. Deep detail (the fragment loader, coverage gate, and WSL bridge) now defers to the documentation hub and the migrated architecture audit. Added a .markdownlint.jsonc (mirrored from Core) scoping the showcase HTML via MD033 allowed_elements.",
+              "kind": "perf"
+            },
+            {
+              "text": "aliases.md was missing three whole sections. os/33-psmux-pill.ps1 (psmux-pill-now/-enable/-disable/-status), os/40-maint.ps1 (maint-install/-run/-log/-status/-uninstall), and os/45-doctor.ps1 (dotfiles-doctor) had zero cheat-sheet coverage. Added sections for all three, and filled in the corresponding CLAUDE.md \"Where things are\" gaps (git/, maint/, ssh/, docs/, tests/).",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
           "category": "Fixed",
           "items": [
+            {
+              "text": "Runaway git.exe processes that blocked updating git. git gets spawned all the time without you asking — starship's git_* prompt modules on every render, the background scoop update bucket pulls in core/15-update.ps1, the daily maint job. Any of those can wedge on an INTERACTIVE credential prompt (git's own terminal prompt, or a Git Credential Manager dialog) in a context with nobody to answer, so the git.exe waits forever and the next spawn stacks another — hundreds of orphans that hold the git binary busy so scoop update git / winget upgrade Git.Git can't replace it. Fix: a new early fragment core/08-git-safety.ps1 exports GIT_TERMINAL_PROMPT=0 + GCM_INTERACTIVE=Never (before 15-update and the prompt tools load) so shell-spawned git FAILS FAST instead of blocking on auth; escape hatch DOTFILES_GIT_ALLOW_PROMPT=1, and an already-set value is honoured. Adds a git-reap (Reset-StuckGit) verb to kill a pile that already formed. Paired with Core pinning starship command_timeout (reaps read-only prompt-git that wedges on a slow FS), synced into starship/starship.toml here (.core-ref bumped).",
+              "kind": "security"
+            },
             {
               "text": "Large multi-line pastes no longer switch modes / reorder text / run vim commands. Root cause: core/10-tools.ps1 sets EditMode Vi, and PSReadLine versions before 2.2.0 have no bracketed-paste support, so a pasted block is replayed keystroke-by-keystroke and :/d/i/a/o/Esc are taken as Vi commands. Fix: bumped the PSReadLine pin in packages/modules.ps1 from 2.2.0 to 2.3.6 (the current gallery release; first paste-safe release is 2.2.0), kept Vi mode (deliberate parity with Core's zsh-vi-mode), and added a cheap (Get-Module PSReadLine).Version guard that emits a one-line Write-DotWarn with the upgrade command if a stale in-box PSReadLine (< 2.2.0) is loaded, so a stale box self-diagnoses. tests/Repo.Tests.ps1 now asserts the >= 2.2.0 floor.",
               "kind": "fix"
@@ -378,6 +393,46 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "maint: the daily runner now reconciles pinned zsh plugins by CONFIG, not checkout state. maint/dotfiles-maint.sh decided \"pinned vs unpinned\" by asking whether a plugin's HEAD was detached — but a plugin cloned before plugins.zsh began pinning (or by the old floating --depth=1 path) sits on a branch even though it IS pinned in ZPLUGIN_PINS. Those were wrongly git pull --ff-only'd every run: floating them off their pins, and logging a false ✗ … (pull failed) for any whose branch couldn't fast-forward (e.g. zsh-syntax-highlighting). The loop now reads the pins straight from plugins.zsh (same grep update-plugins.sh uses — bash-3.2 safe) and, for any pinned plugin, re-asserts the recorded SHA (fetch + detach, mirroring zplugin-update): a branch checkout is reconciled back onto its pin, a rolled pin is now actually applied by the runner, and plugins already at their pin do zero network. Only genuinely unpinned plugins still fast-forward.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "other",
+      "text": "README second-pass polish. The dotgibson shield now tracks the dotfiles-core release version (the system's version); dropped the showcase and LinkedIn shields for a one-line header (LinkedIn moved to Contact); \"Explore the docs »\" and the [docs] link now point at the documentation hub root (/docs); and About gained Languages (PowerShell) + Tools (Windows Terminal, Scoop, WinGet, psmux) subsections. The machine-checked Layout box and bootstrap SHA marker are unchanged.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "perf",
+      "text": "README rebuilt as a lean showcase landing page. Brought the README up to the dotfiles-core exemplar bar — a reference-style shields header, the org logo, a collapsible TOC, then a lean body (lead, three-layer at-a-glance, real Getting Started, a host-specific contribution contract, License/Contact). The lead states plainly that this host replicates Core in PowerShell rather than vendoring it. Deep detail (the fragment loader, coverage gate, and WSL bridge) now defers to the documentation hub and the migrated architecture audit. Added a .markdownlint.jsonc (mirrored from Core) scoping the showcase HTML via MD033 allowed_elements.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "feature",
+      "text": "aliases.md was missing three whole sections. os/33-psmux-pill.ps1 (psmux-pill-now/-enable/-disable/-status), os/40-maint.ps1 (maint-install/-run/-log/-status/-uninstall), and os/45-doctor.ps1 (dotfiles-doctor) had zero cheat-sheet coverage. Added sections for all three, and filled in the corresponding CLAUDE.md \"Where things are\" gaps (git/, maint/, ssh/, docs/, tests/).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "Runaway git.exe processes that blocked updating git. git gets spawned all the time without you asking — starship's git_* prompt modules on every render, the background scoop update bucket pulls in core/15-update.ps1, the daily maint job. Any of those can wedge on an INTERACTIVE credential prompt (git's own terminal prompt, or a Git Credential Manager dialog) in a context with nobody to answer, so the git.exe waits forever and the next spawn stacks another — hundreds of orphans that hold the git binary busy so scoop update git / winget upgrade Git.Git can't replace it. Fix: a new early fragment core/08-git-safety.ps1 exports GIT_TERMINAL_PROMPT=0 + GCM_INTERACTIVE=Never (before 15-update and the prompt tools load) so shell-spawned git FAILS FAST instead of blocking on auth; escape hatch DOTFILES_GIT_ALLOW_PROMPT=1, and an already-set value is honoured. Adds a git-reap (Reset-StuckGit) verb to kill a pile that already formed. Paired with Core pinning starship command_timeout (reaps read-only prompt-git that wedges on a slow FS), synced into starship/starship.toml here (.core-ref bumped).",
+      "core": false
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
@@ -684,92 +739,83 @@
     },
     {
       "repo": "dotfiles-core",
-      "version": "v2.6.0",
-      "date": "2026-06-30",
-      "category": "Added",
-      "kind": "config",
-      "text": "sesh detection (HAVE_SESH) — finishing wiring Core already half-shipped. sesh (joshmedeski's smart tmux session manager) was already driven by the Ctrl-G shell widget (fzf.zsh), the prefix + f tmux popup (tmux-sesh.sh), a seeded sesh/sesh.toml.example, and listed in core-doctor's integrations — but tools.zsh never set a HAVE_SESH flag for it the way it does for the other detected tools. (Detection itself still worked — the Ctrl-G/prefix + f fallback keys off command -v sesh, and core-doctor already probes sesh the same way.) tools.zsh now sets HAVE_SESH (like HAVE_GUM, no _core_wired arm — sesh registers no persistent shell hook, so presence ≈ wired), and PORTING-MATRIX.md gains a sesh row + footnote documenting the go install github.com/joshmedeski/sesh/v2@latest build path (the v2 module path; go is already a pinned mise runtime) for the distros that don't package it. No core.manifest change — the .example is already listed.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.6.0",
-      "date": "2026-06-30",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
       "category": "Added",
       "kind": "feature",
-      "text": "RELEASE-RUNBOOK.md — the step-by-step, copy-paste recipe for cutting a release (Core, the OS-repo fan-out rollout, and htpx), plus a \"dry-run a new cross-repo workflow before relying on it\" habit and a troubleshooting table. Complements RELEASE-STRATEGY.md (the policy); cross-linked from it and CLAUDE.md.",
+      "text": "assets/: a reproducible VHS tape for the README hero demo. assets/demo.tape scripts a short terminal tour (eza, bat, zoxide, core help, glog) that renders to assets/demo.gif via vhs assets/demo.tape, so the hero can be regenerated rather than hand-recorded. assets/README.md documents the render steps; assets/ is allowlisted in audit-core.sh as repo-meta (it rides along in the subtree copy but is never symlinked).",
       "core": true
     },
     {
       "repo": "dotfiles-core",
-      "version": "v2.6.0",
-      "date": "2026-06-30",
-      "category": "Changed",
-      "kind": "config",
-      "text": "nvim: disable <LeftDrag> and <LeftRelease> in all modes unconditionally. Previously these were suppressed only when inside a $TMUX session, in Normal and Visual modes. They are now <Nop> in Normal, Insert, and Visual modes regardless of environment, eliminating accidental mouse-drag selections during terminal use.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.6.0",
-      "date": "2026-06-30",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "bootstrap-test.yml retries the per-distro prep step (up to 5x with backoff). The reusable links-only job ran the dep install once; a transient distro-mirror timeout (notably openSUSE Tumbleweed's OSS CDN) then redded the job — and every Core fan-out PR — on a network blip. The retry is fleet-wide (one place, every caller); a genuinely broken prep still fails loud after the attempts are exhausted.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.5.0",
-      "date": "2026-06-29",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
       "category": "Added",
       "kind": "config",
-      "text": "jujutsu (jj) as an OPT-IN, colocated git companion. Additive — it never replaces git. New jujutsu/config.toml (symlinked to ~/.config/jj/config.toml, in core.manifest) sets a sensible colocated-friendly default (ui.default-command = \"log\", auto-local-bookmark; identity intentionally unset — jj does NOT inherit git's user.name/user.email, so an opt-in author sets it once with jj config set --user user.name/user.email). tools.zsh gains HAVE_JJ detection and aliases.zsh a few HAVE_JJ-guarded verbs (jjs/jjl/jjd); nothing is aliased over git. On a box without jj everything is inert. PORTING-MATRIX.md documents per-distro packaging (packaged on Arch/openSUSE/Gentoo/Fedora/Homebrew/nix; cargo install jujutsu on Alpine(musl)/Debian-Kali — same pattern as yazi/ouch).",
+      "text": "README: a structured four-row badge block at the top. Row 1 is repo status & automation — live ci and core-integrity Actions status, open-issue / open-PR counts, repo size, and latest release. Row 2 is the MIT license (auto-detected from LICENSE) plus last-commit / commit-activity. Row 3 is the languages (Zsh, Bash, Lua, TOML, YAML, JSON) and Row 4 the tooling (Neovim, Vim, tmux, Starship, Git, 1Password). Tools with no simpleicon (mise, lazygit, jujutsu, sesh, fzf) share a substitute gnometerminal glyph on a Tokyo Night purple label. Every brand color is taken from the simple-icons dataset (e.g. Lua 000080, Git F03C2E, 1Password 145FE4). Vim is the vim/vimrc fallback editor for boxes with no nvim, not just the vim=nvim alias; the tooling row covers every tool Core ships a dedicated config for. Each Row 3/4 badge links to its upstream project on GitHub and, where the project publishes releases/tags, shows the current upstream version live (Neovim, Vim, tmux, Starship, Git, Lua, TOML, mise, lazygit, jujutsu, sesh, fzf); Zsh, Bash, YAML, JSON, and 1Password have no clean upstream version and stay plain. On the versioned badges the name side carries the brand color and the version side is a Tokyo Night blue (not grey). Row 1 leads with a dotgibson badge that shows the current release version (dynamic github/v/release) with the org avatar as its icon (base64 data-URI logo) and links to the latest release. All flat-square; the old hardcoded audit-passing shield is replaced by the live ci status it stood in for.",
       "core": true
     },
     {
       "repo": "dotfiles-core",
-      "version": "v2.5.0",
-      "date": "2026-06-29",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
+      "category": "Added",
+      "kind": "feature",
+      "text": "nvim: utils/ui-highlights.lua — a flat table of NvChad-flavored highlight overrides. Hairline window splits (WinSeparator/VertSplit), minimal rounded floats (NormalFloat/FloatBorder/FloatTitle), a border-tinted fzf-lua palette (FzfLua*), a matching blink.cmp menu/docs palette (BlinkCmp*), and NvChad's dim-linenr / bright-current-line gutter. Applied through tokyonight's on_highlights in plugins/theme.lua, so it re-runs on every :colorscheme and recolors from whatever style/theme is active — no ColorScheme autocmd, no per-plugin hardcoded hexes. Deliberately one flat function, not a helper framework.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "README: reworked into a lean public landing page. Replaced the long-form technical README with a concise landing page — a lead stating Core is the vendored foundation layer (you install an OS repo, not this one), an at-a-glance three-layer table, a modern-CLI Usage section framed by the HAVE_* detection-flag fallback, and the repo's real contribution contract. The deep architecture and reference material now lives on the documentation hub at dotfiles-web. Fixed broken links along the way (LICENSE, aliases.md, the issue-template deep-links, a malformed acknowledgment link), and scoped MD033 in .markdownlint.jsonc with allowed_elements so the intentional showcase inline HTML passes the markdown gate while the rule still catches unexpected tags. The hero image is now the rendered terminal demo (assets/demo.gif, produced from assets/demo.tape).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
+      "category": "Changed",
+      "kind": "config",
+      "text": "nvim: the statusline now wears NvChad's rounded block look. plugins/lualine-nvim.lua keeps its sections and (intentionally) its existing diagnostic glyphs — which stay in lockstep with utils/diagnostics.lua and the tabline — but swaps powerline arrows for NvChad's half-circle bubble caps (U+E0B6 / U+E0B4) and drops inner component separators so each half reads as one clean run of blocks. Adds a cwd (project basename) segment on the right, the cue a global statusline otherwise loses. Still a standard lualine config — no NvChad backend, no statusline caching, no managed toggle state.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
+      "category": "Changed",
+      "kind": "config",
+      "text": "nvim: fzf-lua now mirrors NvChad's telescope layout. plugins/fzf-lua.lua gains winopts/fzf_opts translated 1:1 from nvchad/configs/telescope.lua (width 0.87, height 0.80, 55% preview on the right, prompt on top, a U+F002 magnifier prompt prefix, a U+F0DA selection caret) with rounded borders — the minimal NvChad finder look, on the finder you actually run (fzf-lua, not telescope).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.1.0",
+      "date": "2026-07-06",
+      "category": "Changed",
+      "kind": "config",
+      "text": "nvim: the bufferline tabline picks up NvChad's flat-tab modified dot. plugins/bufferline-nvim.lua sets modified_icon to the same ● (f111) used by lualine and incline, and annotates separator_style = \"thin\" as the flat, NvChad-tabufline-style rectangular tabs it already produces.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.0.1",
+      "date": "2026-07-03",
       "category": "Changed",
       "kind": "perf",
-      "text": "zsh syntax highlighter swapped: fast-syntax-highlighting → zsh-users/zsh-syntax-highlighting (z-sy-h). The pin moves to z-sy-h (a maintained, first-party zsh-users plugin) and the load order is corrected per its README: the highlighter is now the LAST widget-wrapping plugin sourced, with zsh-history-substring-search deferred immediately after it so its widgets get wrapped. The FAST_THEME/FAST_HIGHLIGHT theming is replaced by minimal ZSH_HIGHLIGHT_HIGHLIGHTERS (main + brackets) and ZSH_HIGHLIGHT_STYLES recoloured to the Tokyo Night Storm palette.",
+      "text": "nvim: the cheatsheet's three entry points now share one opener. <leader>? and the :Cheatsheet / :Cheat user commands each inlined the same require(\"gerrrt.cheatsheet\").open() thunk; they now call a single local open_cheatsheet, so the three can't drift and a future option/argument is a one-line edit. No user-visible change — require is still deferred to first open.",
       "core": true
     },
     {
       "repo": "dotfiles-core",
-      "version": "v2.5.0",
-      "date": "2026-06-29",
-      "category": "Changed",
-      "kind": "config",
-      "text": "fleet-drift.sh anchors to the latest released Core tag by default, not the working tip. Fan-out stamps each OS repo with the Core tag it carries, so the dashboard now measures against the newest vX.Y.Z (via git describe), falling back to origin/main/main/HEAD. An explicit --ref/$CORE_REF_SHA still wins. This stops the false \"BEHIND by N\" the report showed for every unreleased commit on main (CHANGELOG/auto-tag churn between releases); the fleet-drift.yml workflow drops its --ref HEAD accordingly.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.5.0",
-      "date": "2026-06-29",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "auto-tag.sh exit-code contract hardened + tested. Added a defence-in-depth guard so _next_version fails loudly (non-zero) on a non-X.Y.Z input instead of producing a garbage component, and the call site now propagates that failure rather than tagging a bogus v. The behavioral suite (test-core.sh) now asserts the full exit-code contract hermetically (no network/gh): success → 0, no-op → 0, validation error → 2, and a real create failure (a --push onto an already-taken tag name, tripping Guard 2) → non-zero.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.5.0",
-      "date": "2026-06-29",
+      "version": "v3.0.1",
+      "date": "2026-07-03",
       "category": "Fixed",
       "kind": "feature",
-      "text": "auto-tag.sh --release fails CI when an opted-in Release create actually fails. The gh release create error branch called fail but the script still exited 0, so a real failure (gh present, API error) went green with no Release. It now exit 1s there — the tag still stands (pushed above), but CI goes red so you create the Release manually. The two non-failure exits stay deliberate: gh absent → skip, Release already exists → no-op. Also added --release to the usage() synopsis line (it was only in the flag list) and clarified its gh/skip semantics.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v2.4.1",
-      "date": "2026-06-29",
-      "category": "Changed",
-      "kind": "config",
-      "text": "tag-release.sh recipe spells out the land-then-tag order. The printed next-steps now make the sequence explicit — land the release commit via PR (a merge commit), then tag origin/main (the merged tip) so the tag sits on main's HEAD and git describe stays clean — instead of tagging the pre-merge commit and re-pointing. The two tag pushes use ;, not && (an \"already exists\" on the first must not skip the second — the vN move). PUSH=1 now warns that it tags the pre-merge commit and prints the re-point steps.",
+      "text": "gsync was undocumented in aliases.md. The upstream-sync helper (zsh/aliases.zsh, pushes an OS repo's vendored core/ back to dotfiles-core) had no entry in the aliases cheat sheet. Added an \"Upstream Sync\" section.",
       "core": true
     }
   ]
