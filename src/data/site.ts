@@ -97,5 +97,6 @@ export const nav = [
   { label: "Docs", href: "/docs" },
   { label: "Config", href: "/config" },
   { label: "Repos", href: "/#repos" },
+  { label: "Status", href: "/status" },
   { label: "Changelog", href: "/changelog" },
 ] as const;
