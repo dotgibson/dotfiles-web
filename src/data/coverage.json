@@ -1,9 +1,9 @@
 {
-  "ruleCount": 64,
-  "documentCount": 66,
-  "techniqueCount": 39,
-  "tacticCount": 8,
-  "logsourceCount": 20,
+  "ruleCount": 65,
+  "documentCount": 68,
+  "techniqueCount": 41,
+  "tacticCount": 9,
+  "logsourceCount": 21,
   "tactics": [
     {
       "id": "TA0002",
@@ -34,6 +34,12 @@
       "name": "Credential Access",
       "techniques": 11,
       "rules": 12
+    },
+    {
+      "id": "TA0007",
+      "name": "Discovery",
+      "techniques": 2,
+      "rules": 1
     },
     {
       "id": "TA0008",
@@ -98,6 +104,13 @@
       ]
     },
     {
+      "id": "T1069.002",
+      "rules": 1,
+      "ruleNames": [
+        "sharphound_ldap_sweep_4662"
+      ]
+    },
+    {
       "id": "T1070",
       "rules": 1,
       "ruleNames": [
@@ -110,6 +123,13 @@
       "ruleNames": [
         "jenkins_job_backdoor",
         "tfc_variable_injection"
+      ]
+    },
+    {
+      "id": "T1087.002",
+      "rules": 1,
+      "ruleNames": [
+        "sharphound_ldap_sweep_4662"
       ]
     },
     {
@@ -382,6 +402,13 @@
     },
     {
       "dir": "defense_evasion",
+      "products": [
+        "windows"
+      ],
+      "rules": 1
+    },
+    {
+      "dir": "discovery",
       "products": [
         "windows"
       ],
