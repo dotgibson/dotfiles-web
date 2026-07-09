@@ -311,20 +311,26 @@ function readKv(file, key) {
   return m ? m[1] : null;
 }
 const stripV = (s) => (s || '').replace(/^v/, '');
+// A `git describe` value ("vX.Y.Z-N-gabc1234") records N commits PAST the tag —
+// which is what a mirror synced from a branch tip between releases carries. Strip
+// that suffix so drift compares and labels by the release name: without it, such a
+// stamp never equals coreVersion (always reads "behind") and shows an overlong,
+// SHA-suffixed diagram label. A clean tag ("v3.2.0") is unaffected.
+const stripDescribe = (s) => (s || '').replace(/-\d+-g[0-9a-f]+$/, '');
 const driftRepos = {};
 for (const name of osRepos) {
   let carried = null;
   let ref = null;
   if (name === 'dotfiles-Windows') {
     const cr = join(repoPath(name), 'nvim', '.core-ref');
-    const tag = readKv(cr, 'tag');
+    const tag = stripDescribe(readKv(cr, 'tag'));
     const commit = readKv(cr, 'commit');
     carried = tag ? stripV(tag) : null;
     ref = tag || (commit ? commit.slice(0, 12) : null);
   } else {
     const lock = join(repoPath(name), 'core.lock');
     carried = readKv(lock, 'core_version');
-    const tag = readKv(lock, 'core_tag');
+    const tag = stripDescribe(readKv(lock, 'core_tag'));
     const sha = readKv(lock, 'core_sha');
     ref = tag || (sha ? sha.slice(0, 12) : null);
   }
