@@ -4,6 +4,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "Showcase site for the dotfiles ecosystem (Core -> OS-native -> Role).",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
