@@ -19,7 +19,7 @@
 // HARD ERROR (exit 1) instead — regenerate against the real repos, or fail loud.
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
+import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -84,13 +84,13 @@ if (missing.length || coreZshMissing) {
     // Publish path: refuse to leave a possibly-stale snapshot in place silently.
     console.error(
       `[collect-metrics] STRICT: ${why} under ${root} — cannot regenerate ` +
-        `${out.replace(webRepo + '/', '')}. ${tail}`
+        `${relative(webRepo, out)}. ${tail}`
     );
     process.exit(1);
   }
   console.warn(
     `[collect-metrics] ${why} under ${root} — keeping the committed ` +
-      `${out.replace(webRepo + '/', '')} as-is. ${tail} (pass --strict to fail instead.)`
+      `${relative(webRepo, out)} as-is. ${tail} (pass --strict to fail instead.)`
   );
   process.exit(0);
 }
@@ -387,7 +387,7 @@ const data = {
 };
 
 writeFileSync(out, JSON.stringify(data, null, 2) + '\n');
-console.log(`[collect-metrics] wrote ${out.replace(webRepo + '/', '')}`);
+console.log(`[collect-metrics] wrote ${relative(webRepo, out)}`);
 const { changelog: cl, ...rest } = data;
 console.log(JSON.stringify(rest, null, 2));
 console.log(
