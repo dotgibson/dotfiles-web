@@ -1,8 +1,12 @@
 #!/usr/bin/env node
-// verify-bootstrap-flags.mjs — the drift guard for the Bootstrap Command Generator
-// (design doc §1.4). src/data/bootstrap.ts is hand-authored, so this checks it can
-// never drift from the repos it generates commands for: it parses each repo's REAL
-// flag surface and fails if bootstrap.ts emits a flag the repo doesn't accept.
+// verify-bootstrap-flags.mjs — the drift guard for BOTH command builders. Two files
+// hand-author install commands from their own flag lists: src/data/bootstrap.ts (the
+// getting-started generator) and src/components/InstallBuilder.astro (the landing-page
+// widget, which carries a SEPARATE inline copy). Either can drift from the repos it
+// targets, so this parses each repo's REAL flag surface and fails if EITHER builder
+// emits a flag the repo doesn't accept — an unknown flag hard-fails on macOS (its
+// bootstrap rejects anything outside a KNOWN_FLAGS allowlist), so a wrong flag here is
+// a broken copy-paste command for a real user.
 //
 //   node scripts/verify-bootstrap-flags.mjs            # repos are siblings of this one
 //   DOTFILES_ROOT=/path/to/repos node scripts/verify-bootstrap-flags.mjs
@@ -24,11 +28,31 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webRepo = resolve(__dirname, '..');
 const root = process.env.DOTFILES_ROOT ? resolve(process.env.DOTFILES_ROOT) : resolve(webRepo, '..');
 const repoPath = (name) => join(root, name);
+
+// Evaluate a DATA-ONLY JS literal (the type-stripped bootstrap.ts body, or the inline
+// InstallBuilder.astro `platforms` array) as the completion value of a locked-down vm
+// context: NO Node globals (process/require/console/…) reachable, a hard timeout, and
+// runtime code-generation (eval/new Function/wasm) disabled. These inputs are committed
+// repo files, but confining the parse to pure data keeps this build script from ever
+// executing arbitrary JS lifted out of a source file — the completion value is the last
+// expression, so callers append a bare `targets;` / wrap the literal in parens.
+function evalDataLiteral(code, what) {
+  try {
+    return vm.runInNewContext(code, Object.create(null), {
+      timeout: 1000,
+      contextCodeGeneration: { strings: false, wasm: false },
+    });
+  } catch (e) {
+    console.error(`[verify-flags] could not evaluate ${what}: ${e.message}`);
+    process.exit(1);
+  }
+}
 
 // ── load the resolved targets from bootstrap.ts ──────────────────────────────
 // The file is data-only after its type layer, so strip the types and evaluate the
@@ -46,21 +70,55 @@ function loadTargets() {
       .replace(/:\s*BootstrapFlag\b/g, '')
       .replace(/:\s*BootstrapTarget\[\]/g, '')
       .replace(/:\s*ModuleGroup\[\]/g, '')
-      .replace(/^export const /gm, 'const ') + '\nreturn targets;';
-  let targets;
-  try {
-    // eslint-disable-next-line no-new-func
-    targets = Function(js)();
-  } catch (e) {
-    console.error(`[verify-flags] could not parse src/data/bootstrap.ts: ${e.message}`);
-    console.error('[verify-flags] the type-strip in loadTargets() may need updating for a new annotation.');
-    process.exit(1);
-  }
+      .replace(/^export const /gm, 'const ') + '\ntargets;';
+  const targets = evalDataLiteral(
+    js,
+    'src/data/bootstrap.ts (the type-strip in loadTargets() may need updating for a new annotation)'
+  );
   if (!Array.isArray(targets) || !targets.length) {
     console.error('[verify-flags] parsed bootstrap.ts but found no targets — aborting.');
     process.exit(1);
   }
   return targets;
+}
+
+// ── load the landing-page builder's SEPARATE inline flag list ─────────────────
+// InstallBuilder.astro carries its own `platforms` literal (a compact widget with a
+// Linux distro sub-picker), independent of bootstrap.ts, so it needs the same guard or
+// it can drift and emit a bootstrap-rejecting command with CI green. Extract the literal
+// the same type-free way (it's self-contained — no imports referenced inside it) and
+// flatten to {repo, isPs, flags[]} rows, fanning the Linux platform out per distro
+// (base flags + that distro's `extra`). Returns null if the component is absent.
+function loadInstallBuilderRows() {
+  const file = join(webRepo, 'src', 'components', 'InstallBuilder.astro');
+  if (!existsSync(file)) return null;
+  const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  // The top-level array is the only `]` that starts a line then closes with `;`
+  // (inner arrays are indented and end with `],`), so this lazily captures the whole
+  // literal without a JS parser — matching loadTargets()'s approach.
+  const m = src.match(/const platforms = (\[[\s\S]*?\n\]);/);
+  if (!m) {
+    console.error('[verify-flags] could not locate the `platforms` array in InstallBuilder.astro.');
+    console.error('[verify-flags] its shape may have changed — update loadInstallBuilderRows().');
+    process.exit(1);
+  }
+  const platforms = evalDataLiteral(
+    '(' + m[1] + ')',
+    'InstallBuilder.astro platforms (its shape may have changed — update loadInstallBuilderRows())'
+  );
+  const rows = [];
+  for (const p of platforms) {
+    const isPs = p.shell === 'powershell';
+    const base = (p.flags || []).map((f) => f.flag);
+    if (p.distros) {
+      for (const d of p.distros) {
+        rows.push({ id: `${p.id}:${d.id}`, repo: d.repo, isPs, flags: [...base, ...(d.extra || []).map((f) => f.flag)] });
+      }
+    } else {
+      rows.push({ id: p.id, repo: p.repo, isPs, flags: base });
+    }
+  }
+  return rows;
 }
 
 // ── parse a repo's real flag surface ─────────────────────────────────────────
@@ -150,6 +208,33 @@ for (const t of targets) {
   if (notSurfaced.length) notes.push(`${t.repo} (${t.id}): not surfaced — ${notSurfaced.sort().join(' ')}`);
 }
 
+// ── also hold the landing-page builder to the same check ──────────────────────
+// Every flag InstallBuilder.astro emits must likewise be one the target repo accepts.
+// (It curates like bootstrap.ts, so we only assert its flags are ACCEPTED — not that it
+// surfaces every repo flag.)
+const ibRows = loadInstallBuilderRows();
+if (ibRows) {
+  for (const r of ibRows) {
+    const file = join(repoPath(r.repo), r.isPs ? 'install.ps1' : 'bootstrap.sh');
+    if (!existsSync(file)) {
+      skipped++;
+      notes.push(`InstallBuilder ${r.id}: ${r.repo} ${r.isPs ? 'install.ps1' : 'bootstrap.sh'} not found — skipped (repo not checked out).`);
+      continue;
+    }
+    verified++;
+    const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+    const accepted = r.isPs ? psAcceptedFlags(src) : shAcceptedFlags(src);
+    for (const flag of r.flags) {
+      if (!accepted.has(flag)) {
+        errors.push(
+          `InstallBuilder.astro (${r.id}): surfaces "${flag}" but ${r.repo}'s ${r.isPs ? 'install.ps1' : 'bootstrap.sh'} ` +
+            `does not accept it. Accepted: ${[...accepted].sort().join(' ') || '(none parsed)'}`
+        );
+      }
+    }
+  }
+}
+
 // All repos missing → nothing to verify; skip rather than fail a dist-only build.
 if (verified === 0) {
   console.warn(
@@ -165,9 +250,10 @@ if (notes.length) {
 }
 
 if (errors.length) {
-  console.error(`\n[verify-flags] ✗ ${errors.length} drift error(s) — bootstrap.ts is out of sync:`);
+  console.error(`\n[verify-flags] ✗ ${errors.length} drift error(s) — a command builder is out of sync with the repos:`);
   for (const e of errors) console.error(`  ✗ ${e}`);
-  console.error('\nFix the flag in src/data/bootstrap.ts (or the repo bootstrap), then re-run.');
+  // Each error above names its own source; fix the flag there (or the repo bootstrap).
+  console.error('\nFix the flag in the source named in each error — src/data/bootstrap.ts or ' + 'src/components/InstallBuilder.astro — (or the repo bootstrap), then re-run.');
   process.exit(1);
 }
 
