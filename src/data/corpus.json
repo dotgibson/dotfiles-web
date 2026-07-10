@@ -1,16 +1,16 @@
 {
-  "totalPairs": 71,
+  "totalPairs": 85,
   "groupCount": 16,
-  "techniqueCount": 43,
-  "tacticCount": 9,
+  "techniqueCount": 57,
+  "tacticCount": 11,
   "groups": [
     {
       "label": "On-prem AD / Windows",
-      "count": 24
+      "count": 37
     },
     {
       "label": "Cloud IAM (Entra · AWS · GCP)",
-      "count": 5
+      "count": 6
     },
     {
       "label": "Okta",
@@ -71,6 +71,17 @@
   ],
   "pairs": [
     {
+      "id": "account-lockout-defenders",
+      "attack": "Account access removal (lock out admins & responders)",
+      "detection": "Detect account access removal (admin disable/delete/reset + group removal)",
+      "group": "On-prem AD / Windows",
+      "phase": "Impact",
+      "tactic": "TA0040",
+      "techniques": [
+        "T1531"
+      ]
+    },
+    {
       "id": "adcs-esc1-certipy",
       "attack": "AD CS ESC1 (request a cert as admin via arbitrary SAN)",
       "detection": "Detect AD CS SAN abuse (4886 ESC1/relay)",
@@ -93,6 +104,17 @@
       ]
     },
     {
+      "id": "web-service-c2-telegram",
+      "attack": "C2 over a legitimate web service (Telegram / Slack / Gist)",
+      "detection": "Detect web-service C2 (non-browser process to SaaS API)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1102.002"
+      ]
+    },
+    {
       "id": "coerce-petitpotam",
       "attack": "Coerce DC auth (PetitPotam / printerbug)",
       "detection": "Detect coercion (5145 named-pipe access)",
@@ -101,6 +123,17 @@
       "tactic": "TA0006",
       "techniques": [
         "T1187"
+      ]
+    },
+    {
+      "id": "ransomware-encrypt-files",
+      "attack": "Data encrypted for impact (mass file encryption)",
+      "detection": "Detect mass encryption (4663 file-write burst + note drop)",
+      "group": "On-prem AD / Windows",
+      "phase": "Impact",
+      "tactic": "TA0040",
+      "techniques": [
+        "T1486"
       ]
     },
     {
@@ -137,6 +170,39 @@
       ]
     },
     {
+      "id": "dga-c2-domains",
+      "attack": "DGA rendezvous domains (resilient C2 resolution)",
+      "detection": "Detect DGA beacons (NXDOMAIN burst + label entropy)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1568.002"
+      ]
+    },
+    {
+      "id": "dns-tunnel-c2",
+      "attack": "DNS-tunnel C2 (iodine / dnscat2 / Sliver DNS)",
+      "detection": "Detect DNS tunneling (Sysmon 22 query volume + label length)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1071.004"
+      ]
+    },
+    {
+      "id": "domain-fronting-cdn",
+      "attack": "Domain-fronted C2 (high-reputation CDN edge)",
+      "detection": "Detect domain fronting (TLS SNI vs HTTP Host mismatch)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1090.004"
+      ]
+    },
+    {
       "id": "dpapi-backupkey",
       "attack": "DPAPI domain backup key (decrypt any user's secrets)",
       "detection": "Detect DPAPI backup-key theft (protected_storage pipe, 5145)",
@@ -170,6 +236,39 @@
       ]
     },
     {
+      "id": "https-beacon-sliver",
+      "attack": "HTTPS beacon with long sleep + jitter (Sliver / Cobalt / Havoc)",
+      "detection": "Detect HTTPS beaconing by inter-arrival regularity (proxy logs)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1071.001"
+      ]
+    },
+    {
+      "id": "icmp-tunnel-c2",
+      "attack": "ICMP-tunnel C2 (echo-payload smuggling)",
+      "detection": "Detect ICMP tunneling (echo volume + payload size)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1095"
+      ]
+    },
+    {
+      "id": "inhibit-recovery-vssadmin",
+      "attack": "Inhibit system recovery (delete shadow copies + backups)",
+      "detection": "Detect recovery inhibition (4688 vssadmin / wbadmin / bcdedit)",
+      "group": "On-prem AD / Windows",
+      "phase": "Impact",
+      "tactic": "TA0040",
+      "techniques": [
+        "T1490"
+      ]
+    },
+    {
       "id": "kerberoast-getuserspns",
       "attack": "Kerberoast SPNs (request + crack offline)",
       "detection": "Detect Kerberoasting (4769 RC4 TGS)",
@@ -178,6 +277,17 @@
       "tactic": "TA0006",
       "techniques": [
         "T1558.003"
+      ]
+    },
+    {
+      "id": "mtls-c2-sliver",
+      "attack": "Mutual-TLS C2 session (Sliver mTLS implant)",
+      "detection": "Detect encrypted C2 by TLS fingerprint (JA3 / JA3S)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1573.002"
       ]
     },
     {
@@ -247,6 +357,17 @@
       ]
     },
     {
+      "id": "resource-hijack-xmrig",
+      "attack": "Resource hijacking (cryptomining on compromised hosts)",
+      "detection": "Detect cryptojacking (Stratum pool connections + CPU peg)",
+      "group": "On-prem AD / Windows",
+      "phase": "Impact",
+      "tactic": "TA0040",
+      "techniques": [
+        "T1496"
+      ]
+    },
+    {
       "id": "rbcd-impacket",
       "attack": "Resource-based constrained delegation (RBCD)",
       "detection": "Detect RBCD abuse (5136 msDS-AllowedToActOnBehalfOfOtherIdentity write)",
@@ -255,6 +376,17 @@
       "tactic": "TA0004",
       "techniques": [
         "T1098"
+      ]
+    },
+    {
+      "id": "reverse-tunnel-chisel",
+      "attack": "Reverse tunnel for C2 pivoting (chisel / ligolo-ng)",
+      "detection": "Detect reverse tunnels (long-lived outbound session + JA3)",
+      "group": "On-prem AD / Windows",
+      "phase": "Command & Control",
+      "tactic": "TA0011",
+      "techniques": [
+        "T1572"
       ]
     },
     {
@@ -299,6 +431,17 @@
       "tactic": "TA0006",
       "techniques": [
         "T1558.002"
+      ]
+    },
+    {
+      "id": "service-stop-preransom",
+      "attack": "Stop business services before impact (unlock files for encryption)",
+      "detection": "Detect pre-encryption service kills (7036 stop burst)",
+      "group": "On-prem AD / Windows",
+      "phase": "Impact",
+      "tactic": "TA0040",
+      "techniques": [
+        "T1489"
       ]
     },
     {
@@ -354,6 +497,17 @@
       "tactic": "TA0003",
       "techniques": [
         "T1098.001"
+      ]
+    },
+    {
+      "id": "cloud-snapshot-destroy",
+      "attack": "Destroy cloud backups & data (snapshot / bucket deletion)",
+      "detection": "Detect cloud data destruction (CloudTrail delete burst)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Impact",
+      "tactic": "TA0040",
+      "techniques": [
+        "T1485"
       ]
     },
     {
