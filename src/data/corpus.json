@@ -1,8 +1,8 @@
 {
-  "totalPairs": 44,
-  "groupCount": 7,
-  "techniqueCount": 33,
-  "tacticCount": 6,
+  "totalPairs": 71,
+  "groupCount": 16,
+  "techniqueCount": 43,
+  "tacticCount": 9,
   "groups": [
     {
       "label": "On-prem AD / Windows",
@@ -14,6 +14,10 @@
     },
     {
       "label": "Okta",
+      "count": 3
+    },
+    {
+      "label": "Google Workspace",
       "count": 3
     },
     {
@@ -29,7 +33,39 @@
       "count": 3
     },
     {
+      "label": "Jenkins",
+      "count": 3
+    },
+    {
       "label": "Harbor registry",
+      "count": 3
+    },
+    {
+      "label": "HashiCorp Vault",
+      "count": 3
+    },
+    {
+      "label": "Terraform Cloud",
+      "count": 3
+    },
+    {
+      "label": "Snowflake",
+      "count": 3
+    },
+    {
+      "label": "Cloudflare edge",
+      "count": 3
+    },
+    {
+      "label": "npm registry",
+      "count": 3
+    },
+    {
+      "label": "PyPI registry",
+      "count": 3
+    },
+    {
+      "label": "Slack",
       "count": 3
     }
   ],
@@ -292,8 +328,8 @@
       "attack": "WMI remote exec (impacket-wmiexec, no service dropped)",
       "detection": "Detect WMI exec (4688 WmiPrvSE child process)",
       "group": "On-prem AD / Windows",
-      "phase": "Lateral Movement",
-      "tactic": "TA0008",
+      "phase": "Execution",
+      "tactic": "TA0002",
       "techniques": [
         "T1047"
       ]
@@ -384,6 +420,39 @@
       "tactic": "TA0003",
       "techniques": [
         "T1556"
+      ]
+    },
+    {
+      "id": "gws-mail-forward",
+      "attack": "Google Workspace external mail forwarding (BEC exfil)",
+      "detection": "Detect external mail forwarding (Google Workspace audit)",
+      "group": "Google Workspace",
+      "phase": "Collection",
+      "tactic": "TA0009",
+      "techniques": [
+        "T1114.003"
+      ]
+    },
+    {
+      "id": "gws-oauth-grant",
+      "attack": "Google Workspace malicious OAuth grant (consent phish)",
+      "detection": "Detect illicit OAuth grant (Google Workspace token audit)",
+      "group": "Google Workspace",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1528"
+      ]
+    },
+    {
+      "id": "gws-super-admin",
+      "attack": "Google Workspace super-admin grant (tenant persistence)",
+      "detection": "Detect admin-role grant (Google Workspace admin audit)",
+      "group": "Google Workspace",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.003"
       ]
     },
     {
@@ -487,6 +556,39 @@
       ]
     },
     {
+      "id": "jenkins-job-backdoor",
+      "attack": "Jenkins job/pipeline backdoor (run code on controller + agents)",
+      "detection": "Detect job create/reconfigure (Jenkins audit log)",
+      "group": "Jenkins",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1072"
+      ]
+    },
+    {
+      "id": "jenkins-script-console",
+      "attack": "Jenkins Script Console RCE (controller code exec + cred dump)",
+      "detection": "Detect Script Console use (Jenkins audit log)",
+      "group": "Jenkins",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1059"
+      ]
+    },
+    {
+      "id": "jenkins-api-token",
+      "attack": "Jenkins user API token (durable non-interactive access)",
+      "detection": "Detect API token creation (Jenkins audit log)",
+      "group": "Jenkins",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
       "id": "harbor-image-backdoor",
       "attack": "Backdoored image over a trusted tag (poison the registry)",
       "detection": "Detect image push over a trusted tag (Harbor audit log)",
@@ -513,6 +615,237 @@
       "attack": "Harbor robot account (durable registry credential)",
       "detection": "Detect robot-account creation (Harbor audit log)",
       "group": "Harbor registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "vault-secret-exfil",
+      "attack": "Bulk KV secret read (exfil the vault)",
+      "detection": "Detect bulk secret read (Vault audit log)",
+      "group": "HashiCorp Vault",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1555"
+      ]
+    },
+    {
+      "id": "vault-audit-disable",
+      "attack": "Disable the Vault audit device (blind the SIEM)",
+      "detection": "Detect audit-device disable (Vault audit log)",
+      "group": "HashiCorp Vault",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "vault-approle-backdoor",
+      "attack": "Rogue AppRole (durable machine auth to Vault)",
+      "detection": "Detect rogue AppRole / auth backdoor (Vault audit log)",
+      "group": "HashiCorp Vault",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "tfc-agent-hijack",
+      "attack": "Rogue Terraform Cloud agent (capture runs + cloud creds)",
+      "detection": "Detect rogue agent pool (Terraform Cloud audit trail)",
+      "group": "Terraform Cloud",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1543"
+      ]
+    },
+    {
+      "id": "tfc-token-backdoor",
+      "attack": "Terraform Cloud org/team token backdoor (durable API access)",
+      "detection": "Detect org/team token creation (Terraform Cloud audit trail)",
+      "group": "Terraform Cloud",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "tfc-var-injection",
+      "attack": "Terraform Cloud variable injection (run code / exfil at apply)",
+      "detection": "Detect workspace variable injection (Terraform Cloud audit trail)",
+      "group": "Terraform Cloud",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1072"
+      ]
+    },
+    {
+      "id": "snowflake-rogue-user",
+      "attack": "Snowflake backdoor user + ACCOUNTADMIN grant",
+      "detection": "Detect user creation / ACCOUNTADMIN grant (Snowflake QUERY_HISTORY)",
+      "group": "Snowflake",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1136.003"
+      ]
+    },
+    {
+      "id": "snowflake-exfil-stage",
+      "attack": "Snowflake data exfil via COPY INTO external stage",
+      "detection": "Detect COPY INTO external unload (Snowflake QUERY_HISTORY)",
+      "group": "Snowflake",
+      "phase": "Exfiltration",
+      "tactic": "TA0010",
+      "techniques": [
+        "T1567.002"
+      ]
+    },
+    {
+      "id": "snowflake-network-policy",
+      "attack": "Snowflake network-policy tamper (open the IP allowlist)",
+      "detection": "Detect network-policy change (Snowflake QUERY_HISTORY)",
+      "group": "Snowflake",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.007"
+      ]
+    },
+    {
+      "id": "cf-api-token",
+      "attack": "Cloudflare API token backdoor (durable account access)",
+      "detection": "Detect API token creation (Cloudflare audit log)",
+      "group": "Cloudflare edge",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "cf-waf-disable",
+      "attack": "Cloudflare WAF/firewall rule disable (open the edge)",
+      "detection": "Detect WAF/firewall rule disable (Cloudflare audit log)",
+      "group": "Cloudflare edge",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "cf-worker-deploy",
+      "attack": "Cloudflare Worker deploy (serverless edge code exec)",
+      "detection": "Detect Worker deploy (Cloudflare audit log)",
+      "group": "Cloudflare edge",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1648"
+      ]
+    },
+    {
+      "id": "npm-malicious-publish",
+      "attack": "npm malicious package publish (supply-chain implant)",
+      "detection": "Detect package publish (npm audit log)",
+      "group": "npm registry",
+      "phase": "Initial Access",
+      "tactic": "TA0001",
+      "techniques": [
+        "T1195.002"
+      ]
+    },
+    {
+      "id": "npm-2fa-disable",
+      "attack": "npm publish-2FA disable (open the publish path)",
+      "detection": "Detect publish-2FA disable (npm audit log)",
+      "group": "npm registry",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "npm-owner-add",
+      "attack": "npm rogue maintainer add (durable publish rights)",
+      "detection": "Detect maintainer add (npm audit log)",
+      "group": "npm registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "pypi-malicious-publish",
+      "attack": "PyPI malicious release upload (supply-chain implant)",
+      "detection": "Detect token release upload (PyPI journal)",
+      "group": "PyPI registry",
+      "phase": "Initial Access",
+      "tactic": "TA0001",
+      "techniques": [
+        "T1195.002"
+      ]
+    },
+    {
+      "id": "pypi-role-add",
+      "attack": "PyPI rogue collaborator add (durable publish rights)",
+      "detection": "Detect collaborator add (PyPI journal)",
+      "group": "PyPI registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "pypi-trusted-publisher",
+      "attack": "PyPI rogue trusted publisher (credential-less publish backdoor)",
+      "detection": "Detect trusted publisher add (PyPI journal)",
+      "group": "PyPI registry",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
+      ]
+    },
+    {
+      "id": "slack-2fa-disable",
+      "attack": "Slack 2FA enforcement disable (weaken workspace auth)",
+      "detection": "Detect 2FA enforcement disable (Slack audit log)",
+      "group": "Slack",
+      "phase": "Defense Evasion",
+      "tactic": "TA0005",
+      "techniques": [
+        "T1562.001"
+      ]
+    },
+    {
+      "id": "slack-external-share",
+      "attack": "Slack Connect external share (channel exfil)",
+      "detection": "Detect external shared channel (Slack audit log)",
+      "group": "Slack",
+      "phase": "Exfiltration",
+      "tactic": "TA0010",
+      "techniques": [
+        "T1567"
+      ]
+    },
+    {
+      "id": "slack-malicious-app",
+      "attack": "Slack malicious app install (durable data access)",
+      "detection": "Detect app install (Slack audit log)",
+      "group": "Slack",
       "phase": "Persistence",
       "tactic": "TA0003",
       "techniques": [
