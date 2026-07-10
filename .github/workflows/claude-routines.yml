@@ -1,0 +1,108 @@
+name: claude-routines
+
+# Scheduled "judgment-work" bot for the public showcase site: run the /showcase-accuracy
+# maintenance routine (.claude/commands) HEADLESS on a weekly cron and file its findings
+# as a deduplicated GitHub issue — so the site-vs-reality drift sweep happens on its own
+# instead of waiting for a human. The web-side twin of dotfiles-core's /doc-audit: the
+# site RESTATES facts (repo count, three-layer model, per-platform install commands, the
+# corpus/detection counts) that live in other repos, and this catches where the prose has
+# drifted from the source of truth. The data-freshness.yml gate already keeps the
+# GENERATED data (generated.json/corpus.json/coverage.json) fresh; this covers the
+# hand-written prose a mechanical gate can't judge.
+#
+# First-party only (same principle as the rest of the fleet): the Claude Code CLI is
+# installed from npm at a PINNED version — NO third-party marketplace action to trust.
+# Auth is the CLAUDE_CODE_OAUTH_TOKEN repo secret (a Claude subscription token minted with
+# `claude setup-token`). dotfiles-web vendors no core/, so the CLI version is pinned here.
+#
+# INERT BY DEFAULT: with no CLAUDE_CODE_OAUTH_TOKEN secret the job no-ops with a warning
+# (so a fork — or this repo before you opt in — never gets a red X). Add the secret to enable.
+
+on:
+  schedule:
+    # Sat 08:00 UTC — deliberately off the rest of the fleet's routine crons (core Tue,
+    # Defense Wed, htpx Thu, Kali Fri, Windows monthly) so the fleet never draws on the
+    # Claude subscription at the same time.
+    - cron: "0 8 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: claude-routines-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Keep in step with dotfiles-core's scripts/tool-versions.env CLAUDE_CODE_VERSION.
+  CLAUDE_CODE_VERSION: "2.1.185"
+
+jobs:
+  # Gate: is the auth token configured? Secrets can't be read in a job-level `if`, so a
+  # tiny job exposes presence as an output the real job depends on. Absent → warn and skip.
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      has_key: ${{ steps.k.outputs.has_key }}
+    steps:
+      - id: k
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+            echo "has_key=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "has_key=false" >>"$GITHUB_OUTPUT"
+            echo "::warning::CLAUDE_CODE_OAUTH_TOKEN secret not set — /showcase-accuracy is scaffolded but inactive. Add the secret to enable it."
+          fi
+
+  # Cross-check the site's restated claims against the source-of-truth repos: counts /
+  # versions in prose vs the generated data, the three-layer model + repo inventory, the
+  # per-platform install commands, and cross-repo claims that moved. Report-first, edits
+  # nothing. Clones the fleet as siblings so the routine can read the real source repos.
+  showcase-accuracy:
+    needs: preflight
+    if: needs.preflight.outputs.has_key == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      issues: write
+    env:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      OWNER: ${{ github.repository_owner }}
+      ISSUE_TITLE: "showcase-accuracy: weekly site-vs-fleet consistency sweep"
+    steps:
+      # Check dotfiles-web into a subdir so the rest of the fleet can sit beside it as
+      # siblings — the layout /showcase-accuracy reads via --add-dir.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          path: dotfiles-web
+      - name: Clone the source-of-truth fleet (read-only, shallow)
+        run: |
+          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch \
+                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
+                   dotfiles-openSUSE dotfiles-Windows htpx; do
+            git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r" 2>/dev/null \
+              || echo "::warning::could not clone $r (skipping it in the sweep)"
+          done
+      - name: Install Claude Code CLI (pinned)
+        # Fail fast if the pin is empty — never silently fall back to a floating `latest`.
+        run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION:?not set}"
+      - name: Run /showcase-accuracy
+        working-directory: dotfiles-web
+        run: |
+          claude -p "/showcase-accuracy" \
+            --add-dir "$GITHUB_WORKSPACE" \
+            --model opus \
+            --permission-mode default \
+            --allowedTools "Read,Grep,Glob,Bash(git ls-files:*),Bash(ls:*)" \
+            --output-format text | tee "$RUNNER_TEMP/showcase-accuracy.md"
+      - name: File the report as an issue
+        # GH_TOKEN scoped to just this step (least privilege): only the final `gh` call
+        # needs it, so it isn't exposed to the `claude` routine run above.
+        working-directory: dotfiles-web
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/workflows/file-routine-issue.sh "$ISSUE_TITLE" "$RUNNER_TEMP/showcase-accuracy.md"
