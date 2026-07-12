@@ -9,6 +9,8 @@
 // Output is plain text with embedded ANSI SGR escape sequences (\x1b[…m) so xterm.js
 // renders the Tokyo Night palette. A handful of helpers below keep the escapes readable.
 
+import { metrics } from "./metrics";
+
 const ESC = "\x1b[";
 const R = `${ESC}0m`; // reset
 // 24-bit truecolor foreground from a hex string — xterm.js renders these against the
@@ -112,9 +114,12 @@ function bat(file: string, lines: string[], lang: string): string {
   return [top, head, sep, ...body, bottom].join("\r\n");
 }
 
+// Source the version from generated.json (via metrics) so `cat core.version` in the
+// playground can never drift from Core's real release — it's the same number the
+// homepage metrics strip and changelog feed render. Falls back to "main" pre-release.
 const CORE_VERSION = bat(
   "core.version",
-  [c.orange("2.4.1")],
+  [c.orange((metrics.core.version ?? "main").replace(/^v/, ""))],
   "txt",
 );
 const ZSHRC = bat(
