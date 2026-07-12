@@ -1,7 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 import { COMMANDS } from '../data/terminal';
+import { metrics } from '../data/metrics';
 import { withBase } from '../lib/url';
+
+// Resolve Core's real version server-side (importing the full metrics payload is
+// free at build time) and hand ONLY the string to the client island via a data
+// attribute below — so `cat core.version` tracks generated.json without the
+// client bundle importing the ~86KB generated.json. Falls back to "main".
+const coreVersion = (metrics.core.version ?? 'main').replace(/^v/, '');
 
 // The playground is a SIMULATED interactive shell rendered with xterm.js — no VM,
 // no WASM, no real filesystem or network. It recognizes a curated set of the
@@ -38,7 +45,7 @@ const help = COMMANDS.filter((cmd) => cmd.name !== 'banner').map((cmd) => ({
 
       <!-- Live terminal (progressive enhancement). Hidden until the island boots, so
            no-JS visitors never see an empty black box; the fallback below shows instead. -->
-      <div class="term-wrap" data-term-shell hidden>
+      <div class="term-wrap" data-term-shell data-core-version={coreVersion} hidden>
         <div class="term-bar" aria-hidden="true">
           <span class="term-dot term-dot--red"></span>
           <span class="term-dot term-dot--yellow"></span>
@@ -100,12 +107,17 @@ const help = COMMANDS.filter((cmd) => cmd.name !== 'banner').map((cmd) => ({
     unknown,
     lookup,
     prompt,
+    setCoreVersion,
   } from '../data/terminal';
 
   const wrap = document.querySelector<HTMLElement>('[data-term-shell]');
   const fallback = document.querySelector<HTMLElement>('[data-term-fallback]');
   const host = document.getElementById('term');
   if (wrap && host) {
+    // Inject Core's version (rendered into the wrapper's data attribute server-side)
+    // so `cat core.version` matches the real release without bundling generated.json.
+    setCoreVersion(wrap.dataset.coreVersion);
+
     // Reveal the live terminal, retire the static fallback.
     wrap.hidden = false;
     fallback?.setAttribute('hidden', '');
