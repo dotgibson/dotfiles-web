@@ -9,8 +9,6 @@
 // Output is plain text with embedded ANSI SGR escape sequences (\x1b[…m) so xterm.js
 // renders the Tokyo Night palette. A handful of helpers below keep the escapes readable.
 
-import { metrics } from "./metrics";
-
 const ESC = "\x1b[";
 const R = `${ESC}0m`; // reset
 // 24-bit truecolor foreground from a hex string — xterm.js renders these against the
@@ -114,14 +112,18 @@ function bat(file: string, lines: string[], lang: string): string {
   return [top, head, sep, ...body, bottom].join("\r\n");
 }
 
-// Source the version from generated.json (via metrics) so `cat core.version` in the
-// playground can never drift from Core's real release — it's the same number the
-// homepage metrics strip and changelog feed render. Falls back to "main" pre-release.
-const CORE_VERSION = bat(
-  "core.version",
-  [c.orange((metrics.core.version ?? "main").replace(/^v/, ""))],
-  "txt",
-);
+// `cat core.version` output. The version STRING is injected at runtime via
+// setCoreVersion — the playground page computes it from generated.json server-side
+// (where importing the metrics payload is free) and passes it through a DOM data
+// attribute, so this client-bundled module never has to import the ~86KB
+// generated.json. Defaults to "main" until injected; the leading `v` is stripped so
+// it renders like the homepage metrics strip.
+let coreVersionStr = "main";
+export function setCoreVersion(v: string | null | undefined): void {
+  coreVersionStr = (v ?? "main").replace(/^v/, "");
+}
+const coreVersionFile = (): string =>
+  bat("core.version", [c.orange(coreVersionStr)], "txt");
 const ZSHRC = bat(
   ".zshrc",
   [
@@ -136,8 +138,8 @@ const ZSHRC = bat(
 );
 
 // The README "files" the demo knows about — `cat`/`bat` and `ls` agree on this set.
+// core.version is handled separately (it's dynamic — see coreVersionFile / the cat run).
 const FILES: Record<string, string> = {
-  "core.version": CORE_VERSION,
   ".zshrc": ZSHRC,
   zshrc: ZSHRC,
 };
@@ -167,6 +169,7 @@ export const COMMANDS: CommandSpec[] = [
       const f = args.trim().split(/\s+/)[0] || "";
       if (!f) return c.muted("usage: cat <file>   (try: core.version, .zshrc)");
       const key = f.replace(/^\.\//, "");
+      if (key === "core.version") return coreVersionFile();
       if (FILES[key]) return FILES[key];
       return `${c.red("cat:")} ${f}: ${c.muted("No such file. Known files: core.version, .zshrc")}`;
     },
