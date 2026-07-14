@@ -1,71 +1,71 @@
 {
-  "generatedAt": "2026-07-10",
+  "generatedAt": "2026-07-14",
   "fleet": {
     "publicRepos": 10,
     "layers": 3,
     "loadOrderStages": 15
   },
   "releases": {
-    "current": "v3.3.0",
+    "current": "v3.5.0",
     "channels": [
+      "v3.5.0",
+      "v3.4.0",
       "v3.3.0",
-      "v3.2.0",
-      "v3.1.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "3.3.0",
+    "coreVersion": "3.5.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-Windows": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-Kali": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v3.3.0",
-        "carried": "3.3.0",
+        "ref": "v3.5.0",
+        "carried": "3.5.0",
         "status": "current"
       }
     }
   },
   "core": {
-    "version": "3.3.0",
+    "version": "3.5.0",
     "sourcedModules": 13,
     "zshLoc": 3241,
     "gitAliases": 57,
@@ -73,14 +73,14 @@
     "completions": 28
   },
   "packages": {
-    "dotfiles-MacBook": 64,
-    "dotfiles-Kali": 29,
-    "dotfiles-Fedora": 31,
-    "dotfiles-Arch": 36,
-    "dotfiles-openSUSE": 30,
-    "dotfiles-Alpine": 34,
-    "dotfiles-Gentoo": 30,
-    "dotfiles-Kali-offensive": 35
+    "dotfiles-MacBook": 65,
+    "dotfiles-Kali": 38,
+    "dotfiles-Fedora": 37,
+    "dotfiles-Arch": 43,
+    "dotfiles-openSUSE": 39,
+    "dotfiles-Alpine": 44,
+    "dotfiles-Gentoo": 31,
+    "dotfiles-Kali-offensive": 38
   },
   "ci": {
     "dotfiles-core": true,
@@ -97,7 +97,46 @@
   "changelog": [
     {
       "repo": "dotfiles-core",
-      "version": "Unreleased",
+      "version": "v3.5.0",
+      "date": "2026-07-13",
+      "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "fix(git): delta's syntax-theme is now ansi (was TwoDark). delta now follows the terminal's Tokyo Night ANSI palette, matching BAT_THEME=ansi (already set in aliases.zsh) so git diff and bat render syntax the same way — and matching the Windows host, which already used ansi. Part of the Windows↔Mac terminal parity pass.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "fix(nvim): <leader>rc and the alpha dashboard \"Config\" button open init.lua on Windows too. Both hardcoded ~/.config/nvim/init.lua, which doesn't exist on the Windows host — Neovim there reads %LOCALAPPDATA%\\nvim — so the binding opened a phantom path. They now resolve the config dir at runtime via vim.fn.stdpath(\"config\"), so the same binding lands on the real init.lua on every platform.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Parity (cross-shell contract)",
+          "items": [
+            {
+              "text": "feat(parity): the aligned tool-swap manifest gains df→duf, top/htop→btop, fm/y→yazi, md→glow (pwsh gmd), and ping→gping. These were already defined in zsh/aliases.zsh; adding them to scripts/parity-aliases.txt makes parity-check.sh enforce them bidirectionally against the pwsh host's provides: contract (the Windows PowerShell port added the matching functions in the same pass).",
+              "kind": "feature"
+            },
+            {
+              "text": "feat(parity): Ctrl+\\ autosuggest/prediction toggle is now aligned, not deliberate. The Windows host binds Ctrl+\\ to flip PSReadLine's PredictionSource, mirroring zsh's autosuggest-toggle; parity-check.sh now enforces the needle on both shells. PARITY.md's Aliases prose also now documents the full curated git shorthand set as aligned across zsh + pwsh. > Merge order: the pwsh side of these rows ships in the dotfiles-Windows parity PR. > Merge (or land together with) that PR so the weekly parity-check.yml — which clones > dotfiles-Windows main — sees the matching pwsh definitions and stays green.",
+              "kind": "feature"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
       "groups": [
         {
           "category": "Added",
@@ -129,6 +168,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "docs(porting): correct the PORTING-MATRIX.md package cells the /os-package-availability routine flagged as drifted. Alpine duf/glow are back to testing (they were never promoted to community on stable, incl. 3.24 — a July flip that claimed otherwise is reverted, and footnote ¹⁴ restored); Alpine tldr now shows cargo³ (testing-only → bootstrap builds it from source) and Alpine ouch is corrected to testing (testing-only, not auto-installed); and Gentoo tealdeer/yazi/lazygit are marked GURU-only (footnote ¹²) alongside a note that direnv is app-shells/direnv, not the non-existent dev-util/direnv. Matches the OS-repo bootstrap reality (Alpine cargo/go-install fallbacks; Gentoo guru_install). Also: Arch atuin drops the stale \"(AUR for some)\" qualifier and Arch doggo moves from AUR³ to doggo (both now first-class in extra), and the openSUSE tealdeer footnote ¹ is de-hedged (it's in Tumbleweed main OSS, not devel-only).",
+              "kind": "config"
+            },
+            {
               "text": "fix(zsh): compinit block no longer leaks a global zcd into every interactive shell. zsh/options.zsh declared local zcd=… at the file's sourced top level, where zsh (which has only function scope) silently promotes local to an ordinary global — polluting the namespace on every shell start across all eight OS repos and contradicting the codebase's own anon-function convention (zsh/aliases.zsh) and loader.zsh's \"no top-level local\" rule. The cache body is now wrapped in an anonymous function so zcd is genuinely function-scoped; compinit declares its state typeset -g, so the completion system persists unchanged.",
               "kind": "fix"
             },
@@ -155,6 +198,26 @@
             {
               "text": "docs(git): spell out the includeIf work-identity failure mode. Clarified that a missing ~/.config/git/config-work makes git silently fall back to your default identity (no error), with the exact commands to seed it.",
               "kind": "config"
+            },
+            {
+              "text": "fix(git): prune-branches uses grep -E, not deprecated egrep. The prune-branches alias (git/gitconfig) shelled out to egrep, which GNU grep ≥3.8 prints a deprecation warning for on every invocation. Switched to grep -Ev; xargs -r is kept (GNU needs it to skip empty input, and modern BSD/macOS xargs supports it), so the alias is quiet on the Linux target and unchanged in behaviour on the macOS/BSD target it ships to.",
+              "kind": "fix"
+            },
+            {
+              "text": "fix(scripts): checksum refresh falls back to shasum -a 256 off-Linux. scripts/update-tool-checksums.sh hard-called sha256sum (GNU coreutils); a run on the macOS box (which ships shasum -a 256, not sha256sum) died. It now probes and falls back, so the tool works on either platform.",
+              "kind": "fix"
+            },
+            {
+              "text": "fix(maint): dotfiles-maint.sh enables set -uo pipefail. The unattended daily runner had no set options, so a typo'd env knob expanded to empty and a mid-pipe failure was masked. Added set -uo pipefail (every env knob is already :=/:- defaulted); -e stays deliberately omitted so one failed step never aborts the rest — that remains step()'s job.",
+              "kind": "fix"
+            },
+            {
+              "text": "fix(tmux): the popup scripts enable set -u. tmux-menu.sh, tmux-scratch.sh, and tmux-sesh.sh carried no set options, unlike their siblings; a typo'd variable would expand to empty silently. Added set -u (all three already guard ${TMUX:-}/${TERM:-} etc.); -e/pipefail stay off because the fzf pickers exit non-zero on a normal operator cancel.",
+              "kind": "fix"
+            },
+            {
+              "text": "fix(scripts): the freshness board's live signals honour an env token. scripts/freshness-dashboard.sh gated its GitHub-API \"live signals\" on gh auth status alone, whose exit/output varies by gh version — so in CI (which authenticates via GH_TOKEN, not gh auth login) the release-drift / Renovate-count / routine-issue sections could be mis-detected as unavailable. It now treats a GH_TOKEN/GITHUB_TOKEN env var as sufficient (what gh api actually uses), falling back to gh auth status for local runs with stored credentials.",
+              "kind": "fix"
             }
           ]
         }
@@ -190,76 +253,84 @@
       ]
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
       "groups": [
         {
-          "category": "Removed",
+          "category": "Added",
           "items": [
             {
-              "text": "token-health.yml — the weekly PAT-expiry probe, now redundant (G2 finish line). The probe existed to catch a FLEET_SYNC_TOKEN / WEBHOOK_SECRET PAT silently expiring before it broke the fan-out or the docs-refresh. With every consumer migrated to GitHub App installation tokens (GITHUB-APP-AUTH.md) and both PATs deleted, there is nothing left to probe — a minted token lives ~1 hour and cannot silently expire. Removed the workflow and its references (the freshness dashboard's \"Token health\" section is now a \"Fleet auth\" note; the cron-stagger and sync-fanout failure-hint comments no longer mention it).",
+              "text": "QuickLook (QL-Win.QuickLook) — macOS-style spacebar file preview added to the optional gui winget group (winget.json + packages.lock.json). Opt-in like the rest of the group; deliberately kept out of the core set. Flow Launcher was considered and left out — it overlaps PowerToys Run, which the desktop group already installs.",
+              "kind": "feature"
+            },
+            {
+              "text": "Everything (voidtools) instant file search + its es CLI. everything (the MFT-indexed search service, extras bucket) and everything-cli (the es command, main bucket) added to scoopfile.json + packages.lock.json. es pairs with the shell — es foo | fzf, or as an FZF_DEFAULT_COMMAND source — and needs the Everything service running, which is why both are installed together.",
+              "kind": "feature"
+            },
+            {
+              "text": "windows/defaults.ps1 — Windows preferences as code (the pwsh twin of the sibling dotfiles-MacBook repo's macos/defaults.sh). A handful of privacy/telemetry + Explorer tweaks (disable the advertising ID, Start-menu suggestions, Bing-in-Start; show file extensions; open to This PC) codified as idempotent HKCU registry writes — no admin, nothing machine-wide. -DryRun previews, -RestartExplorer applies shell changes now. The point: the tweaks live in git (diffable, reproducible) instead of a one-shot debloat GUI. Standalone/opt-in — it is not wired into install.ps1.",
               "kind": "config"
             },
             {
-              "text": "dotfiles-Defense-PLAN.md — the pre-build planning skeleton, now obsolete. The doc was a \"ready-to-instantiate skeleton for a future dotfiles-Defense repo,\" written before that repo existed. dotfiles-Defense is now a public, released repo (v1.0.x) that actively vendors Core, so the plan is spent — and, worse, it actively misled the /doc-audit routine into reporting Defense as \"unbuilt/absent.\" Deleted (git history retains it) and dropped from the audit-core.sh META_ALLOWLIST.",
+              "text": "jujutsu (jj) config on the host. New jj/config.toml — the host-side twin of Core's core/jujutsu/config.toml — is symlinked to %APPDATA%\\jj\\config.toml (jj's native Windows config location) via Get-DotfilesLinkPlan, so the jjs/jjl/jjd aliases land on the same log-first, colocated-git setup as the Unix fleet. Windows-safe deviation: the pager is jj's built-in (:builtin) since Core's less -FRX isn't on the host. Identity stays unset (set once per machine with jj config set --user …).",
+              "kind": "config"
+            },
+            {
+              "text": "Windows↔Mac terminal parity pass — the PowerShell/psmux/Windows Terminal stack now matches the Core (zsh) baseline the Mac inherits, wherever it's reproducible. - *Git shorthands:* the full curated git.zsh set (~55 g* verbs) is now on the host — gap, the gca/gcam/gc!/gcn! commit family, gb* branch, gcb/gcom/ gsw/gswc/gswm checkout/switch, gds/gdw, gloga/glol/glola, gf/gfa/ gpr/gpu, gpf = push --force-with-lease (the safe force), the gsta* stash and grb* rebase families, grh/grhh/grs/grss, gr/grv/gm/gma, plus gdft (difftastic) and jjs/jjl/jjd (jujutsu). The built-in PowerShell aliases that shadow a git shorthand (gc→Get-Content, gcm→Get-Command, gp→Get-ItemProperty, gl→Get-Location, gm→Get-Member, gcb→Get-Clipboard) are removed at load so the functions win — which also fixes gl/gc/gcm/gp, previously shadowed and silently not doing their git thing. gbD (force-delete) is dropped: PowerShell is case-insensitive, so it can't coexist with gbd (use gbd -D). - *Modern-CLI aliases:* df→duf, fm/y→yazi, top/htop→btop, tree→eza, ping→gping, cdi→zoxide interactive, and notes. - *Functions:* ports (listening sockets + process), cdup, fcd, genpw (crypto RNG), please (elevated re-run of the last command), and pullall (parallel fast-forward of every repo under a dir). - *Tools:* gping, difftastic, and jj (jujutsu) added to scoopfile.json (+ packages.lock.json); the difftastic difftool + dft alias added to git/.gitconfig. - *psmux keys:* full-span splits (\\/_), zoom (m), kill/swap (x/X), toggle titles (P), synchronize-panes (*), a floating popup (F), window cycling (Alt+Shift+H/L), rename/kill window (,/&), enriched vi copy-mode (Enter/v/C-v/Escape), R/S/d QoL, double-tap-prefix → last-window, and a new prefix + u URL picker (psmux-url.ps1, host port of tmux-fzf-url). The cheatsheet moved from prefix + D to prefix + ? to match Core's tmux. - *Ctrl+\\* now toggles PSReadLine predictions, mirroring zsh's autosuggest-toggle.",
+              "kind": "fix"
+            },
+            {
+              "text": "A real winget import-compatible manifest and a winget configure baseline. winget.json is this repo's own shape ({ packages: [ id | { id, group } ] }) so the installer can carry optional-group tags — which means it is *not* consumable by winget import. New packages/Export-WingetImport.ps1 projects it down to the official export schema at packages/winget-import.json, so a fresh box restores the whole set in one command (winget import -i packages/winget-import.json …); -Frozen pins versions from packages.lock.json. New root configuration.dsc.yaml goes further — an idempotent winget configure baseline that also enables Developer Mode (symlinks without an admin prompt).",
+              "kind": "config"
+            },
+            {
+              "text": "Windows Terminal \"PowerShell (JetBrains Mono)\" profile. JetBrainsMono-NF was installed by scoopfile.json but unused; it now has a home as a second pwsh profile, alongside the CaskaydiaCove default.",
+              "kind": "config"
+            },
+            {
+              "text": "PSReadLine F2 toggles the prediction view (inline ghost ⇄ multi-row ListView) on demand, and the prediction UI is now tinted to the Tokyo Night palette instead of PSReadLine's default grey. The low-churn InlineView stays the default.",
+              "kind": "config"
+            },
+            {
+              "text": "Tab-completion of local branch names for bare git after a ref-consuming verb (checkout/switch/merge/rebase/branch) — filling the gap left by running no posh-git.",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "Windows Terminal now matches Ghostty's look: default font size 13 → 16 and useAcrylic: true (opacity stays 90) so the background is frosted glass like Ghostty's background-blur, rather than flat 90% opacity. The JetBrains Mono profile is bumped to 16 too.",
+              "kind": "config"
+            },
+            {
+              "text": "PSReadLine history depth raised 50000 → 200000, matching Core's zsh HISTSIZE/SAVEHIST.",
+              "kind": "config"
+            },
+            {
+              "text": "delta already followed the Tokyo Night ansi theme here; Core adopts ansi too (was TwoDark) so git diff renders identically on both OSes.",
+              "kind": "config"
+            },
+            {
+              "text": "Windows Terminal opts into the AtlasEngine renderer explicitly (useAtlasEngine: true in profiles.defaults) — it's the modern default, but the setting documents intent and guards an older WT build.",
+              "kind": "config"
+            },
+            {
+              "text": "dotfiles-doctor and core version spawn one fewer git per run. The \"Repo version\" detail collapsed two of its three git invocations into a single git log -1 --format='%h%n%cs'.",
+              "kind": "config"
+            },
+            {
+              "text": "GlazeWM keymap reconciled with the Mac's AeroSpace into one shared cross-OS keymap. The tiled desktop now has identical muscle memory on Windows and macOS: desktop/glazewm/config.yaml is kept keystroke-for-keystroke in step with dotfiles-MacBook/aerospace/aerospace.toml. Workspaces trimmed from 9 to 5 (matching AeroSpace's persistent 1–5); resize mode is now HJKL-only (arrow duplicates removed). Bindings with no identical AeroSpace equivalent were dropped for strict parity: minimize (Alt+M), toggle-tiling (Alt+T), pause mode (Alt+Shift+P), redraw (Alt+Shift+W), exit-WM (Alt+Shift+E), and directional move-workspace-to-monitor (Alt+Shift+A/S/D/F). Quit GlazeWM from its system-tray icon now that wm-exit has no bind. desktop/README.md updated to match.",
               "kind": "config"
             }
           ]
         },
         {
-          "category": "Added",
+          "category": "Removed",
           "items": [
             {
-              "text": "ast-grep is now a recognized opt-in tool. AST-aware structural code search/rewrite — the syntax-tree complement to ripgrep (text), sd (regex), and gron (JSON). tools.zsh sets HAVE_ASTGREP when the binary is present; it's its own command with no alias (like gron/sd), so it shadows nothing and is inert without the binary. PORTING-MATRIX.md documents install sources (Arch extra, Alpine community musl build, Homebrew; else cargo/mise/npm/pip). Surfaced by /tool-scout as the one true capability gap in the stack.",
-              "kind": "feature"
-            },
-            {
-              "text": "ci: raised the modernization floor — banned retired runners + old action runtimes. scripts/modern-baseline.yml now bans macos-13 (retired 2025-12-04), windows-2019 (unsupported 2025-06-30), and ubuntu-22.04 (deprecation opens 2026-09-17) as runner labels, and the using: node16 / using: node20 action runtimes (Node 24 is the default since 2026-06-16). Pure no-regression guard — the fleet uses none of these, so check-modern.sh stays green; it just bars re-introducing a dead runner or runtime. Surfaced by /modernize.",
-              "kind": "fix"
-            },
-            {
-              "text": "Cross-platform alias parity is now a data-driven manifest (Track A). The aligned modern-CLI tool-swap aliases (ls→eza, cat→bat, ps→procs, …) live in a flat scripts/parity-aliases.txt manifest; parity-check.sh reads it and asserts each row bidirectionally — the zsh alias is defined in zsh/aliases.zsh AND the pwsh name is in dotfiles-Windows's 00-aliases.ps1 provides: contract — so a rename or drop on either shell fails the weekly parity-check. Naming exceptions (ps→procs is pss on pwsh) are recorded in the manifest. Extends the check from a handful of hand-coded needles to the full tool-swap surface; adding an aligned alias is one manifest row.",
-              "kind": "config"
-            },
-            {
-              "text": "notify-web dispatch mints a GitHub App token; sync-fanout mint gated on the key (G2). The reusable notify-web-call.yml now mints a short-lived dotfiles-web-scoped GitHub App token for the repository_dispatch (replacing the WEBHOOK_SECRET Bearer PAT) when the fleet App is configured and the caller passes FLEET_APP_PRIVATE_KEY, else it falls back to WEBHOOK_SECRET. Because FLEET_APP_ID is one org-wide variable, the mint is gated on a HAS_APP_KEY presence flag (an env derived from a secret comparison — secrets can't be tested in if:) so a caller that hasn't been migrated (or a repo the key isn't scoped to) falls back cleanly instead of failing on an empty key. The same defensive gate is added to the Core sync-fanout mint. Core's own standalone notify-web.yml dispatcher (not a caller of the reusable) mints the App token inline via the same pattern. Reusable-caller repos pass the key in a follow-up (after v3 advances).",
-              "kind": "security"
-            },
-            {
-              "text": "sync-fanout mints a GitHub App token for the Core fan-out (G2 canary). Following GITHUB-APP-AUTH.md, the Core fan-out now mints a short-lived GitHub App installation token (actions/create-github-app-token, SHA-pinned), scoped to the App's installed repos (the fan-out targets — no second copy of scripts/os-repos.txt to drift), instead of relying on the broad, hand-rotated FLEET_SYNC_TOKEN PAT. It is backward-compatible: the mint step runs only when the FLEET_APP_ID variable is set and otherwise falls back to the PAT, so this is inert until the fleet App is registered. First consumer migrated; htpx sync-fanout and the notify-web dispatch follow the same pattern.",
-              "kind": "feature"
-            },
-            {
-              "text": "GITHUB-APP-AUTH.md — the runbook to retire the fleet's cross-repo PATs (G2). Both FLEET_SYNC_TOKEN (cross-repo push + PR in sync-fanout) and WEBHOOK_SECRET (the repository_dispatch Bearer to dotfiles-web) are broad, hand-rotated PATs that expire on a date nobody watches. The runbook specifies replacing them with one GitHub App that mints short-lived, per-repo-scoped installation tokens at run time (actions/create-github-app-token), a backward-compatible workflow pattern (mint when vars.FLEET_APP_ID is set, else fall back to the legacy PAT — so merging is inert until the App is registered), and the migrate → verify → retire order. Registering the App and resolving the action's pinned SHA are owner actions; the runbook is the design + the exact steps. Once it lands, the token-health probe becomes redundant (a minted token cannot silently expire).",
-              "kind": "feature"
-            },
-            {
-              "text": "/release-readiness + /release-notes maintenance routines — the judgment layer over the release mechanics. /release-readiness is the go/no-go gate in front of RELEASE-RUNBOOK.md: it weighs the unreleased CHANGELOG work, the audit status, version coherence, and fleet drift into a READY-to-cut-vX.Y.Z / HOLD verdict with the next command to run. /release-notes drafts the next release's grouped notes from Conventional Commits (git-cliff, or the first-party gen-release-notes.sh when the binary is absent) as raw material to curate into [Unreleased]. Both are report-first (they edit nothing). release-readiness rides the claude-routines rail weekly (Tue 10:00 UTC, last in the Opus stagger); release-notes is dispatch-only (you draft at release time, not on a beat). Both fetch-depth: 0 for the git log <last-release>..HEAD range.",
-              "kind": "feature"
-            },
-            {
-              "text": "Real release notes for OS-repo tags — scripts/gen-release-notes.sh (G5). OS-repo auto-releases shipped a bare tag with GitHub's raw PR-list (--generate-notes); they now ship a grouped Conventional-Commit changelog. auto-tag.sh --release drafts the notes for the latest..NEXT range and feeds them to gh release create --notes-file, falling back to --generate-notes when a range has no conventional commits. The generator is the first-party twin of Core's cliff.toml — same grouping (Features / Bug Fixes / … in commit-parser order) and one-bullet-per-commit shape, but pure git + awk so it needs no git-cliff binary (the fleet's \"no third-party CI tool we can't pin\" discipline — the same reason zizmor stayed deferred). Also bumps auto-tag-call.yml's internal core checkout from the stale @v2 to @v3 (it now carries both release scripts).",
-              "kind": "perf"
-            },
-            {
-              "text": "A weekly fleet freshness dashboard — one hub health board. scripts/freshness-dashboard.sh consolidates the fleet's otherwise-scattered freshness signals — vendoring drift (fleet-drift.sh), vendored-core/ integrity (core-integrity.sh), and zsh/nvim plugin-pin freshness (update-*-plugins.sh --check) — into a single glanceable markdown board, with links to each repo's Renovate dependency dashboard and the token-health probe. .github/workflows/freshness-dashboard.yml runs it Mondays 10:00 UTC (after the morning sweeps settle) and files a deduplicated issue that updates in place. It reports, never mutates — the sub-gates still enforce; this is the \"how healthy is the fleet this week?\" view in one place. Run locally with make freshness-dashboard.",
-              "kind": "feature"
-            },
-            {
-              "text": "A /modernize maintenance routine — the judgment half of the modernization floor. check-modern.sh enforces the current floor (scripts/modern-baseline.yml); this routine scouts what the next floor should be. It reads the declared floor and the fleet's workflows, researches the latest runner/action deprecations (EOL runner labels, the node16→node20→node24 action-runtime treadmill, pinning-discipline gaps, new hardening dimensions), and files a report-first proposal — the exact baseline edit, the dated upstream source, and whether it is enforceable today or needs fix-first workflow changes. Runs headless weekly on the claude-routines rail (Tue 09:00 UTC, last in the Opus stagger) and files a deduplicated issue; edits nothing.",
-              "kind": "security"
-            },
-            {
-              "text": "Renovate adoption via a shared org preset (replaces Dependabot). The fleet's dependency-update policy now lives once in dotgibson/.github (default.json) and every repo opts in with a three-line renovate.json that extends it — the same hub-and-spoke centralization Phase 1 applied to reusable workflows, now for dependency management (closes the \"no Dependabot/Renovate outside core & Windows\" gap). The preset keeps Renovate in lock-step with the modernization floor (scripts/modern-baseline.yml): it maintains SHA-pinned actions and @sha256: container digests rather than un-pinning them, groups third-party action bumps into one weekly ci(deps): PR, and deliberately leaves the fleet's own dotgibson/** reusable-workflow refs on their moving @v3 major tag (advanced by the release process, not a bot). Core retires its standalone .github/dependabot.yml; renovate.json is allowlisted in audit-core.sh as repo-meta.",
-              "kind": "config"
-            },
-            {
-              "text": "A modernization floor for CI: scripts/modern-baseline.yml + scripts/check-modern.sh, gated by audit-core.sh (section 8c). The baseline declares what \"modern\" means — no removed workflow commands (::set-output/::save-state/…), no EOL runners, every external action pinned to a 40-hex SHA (the fleet's own @vN reusable workflows exempt), and every container image pinned to an @sha256: digest — and the checker enforces it so a workflow can't silently regress below it. This generalizes the fleet's existing SHA-pin discipline into one contract and closes the last break in it (mutable container tags: alpine:3.21 and archlinux:latest in ci.yml are now digest-pinned). Run standalone with make check-modern.",
-              "kind": "feature"
-            },
-            {
-              "text": "difftastic (difft): an opt-in, structure-aware diff companion to delta. tools.zsh now detects it (HAVE_DIFFT), git/gitconfig defines a difftool \"difftastic\" plus a git dft alias, and aliases.zsh adds a HAVE_DIFFT-guarded gdft shortcut. difftastic diffs by AST (tree-sitter), so formatting-only churn — rewraps, moved elements, trailing commas — shows as no syntactic change. It is deliberately additive, never the default: delta stays the git diff syntax-highlighting pager and difft is only reached on demand via git dft/gdft, so nothing changes on a box without the binary. Documented in PORTING-MATRIX.md (packaged on Arch/Alpine-musl/Fedora/Gentoo/openSUSE/Homebrew/ Debian-Kali; cargo/mise where unpackaged).",
+              "text": "Dropped Visual Studio Code, Obsidian, and Firefox from the winget manifest. VS Code was a core (always-installed) package; Obsidian and Firefox sat in the optional gui group. All three are editor/browser/app preferences rather than part of the host toolchain, so they're no longer installed by bootstrap/install.ps1. Removed from winget.json and packages.lock.json (the gui group is now just 1Password — the app and its CLI). Existing installs are untouched — this only stops future auto-installs; add any back by hand (winget install …) if you want it.",
               "kind": "config"
             }
           ]
@@ -268,32 +339,42 @@
           "category": "Fixed",
           "items": [
             {
-              "text": "docs: PORTING-MATRIX.md clipboard section claimed the backend is \"swapped in os/<distro>.zsh\". Clipboard selection actually lives in Core's cross-OS clip/clip-paste scripts — each os/*.zsh only aliases pbcopy/pbpaste to them. Reworded the heading to \"Clipboard packages to install\" (the table's package names were always correct); surfaced by /doc-audit.",
+              "text": "The multi-flavor Windows Terminal settings link no longer prints a \"target folder not found — skipping\" warning per flavor you don't have. After the three-flavor support landed (Store / unpackaged / Preview), install.ps1 warned once for each absent flavor and dotfiles-doctor showed three link rows (two forever \"skipped\") — noise, since you normally have exactly one WT install. Both now treat the flavors as a group: link whichever is present, stay silent about the rest, and warn/skip once only when no Windows Terminal is installed at all.",
               "kind": "config"
             },
             {
-              "text": "ci: update-nvim-plugins.sh exited non-zero when the lock was already current. In apply mode the \"already current\" branch ended on ((CHECK)) (exit status 1 when CHECK=0), so the script returned 1 with nothing wrong — and under the freshness bot's set -e that turned a no-op week into a red nvim job (and, now that failure-alerting works, a false issue). It exits 0 explicitly.",
+              "text": "Windows Terminal settings now link for a scoop/unpackaged or Preview WT, not just the Store build. Get-DotfilesLinkPlan (powershell/core/05-lib.ps1) hardcoded the packaged …WindowsTerminal_8wekyb3d8bbwe\\LocalState path, and the row self-skips when that parent is absent — so an unpackaged WT silently never got its settings.json. Two more plan rows cover %LOCALAPPDATA%\\Microsoft\\Windows Terminal\\ (unpackaged) and the …WindowsTerminalPreview… package; only the installed flavor's row links.",
+              "kind": "config"
+            },
+            {
+              "text": "packages.lock.json pinned 1Password to a range (> 8.12.24.34), not an exact version — defeating -Frozen reproducibility for that one package. Pinned to an exact version (regenerate on a real box with Update-PackageLock.ps1).",
               "kind": "fix"
             },
             {
-              "text": "docs: aliases.md was missing gdft. The difftastic-backed git difftool shortcut (added alongside HAVE_DIFFT and git dft) landed in zsh/aliases.zsh without a matching entry in the cheat sheet — added to the Diff table.",
-              "kind": "config"
+              "text": "GlazeWM and Zebar failed to install (winget … NO_APPLICATIONS_FOUND). The desktop group used the CamelCase winget IDs glzr-io.GlazeWM / glzr-io.Zebar, but the community manifests publish them lowercase (glzr-io.glazewm / glzr-io.zebar) and winget install -e is case-sensitive — so both were skipped while PowerToys/TranslucentTB installed fine. Corrected the IDs in winget.json, packages.lock.json, and the docs.",
+              "kind": "fix"
             },
             {
-              "text": "maint: the daily runner now reconciles pinned zsh plugins by CONFIG, not checkout state. maint/dotfiles-maint.sh decided \"pinned vs unpinned\" by asking whether a plugin's HEAD was detached — but a plugin cloned before plugins.zsh began pinning (or by the old floating --depth=1 path) sits on a branch even though it IS pinned in ZPLUGIN_PINS. Those were wrongly git pull --ff-only'd every run: floating them off their pins, and logging a false ✗ … (pull failed) for any whose branch couldn't fast-forward (e.g. zsh-syntax-highlighting). The loop now reads the pins straight from plugins.zsh (same grep update-plugins.sh uses — bash-3.2 safe) and, for any pinned plugin, re-asserts the recorded SHA (fetch + detach, mirroring zplugin-update): a branch checkout is reconciled back onto its pin, a rolled pin is now actually applied by the runner, and plugins already at their pin do zero network. Only genuinely unpinned plugins still fast-forward.",
-              "kind": "config"
+              "text": "bootstrap.ps1 handoff to install.ps1 failed with \"A positional parameter cannot be found that accepts argument '$null'\". When no DOTFILES_BOOTSTRAP_ARGS were set (the common case), Get-BootstrapInstallArgs returned @(), which PowerShell unrolls to $null on assignment; splatting $null into the switch-only install.ps1 passed a literal $null positional argument. The call site now wraps the result in @() and guards the splat, so a fresh .\\bootstrap.ps1 (or the irm | iex one-liner) runs the installer cleanly.",
+              "kind": "fix"
             }
           ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "groups": [
+        },
         {
           "category": "Added",
           "items": [
+            {
+              "text": "Zebar bar gains pomodoro, media controls, and a power menu. Cherry-picked from Gerrrt/yasb-glazewm-config into the vanilla-clear widget: a 25/5 pomodoro (click to start/pause, right-click to reset), now-playing title/artist with prev/play-pause/next (Zebar media provider), and a lock/sleep/restart/shutdown power menu (via shellExec, with shutdown/rundll32 whitelisted in zpack.json's privileges.shellCommands). The zebar client import is bumped to the @3 major to match the pinned app so those providers/APIs are present.",
+              "kind": "config"
+            },
+            {
+              "text": "Opt-in tiling-desktop layer (desktop/). A new optional layer that rices the *desktop* on top of the shell host, adapted from Gerrrt/make-windows-pretty and retuned to the fleet's Tokyo Night Storm palette. Ships GlazeWM (i3-style tiling WM), a Zebar top bar (the buildless-React vanilla-clear widget as a native Zebar v3 widget pack (zpack.json), wired to GlazeWM for live, clickable workspaces), and adds PowerToys + TranslucentTB. All four install via the new desktop optional package group in winget.json (opt out at the picker or with DOTFILES_PKG_GROUPS), pinned in packages.lock.json. desktop/glazewm/config.yaml and the Zebar widget are symlinked into ~/.glzr by the shared link plan, so dotfiles-doctor verifies them and uninstall.ps1 removes them. The GlazeWM keymap is deliberately re-bound off Alt+<arrow> (which Windows Terminal uses for pane focus) to vim keys (Alt+H/J/K/L), and Alt+Enter launches wt. Setup + full keymap in desktop/README.md.",
+              "kind": "config"
+            },
+            {
+              "text": "duf added to the scoop manifest. The one modern-CLI tool core-doctor probes for that was missing from the Windows package set (macOS's Brewfile and the Linux lists lacked it too) — now installed from scoop main and pinned in packages.lock.json, closing the last doctor-tool gap on Windows.",
+              "kind": "config"
+            },
             {
               "text": "/release-readiness + /release-notes routines (.claude/commands/ + .github/workflows/claude-routines.yml). The Windows twin of Core's release routines: release-readiness reads the Conventional Commits + CHANGELOG since the last deliberate release and files a go/no-go verdict with the recommended next version — purpose-built for Windows' quirk that auto-tag patch-bumps on nvim/starship mirror-syncs, so meaningful feat/perf work drifts under patch tags (the tag line has run ahead of the CHANGELOG headings); release-notes drafts the CHANGELOG entry from those commits. Both report-first (file a deduped issue, change nothing). release-notes is dispatch-only; release-readiness also runs a monthly nudge. Inert by default — dormant until a CLAUDE_CODE_OAUTH_TOKEN repo secret is added. Run via Actions → claude-routines → Run workflow → routine.",
               "kind": "security"
@@ -320,6 +401,10 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "fix(module): the Dotfiles module surface runs under Set-StrictMode -Version Latest. The non-interactive helper surface (Dotfiles.psm1 → core/05-lib.ps1 + the *.Helpers.ps1) had no strict-mode guard, so a typo'd variable, a missing property, or a bad array index silently returned $null instead of erroring. StrictMode is now set inside the module — scoped to the module, so even under Import-Module -Global the interactive session stays lenient (a blanket StrictMode on the dot-sourced interactive layer would change everyday shell behaviour, which is why it stays off there). The Serve/Doctor/Help/WslBridge suites already exercise the surface via Import-Module, and Lib.Tests.ps1 now sets StrictMode too, so CI validates the helpers under strict mode.",
+              "kind": "fix"
+            },
             {
               "text": "fix(profile): the local-modules PSModulePath dedup guard compares literally. profile.ps1 used -notlike \"*$LocalModules*\", which treats the path as a wildcard pattern — a %LOCALAPPDATA% containing [ or ] (e.g. a user[1] name or a redirected profile) could mis-fire the guard and re-prepend PSModulePath on every shell start. It now splits on the path separator and uses -notcontains (a literal, case-insensitive compare).",
               "kind": "fix"
@@ -514,92 +599,196 @@
   ],
   "feed": [
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
-      "text": "feat(freshness): the weekly fleet board gains three live cross-repo signals. scripts/freshness-dashboard.sh now queries the GitHub API (best-effort, gated on gh + a token — the workflow provides both, a local run degrades to an \"unavailable\" note) for: own-tag release drift (commits each repo has merged since its last release tag — its own unreleased work, distinct from Core-tag vendoring drift), an open Renovate PR tally per repo (how many dependency PRs are waiting right now, beside the existing dashboard links), and judgment-layer routine issues (links to each repo's open .claude-routine issues — doc-audit, os-package-availability, coverage-gap, … — so the board references the stale-docs and coverage-hole signals rather than recomputing them). Still a never-failing reporter (always exits 0).",
-      "core": true
+      "text": "QuickLook (QL-Win.QuickLook) — macOS-style spacebar file preview added to the optional gui winget group (winget.json + packages.lock.json). Opt-in like the rest of the group; deliberately kept out of the core set. Flow Launcher was considered and left out — it overlaps PowerToys Run, which the desktop group already installs.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
-      "text": "feat(routines): three new judgment routines + a reusable OS-repo routine workflow. - /shell-review (.claude/commands/shell-review.md) — weekly (Tue 11:00) read of the week's changed zsh/bash for runtime footguns lint can't catch (the tmux-scratchpad and doctor-hint classes), report-first. - /drift-triage (.claude/commands/drift-triage.md) — weekly (Tue 12:00) interpretation of Monday's fleet-drift sweep into ranked per-repo remediation, report-first. - /os-package-availability (.claude/commands/os-package-availability.md) — audits an OS repo's install/packages.txt/Brewfile for renamed/dropped/moved packages against upstream + PORTING-MATRIX.md. Shipped as a reusable workflow (.github/workflows/claude-routines-call.yml) so each OS repo consumes it as a ~5-line @v3 caller (inverted checkout, like lint-call.yml) rather than a 6× copy. All inert-by-default (preflight CLAUDE_CODE_OAUTH_TOKEN gate) and report-first.",
-      "core": true
+      "text": "Everything (voidtools) instant file search + its es CLI. everything (the MFT-indexed search service, extras bucket) and everything-cli (the es command, main bucket) added to scoopfile.json + packages.lock.json. es pairs with the shell — es foo | fzf, or as an FZF_DEFAULT_COMMAND source — and needs the Everything service running, which is why both are installed together.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Changed",
-      "kind": "perf",
-      "text": "**perf(zsh): drop zstyle ':completion:*' rehash true — no more per-Tab $PATH stat storm.** rehash true (zsh/options.zsh) forced zsh to rebuild its external-command hash — stat every directory in $PATH — on every completion attempt, which is perceptible on an NFS home, linuxbrew, or a large mise-shims $PATH, and fanned out to all eight OS repos. Removed; a newly-installed binary now surfaces after hash -r or a new shell (the maint runner already refreshes the command hash after installs). A regression-guard comment records why it stays out.",
-      "core": true
+      "category": "Added",
+      "kind": "config",
+      "text": "windows/defaults.ps1 — Windows preferences as code (the pwsh twin of the sibling dotfiles-MacBook repo's macos/defaults.sh). A handful of privacy/telemetry + Explorer tweaks (disable the advertising ID, Start-menu suggestions, Bing-in-Start; show file extensions; open to This PC) codified as idempotent HKCU registry writes — no admin, nothing machine-wide. -DryRun previews, -RestartExplorer applies shell changes now. The point: the tweaks live in git (diffable, reproducible) instead of a one-shot debloat GUI. Standalone/opt-in — it is not wired into install.ps1.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "jujutsu (jj) config on the host. New jj/config.toml — the host-side twin of Core's core/jujutsu/config.toml — is symlinked to %APPDATA%\\jj\\config.toml (jj's native Windows config location) via Get-DotfilesLinkPlan, so the jjs/jjl/jjd aliases land on the same log-first, colocated-git setup as the Unix fleet. Windows-safe deviation: the pager is jj's built-in (:builtin) since Core's less -FRX isn't on the host. Identity stays unset (set once per machine with jj config set --user …).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "Windows↔Mac terminal parity pass — the PowerShell/psmux/Windows Terminal stack now matches the Core (zsh) baseline the Mac inherits, wherever it's reproducible. - *Git shorthands:* the full curated git.zsh set (~55 g* verbs) is now on the host — gap, the gca/gcam/gc!/gcn! commit family, gb* branch, gcb/gcom/ gsw/gswc/gswm checkout/switch, gds/gdw, gloga/glol/glola, gf/gfa/ gpr/gpu, gpf = push --force-with-lease (the safe force), the gsta* stash and grb* rebase families, grh/grhh/grs/grss, gr/grv/gm/gma, plus gdft (difftastic) and jjs/jjl/jjd (jujutsu). The built-in PowerShell aliases that shadow a git shorthand (gc→Get-Content, gcm→Get-Command, gp→Get-ItemProperty, gl→Get-Location, gm→Get-Member, gcb→Get-Clipboard) are removed at load so the functions win — which also fixes gl/gc/gcm/gp, previously shadowed and silently not doing their git thing. gbD (force-delete) is dropped: PowerShell is case-insensitive, so it can't coexist with gbd (use gbd -D). - *Modern-CLI aliases:* df→duf, fm/y→yazi, top/htop→btop, tree→eza, ping→gping, cdi→zoxide interactive, and notes. - *Functions:* ports (listening sockets + process), cdup, fcd, genpw (crypto RNG), please (elevated re-run of the last command), and pullall (parallel fast-forward of every repo under a dir). - *Tools:* gping, difftastic, and jj (jujutsu) added to scoopfile.json (+ packages.lock.json); the difftastic difftool + dft alias added to git/.gitconfig. - *psmux keys:* full-span splits (\\/_), zoom (m), kill/swap (x/X), toggle titles (P), synchronize-panes (*), a floating popup (F), window cycling (Alt+Shift+H/L), rename/kill window (,/&), enriched vi copy-mode (Enter/v/C-v/Escape), R/S/d QoL, double-tap-prefix → last-window, and a new prefix + u URL picker (psmux-url.ps1, host port of tmux-fzf-url). The cheatsheet moved from prefix + D to prefix + ? to match Core's tmux. - *Ctrl+\\* now toggles PSReadLine predictions, mirroring zsh's autosuggest-toggle.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "A real winget import-compatible manifest and a winget configure baseline. winget.json is this repo's own shape ({ packages: [ id | { id, group } ] }) so the installer can carry optional-group tags — which means it is *not* consumable by winget import. New packages/Export-WingetImport.ps1 projects it down to the official export schema at packages/winget-import.json, so a fresh box restores the whole set in one command (winget import -i packages/winget-import.json …); -Frozen pins versions from packages.lock.json. New root configuration.dsc.yaml goes further — an idempotent winget configure baseline that also enables Developer Mode (symlinks without an admin prompt).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "Windows Terminal \"PowerShell (JetBrains Mono)\" profile. JetBrainsMono-NF was installed by scoopfile.json but unused; it now has a home as a second pwsh profile, alongside the CaskaydiaCove default.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "PSReadLine F2 toggles the prediction view (inline ghost ⇄ multi-row ListView) on demand, and the prediction UI is now tinted to the Tokyo Night palette instead of PSReadLine's default grey. The low-churn InlineView stays the default.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "Tab-completion of local branch names for bare git after a ref-consuming verb (checkout/switch/merge/rebase/branch) — filling the gap left by running no posh-git.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
       "category": "Changed",
       "kind": "config",
-      "text": "chore(bin): make .bin/sync-upstream.sh overridable for forks/mirrors. CORE_REPO_URL and TARGET_BRANCH now read ${VAR:-default}, so a fork, a mirror, or a renamed org can gsync without editing this vendored file.",
-      "core": true
+      "text": "Windows Terminal now matches Ghostty's look: default font size 13 → 16 and useAcrylic: true (opacity stays 90) so the background is frosted glass like Ghostty's background-blur, rather than flat 90% opacity. The JetBrains Mono profile is bumped to 16 too.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(zsh): compinit block no longer leaks a global zcd into every interactive shell. zsh/options.zsh declared local zcd=… at the file's sourced top level, where zsh (which has only function scope) silently promotes local to an ordinary global — polluting the namespace on every shell start across all eight OS repos and contradicting the codebase's own anon-function convention (zsh/aliases.zsh) and loader.zsh's \"no top-level local\" rule. The cache body is now wrapped in an anonymous function so zcd is genuinely function-scoped; compinit declares its state typeset -g, so the completion system persists unchanged.",
-      "core": true
+      "category": "Changed",
+      "kind": "config",
+      "text": "PSReadLine history depth raised 50000 → 200000, matching Core's zsh HISTSIZE/SAVEHIST.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(zsh): serve now prints a reachable URL and QR on macOS. serve (zsh/functions.zsh) gated all tunnel/LAN IP discovery on command -v ip, but macOS ships no ip(8), so on a Mac it degraded to a bare \"serving on port N\" with no LAN URL and no QR. Added a route(8) + ipconfig fallback branch — the same Linux/macOS split tmux/scripts/tmux-netinfo.sh already uses — so tunnel-first, then default-route LAN discovery works on a Mac. No change on Linux/WSL.",
-      "core": true
+      "category": "Changed",
+      "kind": "config",
+      "text": "delta already followed the Tokyo Night ansi theme here; Core adopts ansi too (was TwoDark) so git diff renders identically on both OSes.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(nvim): undo dir now derives from stdpath(\"state\"), not a hardcoded path. options.lua hardcoded ~/.local/share/nvim/undodir; it now uses vim.fn.stdpath(\"state\"), so undo history lands in the right tree under a relocated XDG_STATE_HOME and on macOS.",
-      "core": true
+      "category": "Changed",
+      "kind": "config",
+      "text": "Windows Terminal opts into the AtlasEngine renderer explicitly (useAtlasEngine: true in profiles.defaults) — it's the modern default, but the setting documents intent and guards an older WT build.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(nvim): drop the no-op vim.opt.encoding = \"UTF-8\". Neovim's internal encoding is always UTF-8; setting it post-startup is a no-op at best and a footgun at worst. Removed; a comment records why it stays out.",
-      "core": true
+      "category": "Changed",
+      "kind": "config",
+      "text": "dotfiles-doctor and core version spawn one fewer git per run. The \"Repo version\" detail collapsed two of its three git invocations into a single git log -1 --format='%h%n%cs'.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(tmux): popup previews degrade on Debian / a bare box. tmux-menu.sh's engagement preview now falls back bat→batcat (Debian renames the binary), and tmux-sesh.sh's project preview falls back eza→ls when eza is absent — matching how the zsh widgets already resolve these.",
-      "core": true
+      "category": "Changed",
+      "kind": "config",
+      "text": "GlazeWM keymap reconciled with the Mac's AeroSpace into one shared cross-OS keymap. The tiled desktop now has identical muscle memory on Windows and macOS: desktop/glazewm/config.yaml is kept keystroke-for-keystroke in step with dotfiles-MacBook/aerospace/aerospace.toml. Workspaces trimmed from 9 to 5 (matching AeroSpace's persistent 1–5); resize mode is now HJKL-only (arrow duplicates removed). Bindings with no identical AeroSpace equivalent were dropped for strict parity: minimize (Alt+M), toggle-tiling (Alt+T), pause mode (Alt+Shift+P), redraw (Alt+Shift+W), exit-WM (Alt+Shift+E), and directional move-workspace-to-monitor (Alt+Shift+A/S/D/F). Quit GlazeWM from its system-tray icon now that wm-exit has no bind. desktop/README.md updated to match.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(starship): the Linux VPN segment uses a portable ip link show probe, not ifconfig. custom.vpn_linux shelled out to ifconfig (net-tools), which modern distros don't ship by default, so the tunnel indicator silently never appeared. It now parses ip link show — the common form supported by BOTH iproute2 AND BusyBox's ip applet (Alpine's default), so it works on every Linux target including the BusyBox outlier. custom.vpn_macos keeps ifconfig (native).",
-      "core": true
+      "category": "Removed",
+      "kind": "config",
+      "text": "Dropped Visual Studio Code, Obsidian, and Firefox from the winget manifest. VS Code was a core (always-installed) package; Obsidian and Firefox sat in the optional gui group. All three are editor/browser/app preferences rather than part of the host toolchain, so they're no longer installed by bootstrap/install.ps1. Removed from winget.json and packages.lock.json (the gui group is now just 1Password — the app and its CLI). Existing installs are untouched — this only stops future auto-installs; add any back by hand (winget install …) if you want it.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
+      "repo": "dotfiles-Windows",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "config",
-      "text": "docs(git): spell out the includeIf work-identity failure mode. Clarified that a missing ~/.config/git/config-work makes git silently fall back to your default identity (no error), with the exact commands to seed it.",
-      "core": true
+      "text": "The multi-flavor Windows Terminal settings link no longer prints a \"target folder not found — skipping\" warning per flavor you don't have. After the three-flavor support landed (Store / unpackaged / Preview), install.ps1 warned once for each absent flavor and dotfiles-doctor showed three link rows (two forever \"skipped\") — noise, since you normally have exactly one WT install. Both now treat the flavors as a group: link whichever is present, stay silent about the rest, and warn/skip once only when no Windows Terminal is installed at all.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "Windows Terminal settings now link for a scoop/unpackaged or Preview WT, not just the Store build. Get-DotfilesLinkPlan (powershell/core/05-lib.ps1) hardcoded the packaged …WindowsTerminal_8wekyb3d8bbwe\\LocalState path, and the row self-skips when that parent is absent — so an unpackaged WT silently never got its settings.json. Two more plan rows cover %LOCALAPPDATA%\\Microsoft\\Windows Terminal\\ (unpackaged) and the …WindowsTerminalPreview… package; only the installed flavor's row links.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "packages.lock.json pinned 1Password to a range (> 8.12.24.34), not an exact version — defeating -Frozen reproducibility for that one package. Pinned to an exact version (regenerate on a real box with Update-PackageLock.ps1).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "GlazeWM and Zebar failed to install (winget … NO_APPLICATIONS_FOUND). The desktop group used the CamelCase winget IDs glzr-io.GlazeWM / glzr-io.Zebar, but the community manifests publish them lowercase (glzr-io.glazewm / glzr-io.zebar) and winget install -e is case-sensitive — so both were skipped while PowerToys/TranslucentTB installed fine. Corrected the IDs in winget.json, packages.lock.json, and the docs.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "bootstrap.ps1 handoff to install.ps1 failed with \"A positional parameter cannot be found that accepts argument '$null'\". When no DOTFILES_BOOTSTRAP_ARGS were set (the common case), Get-BootstrapInstallArgs returned @(), which PowerShell unrolls to $null on assignment; splatting $null into the switch-only install.ps1 passed a literal $null positional argument. The call site now wraps the result in @() and guards the splat, so a fresh .\\bootstrap.ps1 (or the irm | iex one-liner) runs the installer cleanly.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "Zebar bar gains pomodoro, media controls, and a power menu. Cherry-picked from Gerrrt/yasb-glazewm-config into the vanilla-clear widget: a 25/5 pomodoro (click to start/pause, right-click to reset), now-playing title/artist with prev/play-pause/next (Zebar media provider), and a lock/sleep/restart/shutdown power menu (via shellExec, with shutdown/rundll32 whitelisted in zpack.json's privileges.shellCommands). The zebar client import is bumped to the @3 major to match the pinned app so those providers/APIs are present.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "Opt-in tiling-desktop layer (desktop/). A new optional layer that rices the *desktop* on top of the shell host, adapted from Gerrrt/make-windows-pretty and retuned to the fleet's Tokyo Night Storm palette. Ships GlazeWM (i3-style tiling WM), a Zebar top bar (the buildless-React vanilla-clear widget as a native Zebar v3 widget pack (zpack.json), wired to GlazeWM for live, clickable workspaces), and adds PowerToys + TranslucentTB. All four install via the new desktop optional package group in winget.json (opt out at the picker or with DOTFILES_PKG_GROUPS), pinned in packages.lock.json. desktop/glazewm/config.yaml and the Zebar widget are symlinked into ~/.glzr by the shared link plan, so dotfiles-doctor verifies them and uninstall.ps1 removes them. The GlazeWM keymap is deliberately re-bound off Alt+<arrow> (which Windows Terminal uses for pane focus) to vim keys (Alt+H/J/K/L), and Alt+Enter launches wt. Setup + full keymap in desktop/README.md.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "duf added to the scoop manifest. The one modern-CLI tool core-doctor probes for that was missing from the Windows package set (macOS's Brewfile and the Linux lists lacked it too) — now installed from scoop main and pinned in packages.lock.json, closing the last doctor-tool gap on Windows.",
+      "core": false
     },
     {
       "repo": "dotfiles-Windows",
@@ -631,6 +820,14 @@
       "category": "Documentation",
       "kind": "feature",
       "text": "aliases.md was missing three whole sections. os/33-psmux-pill.ps1 (psmux-pill-now/-enable/-disable/-status), os/40-maint.ps1 (maint-install/-run/-log/-status/-uninstall), and os/45-doctor.ps1 (dotfiles-doctor) had zero cheat-sheet coverage. Added sections for all three, and filled in the corresponding CLAUDE.md \"Where things are\" gaps (git/, maint/, ssh/, docs/, tests/).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(module): the Dotfiles module surface runs under Set-StrictMode -Version Latest. The non-interactive helper surface (Dotfiles.psm1 → core/05-lib.ps1 + the *.Helpers.ps1) had no strict-mode guard, so a typo'd variable, a missing property, or a bad array index silently returned $null instead of erroring. StrictMode is now set inside the module — scoped to the module, so even under Import-Module -Global the interactive session stays lenient (a blanket StrictMode on the dot-sourced interactive layer would change everyday shell behaviour, which is why it stays off there). The Serve/Doctor/Help/WslBridge suites already exercise the surface via Import-Module, and Lib.Tests.ps1 now sets StrictMode too, so CI validates the helpers under strict mode.",
       "core": false
     },
     {
@@ -955,6 +1152,195 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v3.5.0",
+      "date": "2026-07-13",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "fix(git): delta's syntax-theme is now ansi (was TwoDark). delta now follows the terminal's Tokyo Night ANSI palette, matching BAT_THEME=ansi (already set in aliases.zsh) so git diff and bat render syntax the same way — and matching the Windows host, which already used ansi. Part of the Windows↔Mac terminal parity pass.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.5.0",
+      "date": "2026-07-13",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(nvim): <leader>rc and the alpha dashboard \"Config\" button open init.lua on Windows too. Both hardcoded ~/.config/nvim/init.lua, which doesn't exist on the Windows host — Neovim there reads %LOCALAPPDATA%\\nvim — so the binding opened a phantom path. They now resolve the config dir at runtime via vim.fn.stdpath(\"config\"), so the same binding lands on the real init.lua on every platform.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.5.0",
+      "date": "2026-07-13",
+      "category": "Parity (cross-shell contract)",
+      "kind": "feature",
+      "text": "feat(parity): the aligned tool-swap manifest gains df→duf, top/htop→btop, fm/y→yazi, md→glow (pwsh gmd), and ping→gping. These were already defined in zsh/aliases.zsh; adding them to scripts/parity-aliases.txt makes parity-check.sh enforce them bidirectionally against the pwsh host's provides: contract (the Windows PowerShell port added the matching functions in the same pass).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.5.0",
+      "date": "2026-07-13",
+      "category": "Parity (cross-shell contract)",
+      "kind": "feature",
+      "text": "feat(parity): Ctrl+\\ autosuggest/prediction toggle is now aligned, not deliberate. The Windows host binds Ctrl+\\ to flip PSReadLine's PredictionSource, mirroring zsh's autosuggest-toggle; parity-check.sh now enforces the needle on both shells. PARITY.md's Aliases prose also now documents the full curated git shorthand set as aligned across zsh + pwsh. > Merge order: the pwsh side of these rows ships in the dotfiles-Windows parity PR. > Merge (or land together with) that PR so the weekly parity-check.yml — which clones > dotfiles-Windows main — sees the matching pwsh definitions and stays green.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Added",
+      "kind": "feature",
+      "text": "feat(freshness): the weekly fleet board gains three live cross-repo signals. scripts/freshness-dashboard.sh now queries the GitHub API (best-effort, gated on gh + a token — the workflow provides both, a local run degrades to an \"unavailable\" note) for: own-tag release drift (commits each repo has merged since its last release tag — its own unreleased work, distinct from Core-tag vendoring drift), an open Renovate PR tally per repo (how many dependency PRs are waiting right now, beside the existing dashboard links), and judgment-layer routine issues (links to each repo's open .claude-routine issues — doc-audit, os-package-availability, coverage-gap, … — so the board references the stale-docs and coverage-hole signals rather than recomputing them). Still a never-failing reporter (always exits 0).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Added",
+      "kind": "feature",
+      "text": "feat(routines): three new judgment routines + a reusable OS-repo routine workflow. - /shell-review (.claude/commands/shell-review.md) — weekly (Tue 11:00) read of the week's changed zsh/bash for runtime footguns lint can't catch (the tmux-scratchpad and doctor-hint classes), report-first. - /drift-triage (.claude/commands/drift-triage.md) — weekly (Tue 12:00) interpretation of Monday's fleet-drift sweep into ranked per-repo remediation, report-first. - /os-package-availability (.claude/commands/os-package-availability.md) — audits an OS repo's install/packages.txt/Brewfile for renamed/dropped/moved packages against upstream + PORTING-MATRIX.md. Shipped as a reusable workflow (.github/workflows/claude-routines-call.yml) so each OS repo consumes it as a ~5-line @v3 caller (inverted checkout, like lint-call.yml) rather than a 6× copy. All inert-by-default (preflight CLAUDE_CODE_OAUTH_TOKEN gate) and report-first.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "**perf(zsh): drop zstyle ':completion:*' rehash true — no more per-Tab $PATH stat storm.** rehash true (zsh/options.zsh) forced zsh to rebuild its external-command hash — stat every directory in $PATH — on every completion attempt, which is perceptible on an NFS home, linuxbrew, or a large mise-shims $PATH, and fanned out to all eight OS repos. Removed; a newly-installed binary now surfaces after hash -r or a new shell (the maint runner already refreshes the command hash after installs). A regression-guard comment records why it stays out.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Changed",
+      "kind": "config",
+      "text": "chore(bin): make .bin/sync-upstream.sh overridable for forks/mirrors. CORE_REPO_URL and TARGET_BRANCH now read ${VAR:-default}, so a fork, a mirror, or a renamed org can gsync without editing this vendored file.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "docs(porting): correct the PORTING-MATRIX.md package cells the /os-package-availability routine flagged as drifted. Alpine duf/glow are back to testing (they were never promoted to community on stable, incl. 3.24 — a July flip that claimed otherwise is reverted, and footnote ¹⁴ restored); Alpine tldr now shows cargo³ (testing-only → bootstrap builds it from source) and Alpine ouch is corrected to testing (testing-only, not auto-installed); and Gentoo tealdeer/yazi/lazygit are marked GURU-only (footnote ¹²) alongside a note that direnv is app-shells/direnv, not the non-existent dev-util/direnv. Matches the OS-repo bootstrap reality (Alpine cargo/go-install fallbacks; Gentoo guru_install). Also: Arch atuin drops the stale \"(AUR for some)\" qualifier and Arch doggo moves from AUR³ to doggo (both now first-class in extra), and the openSUSE tealdeer footnote ¹ is de-hedged (it's in Tumbleweed main OSS, not devel-only).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(zsh): compinit block no longer leaks a global zcd into every interactive shell. zsh/options.zsh declared local zcd=… at the file's sourced top level, where zsh (which has only function scope) silently promotes local to an ordinary global — polluting the namespace on every shell start across all eight OS repos and contradicting the codebase's own anon-function convention (zsh/aliases.zsh) and loader.zsh's \"no top-level local\" rule. The cache body is now wrapped in an anonymous function so zcd is genuinely function-scoped; compinit declares its state typeset -g, so the completion system persists unchanged.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(zsh): serve now prints a reachable URL and QR on macOS. serve (zsh/functions.zsh) gated all tunnel/LAN IP discovery on command -v ip, but macOS ships no ip(8), so on a Mac it degraded to a bare \"serving on port N\" with no LAN URL and no QR. Added a route(8) + ipconfig fallback branch — the same Linux/macOS split tmux/scripts/tmux-netinfo.sh already uses — so tunnel-first, then default-route LAN discovery works on a Mac. No change on Linux/WSL.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(nvim): undo dir now derives from stdpath(\"state\"), not a hardcoded path. options.lua hardcoded ~/.local/share/nvim/undodir; it now uses vim.fn.stdpath(\"state\"), so undo history lands in the right tree under a relocated XDG_STATE_HOME and on macOS.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(nvim): drop the no-op vim.opt.encoding = \"UTF-8\". Neovim's internal encoding is always UTF-8; setting it post-startup is a no-op at best and a footgun at worst. Removed; a comment records why it stays out.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(tmux): popup previews degrade on Debian / a bare box. tmux-menu.sh's engagement preview now falls back bat→batcat (Debian renames the binary), and tmux-sesh.sh's project preview falls back eza→ls when eza is absent — matching how the zsh widgets already resolve these.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(starship): the Linux VPN segment uses a portable ip link show probe, not ifconfig. custom.vpn_linux shelled out to ifconfig (net-tools), which modern distros don't ship by default, so the tunnel indicator silently never appeared. It now parses ip link show — the common form supported by BOTH iproute2 AND BusyBox's ip applet (Alpine's default), so it works on every Linux target including the BusyBox outlier. custom.vpn_macos keeps ifconfig (native).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "docs(git): spell out the includeIf work-identity failure mode. Clarified that a missing ~/.config/git/config-work makes git silently fall back to your default identity (no error), with the exact commands to seed it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(git): prune-branches uses grep -E, not deprecated egrep. The prune-branches alias (git/gitconfig) shelled out to egrep, which GNU grep ≥3.8 prints a deprecation warning for on every invocation. Switched to grep -Ev; xargs -r is kept (GNU needs it to skip empty input, and modern BSD/macOS xargs supports it), so the alias is quiet on the Linux target and unchanged in behaviour on the macOS/BSD target it ships to.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(scripts): checksum refresh falls back to shasum -a 256 off-Linux. scripts/update-tool-checksums.sh hard-called sha256sum (GNU coreutils); a run on the macOS box (which ships shasum -a 256, not sha256sum) died. It now probes and falls back, so the tool works on either platform.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(maint): dotfiles-maint.sh enables set -uo pipefail. The unattended daily runner had no set options, so a typo'd env knob expanded to empty and a mid-pipe failure was masked. Added set -uo pipefail (every env knob is already :=/:- defaulted); -e stays deliberately omitted so one failed step never aborts the rest — that remains step()'s job.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(tmux): the popup scripts enable set -u. tmux-menu.sh, tmux-scratch.sh, and tmux-sesh.sh carried no set options, unlike their siblings; a typo'd variable would expand to empty silently. Added set -u (all three already guard ${TMUX:-}/${TERM:-} etc.); -e/pipefail stay off because the fzf pickers exit non-zero on a normal operator cancel.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v3.4.0",
+      "date": "2026-07-12",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "fix(scripts): the freshness board's live signals honour an env token. scripts/freshness-dashboard.sh gated its GitHub-API \"live signals\" on gh auth status alone, whose exit/output varies by gh version — so in CI (which authenticates via GH_TOKEN, not gh auth login) the release-drift / Renovate-count / routine-issue sections could be mis-detected as unavailable. It now treats a GH_TOKEN/GITHUB_TOKEN env var as sufficient (what gh api actually uses), falling back to gh auth status for local runs with stored credentials.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v3.3.0",
       "date": "2026-07-09",
       "category": "Changed",
@@ -978,177 +1364,6 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "fix(tmux): scratchpad popup (prefix + T) no longer hijacks the main session on close. tmux-scratch.sh runs the scratchpad as a persistent _popup_scratchpad session the popup attaches to. On close, exiting the shell destroys that session, and the global detach-on-destroy off (tmux.conf) made the popup's client jump to the MAIN session instead of closing — attaching a second, popup-sized (80%×80%) client, so tmux clamped the main session to the popup's size and double-drew it (the scratchpad \"took over\" and the real terminal was left garbled). The scratch session now sets detach-on-destroy on for itself, so its client detaches (popup closes cleanly) when it's destroyed; real sessions keep the global jump-don't-exit behaviour.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Removed",
-      "kind": "config",
-      "text": "token-health.yml — the weekly PAT-expiry probe, now redundant (G2 finish line). The probe existed to catch a FLEET_SYNC_TOKEN / WEBHOOK_SECRET PAT silently expiring before it broke the fan-out or the docs-refresh. With every consumer migrated to GitHub App installation tokens (GITHUB-APP-AUTH.md) and both PATs deleted, there is nothing left to probe — a minted token lives ~1 hour and cannot silently expire. Removed the workflow and its references (the freshness dashboard's \"Token health\" section is now a \"Fleet auth\" note; the cron-stagger and sync-fanout failure-hint comments no longer mention it).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Removed",
-      "kind": "config",
-      "text": "dotfiles-Defense-PLAN.md — the pre-build planning skeleton, now obsolete. The doc was a \"ready-to-instantiate skeleton for a future dotfiles-Defense repo,\" written before that repo existed. dotfiles-Defense is now a public, released repo (v1.0.x) that actively vendors Core, so the plan is spent — and, worse, it actively misled the /doc-audit routine into reporting Defense as \"unbuilt/absent.\" Deleted (git history retains it) and dropped from the audit-core.sh META_ALLOWLIST.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "feature",
-      "text": "ast-grep is now a recognized opt-in tool. AST-aware structural code search/rewrite — the syntax-tree complement to ripgrep (text), sd (regex), and gron (JSON). tools.zsh sets HAVE_ASTGREP when the binary is present; it's its own command with no alias (like gron/sd), so it shadows nothing and is inert without the binary. PORTING-MATRIX.md documents install sources (Arch extra, Alpine community musl build, Homebrew; else cargo/mise/npm/pip). Surfaced by /tool-scout as the one true capability gap in the stack.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "fix",
-      "text": "ci: raised the modernization floor — banned retired runners + old action runtimes. scripts/modern-baseline.yml now bans macos-13 (retired 2025-12-04), windows-2019 (unsupported 2025-06-30), and ubuntu-22.04 (deprecation opens 2026-09-17) as runner labels, and the using: node16 / using: node20 action runtimes (Node 24 is the default since 2026-06-16). Pure no-regression guard — the fleet uses none of these, so check-modern.sh stays green; it just bars re-introducing a dead runner or runtime. Surfaced by /modernize.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "config",
-      "text": "Cross-platform alias parity is now a data-driven manifest (Track A). The aligned modern-CLI tool-swap aliases (ls→eza, cat→bat, ps→procs, …) live in a flat scripts/parity-aliases.txt manifest; parity-check.sh reads it and asserts each row bidirectionally — the zsh alias is defined in zsh/aliases.zsh AND the pwsh name is in dotfiles-Windows's 00-aliases.ps1 provides: contract — so a rename or drop on either shell fails the weekly parity-check. Naming exceptions (ps→procs is pss on pwsh) are recorded in the manifest. Extends the check from a handful of hand-coded needles to the full tool-swap surface; adding an aligned alias is one manifest row.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "security",
-      "text": "notify-web dispatch mints a GitHub App token; sync-fanout mint gated on the key (G2). The reusable notify-web-call.yml now mints a short-lived dotfiles-web-scoped GitHub App token for the repository_dispatch (replacing the WEBHOOK_SECRET Bearer PAT) when the fleet App is configured and the caller passes FLEET_APP_PRIVATE_KEY, else it falls back to WEBHOOK_SECRET. Because FLEET_APP_ID is one org-wide variable, the mint is gated on a HAS_APP_KEY presence flag (an env derived from a secret comparison — secrets can't be tested in if:) so a caller that hasn't been migrated (or a repo the key isn't scoped to) falls back cleanly instead of failing on an empty key. The same defensive gate is added to the Core sync-fanout mint. Core's own standalone notify-web.yml dispatcher (not a caller of the reusable) mints the App token inline via the same pattern. Reusable-caller repos pass the key in a follow-up (after v3 advances).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "feature",
-      "text": "sync-fanout mints a GitHub App token for the Core fan-out (G2 canary). Following GITHUB-APP-AUTH.md, the Core fan-out now mints a short-lived GitHub App installation token (actions/create-github-app-token, SHA-pinned), scoped to the App's installed repos (the fan-out targets — no second copy of scripts/os-repos.txt to drift), instead of relying on the broad, hand-rotated FLEET_SYNC_TOKEN PAT. It is backward-compatible: the mint step runs only when the FLEET_APP_ID variable is set and otherwise falls back to the PAT, so this is inert until the fleet App is registered. First consumer migrated; htpx sync-fanout and the notify-web dispatch follow the same pattern.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "feature",
-      "text": "GITHUB-APP-AUTH.md — the runbook to retire the fleet's cross-repo PATs (G2). Both FLEET_SYNC_TOKEN (cross-repo push + PR in sync-fanout) and WEBHOOK_SECRET (the repository_dispatch Bearer to dotfiles-web) are broad, hand-rotated PATs that expire on a date nobody watches. The runbook specifies replacing them with one GitHub App that mints short-lived, per-repo-scoped installation tokens at run time (actions/create-github-app-token), a backward-compatible workflow pattern (mint when vars.FLEET_APP_ID is set, else fall back to the legacy PAT — so merging is inert until the App is registered), and the migrate → verify → retire order. Registering the App and resolving the action's pinned SHA are owner actions; the runbook is the design + the exact steps. Once it lands, the token-health probe becomes redundant (a minted token cannot silently expire).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "feature",
-      "text": "/release-readiness + /release-notes maintenance routines — the judgment layer over the release mechanics. /release-readiness is the go/no-go gate in front of RELEASE-RUNBOOK.md: it weighs the unreleased CHANGELOG work, the audit status, version coherence, and fleet drift into a READY-to-cut-vX.Y.Z / HOLD verdict with the next command to run. /release-notes drafts the next release's grouped notes from Conventional Commits (git-cliff, or the first-party gen-release-notes.sh when the binary is absent) as raw material to curate into [Unreleased]. Both are report-first (they edit nothing). release-readiness rides the claude-routines rail weekly (Tue 10:00 UTC, last in the Opus stagger); release-notes is dispatch-only (you draft at release time, not on a beat). Both fetch-depth: 0 for the git log <last-release>..HEAD range.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "perf",
-      "text": "Real release notes for OS-repo tags — scripts/gen-release-notes.sh (G5). OS-repo auto-releases shipped a bare tag with GitHub's raw PR-list (--generate-notes); they now ship a grouped Conventional-Commit changelog. auto-tag.sh --release drafts the notes for the latest..NEXT range and feeds them to gh release create --notes-file, falling back to --generate-notes when a range has no conventional commits. The generator is the first-party twin of Core's cliff.toml — same grouping (Features / Bug Fixes / … in commit-parser order) and one-bullet-per-commit shape, but pure git + awk so it needs no git-cliff binary (the fleet's \"no third-party CI tool we can't pin\" discipline — the same reason zizmor stayed deferred). Also bumps auto-tag-call.yml's internal core checkout from the stale @v2 to @v3 (it now carries both release scripts).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "feature",
-      "text": "A weekly fleet freshness dashboard — one hub health board. scripts/freshness-dashboard.sh consolidates the fleet's otherwise-scattered freshness signals — vendoring drift (fleet-drift.sh), vendored-core/ integrity (core-integrity.sh), and zsh/nvim plugin-pin freshness (update-*-plugins.sh --check) — into a single glanceable markdown board, with links to each repo's Renovate dependency dashboard and the token-health probe. .github/workflows/freshness-dashboard.yml runs it Mondays 10:00 UTC (after the morning sweeps settle) and files a deduplicated issue that updates in place. It reports, never mutates — the sub-gates still enforce; this is the \"how healthy is the fleet this week?\" view in one place. Run locally with make freshness-dashboard.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "security",
-      "text": "A /modernize maintenance routine — the judgment half of the modernization floor. check-modern.sh enforces the current floor (scripts/modern-baseline.yml); this routine scouts what the next floor should be. It reads the declared floor and the fleet's workflows, researches the latest runner/action deprecations (EOL runner labels, the node16→node20→node24 action-runtime treadmill, pinning-discipline gaps, new hardening dimensions), and files a report-first proposal — the exact baseline edit, the dated upstream source, and whether it is enforceable today or needs fix-first workflow changes. Runs headless weekly on the claude-routines rail (Tue 09:00 UTC, last in the Opus stagger) and files a deduplicated issue; edits nothing.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "config",
-      "text": "Renovate adoption via a shared org preset (replaces Dependabot). The fleet's dependency-update policy now lives once in dotgibson/.github (default.json) and every repo opts in with a three-line renovate.json that extends it — the same hub-and-spoke centralization Phase 1 applied to reusable workflows, now for dependency management (closes the \"no Dependabot/Renovate outside core & Windows\" gap). The preset keeps Renovate in lock-step with the modernization floor (scripts/modern-baseline.yml): it maintains SHA-pinned actions and @sha256: container digests rather than un-pinning them, groups third-party action bumps into one weekly ci(deps): PR, and deliberately leaves the fleet's own dotgibson/** reusable-workflow refs on their moving @v3 major tag (advanced by the release process, not a bot). Core retires its standalone .github/dependabot.yml; renovate.json is allowlisted in audit-core.sh as repo-meta.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "feature",
-      "text": "A modernization floor for CI: scripts/modern-baseline.yml + scripts/check-modern.sh, gated by audit-core.sh (section 8c). The baseline declares what \"modern\" means — no removed workflow commands (::set-output/::save-state/…), no EOL runners, every external action pinned to a 40-hex SHA (the fleet's own @vN reusable workflows exempt), and every container image pinned to an @sha256: digest — and the checker enforces it so a workflow can't silently regress below it. This generalizes the fleet's existing SHA-pin discipline into one contract and closes the last break in it (mutable container tags: alpine:3.21 and archlinux:latest in ci.yml are now digest-pinned). Run standalone with make check-modern.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Added",
-      "kind": "config",
-      "text": "difftastic (difft): an opt-in, structure-aware diff companion to delta. tools.zsh now detects it (HAVE_DIFFT), git/gitconfig defines a difftool \"difftastic\" plus a git dft alias, and aliases.zsh adds a HAVE_DIFFT-guarded gdft shortcut. difftastic diffs by AST (tree-sitter), so formatting-only churn — rewraps, moved elements, trailing commas — shows as no syntactic change. It is deliberately additive, never the default: delta stays the git diff syntax-highlighting pager and difft is only reached on demand via git dft/gdft, so nothing changes on a box without the binary. Documented in PORTING-MATRIX.md (packaged on Arch/Alpine-musl/Fedora/Gentoo/openSUSE/Homebrew/ Debian-Kali; cargo/mise where unpackaged).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "docs: PORTING-MATRIX.md clipboard section claimed the backend is \"swapped in os/<distro>.zsh\". Clipboard selection actually lives in Core's cross-OS clip/clip-paste scripts — each os/*.zsh only aliases pbcopy/pbpaste to them. Reworded the heading to \"Clipboard packages to install\" (the table's package names were always correct); surfaced by /doc-audit.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "ci: update-nvim-plugins.sh exited non-zero when the lock was already current. In apply mode the \"already current\" branch ended on ((CHECK)) (exit status 1 when CHECK=0), so the script returned 1 with nothing wrong — and under the freshness bot's set -e that turned a no-op week into a red nvim job (and, now that failure-alerting works, a false issue). It exits 0 explicitly.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "docs: aliases.md was missing gdft. The difftastic-backed git difftool shortcut (added alongside HAVE_DIFFT and git dft) landed in zsh/aliases.zsh without a matching entry in the cheat sheet — added to the Diff table.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v3.2.0",
-      "date": "2026-07-08",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "maint: the daily runner now reconciles pinned zsh plugins by CONFIG, not checkout state. maint/dotfiles-maint.sh decided \"pinned vs unpinned\" by asking whether a plugin's HEAD was detached — but a plugin cloned before plugins.zsh began pinning (or by the old floating --depth=1 path) sits on a branch even though it IS pinned in ZPLUGIN_PINS. Those were wrongly git pull --ff-only'd every run: floating them off their pins, and logging a false ✗ … (pull failed) for any whose branch couldn't fast-forward (e.g. zsh-syntax-highlighting). The loop now reads the pins straight from plugins.zsh (same grep update-plugins.sh uses — bash-3.2 safe) and, for any pinned plugin, re-asserts the recorded SHA (fetch + detach, mirroring zplugin-update): a branch checkout is reconciled back onto its pin, a rolled pin is now actually applied by the runner, and plugins already at their pin do zero network. Only genuinely unpinned plugins still fast-forward.",
       "core": true
     }
   ]
