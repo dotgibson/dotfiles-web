@@ -6,7 +6,9 @@ name: fleet-sync
 # manifests. That only refreshes when someone runs `npm run metrics` locally with the
 # siblings checked out — so it silently rots. This bot re-derives it weekly against
 # fresh clones of the fleet and opens a PR when the numbers/changelog have drifted;
-# merging it triggers deploy.yml to rebuild the site. workflow_dispatch refreshes on demand.
+# merging it triggers deploy.yml to rebuild the site. workflow_dispatch refreshes on demand,
+# and a `core-release` repository_dispatch from dotfiles-core runs it the moment a new Core
+# release ships — so the committed generated.json tracks the tag without a day's cron lag.
 #
 # First-party only (GITHUB_TOKEN + gh, no third-party action), mirroring the
 # dotfiles-core freshness bot. A fixed branch keeps it idempotent (update, don't stack).
@@ -15,6 +17,12 @@ on:
   schedule:
     - cron: "0 8 * * 2" # Tuesdays 08:00 UTC
   workflow_dispatch:
+  # dotfiles-core POSTs this the instant it publishes a release (its notify-web.yml).
+  # Regenerating on release — not only on the Tuesday cron — keeps the COMMITTED
+  # generated.json current, so Monday's data-freshness guard never goes red waiting
+  # a day for the weekly refresh to catch up to a fresh Core tag.
+  repository_dispatch:
+    types: [core-release]
 
 permissions:
   contents: read
