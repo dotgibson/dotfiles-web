@@ -1,5 +1,5 @@
 ---
-import { site, nav, coreRepoUrl } from '../data/site';
+import { site, footerLinks, coreRepoUrl } from '../data/site';
 import { withBase } from '../lib/url';
 const year = new Date().getFullYear();
 ---
@@ -14,7 +14,7 @@ const year = new Date().getFullYear();
     </div>
 
     <nav class="site-footer__nav" aria-label="Footer">
-      {nav.map((item) => <a href={withBase(item.href)}>{item.label}</a>)}
+      {footerLinks.map((item) => <a href={withBase(item.href)}>{item.label}</a>)}
       <a href={coreRepoUrl} target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
   </div>

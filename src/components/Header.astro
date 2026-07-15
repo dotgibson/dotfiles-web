@@ -9,6 +9,10 @@ function isActive(href: string) {
   const target = withBase(href).replace(/\/$/, '');
   return current === target;
 }
+// A group is highlighted when the current page is one of its children.
+function groupActive(children: readonly { href: string }[]) {
+  return children.some((c) => isActive(c.href));
+}
 
 // The Core version this build documents (from generated.json) — surfaced as a
 // badge so the site self-identifies which release it reflects. Null-safe: hidden
@@ -40,17 +44,44 @@ const coreVersion = metrics.core.version;
     <nav class="nav" aria-label="Primary">
       <ul class="nav__list" id="nav-list">
         {
-          nav.map((item) => (
-            <li>
-              <a
-                href={withBase(item.href)}
-                class:list={['nav__link', { active: isActive(item.href) }]}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
+          nav.map((item) =>
+            'children' in item ? (
+              <li class="nav__group">
+                <button
+                  type="button"
+                  class:list={['nav__link', 'nav__trigger', { active: groupActive(item.children) }]}
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  {item.label}
+                  <span class="nav__caret" aria-hidden="true">▾</span>
+                </button>
+                <ul class="nav__menu">
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={withBase(child.href)}
+                        class:list={['nav__sublink', { active: isActive(child.href) }]}
+                        aria-current={isActive(child.href) ? 'page' : undefined}
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={withBase(item.href)}
+                  class:list={['nav__link', { active: isActive(item.href) }]}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ),
+          )
         }
         <li class="nav__cta">
           <a class="btn btn-ghost" href={coreRepoUrl} target="_blank" rel="noopener">
@@ -152,6 +183,75 @@ const coreVersion = metrics.core.version;
     color: var(--tn-cyan);
     background: var(--tn-surface);
   }
+
+  /* Dropdown groups (Tools / Learn) */
+  .nav__group {
+    position: relative;
+  }
+  .nav__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+  }
+  .nav__caret {
+    font-size: 0.6rem;
+    line-height: 1;
+    transition: transform 0.15s ease;
+  }
+  .nav__group:hover .nav__caret,
+  .nav__group.open .nav__caret {
+    transform: rotate(180deg);
+  }
+  .nav__menu {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    min-width: 11rem;
+    list-style: none;
+    margin: 0;
+    padding: 0.35rem;
+    background: rgba(22, 22, 30, 0.98);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+    z-index: 110;
+  }
+  /* Reveal on hover (mouse) or when JS sets `.open` (click / keyboard / touch).
+     Deliberately NOT `:focus-within` — a trigger keeps focus after click/Escape,
+     which would pin the menu open and defeat explicit dismissal. Keyboard reveal
+     is handled by the click-toggle + focusout close in the script below. */
+  .nav__group:hover .nav__menu,
+  .nav__group.open .nav__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .nav__sublink {
+    display: block;
+    padding: 0.45rem 0.7rem;
+    border-radius: 7px;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .nav__sublink:hover {
+    color: #fff;
+    background: var(--tn-surface);
+  }
+  .nav__sublink.active {
+    color: var(--tn-cyan);
+    background: var(--tn-surface);
+  }
   .nav__cta {
     margin-left: 0.5rem;
   }
@@ -212,6 +312,31 @@ const coreVersion = metrics.core.version;
       padding: 0.7rem 0.8rem;
       font-size: 1rem;
     }
+    /* Groups become click-to-open accordions inside the mobile panel. */
+    .nav__group {
+      position: static;
+    }
+    .nav__trigger {
+      width: 100%;
+      justify-content: space-between;
+      padding: 0.7rem 0.8rem;
+    }
+    .nav__menu {
+      position: static;
+      min-width: 0;
+      padding: 0 0 0.35rem 0.5rem;
+      background: none;
+      border: none;
+      box-shadow: none;
+      /* Hidden until the trigger toggles `.open`; the transient reveal transition
+         is dropped on mobile so the accordion snaps rather than slides sideways. */
+      transform: none;
+      transition: none;
+    }
+    .nav__sublink {
+      padding: 0.6rem 0.8rem;
+      font-size: 1rem;
+    }
     .nav__cta {
       margin: 0.5rem 0 0;
     }
@@ -242,4 +367,44 @@ const coreVersion = metrics.core.version;
       })
     );
   }
+
+  // Dropdown groups: click-toggle with aria-expanded in sync. Mouse users get a
+  // pure-CSS hover reveal; this drives the keyboard/touch path (open state lives
+  // in the `.open` class, NOT `:focus-within`, so it can be explicitly dismissed)
+  // and keeps only one group open at a time.
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('.nav__group'));
+  function closeGroups(except?: HTMLElement) {
+    groups.forEach((g) => {
+      if (g === except) return;
+      g.classList.remove('open');
+      g.querySelector('.nav__trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+  groups.forEach((group) => {
+    const trigger = group.querySelector<HTMLButtonElement>('.nav__trigger');
+    if (!trigger) return;
+    trigger.addEventListener('click', () => {
+      const open = group.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', String(open));
+      if (open) closeGroups(group);
+    });
+    // Keyboard: close once focus leaves the group entirely (tabbing past the last
+    // item), so an open menu doesn't linger with nothing inside it focused.
+    group.addEventListener('focusout', (e) => {
+      const next = (e as FocusEvent).relatedTarget;
+      if (!(next instanceof Node) || !group.contains(next)) {
+        group.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+  // Dismiss open dropdowns on outside click or Escape.
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    if (target instanceof Element && target.closest('.nav__group')) return;
+    closeGroups();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeGroups();
+  });
 </script>
