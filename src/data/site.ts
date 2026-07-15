@@ -86,17 +86,45 @@ export function cloneRef(channel: string): string {
   return `--branch ${channel} `;
 }
 
-// Primary navigation. `href` values are page paths (base path is applied in the layout).
+// Primary navigation. An item is either a direct link (`{ label, href }`) or a
+// group (`{ label, children: [...] }`) that the header renders as a dropdown and
+// the footer flattens into its link list. `href` values are page paths (the base
+// path is applied in the layout). Kept deliberately short — see `footerNav` for
+// the secondary/meta links that used to crowd the primary bar.
 export const nav = [
   { label: "Home", href: "/" },
   { label: "Get Started", href: "/getting-started" },
-  { label: "Playground", href: "/playground" },
-  { label: "Generator", href: "/generator" },
-  { label: "Purple", href: "/purple" },
-  { label: "Architecture", href: "/architecture" },
-  { label: "Docs", href: "/docs" },
-  { label: "Config", href: "/config" },
+  {
+    label: "Tools",
+    children: [
+      { label: "Playground", href: "/playground" },
+      { label: "Generator", href: "/generator" },
+      { label: "Config", href: "/config" },
+    ],
+  },
+  {
+    label: "Learn",
+    children: [
+      { label: "Architecture", href: "/architecture" },
+      { label: "Docs", href: "/docs" },
+      { label: "Purple", href: "/purple" },
+    ],
+  },
+] as const;
+
+// Secondary/meta links. Demoted out of the primary bar (which had grown to 11
+// tabs) and surfaced in the footer instead — reachable, but off the main journey.
+export const footerNav = [
   { label: "Repos", href: "/#repos" },
   { label: "Status", href: "/status" },
   { label: "Changelog", href: "/changelog" },
+] as const;
+
+// Flattened leaf links for the footer sitemap: every primary destination
+// (unwrapping groups into their children) followed by the meta links.
+export const footerLinks = [
+  ...nav.flatMap((item) =>
+    "children" in item ? [...item.children] : [{ label: item.label, href: item.href }],
+  ),
+  ...footerNav,
 ] as const;
