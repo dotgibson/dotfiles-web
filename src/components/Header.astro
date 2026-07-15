@@ -203,7 +203,6 @@ const coreVersion = metrics.core.version;
     transition: transform 0.15s ease;
   }
   .nav__group:hover .nav__caret,
-  .nav__group:focus-within .nav__caret,
   .nav__group.open .nav__caret {
     transform: rotate(180deg);
   }
@@ -225,8 +224,11 @@ const coreVersion = metrics.core.version;
     transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
     z-index: 110;
   }
+  /* Reveal on hover (mouse) or when JS sets `.open` (click / keyboard / touch).
+     Deliberately NOT `:focus-within` — a trigger keeps focus after click/Escape,
+     which would pin the menu open and defeat explicit dismissal. Keyboard reveal
+     is handled by the click-toggle + focusout close in the script below. */
   .nav__group:hover .nav__menu,
-  .nav__group:focus-within .nav__menu,
   .nav__group.open .nav__menu {
     opacity: 1;
     visibility: visible;
@@ -366,9 +368,10 @@ const coreVersion = metrics.core.version;
     );
   }
 
-  // Dropdown groups: click-toggle with aria-expanded in sync. Desktop pointer
-  // users still get hover/focus reveal purely from CSS; this makes the groups
-  // work for keyboard and touch, and keeps only one open at a time.
+  // Dropdown groups: click-toggle with aria-expanded in sync. Mouse users get a
+  // pure-CSS hover reveal; this drives the keyboard/touch path (open state lives
+  // in the `.open` class, NOT `:focus-within`, so it can be explicitly dismissed)
+  // and keeps only one group open at a time.
   const groups = Array.from(document.querySelectorAll<HTMLElement>('.nav__group'));
   function closeGroups(except?: HTMLElement) {
     groups.forEach((g) => {
@@ -385,11 +388,21 @@ const coreVersion = metrics.core.version;
       trigger.setAttribute('aria-expanded', String(open));
       if (open) closeGroups(group);
     });
+    // Keyboard: close once focus leaves the group entirely (tabbing past the last
+    // item), so an open menu doesn't linger with nothing inside it focused.
+    group.addEventListener('focusout', (e) => {
+      const next = (e as FocusEvent).relatedTarget;
+      if (!(next instanceof Node) || !group.contains(next)) {
+        group.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+      }
+    });
   });
   // Dismiss open dropdowns on outside click or Escape.
   document.addEventListener('click', (e) => {
-    if (!(e.target instanceof Node) || !e.target.parentElement) return;
-    if (!(e.target as Element).closest?.('.nav__group')) closeGroups();
+    const target = e.target;
+    if (target instanceof Element && target.closest('.nav__group')) return;
+    closeGroups();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeGroups();

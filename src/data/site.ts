@@ -88,9 +88,10 @@ export function cloneRef(channel: string): string {
 
 // Primary navigation. An item is either a direct link (`{ label, href }`) or a
 // group (`{ label, children: [...] }`) that the header renders as a dropdown and
-// the footer flattens into its link list. `href` values are page paths (the base
-// path is applied in the layout). Kept deliberately short — see `footerNav` for
-// the secondary/meta links that used to crowd the primary bar.
+// the footer flattens into its link list. `href` values are root-relative page
+// paths; each render site (Header.astro / Footer.astro) wraps them in `withBase()`
+// to apply the deploy base path. Kept deliberately short — see `footerNav` for the
+// secondary/meta links that used to crowd the primary bar.
 export const nav = [
   { label: "Home", href: "/" },
   { label: "Get Started", href: "/getting-started" },
