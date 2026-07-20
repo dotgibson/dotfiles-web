@@ -99,16 +99,17 @@ if (missing.length || coreZshMissing) {
 const coreDir = repoPath(core);
 const zshDir = join(coreDir, 'zsh');
 const zshFiles = readdirSync(zshDir).filter((f) => f.endsWith('.zsh'));
-// "Sourced modules" = the chain in _CORE_MODULES, i.e. every zsh/*.zsh except the
-// loader itself (which sources them) and os/local (which live in the OS repos).
+// "Sourced modules" = the numbered fragment chain the loader globs (zsh/NN-name.zsh),
+// i.e. every zsh/*.zsh except the loader itself (which sources them); os/local live in
+// the OS repos.
 const sourcedModules = zshFiles.filter((f) => f !== 'loader.zsh').length;
 const zshLoc = zshFiles.reduce(
   (n, f) => n + readFileSync(join(zshDir, f), 'utf8').split('\n').length,
   0
 );
-const gitAliases = (readFileSync(join(zshDir, 'git.zsh'), 'utf8').match(/^\s*alias /gm) || [])
+const gitAliases = (readFileSync(join(zshDir, '25-git.zsh'), 'utf8').match(/^\s*alias /gm) || [])
   .length;
-const plugins = readFileSync(join(zshDir, 'plugins.zsh'), 'utf8');
+const plugins = readFileSync(join(zshDir, '45-plugins.zsh'), 'utf8');
 const pinnedPlugins = (plugins.match(/\b[0-9a-f]{40}\b/g) || []).length;
 const completionsDir = join(zshDir, 'completions');
 const completions = existsSync(completionsDir) ? readdirSync(completionsDir).length : null;
