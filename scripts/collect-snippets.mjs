@@ -34,7 +34,7 @@ const MAX_LINES = 140; // cap a baked file; the rest is one click away on GitHub
 const CURATED = [
   // ── Core: authored once, identical everywhere ──
   { layer: 'core', repo: 'dotfiles-core', path: 'zsh/20-aliases.zsh', lang: 'bash',
-    title: 'zsh/20-aliases.zsh', blurb: 'Modern-CLI aliases (eza, bat, rg, fd…), each guarded by a 00-tools.zsh capability check so a missing tool never breaks the shell.' },
+    title: 'zsh/20-aliases.zsh', blurb: 'Modern-CLI aliases (eza, bat, rg, fd…), each guarded by a capability check (HAVE_* flags) so a missing tool never breaks the shell.' },
   { layer: 'core', repo: 'dotfiles-core', path: 'starship/starship.toml', lang: 'toml',
     title: 'starship/starship.toml', blurb: 'The Tokyo Night prompt — symlinked to starship’s default path, so no STARSHIP_CONFIG env is needed.' },
   { layer: 'core', repo: 'dotfiles-core', path: 'tmux/tmux.reset.conf', lang: 'bash',
