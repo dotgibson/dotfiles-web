@@ -99,16 +99,25 @@ if (missing.length || coreZshMissing) {
 const coreDir = repoPath(core);
 const zshDir = join(coreDir, 'zsh');
 const zshFiles = readdirSync(zshDir).filter((f) => f.endsWith('.zsh'));
-// "Sourced modules" = the chain in _CORE_MODULES, i.e. every zsh/*.zsh except the
-// loader itself (which sources them) and os/local (which live in the OS repos).
+// Resolve a Core zsh fragment by its name, tolerant of the v4 numbered-fragment rename:
+// match the pre-v4 bare name (git.zsh) OR the v4 numbered form (NN-git.zsh). Discovering
+// by suffix means a future renumber can't silently break regeneration; a missing fragment
+// is a HARD, explicit error rather than a raw ENOENT deep in the metrics.
+const readFragment = (base) => {
+  const hit = zshFiles.find((f) => f === base || f.endsWith(`-${base}`));
+  if (!hit) throw new Error(`collect-metrics: no Core zsh fragment for "${base}" (looked for ${base} or NN-${base}) in ${zshDir}`);
+  return readFileSync(join(zshDir, hit), 'utf8');
+};
+// "Sourced modules" = the numbered fragment chain the loader globs (zsh/NN-name.zsh),
+// i.e. every zsh/*.zsh except the loader itself (which sources them); os/local live in
+// the OS repos.
 const sourcedModules = zshFiles.filter((f) => f !== 'loader.zsh').length;
 const zshLoc = zshFiles.reduce(
   (n, f) => n + readFileSync(join(zshDir, f), 'utf8').split('\n').length,
   0
 );
-const gitAliases = (readFileSync(join(zshDir, 'git.zsh'), 'utf8').match(/^\s*alias /gm) || [])
-  .length;
-const plugins = readFileSync(join(zshDir, 'plugins.zsh'), 'utf8');
+const gitAliases = (readFragment('git.zsh').match(/^\s*alias /gm) || []).length;
+const plugins = readFragment('plugins.zsh');
 const pinnedPlugins = (plugins.match(/\b[0-9a-f]{40}\b/g) || []).length;
 const completionsDir = join(zshDir, 'completions');
 const completions = existsSync(completionsDir) ? readdirSync(completionsDir).length : null;
