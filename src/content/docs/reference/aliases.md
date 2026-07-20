@@ -7,8 +7,8 @@ order: 0
 
 # Alias reference
 
-Core ships a curated set of aliases from `zsh/aliases.zsh` and `zsh/git.zsh`. The modern-CLI
-swaps are **guarded by detection flags**: `tools.zsh` sets `HAVE_*` at load time, and each alias
+Core ships a curated set of aliases from `zsh/20-aliases.zsh` and `zsh/25-git.zsh`. The modern-CLI
+swaps are **guarded by detection flags**: `00-tools.zsh` sets `HAVE_*` at load time, and each alias
 only activates if the tool is installed — otherwise the classic command is used. Nothing breaks on
 a box without the newer tool; things just get nicer where they can.
 
@@ -59,7 +59,7 @@ a box without the newer tool; things just get nicer where they can.
 
 ## Git suite (OMZ-compatible)
 
-Sourced from `zsh/git.zsh`. A representative slice — see the shell's `core help` for the full set.
+Sourced from `zsh/25-git.zsh`. A representative slice — see the shell's `core help` for the full set.
 
 | Alias | Expands to |
 | --- | --- |

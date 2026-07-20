@@ -4,23 +4,26 @@ import CommandBlock from '../components/CommandBlock.astro';
 import ArchitectureDiagram from '../components/ArchitectureDiagram.astro';
 import { withBase } from '../lib/url';
 
+// v4: each stage is a numbered fragment (NN-name.zsh) the loader globs + sorts by
+// prefix. The NN is the real band number, so the gaps (05, 85) are intentional.
 const loadOrder = [
-  ['tools', 'detection + single init point (zoxide/starship/atuin/mise) — loads first'],
-  ['ui', 'terminal-UX primitives (_core_err/ok/hint/confirm/spin), gum-aware'],
-  ['options', 'setopts + completion system (compinit, cached) + zstyles'],
-  ['history', 'HISTFILE/SIZE + history setopts + secret-ignore'],
-  ['aliases', 'modern-CLI aliases, each guarded by tools.zsh detection'],
-  ['git', 'curated OMZ-style git aliases + git_main_branch helper'],
-  ['functions', 'cross-OS shell functions (mkcd, extract, serve, …)'],
-  ['fzf', 'fzf env + zle widgets (Ctrl-F/R, Alt-Z) + fif/fbr'],
-  ['bindings', 'vi-mode keybindings (zvm_after_init hook)'],
-  ['plugins', 'lightweight plugin loader + pinned plugin list'],
-  ['op', '1Password CLI helpers'],
-  ['maint / update', 'daily-maintenance surface + the up updater nudge'],
-  ['os', 'the OS-native layer (os/<platform>.zsh)'],
-  ['offensive', 'Kali only — engagement scaffolding'],
-  ['defense', 'Defense only — detection/hunt tooling'],
-  ['local', 'machine-specific overrides (untracked) — always wins'],
+  ['00', 'tools', 'detection + single init point (zoxide/starship/atuin/mise) — loads first'],
+  ['05', 'ui', 'terminal-UX primitives (_core_err/ok/hint/confirm/spin), gum-aware'],
+  ['10', 'options', 'setopts + completion system (compinit, cached under $XDG_CACHE_HOME) + zstyles'],
+  ['15', 'history', 'HISTFILE (under $XDG_STATE_HOME) + history setopts + secret-ignore'],
+  ['20', 'aliases', 'modern-CLI aliases, each guarded by 00-tools.zsh detection'],
+  ['25', 'git', 'curated OMZ-style git aliases + git_main_branch helper'],
+  ['30', 'functions', 'cross-OS shell functions (mkcd, extract, serve, …)'],
+  ['35', 'fzf', 'fzf env + zle widgets (Ctrl-F/R, Alt-Z) + fif/fbr'],
+  ['40', 'bindings', 'vi-mode keybindings (zvm_after_init hook)'],
+  ['45', 'plugins', 'lightweight plugin loader + pinned plugin list (under $XDG_DATA_HOME)'],
+  ['50', 'op', '1Password CLI helpers'],
+  ['55', 'maint', 'daily-maintenance surface (maint-install, …)'],
+  ['60', 'update', 'the up updater + once/day "updates available" nudge'],
+  ['80', 'os', 'the OS-native layer (os/<platform>.zsh)'],
+  ['85', 'offensive', 'Kali only — engagement scaffolding (85-offensive.zsh)'],
+  ['85', 'defense', 'Defense only — detection/hunt tooling (85-defense.zsh)'],
+  ['99', 'local', 'machine-specific overrides (99-local.zsh, untracked) — always wins'],
 ];
 
 const comparisons = [
@@ -223,23 +226,37 @@ git subtree pull --prefix=core https://github.com/dotgibson/dotfiles-core main -
       <!-- load order -->
       <h2 class="mt">The canonical load order</h2>
       <p>
-        Load order is load-bearing. <code>tools</code> initializes atuin (registering its
-        widget), <code>options</code> runs <code>compinit</code> (fzf-tab + carapace need
-        it), and <code>fzf</code> defines its widgets <em>before</em> <code>plugins</code>
-        loads zsh-vi-mode, whose init fires the keybinding hook in <code>bindings</code>.
-        Every OS repo’s <code>.zshrc</code> sources the chain in this order:
+        Load order is load-bearing. <code>00-tools</code> initializes atuin (registering its
+        widget), <code>10-options</code> runs <code>compinit</code> (fzf-tab + carapace need
+        it), and <code>35-fzf</code> defines its widgets <em>before</em> <code>45-plugins</code>
+        loads zsh-vi-mode, whose init fires the keybinding hook in <code>40-bindings</code>.
+        Every OS repo’s <code>.zshrc</code> just sources the vendored <code>loader.zsh</code>,
+        which globs <code>$ZSH_CFG/NN-*.zsh</code>, sorts by the numeric prefix, and sources
+        each — the order <em>is</em> the numbering, with no hand-maintained module list:
       </p>
       <ol class="load-order">
         {
-          loadOrder.map(([name, desc], i) => (
+          loadOrder.map(([nn, name, desc]) => (
             <li>
-              <span class="load-order__n text-mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="load-order__n text-mono">{nn}</span>
               <span class="load-order__name text-mono">{name}</span>
               <span class="load-order__desc muted">{desc}</span>
             </li>
           ))
         }
       </ol>
+      <p>
+        Two v4 refinements ride this loader. <strong>Profiles</strong> —
+        <code>CORE_PROFILE=minimal|standard|full</code> — gate the Core band
+        (<code>00</code>–<code>69</code>) by number: <code>minimal</code> stops after
+        <code>30-functions</code>, <code>standard</code> after <code>50-op</code>, and
+        <code>full</code> loads everything; the OS/role/host fragments (<code>≥ 70</code>)
+        always load, so a lean profile can never drop essential setup. And the
+        <strong>XDG split</strong> moves mutable state out of the symlinked config tree —
+        history to <code>$XDG_STATE_HOME</code>, the compdump to <code>$XDG_CACHE_HOME</code>,
+        plugins to <code>$XDG_DATA_HOME</code> — while each fragment’s byte-compiled
+        <code>.zwc</code> stays beside it for fast startup.
+      </p>
 
       <!-- kali note -->
       <div class="card kali-note">
@@ -247,8 +264,9 @@ git subtree pull --prefix=core https://github.com/dotgibson/dotfiles-core main -
         <p>
           Kali stacks three layers — Core, its apt OS layer, and an offensive role stage
           (<code>dotfiles-Defense</code> mirrors this on the blue side). Where a plain OS
-          repo’s loader ends <code>… os local</code>, Kali inserts one more stage —
-          <code>… os offensive local</code> — for engagement scaffolding (scope-first
+          repo’s fragments end <code>… 80-os 99-local</code>, Kali drops in one more —
+          <code>85-offensive.zsh</code> (role band 85), sorting between the two — for
+          engagement scaffolding (scope-first
           workspaces, an audit-trail <code>logshell</code>, NetExec/BloodHound CE helpers).
           Engagement data never lives in the repo; it stays under
           <code>~/engagements</code>, and every tool is for authorized engagements with

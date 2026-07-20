@@ -12,7 +12,7 @@ const coreVersion = (metrics.core.version ?? 'main').replace(/^v/, '');
 
 // The playground is a SIMULATED interactive shell rendered with xterm.js — no VM,
 // no WASM, no real filesystem or network. It recognizes a curated set of the
-// system's REAL commands/aliases (pulled from dotfiles-core/zsh/aliases.zsh) and
+// system's REAL commands/aliases (pulled from dotfiles-core/zsh/20-aliases.zsh) and
 // prints deterministic, representative output. The command table lives in
 // src/data/terminal.ts and is shared by the client island below and this page's
 // no-JS fallback, so the two can't drift.

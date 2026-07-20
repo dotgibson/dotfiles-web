@@ -3,7 +3,7 @@
 // This is a SIMULATED shell — no VM, no WASM, no real filesystem. Each entry maps a
 // command (or one of its aliases) to deterministic, canned output that mirrors what
 // the REAL dotfiles stack would print. The alias names are taken verbatim from
-// dotfiles-core/zsh/aliases.zsh so the demo stays honest: `ls`→eza, `cat`→bat,
+// dotfiles-core/zsh/20-aliases.zsh so the demo stays honest: `ls`→eza, `cat`→bat,
 // `cd`/`z`→zoxide, etc. Keep the set small but representative of the modern-CLI stack.
 //
 // Output is plain text with embedded ANSI SGR escape sequences (\x1b[…m) so xterm.js
@@ -127,12 +127,13 @@ const coreVersionFile = (): string =>
 const ZSHRC = bat(
   ".zshrc",
   [
-    `${c.comment("# Bootstrap the vendored Core module chain, then OS + local overlays.")}`,
+    `${c.comment("# The vendored Core loader globs the numbered fragments, sorts by NN")}`,
+    `${c.comment("# prefix, and sources each — no module list to hand-maintain.")}`,
     `${c.purple("source")} ${c.green('"$HOME/.config/zsh/core/zsh/loader.zsh"')}`,
     ``,
-    `${c.comment("# Load order is load-bearing — see core.manifest:")}`,
-    `${c.comment("#   tools -> ui -> options -> history -> aliases -> git -> functions")}`,
-    `${c.comment("#   -> fzf -> bindings -> plugins -> op -> maint -> update -> os -> local")}`,
+    `${c.comment("# Load order IS the numbering (Core 00-69, OS 80, local 99):")}`,
+    `${c.comment("#   00-tools 05-ui 10-options 15-history 20-aliases 25-git 30-functions")}`,
+    `${c.comment("#   35-fzf 40-bindings 45-plugins 50-op 55-maint 60-update 80-os 99-local")}`,
   ],
   "zsh",
 );
@@ -199,9 +200,9 @@ export const COMMANDS: CommandSpec[] = [
     run: (args) => {
       const pat = args.trim() || "";
       const hits = [
-        c.purple("zsh/aliases.zsh"),
-        c.purple("zsh/tools.zsh"),
-        c.purple("zsh/functions.zsh"),
+        c.purple("zsh/20-aliases.zsh"),
+        c.purple("zsh/00-tools.zsh"),
+        c.purple("zsh/30-functions.zsh"),
         c.blue("nvim/init.lua"),
         c.green("bootstrap.sh"),
       ];
@@ -217,11 +218,11 @@ export const COMMANDS: CommandSpec[] = [
     run: (args) => {
       const pat = args.trim() || "alias";
       return [
-        `${c.purple("zsh/aliases.zsh")}`,
+        `${c.purple("zsh/20-aliases.zsh")}`,
         `${c.green("10")}:${c.comment(":")}  ${c.fg("if [[ -n ${HAVE_EZA:-} ]]; then")}`,
         `${c.green("11")}:${c.comment(":")}    ${highlight(`alias ls='eza --group-directories-first --icons=auto'`, pat)}`,
         `${c.green("12")}:${c.comment(":")}    ${highlight(`alias ll='eza -lah --group-directories-first --git'`, pat)}`,
-        `${c.purple("zsh/git.zsh")}`,
+        `${c.purple("zsh/25-git.zsh")}`,
         `${c.green("4")}:${c.comment(":")}   ${highlight(`alias g='git'`, pat)}`,
       ].join("\r\n");
     },
@@ -230,7 +231,7 @@ export const COMMANDS: CommandSpec[] = [
     name: "git",
     match: ["git st", "git status", "gst", "g st"],
     tool: "git (st = status -sb)",
-    blurb: "git short status — the `gst`/`git st` alias from git.zsh",
+    blurb: "git short status — the `gst`/`git st` alias from 25-git.zsh",
     run: () => {
       return [
         `${c.green("##")} ${c.fg("main")}${c.comment("...origin/main")}`,

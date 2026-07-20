@@ -48,6 +48,6 @@ export const headlineStats: { value: string; label: string; hint: string }[] = [
   { value: String(metrics.fleet.layers), label: 'clean layers', hint: 'Core · OS-native · Role' },
   { value: String(metrics.core.sourcedModules), label: 'Core zsh modules', hint: 'one canonical load order' },
   { value: metrics.core.zshLoc.toLocaleString(), label: 'lines of Core zsh', hint: 'authored once, synced out' },
-  { value: String(metrics.core.gitAliases), label: 'git aliases', hint: 'OMZ-style, in git.zsh' },
+  { value: String(metrics.core.gitAliases), label: 'git aliases', hint: 'OMZ-style, in 25-git.zsh' },
   { value: String(metrics.core.pinnedPlugins), label: 'SHA-pinned plugins', hint: 'no floating master clones' },
 ];

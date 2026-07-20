@@ -54,7 +54,7 @@ OS repo.
 ## The short version
 
 1. Add the file, and add its path to `core.manifest` in the same commit.
-2. Place any new module correctly in the load order.
+2. Name a new zsh module as a numbered fragment (`NN-name.zsh`) so the loader globs it in the right place — pick the `NN` prefix for its band (Core `00`–`69`; the OS layer is `80`, role stages `85`, host-local `99`).
 3. Set exec bits: scripts `+x`, `zsh/*.zsh` not executable.
 4. Run `make audit` until it's green, then `make sync` to fan it out.
 5. Record the change in `CHANGELOG.md` under `[Unreleased]` with a Conventional Commits message.
