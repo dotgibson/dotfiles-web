@@ -90,7 +90,7 @@ export const repos: Repo[] = [
       {
         label: 'Modern-CLI swaps are guarded',
         detail:
-          'tools.zsh resolves HAVE_* flags at load time, so every alias (eza/bat/zoxide/…) falls back to the classic command on a box that lacks the newer one. Nothing breaks; it just gets nicer where it can.',
+          '00-tools.zsh resolves HAVE_* flags at load time, so every alias (eza/bat/zoxide/…) falls back to the classic command on a box that lacks the newer one. Nothing breaks; it just gets nicer where it can.',
       },
       {
         label: 'One gate defines healthy',
