@@ -1,4 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>dotgibson/.github"]
+  "extends": ["local>dotgibson/.github"],
+  "packageRules": [
+    {
+      "description": "Hold TypeScript on the 6.x line. TS 7 is the Go-native port: its package exports drop the compiler API ('.' resolves to lib/version.cjs, with the real surface behind './unstable/*'), and @astrojs/check -> @astrojs/language-server -> volar-service-typescript still consumes the old API, so `astro check` would break at runtime. @astrojs/check@0.9.9 (latest, so there is no upgrade path around it) also declares peerDependencies typescript ^5.0.0 || ^6.0.0, which makes a bump to 7 fail `npm ci` with ERESOLVE and take the Pages deploy with it. An allowedVersions ceiling rather than a disable, so 6.x patches still flow. Lift this once @astrojs/check widens its peer range and the Volar stack ports to the unstable/* API.",
+      "matchManagers": ["npm"],
+      "matchDepNames": ["typescript"],
+      "allowedVersions": "<7"
+    }
+  ]
 }
