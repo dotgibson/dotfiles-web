@@ -1,71 +1,71 @@
 {
-  "generatedAt": "2026-07-21",
+  "generatedAt": "2026-07-23",
   "fleet": {
     "publicRepos": 10,
     "layers": 3,
     "loadOrderStages": 15
   },
   "releases": {
-    "current": "v4.0.1",
+    "current": "v4.1.0",
     "channels": [
-      "v4.0.1",
+      "v4.1.0",
       "v4.0.0",
       "v3.9.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "4.0.1",
+    "coreVersion": "4.1.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-Windows": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-Kali": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v4.0.1",
-        "carried": "4.0.1",
+        "ref": "v4.1.0",
+        "carried": "4.1.0",
         "status": "current"
       }
     }
   },
   "core": {
-    "version": "4.0.1",
+    "version": "4.1.0",
     "sourcedModules": 13,
     "zshLoc": 3323,
     "gitAliases": 57,
@@ -104,6 +104,56 @@
           "items": [
             {
               "text": "Docs/comments: finish the v4 numbered-fragment rename. The v4.0.0 rename moved the files and updated the manifest/docs but left the pre-v4 flat names (tools.zsh, plugins.zsh, …) scattered through the fragments' own cross-reference comments and a few dev scripts. Renumbered them all to the NN-name.zsh form — every fragment's self-header and every \"loads after 10-options.zsh\" / \"guarded by 00-tools.zsh\" comment across zsh/*.zsh, plus bench-core.sh, audit-core.sh, update-plugins.sh, ci.yml, lib/ux.sh, jujutsu/config.toml, and others. Deliberately left untouched: historical CHANGELOG.md entries, V4-PROPOSAL.md, and the intentional pre-v4 names in the migration path (bootstrap-lib.sh's stale-symlink cleanup, test-core.sh's migration fixtures). Also: aliases.md gains a Named Directories section for the ~dots/~proj hash -d shortcuts, and PORTING-MATRIX.md clarifies that Defense is a distro-agnostic Role repo (absent from the OS-stamp table by design, not omission). Comment/doc only — no behavior change.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.1.0",
+      "date": "2026-07-23",
+      "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "Forced a steady block cursor in tmux. tmux/tmux.conf now sets cursor-style block, so panes render a non-blinking block cursor regardless of the terminal's own default.",
+              "kind": "change"
+            },
+            {
+              "text": "Bumped the pinned Python and Ruby runtimes off their security-only lines. mise/config.toml: python = \"3.12\" → \"3.14\" and ruby = \"3.3\" → \"3.4\". Both pins had aged into security-only maintenance: Python 3.12's bugfix window ended ~2025-04, Ruby 3.3 dropped to security maintenance on 2026-04-01. Python 3.14 (GA 2025-10-07) has bugfix support through 2027-10; Ruby 3.4 (GA 2024-12-25) is in normal maintenance. Regenerate mise.lock on a real box with mise install after syncing.",
+              "kind": "change"
+            }
+          ]
+        },
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "New /runtime-freshness routine. On-demand .claude/ routine (report-first, like /freshness-triage) that decides whether the pinned runtimes in mise/config.toml (python/ruby/java/lua) are due to cross a pin — weighing EOL calendars and tooling compatibility, the judgment the maint job's mise outdated --bump nudge can't make.",
+              "kind": "feat"
+            },
+            {
+              "text": "Scheduled maintenance now surfaces cross-pin runtime bumps. The daily runner now logs mise outdated --bump after the upgrade step — a report-only nudge listing runtimes with a newer version available beyond their pin, mirroring the existing system packages upgrade line.",
+              "kind": "feat"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "Scheduled maintenance now advances the Rust toolchain. The daily runner ran mise upgrade --yes, but mise's rust support delegates to rustup, so rust = \"stable\" always read as satisfied and Rust silently fell behind. dotfiles-maint.sh now runs rustup update after the mise step, guarded on have rustup.",
+              "kind": "fix"
+            },
+            {
+              "text": "sync-core.sh summary now counts repos, not check lines. The footer previously printed a line-level pass counter that could report \"updated 17\" for an 8-repo fan-out. The headline row now tallies repos in updated/skipped/failed buckets with an \"(of N targeted)\" total.",
+              "kind": "fix"
+            },
+            {
+              "text": "nvim: first file opened in a bare session got no filetype — no syntax/treesitter highlighting, no LSP, no linter. Root cause: vim.lsp.enable()'s post-startup doautoall FileType replay set did_filetype mid-chain, making :setf a no-op for the first buffer. Fix: fire FilePost via vim.schedule() so the deferred-plugin burst lands after the read chain completes.",
               "kind": "fix"
             }
           ]
