@@ -10,8 +10,17 @@ name: fleet-sync
 # and a `core-release` repository_dispatch from dotfiles-core runs it the moment a new Core
 # release ships — so the committed generated.json tracks the tag without a day's cron lag.
 #
-# First-party only (GITHUB_TOKEN + gh, no third-party action), mirroring the
-# dotfiles-core freshness bot. A fixed branch keeps it idempotent (update, don't stack).
+# AUTH — why not the built-in GITHUB_TOKEN: a branch pushed / PR opened with the default
+# GITHUB_TOKEN does NOT trigger `pull_request` (or `push`) workflows — GitHub's recursion
+# guard. So a refresh PR authored by GITHUB_TOKEN would sit forever with build + data-freshness
+# never running and mergeable_state "blocked". We therefore push the branch and open the PR
+# with the fleet GitHub App token (the same identity + pinned action as dotfiles-core's
+# sync-fanout.yml — see GITHUB-APP-AUTH.md), falling back to the legacy FLEET_SYNC_TOKEN PAT.
+# Both are non-GITHUB_TOKEN identities, so the PR's checks run and it can actually be merged.
+# If NEITHER is configured we fall back to GITHUB_TOKEN — the PR still opens (no hard failure),
+# it just won't auto-trigger CI until a human nudges it, exactly the old behaviour.
+# create-github-app-token is GitHub's own action, SHA-pinned (no untrusted marketplace action).
+# A fixed branch keeps it idempotent (update, don't stack).
 
 on:
   schedule:
@@ -42,15 +51,36 @@ jobs:
       pull-requests: write # open/update the PR
     env:
       BRANCH: automation/fleet-metrics
-      GH_TOKEN: ${{ github.token }}
       OWNER: ${{ github.repository_owner }}
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      # Presence flag for the App private key (value is 'true'/'false', never the key):
+      # secrets can't be tested in a step `if:`, but an env derived from a secret comparison
+      # can. Gates the mint on the key ACTUALLY being present so a partial App setup (the
+      # FLEET_APP_ID variable set org-wide but the key not scoped here) falls back cleanly.
+      HAS_APP_KEY: ${{ secrets.FLEET_APP_PRIVATE_KEY != '' }}
     steps:
       # Check the site into a subdir so the rest of the fleet can sit beside it as
       # siblings — the layout collect-metrics.mjs expects (root = parent of this repo).
+      # persist-credentials: false — do NOT leave the GITHUB_TOKEN in .git/config, or the
+      # push below would authenticate as GITHUB_TOKEN (no CI trigger) whatever remote URL we set.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           path: dotfiles-web
+          persist-credentials: false
+      # Mint a short-lived, repo-scoped installation token IF the fleet App is configured
+      # (the FLEET_APP_ID variable is set and its private key is present). continue-on-error
+      # so a repo the App isn't installed on falls through to the PAT / GITHUB_TOKEN chain
+      # below instead of failing the run.
+      - name: Mint a scoped installation token (if the fleet App is configured)
+        id: app
+        if: vars.FLEET_APP_ID != '' && env.HAS_APP_KEY == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.FLEET_APP_ID }}
+          private-key: ${{ secrets.FLEET_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
       - name: Clone the fleet as siblings (read-only, shallow)
         run: |
           set -euo pipefail
@@ -69,6 +99,12 @@ jobs:
           node scripts/collect-snippets.mjs
       - name: Open a PR if the derived data drifted
         working-directory: dotfiles-web
+        env:
+          # Prefer the App token, then the legacy PAT, then the built-in token. The first two
+          # trigger the PR's checks; the last opens the PR but won't (the documented fallback).
+          FLEET_TOKEN: ${{ steps.app.outputs.token || secrets.FLEET_SYNC_TOKEN || github.token }}
+          GH_TOKEN: ${{ steps.app.outputs.token || secrets.FLEET_SYNC_TOKEN || github.token }}
+          REPO: ${{ github.event.repository.name }}
         run: |
           set -euo pipefail
           # generatedAt is a day-granular stamp that changes on every run; judge metrics
@@ -85,13 +121,16 @@ jobs:
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # persist-credentials:false left origin unauthenticated — point it at the token
+          # so the push authenticates as the App (or PAT), the identity that triggers CI.
+          git remote set-url origin "https://x-access-token:${FLEET_TOKEN}@github.com/${OWNER}/${REPO}.git"
           git switch -C "$BRANCH"
           git add src/data/generated.json src/data/snippets.json
           git commit -m "chore(data): refresh fleet metrics + changelog + config snippets (fleet-sync bot)"
           git push -f -u origin "$BRANCH"
           # Idempotent: update the existing PR if one is already open for this branch.
-          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
-            gh pr create --head "$BRANCH" --base "$DEFAULT_BRANCH" \
+          if [ -z "$(gh pr list --repo "${OWNER}/${REPO}" --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            gh pr create --repo "${OWNER}/${REPO}" --head "$BRANCH" --base "$DEFAULT_BRANCH" \
               --title "chore(data): refresh fleet metrics + changelog + config snippets" \
               --body "Automated by the fleet-sync bot. The derived site data (\`src/data/generated.json\` — changelog + by-the-numbers; \`src/data/snippets.json\` — the Config explorer's baked source files) was behind the fleet; this regenerates it via \`collect-metrics.mjs\` + \`collect-snippets.mjs\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
           fi
