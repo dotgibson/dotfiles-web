@@ -1,86 +1,86 @@
 {
-  "generatedAt": "2026-07-29",
+  "generatedAt": "2026-08-04",
   "fleet": {
     "publicRepos": 10,
     "layers": 3,
     "loadOrderStages": 15
   },
   "releases": {
-    "current": "v4.5.0",
+    "current": "v4.7.1",
     "channels": [
-      "v4.5.0",
-      "v4.4.0",
-      "v4.3.0",
+      "v4.7.1",
+      "v4.7.0",
+      "v4.6.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "4.5.0",
+    "coreVersion": "4.7.1",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       },
       "dotfiles-Windows": {
-        "ref": "v4.4.0",
-        "carried": "4.4.0",
+        "ref": "v4.6.0",
+        "carried": "4.6.0",
         "status": "behind"
       },
       "dotfiles-Kali": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v4.5.0",
-        "carried": "4.5.0",
+        "ref": "v4.7.1",
+        "carried": "4.7.1",
         "status": "current"
       }
     }
   },
   "core": {
-    "version": "4.5.0",
+    "version": "4.7.1",
     "sourcedModules": 13,
-    "zshLoc": 3392,
+    "zshLoc": 3403,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 28
   },
   "packages": {
-    "dotfiles-MacBook": 70,
+    "dotfiles-MacBook": 76,
     "dotfiles-Kali": 40,
-    "dotfiles-Fedora": 38,
+    "dotfiles-Fedora": 37,
     "dotfiles-Arch": 44,
     "dotfiles-openSUSE": 39,
     "dotfiles-Alpine": 51,
     "dotfiles-Gentoo": 32,
-    "dotfiles-Kali-offensive": 52
+    "dotfiles-Kali-offensive": 53
   },
   "ci": {
     "dotfiles-core": true,
@@ -97,44 +97,18 @@
   "changelog": [
     {
       "repo": "dotfiles-core",
-      "version": "v4.5.0",
-      "date": "2026-07-28",
+      "version": "v4.7.1",
+      "date": "2026-08-03",
       "groups": [
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "jnv — interactive JSON explorer. 00-tools.zsh now detects jnv and sets HAVE_JNV: a dual-pane jq-filter editor + collapsible JSON viewer that fills the \"explore an unfamiliar API/JSON response\" gap between jq (transform), gron (grep), and yq (YAML). It's its own command with no alias (like jq/gron/ ast-grep) and is inert without the binary. A Rust CLI (embeds jaq, no external jq dependency). Detect-only for now — Core lights up HAVE_JNV when the binary is present, but jnv is not yet wired into any OS repo's Brewfile/packages.txt/ bootstrap.sh (install it via brew/AUR/Nix or cargo install --locked jnv); fleet auto-install is a tracked follow-up. New PORTING-MATRIX.md row and footnote. (zsh/00-tools.zsh, zsh/20-aliases.zsh, PORTING-MATRIX.md)",
-              "kind": "feature"
-            }
-          ]
-        },
         {
           "category": "Fixed",
           "items": [
             {
-              "text": "fleet-drift false red on dotfiles-Windows. The sweep measures every repo against the latest Core release tag, but dotfiles-Windows vendors only the nvim/ subtree and tracks Core's main tip (synced by the nvim-sync bot, which re-stamps its marker only when nvim/ actually changes). So its recorded commit can legitimately be a descendant of the release tag (an unreleased nvim/ commit pulled between releases) or an ancestor of it (a release that changed no nvim/ files leaves the marker behind while the vendored tree is byte-identical) — and the old commit-vs-tag comparison flagged both as drift, failing the run and filing a spurious ci-failure issue. dotfiles-Windows is now judged against nvim/'s last change reachable from the reference (git rev-list -1 REF -- nvim), so both states read as current while a genuinely stale nvim/ tree still fails. (scripts/fleet-drift.sh)",
+              "text": "/os-package-availability no longer files column-shifted matrix findings. The Alpine run on 2026-08-02 reported four PORTING-MATRIX.md cells as stale (starship/yazi/tree-sitter-cli/viddy still on script³/cargo³) and asked for two footnote rewrites. All six were already correct: the routine had read the Kali (apt) column — the last cell on each row — as if it were Alpine, and re-proposed footnote wording the footnotes already carried. A report-first routine that flags a correct table is worse than one that finds nothing, since it invites a \"fix\" that introduces the drift it claimed to catch. The prompt now anchors both reads: count columns from the header row (Arch | openSUSE | Alpine | Gentoo | Kali, last cell is Kali), quote the whole row and name the column header before citing a cell, and quote a footnote's current text before calling it stale. Reporting rules require that evidence in the issue body, so a misalignment is visible to a reader instead of shipping as a finding.",
               "kind": "fix"
             },
             {
-              "text": "alpha-nvim greeter crash on nvim launch. The dashboard footer was built by assigning raw strings into startify's footer section, but that section is a group whose val must hold element tables — alpha then called layout_element[nil] and threw a VimEnter autocommand error (nil-call at alpha.lua:362). The footer is now a text element, mutated in place so the layout's captured reference renders it. (nvim/lua/gerrrt/plugins/alpha-nvim.lua)",
-              "kind": "fix"
-            },
-            {
-              "text": "PORTING-MATRIX.md Alpine column caught up with community. starship, yazi, tree-sitter-cli and viddy have landed in Alpine's community repo (native musl builds) since these rows were written — the matrix now shows the apk package for each instead of script³/cargo³, footnote ⁵ notes the community tree-sitter-cli is the musl build that clears the ≥ 0.26.1 floor, and footnotes ⁸/¹⁶ drop the stale \"not in Alpine\" claim for jujutsu/viddy. Availability doc only; dotfiles-Alpine carries the matching packages.txt move. (PORTING-MATRIX.md)",
-              "kind": "fix"
-            },
-            {
-              "text": "PORTING-MATRIX.md openSUSE yq corrected to the Go-install path. The row claimed stock yq on openSUSE is mikefarah's Go build, but the main OSS yq is kislyuk's separate Python yq (the Go build ships only from a personal OBS repo) — so a stock zypper in yq lands the wrong tool. The openSUSE cell is now go³ and footnote ⁶ explains it; dotfiles-openSUSE go-installs the mikefarah build in bootstrap.sh alongside doggo/carapace/sesh. (PORTING-MATRIX.md)",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Security",
-          "items": [
-            {
-              "text": "Container digest-pin rule now covers every image surface, tightly. Rule 4 in check-modern.sh only anchored on an image: value or a docker run|build|pull command, so an unpinned container: node:20 shorthand or a uses: docker://alpine:3.21 container action slipped the floor — neither is owner/repo@sha form, so the action sha-pin rule (3) misses them too. The rule now extracts the single image reference from each clean surface (image:, container: shorthand, uses: docker://) and requires an @sha256: digest on it: this also catches a bare container: alpine / docker://alpine (implicit mutable latest, which a name:tag regex missed) and correctly accepts a digest-only alpine@sha256:… (previously mis-flagged), while docker run keeps its tolerant token scan. No live violations in the fleet today — pre-emptive, closing the gap before an OS/role repo (which inherit the *-call.yml@v3 workflows) reaches for one. (scripts/check-modern.sh, scripts/modern-baseline.yml)",
+              "text": "The freshness dashboard no longer renders GitHub API error bodies as data. The 2026-08-03 board (#324) printed {\"message\":\"Not Found\",…,\"status\":\"404\"} as dotfiles-web's release tag and a 403 secondary-rate-limit body as htpx's open-issue count. Cause: on an HTTP error gh api skips the --jq filter and copies the raw response body to stdout, writing only its one-line summary to stderr — so the helpers' 2>/dev/null || true silenced the wrong stream and discarded the one reliable signal, the exit code. The error JSON became \"the value\", and every // empty and emptiness guard downstream waved it through; the — (no tags) branch was unreachable for any repo whose 404 body carries a message key, and a third site (the Renovate tally) had the same latent defect. The helpers now capture stdout, test the exit code, and drop stdout on failure — and they propagate that status, so the board can tell \"the API answered: none\" (— (no tags)) from \"we never got an answer\" (?), a distinction it was previously asserting without evidence. The ~24 search-API calls are paced under GitHub's 30/minute authenticated ceiling (the workflow authenticates with the stock GITHUB_TOKEN and its lower shared quota), and a 403/429 gets a widening backoff under two brakes: an exhausted ladder latches, so the remaining calls stop re-waiting on a limit that demonstrably isn't clearing, while total backoff sleep is capped for the whole run — a ladder that recovers must not latch, but 24 calls each riding out a fresh transient limit would otherwise sleep for 12 minutes against a 15-minute job timeout. Both brakes are files, not variables, since the helpers run inside command substitution and a variable would not survive the subshell. scripts/test-core.sh now drives all of it against a gh stub reproducing the real error shape; the script had no behavioral coverage before.",
               "kind": "fix"
             }
           ]
@@ -143,39 +117,34 @@
     },
     {
       "repo": "dotfiles-core",
-      "version": "v4.4.0",
-      "date": "2026-07-27",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
       "groups": [
         {
           "category": "Added",
           "items": [
             {
-              "text": "Terminal web browser wiring. 00-tools.zsh now resolves a BROWSER_BIN (prefers w3m, falls back to any present lynx/links2/links/elinks) and sets HAVE_BROWSER. 20-aliases.zsh exposes a web verb everywhere the browser is present, and exports $BROWSER only on a headless box (no $DISPLAY/ $WAYLAND_DISPLAY, non-macOS) so GUI-opening tools aren't hijacked on a desktop. The OS repos add w3m to their package lists. (zsh/00-tools.zsh, zsh/20-aliases.zsh)",
-              "kind": "feature"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.3.0",
-      "date": "2026-07-25",
-      "groups": [
-        {
-          "category": "Changed",
-          "items": [
+              "text": "prefix + a opens Claude Code in a tmux popup — tmux/scripts/tmux-claude.sh (new). The nvim integration gives you Claude coupled to an editing session (buffers, selection, diagnostics, diffs); this is the other half — Claude from a shell pane, mid-rebase, or in a directory with no editor open. Same shape as the prefix + g lazygit popup, rooted at #{pane_current_path}, and gated on the claude binary the way tmux-sesh.sh gates on sesh (absent, it puts the reason on the status line rather than doing a silent nothing). It is deliberately not display-popup -E claude, the way lazygit is bound. lazygit is stateless, so killing its popup costs nothing — a conversation is not, and dismissing a raw -E claude popup would take the thread with it. So this follows tmux-scratch.sh instead: a persistent detached session the popup attaches to, making prefix + a toggle visibility rather than lifetime. It inherits that script's three hard-won fixes — per-session detach-on-destroy on (or quitting hops the popup client onto your main session at popup dimensions and double-draws the real terminal), the TERM repair (display-popup launches with TERM unset, so a nested tmux attach otherwise dies with \"terminal does not support clear\"), and status off / prefix None / key-table popup so every keystroke reaches Claude's TUI. Sessions are keyed on the git root, not the cwd: every pane inside a repo shares one conversation, which is the granularity the work actually has, and a single global session would hand you dotfiles-Kali's thread while you sat in dotfiles-core. The name carries a cksum hash of the full path so two repos sharing a basename cannot collide onto one conversation — cksum rather than md5sum/md5, which diverge between Linux and macOS.",
+              "kind": "fix"
+            },
             {
-              "text": "Linters now run on file open, not only on save. nvim-lint fired only on BufWritePost/InsertLeave, so an opened file showed no lint diagnostics until you saved it or toggled in/out of insert mode. Added BufReadPost to the trigger events (plus a one-shot replay of the first buffer, which loads just after its own BufReadPost), so diagnostics surface on open. Heavy whole-package/repo linters (golangci-lint, cpplint, checkstyle, phpstan, sqlfluff, tflint, semgrep) stay save-only — they run on BufWritePost and nowhere else. (nvim/lua/gerrrt/plugins/nvim-lint.lua)",
-              "kind": "feature"
-            }
-          ]
-        },
-        {
-          "category": "Removed",
-          "items": [
+              "text": "<C-y> in fzf-lua sends the selection to Claude Code as @-mentions. The tree-based @-mention (<leader>as in nvim-tree/oil) adds one file, so putting six files in context meant six navigations. fzf is already multi-select — --multi is on for the file pickers, <Tab> marks and <A-a> toggles all — so plugins/fzf-lua.lua now turns \"the files involved in this change\" into one gesture. From the grep pickers each entry carries a line number, so a hit is sent as its own location rather than the whole file (fzf-lua reports 1-indexed lines; send_at_mention documents its range as 0-indexed, so the action converts). Entries are parsed with fzf-lua.path .entry_to_file rather than by hand, since they carry devicon prefixes and grep entries are file:line:col:text. Covers <leader>ff / fg / fb / fr from one actions.files entry, and is documented in cheatsheet.lua alongside the multi-select keys. Three details worth recording. The action table carries a leading true — fzf-lua's inheritance marker (config.lua switches the merge to tbl_deep_extend(\"keep\", yours, defaults) when [1] == true, then strips it). Without it a user action table replaces fzf-lua's defaults wholesale, silently dropping enter, ctrl-s/v/t and alt-q/Q/i/h/f — i.e. opening a file at all. Line forwarding is restricted to the grep family (resume key containing grep), because entry_to_file also reports a positive line for buffer entries — providers/buffers.lua serializes each buffer's current cursor lnum — so forwarding it everywhere would make <leader>fb send the one line you were parked on instead of the file. And unlike plugins/claudecode-nvim.lua this is not cond-gated: fzf-lua is a core finder that must load everywhere, so gating the spec would mean an executable() probe at startup on every box in the fleet. The action fails soft instead, and since it only runs on a keypress it can afford to probe properly and name which failure it hit — CLI absent, CLI installed after Neovim started (the cond is evaluated once at startup, so a restart is needed), or the plugin genuinely failing to load, in which case the real error is shown rather than swallowed.",
+              "kind": "perf"
+            },
             {
-              "text": "Dropped Nix language support (added in v4.2.0) — unused in practice, and the only language of that batch with ongoing install cost. Removed the nil_ls server config, the alejandra formatter, the statix linter, the nix treesitter parser, and the alejandra/statix Mason packages (so they no longer install on every box). No .nix tooling remains; re-add per the v4.2.0 pattern if Nix ever comes back. (nvim/lua/gerrrt/servers/nil_ls.lua, nvim/lua/gerrrt/servers/init.lua, nvim/lua/gerrrt/plugins/{conform,nvim-lint,nvim-treesitter,mason-tool-installer}.lua)",
+              "text": "Claude Code IDE integration for Neovim (coder/claudecode.nvim). nvim/lua/gerrrt/plugins/claudecode-nvim.lua adds the first runtime Claude surface in the fleet — until now Claude Code existed only as pinned CI automation (scripts/tool-versions.env, .github/workflows/claude-routines.yml). The plugin speaks the same WebSocket/MCP protocol as the official VS Code and JetBrains extensions: Neovim runs the server and writes ~/.claude/ide/<port>.lock, and the claude CLI attaches to it. The payoff over a bare terminal pane is that Claude's edits arrive as a native :diffsplit you accept with :w (or <leader>aa) and can edit before accepting, visual selections send with their real file and line range, and Claude reads the session's LSP diagnostics over MCP rather than re-running a build. Keys live under a new <leader>a prefix (ac toggle, as send selection / add file from an nvim-tree or oil buffer, ab add buffer, aa/ad accept/deny diff, am model, ar/aC resume/continue, aS status), registered as the ai / claude group in plugins/which-key.lua and documented in cheatsheet.lua. Two deliberate departures from upstream's install spec, both fleet-driven: - No folke/snacks.nvim dependency. Upstream defaults its terminal to snacks, which Core does not ship and which would overlap fzf-lua, mini.notify and alpha. terminal.provider = \"native\" uses a plain :terminal split instead, keeping faith with the no-dap-ui/no-toggleterm stance in config/autocmds.lua and adding exactly one entry to lazy-lock.json. provider = \"none\" remains a one-line switch for driving claude from a tmux pane and attaching with /ide. - The whole spec is cond-gated on the claude binary. Core vendors into eight OS repos and the CLI is in none of their package lists, so on almost every box the plugin must be inert — the same reasoning as the existing uv gate for the pytest maps. nvim/lua/gerrrt/health.lua gains a :checkhealth gerrrt section that reports the gate (and, once loaded, the IDE lock file) so an absent <leader>a reads as intentional rather than broken. Installing the CLI itself stays out of Core: it is an npm/brew install and therefore OS-native.",
+              "kind": "perf"
+            },
+            {
+              "text": "Terminal buffers are escapable and navigable — nvim/lua/gerrrt/utils/term.lua (new). A Neovim terminal buffer forwards every keystroke to the program inside it, and both of Core's terminals call startinsert, so you land in terminal mode where Core's <C-h/j/k/l> (vim-tmux-navigator, normal mode only) never reach Neovim. The split reads as a trap. Neovim's reserved <C-\\><C-n> was always the way out, but nothing in the config said so — Core shipped no terminal-mode keymaps at all (mode = \"t\" appeared nowhere under nvim/). The defect was discoverability, not behavior. utils/term.lua now owns the rule, and both terminals opt in: Claude's split (plugins/claudecode-nvim.lua) and the pytest split (config/autocmds.lua), which shared the gap all along — it just never surfaced there, since that split is read-only output you glance at rather than a prompt you sit inside. Note :q needs normal mode too, so even closing one starts with <C-\\><C-n>. Buffer-local <M-h/j/k/l> leave terminal mode and navigate in one keystroke; cheatsheet.lua documents all of it as one Terminal buffers card rather than a copy per terminal, since the panel shows every card at once. The navigator's own <C-h/j/k/l> are deliberately not widened into terminal mode: <C-h> is ASCII 8 (backspace) and <C-j> is ASCII 10 (newline), so claiming them would break editing at an interactive prompt — <C-w> (delete-word) is out for the same reason. <M-…> is unclaimed by the TUIs involved; mini.move owns <A-h/j/k/l> in normal/visual only, a different mode. The maps stay buffer-local so a terminal Core did not open (:terminal, a plugin's own) keeps its keys untouched — for Claude's, the buffer is identified by asking the plugin (claudecode.terminal.get_active_terminal_bufnr()) rather than matching the term:// name, which would also hit a plain shell started in a directory containing the word \"claude\".",
+              "kind": "config"
+            },
+            {
+              "text": "Python workflow ergonomics for the Astral stack (uv/ruff/ty). Three small, additive changes that make the already-wired Python setup easier to drive day-to-day: - zsh/20-aliases.zsh adds uvr (uv run) and uvs (uv sync), guarded by a new HAVE_UV flag in zsh/00-tools.zsh so a bare box simply doesn't get them. uv run resolves the project's .venv itself, so these cover the daily loop without manual venv activation. - nvim/lua/gerrrt/config/autocmds.lua adds buffer-local pytest runners on Python buffers — <leader>tt (whole suite) and <leader>tf (current file) — running uv run pytest as an argv-form terminal job rooted at the uv project (not Neovim's cwd). Gated on uv being present, plugin-free (no neotest, matching the config's no-dap-ui/no-toggleterm stance), and complementing the existing DAP \"debug test method\" (<leader>dm). <leader>t is registered as the test group in nvim/lua/gerrrt/plugins/which-key.lua and documented in cheatsheet.lua; a headless probe in scripts/test-core.sh asserts the maps register on a Python buffer. - mise/config.toml documents the deliberate Python ownership split (mise supplies the global mise-managed interpreter for global tools; uv owns per-project envs) so the two managers' roles are explicit.",
+              "kind": "config"
+            },
+            {
+              "text": "mise now supplies the zig, terraform, and foundry toolchains. plugins/conform.lua declares zigfmt, terraform_fmt, and forge_fmt fleet-wide, so :checkhealth (and :checkhealth gerrrt) reported them as \"unavailable — command not found\" on every box lacking the binary. Adding them to mise/config.toml means mise install provides zig fmt, terraform fmt, and forge fmt (via foundry's forge) everywhere Core lands, with a note that foundry's glibc-linked prebuilt must be excluded via disable_tools / MISE_DISABLE_TOOLS on Alpine (musl), since mise merges global + local [tools] and omission alone doesn't drop an inherited tool.",
               "kind": "config"
             }
           ]
@@ -184,8 +153,218 @@
           "category": "Fixed",
           "items": [
             {
-              "text": "Cleared the rustaceanvim vim.lsp.get_buffers_by_client_id() deprecation warning (removed in Nvim 0.13). The v6 line still calls it, so the fix required bumping the version spec from ^6 to ^8 (the fix landed in v7.0.0) and the lockfile to v8.0.5. Chose ^8 over ^9 on purpose — v9's only breaking change is dropping Neovim 0.11 support, and Core vendors to a fleet that may not all be on 0.12; v8 keeps the fix and neovim >= 0.11. The v7/v8 breaking changes (ra-multiplex → lspmux, drop .vscode/settings.json) don't affect this config. (The remaining vim.validate{} warning is from diffview.nvim, which upstream hasn't fixed — removal isn't until Nvim 1.0, so it's benign.) (nvim/lua/gerrrt/plugins/rustaceanvim.lua, nvim/lazy-lock.json)",
+              "text": "buf-config is now a known filetype, silencing the :checkhealth vim.lsp \"Unknown filetype\" warning. nvim/lua/gerrrt/servers/buf_ls.lua advertises buf-config as one of buf_ls's filetypes, but nothing mapped buf's config files to it — so the health check flagged it and buf_ls never attached to buf.yaml / buf.gen.yaml. nvim/lua/gerrrt/config/autocmds.lua now registers buf's full v2 config surface (buf.yaml, buf.gen.yaml, buf.work.yaml, buf.policy.yaml, buf.lock) via vim.filetype.add, so the filetype is known (warning gone) and buf_ls serves them with buf-aware completion/diagnostics. Highlighting is preserved by aliasing buf-config to the yaml parser (vim.treesitter.language.register), which hands the buffers to nvim-treesitter's own install/start lifecycle. Covered by a new assertion in scripts/test-core.sh (each buf basename resolves to buf-config; the parser alias resolves to yaml).",
+              "kind": "config"
+            },
+            {
+              "text": "PORTING-MATRIX.md's openSUSE column no longer understates what Tumbleweed packages. Seven tools were marked bootstrap-only (script³/cargo³/go³) that the main OSS binary repo (repo-oss) now ships first-class — starship, atuin, yazi, viddy, ouch, doggo, ast-grep — so anyone stamping or maintaining dotfiles-openSUSE from the matrix was being told to build from source what zypper in already provides. Each now names its real package under a new footnote ¹⁸, which also records the caveat the audit could not close: Leap 15.x was not separately audited and rolls slower, so verify with zypper se there. Footnote ¹⁶ (viddy) dropped openSUSE from its \"not packaged\" list to match. Docs-only — no bootstrap.sh or packages.txt behavior changes. The correction also surfaced a latent overclaim: of the seven, only starship, atuin, yazi, viddy and doggo are actually installed by dotfiles-openSUSE's bootstrap.sh (presence-guarded, so a packaged binary short-circuits them). ouch and ast-grep have no installer there at all, so their old cargo³ cells promised a ³ fallback that never existed — footnote ¹⁸ now says so, and names packaging as their only automatic path.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.6.0",
+      "date": "2026-07-30",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": ":checkhealth gerrrt now reports LSP / formatter / linter readiness. The built-in :checkhealth vim.lsp only lists clients attached to the live session, so run from the dashboard it reads \"No active clients\" and says nothing about whether your configured tools are installed. Three new sections in nvim/lua/gerrrt/health.lua report per-tool state: - LSP servers — every wanted server (from nvim/lua/gerrrt/servers/init.lua) as attached / enabled-idle / pending-enable / binary-missing / override-failed, via a new read-only M.status() export that reuses the module's own wanted-list and binary_available(). It tracks registered (our override loaded) and enabled (we called vim.lsp.enable) as distinct facts — not inferred from vim.lsp.config[name], which also resolves upstream lspconfig defaults — so a failed override or an installed-but-not-yet- enabled binary is reported accurately. - Formatters (conform) — rendered from conform's own list_all_formatters() availability. - Linters (nvim-lint) — from linters_by_ft + the SAST semgrep, checking each linter's real builtin cmd. All three are side-effect-free: they observe package.loaded and never require() a plugin (which would force-load it and, for the LSP stack, register/enable servers before nvim-lspconfig's defaults are on the runtimepath), so from the dashboard they say \"open a file, then re-run\" rather than mutating the session. Missing binaries are info (not warnings) on DOTFILES_OFFLINE boxes. Covered by new assertions in scripts/test-core.sh (the D4 registry probe exercises status(); the checkhealth probe asserts all four sections render). (nvim/lua/gerrrt/health.lua, nvim/lua/gerrrt/servers/init.lua, scripts/test-core.sh)",
+              "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "Dev toolchain and plugin pins rolled forward. Routine freshness sweep. The gate toolchain was bumped in scripts/tool-versions.env (the single source — ci.yml and make setup read it, and the audit's consistency gate enforces the .pre-commit-config.yaml revs match it): shellcheck 0.10.0 → 0.11.0 (with its SHELLCHECK_SHA256 recomputed via scripts/update-tool-checksums.sh), markdownlint-cli2 0.22.1 → 0.23.2, and pre-commit-hooks v5.0.0 → v6.0.0. Plugin pins were rolled to upstream: the zsh zsh-transient-prompt pin (zsh/45-plugins.zsh) and four Neovim plugins in nvim/lazy-lock.json (nvim-lspconfig, package-info.nvim, rainbow-delimiters.nvim, schemastore.nvim). (scripts/tool-versions.env, .pre-commit-config.yaml, zsh/45-plugins.zsh, nvim/lazy-lock.json)",
               "kind": "perf"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": ":checkhealth gerrrt clipboard false alarm on native Windows. On the Windows host (where dotfiles-Windows vendors only nvim/ and never runs Core's bootstrap), the clipboard section warned \"Core's cross-OS clipboard scripts are not on PATH (clip: found, clip-paste: missing)\" — misleading, because clip only \"found\" as Windows' built-in clip.exe and the Unix/WSL clip/clip-paste ladder simply does not apply there: config/clipboard.lua wires an OS-appropriate provider instead (the clip-windows provider — clip.exe copy + PowerShell paste — when clip.exe is present, else the OSC52 fallback). nvim/lua/gerrrt/health.lua now detects native Windows (has(\"win32\"), false under WSL), records that the Unix probe is inapplicable, and defers to :checkhealth vim.provider for the live backend rather than running the ladder or re-deriving the provider itself. (nvim/lua/gerrrt/health.lua)",
+              "kind": "perf"
+            },
+            {
+              "text": "noice.nvim cmdline regex highlighting. Added the regex Tree-sitter parser to ensure_installed in nvim/lua/gerrrt/plugins/nvim-treesitter.lua. noice runs a floating command line (cmdline_popup), which uses the regex parser to syntax- highlight the pattern in :s/…/ substitutions and searches; without it, :checkhealth noice warned \"regex parser is not installed. Highlighting of the cmdline for regex might be broken.\" It installs on next launch via the existing ensure_installed diff.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "psmux power pill — the battery segment the macOS tmux bar has. New psmux/scripts/psmux-power.ps1, rendered right-most in status-right, which is where Core puts it too (its last slot is #{@status_right_os}, the hook each OS repo fills). It is the Windows port of Core's tmux/scripts/tmux-battery.sh and uses that scale, so the two *terminal* bars agree: green ≥60 / yellow ≥20 / red <20, with the level glyph swapped for a charging bolt on AC and the colour still tracking the level. One deliberate divergence — Core prints nothing when there's no battery, so its segment vanishes on a desktop; here it falls back to Zebar's AC placeholder, a lone green md-power-plug 󰚥, since an empty segment reads as a broken pill on a desktop-first host. Power state comes from SystemInformation.PowerStatus (one in-process GetSystemPowerStatus read), not Win32_Battery — a desktop returns nothing from the latter, so \"no battery\" and \"the query failed\" would be indistinguishable. Refreshed by the existing in-session timer alongside the VPN pill, so nothing new touches psmux's synchronous render path. psmux.conf seeds @pwr_pill with set -og (only-if-unset) so the desktop plug is right before the first tick, while a prefix + r reload can't clobber a live laptop reading. (psmux/, powershell/os/33-psmux-pill.ps1) Note this means the psmux bar and Zebar disagree between 40 and 60 % — deliberately. The bars are matched terminal-to-terminal (psmux ↔ Core tmux) and desktop-to-desktop (Zebar ↔ sketchybar), and those two references use different scales.",
+              "kind": "fix"
+            },
+            {
+              "text": "Test coverage for the power pill's every state. The dev box is a desktop, so the laptop branches would otherwise ship unexecuted. psmux-power.ps1 takes a -SimulateState testing seam (no host read, no poke) and tests/Repo.Tests.ps1 asserts each colour and glyph threshold — including that a charging 15 % battery stays red, which is the case a naive \"on AC → blue\" reading would silently hide.",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "The VPN/IP pill never rendered — a PowerShell splatting bug. psmux-netinfo.ps1 poked the bar with psmux set -g @vpn_pill $text. In argument position a bare @name is PowerShell's splatting operator, so the undefined $vpn_pill expanded to nothing and the option name was dropped from the command line entirely; psmux received a single positional and silently discarded the whole command — exit 0, nothing on stderr, option never set. Every other layer (detection, cache file, timer, psmux.conf) was working, which is why it survived so long. Fixed by quoting '@vpn_pill' / '@vpn_fg'. (psmux/scripts/psmux-netinfo.ps1)",
+              "kind": "perf"
+            },
+            {
+              "text": "A config reload repainted a live pill in the wrong colour. @vpn_fg was defaulted with a plain set -g, so every prefix + r overwrote whatever the refresher last poked. Because the pill's *text* is never defaulted, the two halves then disagreed until the next tick — up to a full refresh interval — and these pills encode their state in the colour: an active tunnel kept showing its address in the no-tunnel green, losing the orange that is the entire signal. Both colour options now use set -og (only-if-unset), which still guarantees a non-empty colour on first paint. Caught on review of the same mistake in @pwr_fg, where it would paint a 15 % battery healthy-green. psmux set -g @vpn_pill '', but an empty-string argument is dropped on the way to the exe and the set no-ops exactly like the splat above. Clearing now uses set -gu (unset). psmux-pill-disable clears the segment too, instead of only stopping the timer.",
+              "kind": "config"
+            },
+            {
+              "text": "Holding the prefix key shoved the IP pill two columns right. The prefix/mode indicator sits between #S and the pill with each branch padded to the same width — but the idle branch was three literal spaces, which psmux's parser collapsed to one (see the next entry), against a prefix branch of space + glyph + space that survived as three. The branches are now spaced with #{p<n>:} and are five rendered cells each, verified in both directions on a real terminal. A test asserts the three branches stay equal width, since eyeballing this is exactly what failed before.",
+              "kind": "fix"
+            },
+            {
+              "text": "Multi-space gaps in the status bar were rendering as a single space. psmux parses option values as split_whitespace() + join(\" \"), so every run of spaces collapses to one, quoted or not — which means the twelve-space cwd→clock gap added in #163 had never actually widened anything. Bar gaps now use #{p<n>:}, which pads an empty body at *render* time — after the parser has had its way — and is the same idiom Core's tmux.conf already uses (#{p19:}), so the two configs now read the same. The session→IP gap is wider as a result, and a test forbids multi-space runs in status-left/status-right so this can't silently regress. Note #{p<n>:} only works written directly in the config: a format arriving via a user option is not re-expanded, which is the same rule that keeps a #[…] style run from working inside @vpn_pill.",
+              "kind": "config"
+            },
+            {
+              "text": "Two stale psmux config tests. They asserted the pill was read via #(cmd /c type %LOCALAPPDATA%…) and passed only because that string still appeared in the *comment block* describing the retired transport — they had stopped testing anything real. Repointed at the live @vpn_pill / @pwr_pill segments, plus a static guard that every psmux set in the repo quotes its @option name, since the splatting bug above is invisible at runtime. (tests/Repo.Tests.ps1)",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "summary": "Core → Windows parity pass (2026-07). A focused sweep to close the drift that had built up between recent dotfiles-core / dotfiles-MacBook work and the Windows host, kicked off by a host :checkhealth dump. In short: the stale nvim/ mirror was re-vendored from Core (bringing the regex Tree-sitter parser and the new :checkhealth gerrrt LSP/formatter/linter readiness sections); the native-Windows clipboard false-warning was fixed upstream in Core and pulled in; the psmux :checkhealth tmux noise was documented as the cosmetic wart it is; and the two mid-2026 Core CLI tools the host still lacked were wired up — jnv (interactive JSON explorer) and a web terminal-browser verb (via lynx, since w3m has no scoop manifest). Status-bar redesign (2026-07/08). The parity pass then widened into a full bar rework across both surfaces the host draws — psmux (terminal) and Zebar (desktop) — with macOS sketchybar as the reference. Both converged on the same chip-less items on a transparent bar language, and PARITY.md was rewritten to describe the three-island layout the macOS bar had already drifted to (adopt, not revert), so the shared contract is true for both hosts again. Several entries below are live-testing fixes from actually running it. Per-change detail below.",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "jnv — interactive JSON explorer (fleet parity with Core's HAVE_JNV). Added to packages/scoopfile.json (scoop Main). A jq-filter editor with a collapsible viewer that fills the \"explore an unfamiliar JSON response\" gap between jq (transform) and gron (grep). Its own command with no alias — jnv file.json or pipe into it — like jq/yq/ gron. This also retires the old jless-was-left-out caveat in docs/TOOLS.md: jnv is the packaged interactive explorer now.",
+              "kind": "feature"
+            },
+            {
+              "text": "web — terminal web browser verb (parity with Core's web). Added a guarded web function in core/00-aliases.ps1 that resolves w3m→lynx→links→elinks and runs the first present (skipped entirely when none is installed, matching Core). w3m has no scoop manifest, so the host packages lynx (Core's own next fallback; scoop Main) in scoopfile.json. Unlike Core's headless path, $BROWSER is never exported — the Windows host is GUI-first, so web stays an explicit opt-in verb.",
+              "kind": "config"
+            },
+            {
+              "text": "**Command-block separators (parity with Core's _cmd_block_*). A thin full-width rule is drawn above each prompt that followed a command, colored by exit status — dim (#414868) on success, red (#f7768e) on failure — turning scrollback into scannable blocks. Ported as precmd/preexec (not** a key handler, so it can't collide with PSReadLine vi-mode): the AddToHistoryHandler sets $global:DotCmdBlockRan (a bare Enter never accepts a line, so no rule is drawn on an empty prompt), and Invoke-Starship-PreCommand draws the rule via [Console]::Write. Colour tracks $LASTEXITCODE (the status reliable at that point); pure-cmdlet failures still surface in starship's [status]. (powershell/core/10-tools.ps1)",
+              "kind": "feature"
+            },
+            {
+              "text": "Zebar caffeine / keep-awake indicator. A placeholder matching sketchybar's caffeinate.sh — grey asleep, yellow awake — in the left island. Visual only for now: it renders state but doesn't yet drive a keep-awake mechanism on the host (see the Caffeine component comment in the HTML). (desktop/zebar/vanilla-clear/)",
+              "kind": "feature"
+            },
+            {
+              "text": "Zebar battery shows an AC-power placeholder on desktops. A machine with no battery rendered nothing at all, leaving a gap in the right island; it now shows a green plug glyph. (desktop/zebar/vanilla-clear/)",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "Re-vendored nvim/ from Core (was v4.4.0-3, now current). Brings the Core changes that had not yet reached the host: the regex Tree-sitter parser (silences :checkhealth noice's \"regex parser is not installed\" cmdline-highlighting warning), the new :checkhealth gerrrt LSP / formatter / linter readiness sections, and the servers/init.lua read-only status() export those sections consume. nvim/.core-ref updated to the synced commit. (nvim/, via nvim-sync.ps1)",
+              "kind": "feature"
+            },
+            {
+              "text": "Re-synced nvim/ to Core main a53ac4f — a follow-up mirror picking up the lazy-lock.json plugin-pin refresh (4 SHAs); nvim/.core-ref re-pointed from the pre-merge branch tip to main. starship.toml verified byte-identical to Core (no sync needed). (nvim/lazy-lock.json, nvim/.core-ref)",
+              "kind": "perf"
+            },
+            {
+              "text": "Windows Terminal cursor → bar — cursorShape filledBox → bar to match MacBook's ghostty cursor-style = bar for cross-terminal parity. (windows-terminal/settings.json)",
+              "kind": "config"
+            },
+            {
+              "text": "psmux status bar → Core's centered floating-island look. Ported Core tmux.conf's island redesign to psmux/psmux.conf: a 2-line, centered, transparent bar (status 2 + blank status-format[1], status-justify centre — later absolute-centre, see Fixed — status-style bg=default, bg=default pill caps + pane borders) with flat underlined window tabs and monitor-activity • dots for unseen output (psmux has no monitor-bell) — replacing the old left-justified opaque-pill bar. All five psmux features were probed as supported (psmux 3.3.7) before porting. Stays within psmux's no-shell-out / no-process-table rules: the cwd pill keeps #{b:pane_path} (OSC 7) and Core's nvim-gated pane_current_path segment is intentionally not ported. (psmux/psmux.conf)",
+              "kind": "fix"
+            },
+            {
+              "text": "Zebar adopts sketchybar's floating-islands design, and PARITY.md now describes it. The macOS bar had drifted to a 3-island look (transparent bar + bordered panels) without the shared contract being updated, so PARITY.md was false for one host. Resolved by adopting, not reverting: the bar goes transparent and .left/.center/.right each become a rounded island (rgba(29,32,47,0.93) fill, 2px rim, r=9) accented blue/magenta/ green. Weather moves into the left island (stable-width, non-urgent); two grey │ separators chunk the right island into I/O · load · power, each gated on its own group so a provider-startup transient can't leave a stray separator leading the island. PARITY.md (identical copy in dotfiles-MacBook) rewritten to match: three islands, weather left, transparent bar geometry, blur off, purple un-reserved and orange added to the palette. Not render-verified on a Windows host — reload Zebar and eyeball. (desktop/zebar/vanilla-clear/, desktop/PARITY.md)",
+              "kind": "perf"
+            },
+            {
+              "text": "psmux bar is chip-less. Dropped the rounded pill caps (@cap_l/@cap_r) from the session / cwd / clock / IP segments in favour of plain coloured icon+text on the transparent bar — matching sketchybar, Zebar, and PARITY.md's \"items are chip-less\" spec. Also fixes the prefix and copy-mode glyphs being clipped by the cap they sat against. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
+              "kind": "fix"
+            },
+            {
+              "text": "Default psmux session renamed main → Gerrrt — both the 30-windows.ps1 auto-launch and the mux verb default in 32-psmux.ps1, with the docs/comments that still said main updated to match. (psmux/, docs/TOOLS.md, TERMINAL_WORKFLOW_GUIDE.md)",
+              "kind": "config"
+            },
+            {
+              "text": "Zebar weather reads °F instead of °C (fahrenheitTemp). (desktop/zebar/vanilla-clear/vanilla-clear.html)",
+              "kind": "config"
+            },
+            {
+              "text": "Zebar workspace pills match sketchybar's aerospace.sh. Only the focused workspace is highlighted (blue background, dark text); every other one is a plain grey number with no chip — GlazeWM's .displayed distinction is deliberately dropped for macOS parity, since aerospace shows only the single focused workspace. (desktop/zebar/vanilla-clear/styles.css)",
+              "kind": "config"
+            },
+            {
+              "text": "Zebar spacing and font tuning from live use on a large external monitor. --item-gap 20px → 8px to match sketchybar's per-item padding (padding_left 4 + padding_right 4); left-island items dropped from a 16px to an 8px margin so both islands read at the same density; --bar-font-size 16px → 18px, since sketchybar's ~17pt suits a laptop panel but reads too small on a large panel (still fits the 28px island; 20px is the next comfortable step). (desktop/zebar/vanilla-clear/styles.css)",
+              "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "psmux tabs no longer drift off-center — status-justify absolute-centre. Plain centre (Core's value) centers the window list in the gap between status-left and status-right, so the host's variable-width session pill (wider while prefix is active) and the #{b:pane_path} cwd in status-right pushed the tabs off the true middle — most visibly as a jump when a pane running nvim widened the right float. Switched to absolute-centre, which anchors the tabs to the bar's absolute center regardless of either float's width. Deliberate divergence from Core's centre (see docs/PORTING-NOTES.md); probed on psmux 3.3.7. This is the real fix for the tab-shifting the equal-width prefix cell below was working around. (psmux/psmux.conf)",
+              "kind": "fix"
+            },
+            {
+              "text": "psmux IP / VPN pill rendered blank. Two distinct causes, found in that order. First, psmux.conf ran set -gq @vpn_pill \"\", which clobbered the refresher's poked value on every source-file reload — removed, so #{@vpn_pill} persists what the refresher sets. The segment still rendered empty, because the option was poked as a single pre-styled string ('#[fg=#9ece6a,bold]<glyph> <ip>') and an option value embedding a #[…] style run is not re-interpreted when the format expands it. That's why psmux-pill-status showed a populated cache (a plain file write, a separate code path) while the bar stayed empty. Split the transport to mirror the proven @tn_* colour pattern: @vpn_pill carries plain text only, @vpn_fg carries the accent hex, applied in status-left as #[fg=#{@vpn_fg}]#{@vpn_pill}. Only the colour is defaulted in the conf (so it's never empty on first paint); defaulting the text is what caused the original clobber. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
+              "kind": "perf"
+            },
+            {
+              "text": "psmux prefix indicator style leaked into the window tabs. A #[default] reset after #{@vpn_pill} stops the pill's bold/fg bleeding into the tabs. The indicator was also widened to an equal-width padded cell ( 󰠠 / idle ) so its branches couldn't shift the tabs — kept for stable width, though absolute-centre above is what actually holds the tabs still. (psmux/psmux.conf)",
+              "kind": "config"
+            },
+            {
+              "text": "psmux nvim cwd jammed against the clock. Two passes: the status-right cwd↔clock gap sat inside a #{?} branch and psmux trims in-branch trailing spaces, so it was moved outside the branch — then widened (6 → 12 spaces) once the branch fix made the gap actually render and it was still too tight to read. (psmux/psmux.conf)",
+              "kind": "fix"
+            },
+            {
+              "text": "psmux config warning: unknown option 'monitor-bell'. psmux 3.3.7 doesn't implement monitor-bell at all — its CLI setw/set returns exit 0 (so the capability probe was a false positive) but the config parser rejects it on load. Removed the setting; monitor-activity (which psmux does support) stays, so activity dots still work — only the bell dot is inert. (psmux/psmux.conf)",
+              "kind": "config"
+            },
+            {
+              "text": "Zebar network readout rendered white instead of blue. The .network module had no color class, so only its glyph got the global blue while the ↓↑ throughput values fell back to fg (white). Added .network { color: var(--tn-blue) } so icon and values are blue, matching sketchybar's network.sh (icon + label accent). (desktop/zebar/vanilla-clear/styles.css)",
+              "kind": "feature"
+            },
+            {
+              "text": ":checkhealth gerrrt no longer false-warns about the clipboard on the host. It read \"Core's cross-OS clipboard scripts are not on PATH (clip: found, clip-paste: missing)\" — misleading, since clip only resolved to Windows' built-in clip.exe and the Unix/WSL clip/clip-paste ladder does not apply on the host: config/clipboard.lua wires the clip-windows provider (clip.exe copy + PowerShell paste) instead. Fixed upstream in Core (health.lua now detects native Windows via has(\"win32\") and defers to :checkhealth vim.provider for the live backend) and pulled in with the nvim re-vendor above.",
+              "kind": "perf"
+            }
+          ]
+        },
+        {
+          "category": "Docs",
+          "items": [
+            {
+              "text": "Documented the psmux :checkhealth tmux cosmetic wart in docs/PORTING-NOTES.md: psmux has no show-option verb, so Neovim's built-in vim.health tmux probe shows ❌ ERRORs and a false \"true color could not be detected\" ⚠️ — cosmetic only (psmux renders 24-bit colour natively; nothing functional is affected), and not shimmed on purpose.",
+              "kind": "config"
+            },
+            {
+              "text": "Refreshed the stale \"re-vendor nvim/\" manual step (the full tree is now vendored via nvim-sync.ps1, and the old <leader>rc keymap wart is fixed upstream), and dropped the now-inaccurate \"Known Windows wart\" banner nvim-sync.ps1 printed after each sync.",
+              "kind": "fix"
             }
           ]
         }
@@ -241,730 +420,405 @@
           ]
         }
       ]
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "groups": [
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "QuickLook (QL-Win.QuickLook) — macOS-style spacebar file preview added to the optional gui winget group (winget.json + packages.lock.json). Opt-in like the rest of the group; deliberately kept out of the core set. Flow Launcher was considered and left out — it overlaps PowerToys Run, which the desktop group already installs.",
-              "kind": "feature"
-            },
-            {
-              "text": "Everything (voidtools) instant file search + its es CLI. everything (the MFT-indexed search service, extras bucket) and everything-cli (the es command, main bucket) added to scoopfile.json + packages.lock.json. es pairs with the shell — es foo | fzf, or as an FZF_DEFAULT_COMMAND source — and needs the Everything service running, which is why both are installed together.",
-              "kind": "feature"
-            },
-            {
-              "text": "windows/defaults.ps1 — Windows preferences as code (the pwsh twin of the sibling dotfiles-MacBook repo's macos/defaults.sh). A handful of privacy/telemetry + Explorer tweaks (disable the advertising ID, Start-menu suggestions, Bing-in-Start; show file extensions; open to This PC) codified as idempotent HKCU registry writes — no admin, nothing machine-wide. -DryRun previews, -RestartExplorer applies shell changes now. The point: the tweaks live in git (diffable, reproducible) instead of a one-shot debloat GUI. Standalone/opt-in — it is not wired into install.ps1.",
-              "kind": "config"
-            },
-            {
-              "text": "jujutsu (jj) config on the host. New jj/config.toml — the host-side twin of Core's core/jujutsu/config.toml — is symlinked to %APPDATA%\\jj\\config.toml (jj's native Windows config location) via Get-DotfilesLinkPlan, so the jjs/jjl/jjd aliases land on the same log-first, colocated-git setup as the Unix fleet. Windows-safe deviation: the pager is jj's built-in (:builtin) since Core's less -FRX isn't on the host. Identity stays unset (set once per machine with jj config set --user …).",
-              "kind": "config"
-            },
-            {
-              "text": "Windows↔Mac terminal parity pass — the PowerShell/psmux/Windows Terminal stack now matches the Core (zsh) baseline the Mac inherits, wherever it's reproducible. - Git shorthands: the full curated git.zsh set (~55 g* verbs) is now on the host — gap, the gca/gcam/gc!/gcn! commit family, gb* branch, gcb/gcom/ gsw/gswc/gswm checkout/switch, gds/gdw, gloga/glol/glola, gf/gfa/ gpr/gpu, gpf = push --force-with-lease (the safe force), the gsta* stash and grb* rebase families, grh/grhh/grs/grss, gr/grv/gm/gma, plus gdft (difftastic) and jjs/jjl/jjd (jujutsu). The built-in PowerShell aliases that shadow a git shorthand (gc→Get-Content, gcm→Get-Command, gp→Get-ItemProperty, gl→Get-Location, gm→Get-Member, gcb→Get-Clipboard) are removed at load so the functions win — which also fixes gl/gc/gcm/gp, previously shadowed and silently not doing their git thing. gbD (force-delete) is dropped: PowerShell is case-insensitive, so it can't coexist with gbd (use gbd -D). - Modern-CLI aliases: df→duf, fm/y→yazi, top/htop→btop, tree→eza, ping→gping, cdi→zoxide interactive, and notes. - Functions: ports (listening sockets + process), cdup, fcd, genpw (crypto RNG), please (elevated re-run of the last command), and pullall (parallel fast-forward of every repo under a dir). - Tools: gping, difftastic, and jj (jujutsu) added to scoopfile.json (+ packages.lock.json); the difftastic difftool + dft alias added to git/.gitconfig. - psmux keys: full-span splits (\\/_), zoom (m), kill/swap (x/X), toggle titles (P), synchronize-panes (*), a floating popup (F), window cycling (Alt+Shift+H/L), rename/kill window (,/&), enriched vi copy-mode (Enter/v/C-v/Escape), R/S/d QoL, double-tap-prefix → last-window, and a new prefix + u URL picker (psmux-url.ps1, host port of tmux-fzf-url). The cheatsheet moved from prefix + D to prefix + ? to match Core's tmux. - Ctrl+\\ now toggles PSReadLine predictions, mirroring zsh's autosuggest-toggle.",
-              "kind": "fix"
-            },
-            {
-              "text": "A real winget import-compatible manifest and a winget configure baseline. winget.json is this repo's own shape ({ packages: [ id | { id, group } ] }) so the installer can carry optional-group tags — which means it is not consumable by winget import. New packages/Export-WingetImport.ps1 projects it down to the official export schema at packages/winget-import.json, so a fresh box restores the whole set in one command (winget import -i packages/winget-import.json …); -Frozen pins versions from packages.lock.json. New root configuration.dsc.yaml goes further — an idempotent winget configure baseline that also enables Developer Mode (symlinks without an admin prompt).",
-              "kind": "config"
-            },
-            {
-              "text": "Windows Terminal \"PowerShell (JetBrains Mono)\" profile. JetBrainsMono-NF was installed by scoopfile.json but unused; it now has a home as a second pwsh profile, alongside the CaskaydiaCove default.",
-              "kind": "config"
-            },
-            {
-              "text": "PSReadLine F2 toggles the prediction view (inline ghost ⇄ multi-row ListView) on demand, and the prediction UI is now tinted to the Tokyo Night palette instead of PSReadLine's default grey. The low-churn InlineView stays the default.",
-              "kind": "config"
-            },
-            {
-              "text": "Tab-completion of local branch names for bare git after a ref-consuming verb (checkout/switch/merge/rebase/branch) — filling the gap left by running no posh-git.",
-              "kind": "feature"
-            }
-          ]
-        },
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "Windows Terminal now matches Ghostty's look: default font size 13 → 16 and useAcrylic: true (opacity stays 90) so the background is frosted glass like Ghostty's background-blur, rather than flat 90% opacity. The JetBrains Mono profile is bumped to 16 too.",
-              "kind": "config"
-            },
-            {
-              "text": "PSReadLine history depth raised 50000 → 200000, matching Core's zsh HISTSIZE/SAVEHIST.",
-              "kind": "config"
-            },
-            {
-              "text": "delta already followed the Tokyo Night ansi theme here; Core adopts ansi too (was TwoDark) so git diff renders identically on both OSes.",
-              "kind": "config"
-            },
-            {
-              "text": "Windows Terminal opts into the AtlasEngine renderer explicitly (useAtlasEngine: true in profiles.defaults) — it's the modern default, but the setting documents intent and guards an older WT build.",
-              "kind": "config"
-            },
-            {
-              "text": "dotfiles-doctor and core version spawn one fewer git per run. The \"Repo version\" detail collapsed two of its three git invocations into a single git log -1 --format='%h%n%cs'.",
-              "kind": "config"
-            },
-            {
-              "text": "GlazeWM keymap reconciled with the Mac's AeroSpace into one shared cross-OS keymap. The tiled desktop now has identical muscle memory on Windows and macOS: desktop/glazewm/config.yaml is kept keystroke-for-keystroke in step with dotfiles-MacBook/aerospace/aerospace.toml. Workspaces trimmed from 9 to 5 (matching AeroSpace's persistent 1–5); resize mode is now HJKL-only (arrow duplicates removed). Bindings with no identical AeroSpace equivalent were dropped for strict parity: minimize (Alt+M), toggle-tiling (Alt+T), pause mode (Alt+Shift+P), redraw (Alt+Shift+W), exit-WM (Alt+Shift+E), and directional move-workspace-to-monitor (Alt+Shift+A/S/D/F). Quit GlazeWM from its system-tray icon now that wm-exit has no bind. desktop/README.md updated to match.",
-              "kind": "config"
-            }
-          ]
-        },
-        {
-          "category": "Removed",
-          "items": [
-            {
-              "text": "Dropped Visual Studio Code, Obsidian, and Firefox from the winget manifest. VS Code was a core (always-installed) package; Obsidian and Firefox sat in the optional gui group. All three are editor/browser/app preferences rather than part of the host toolchain, so they're no longer installed by bootstrap/install.ps1. Removed from winget.json and packages.lock.json (the gui group is now just 1Password — the app and its CLI). Existing installs are untouched — this only stops future auto-installs; add any back by hand (winget install …) if you want it.",
-              "kind": "config"
-            }
-          ]
-        },
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "The multi-flavor Windows Terminal settings link no longer prints a \"target folder not found — skipping\" warning per flavor you don't have. After the three-flavor support landed (Store / unpackaged / Preview), install.ps1 warned once for each absent flavor and dotfiles-doctor showed three link rows (two forever \"skipped\") — noise, since you normally have exactly one WT install. Both now treat the flavors as a group: link whichever is present, stay silent about the rest, and warn/skip once only when no Windows Terminal is installed at all.",
-              "kind": "config"
-            },
-            {
-              "text": "Windows Terminal settings now link for a scoop/unpackaged or Preview WT, not just the Store build. Get-DotfilesLinkPlan (powershell/core/05-lib.ps1) hardcoded the packaged …WindowsTerminal_8wekyb3d8bbwe\\LocalState path, and the row self-skips when that parent is absent — so an unpackaged WT silently never got its settings.json. Two more plan rows cover %LOCALAPPDATA%\\Microsoft\\Windows Terminal\\ (unpackaged) and the …WindowsTerminalPreview… package; only the installed flavor's row links.",
-              "kind": "config"
-            },
-            {
-              "text": "packages.lock.json pinned 1Password to a range (> 8.12.24.34), not an exact version — defeating -Frozen reproducibility for that one package. Pinned to an exact version (regenerate on a real box with Update-PackageLock.ps1).",
-              "kind": "fix"
-            },
-            {
-              "text": "GlazeWM and Zebar failed to install (winget … NO_APPLICATIONS_FOUND). The desktop group used the CamelCase winget IDs glzr-io.GlazeWM / glzr-io.Zebar, but the community manifests publish them lowercase (glzr-io.glazewm / glzr-io.zebar) and winget install -e is case-sensitive — so both were skipped while PowerToys/TranslucentTB installed fine. Corrected the IDs in winget.json, packages.lock.json, and the docs.",
-              "kind": "fix"
-            },
-            {
-              "text": "bootstrap.ps1 handoff to install.ps1 failed with \"A positional parameter cannot be found that accepts argument '$null'\". When no DOTFILES_BOOTSTRAP_ARGS were set (the common case), Get-BootstrapInstallArgs returned @(), which PowerShell unrolls to $null on assignment; splatting $null into the switch-only install.ps1 passed a literal $null positional argument. The call site now wraps the result in @() and guards the splat, so a fresh .\\bootstrap.ps1 (or the irm | iex one-liner) runs the installer cleanly.",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "Zebar bar gains pomodoro, media controls, and a power menu. Cherry-picked from Gerrrt/yasb-glazewm-config into the vanilla-clear widget: a 25/5 pomodoro (click to start/pause, right-click to reset), now-playing title/artist with prev/play-pause/next (Zebar media provider), and a lock/sleep/restart/shutdown power menu (via shellExec, with shutdown/rundll32 whitelisted in zpack.json's privileges.shellCommands). The zebar client import is bumped to the @3 major to match the pinned app so those providers/APIs are present.",
-              "kind": "config"
-            },
-            {
-              "text": "Opt-in tiling-desktop layer (desktop/). A new optional layer that rices the desktop on top of the shell host, adapted from Gerrrt/make-windows-pretty and retuned to the fleet's Tokyo Night Storm palette. Ships GlazeWM (i3-style tiling WM), a Zebar top bar (the buildless-React vanilla-clear widget as a native Zebar v3 widget pack (zpack.json), wired to GlazeWM for live, clickable workspaces), and adds PowerToys + TranslucentTB. All four install via the new desktop optional package group in winget.json (opt out at the picker or with DOTFILES_PKG_GROUPS), pinned in packages.lock.json. desktop/glazewm/config.yaml and the Zebar widget are symlinked into ~/.glzr by the shared link plan, so dotfiles-doctor verifies them and uninstall.ps1 removes them. The GlazeWM keymap is deliberately re-bound off Alt+<arrow> (which Windows Terminal uses for pane focus) to vim keys (Alt+H/J/K/L), and Alt+Enter launches wt. Setup + full keymap in desktop/README.md.",
-              "kind": "config"
-            },
-            {
-              "text": "duf added to the scoop manifest. The one modern-CLI tool core-doctor probes for that was missing from the Windows package set (macOS's Brewfile and the Linux lists lacked it too) — now installed from scoop main and pinned in packages.lock.json, closing the last doctor-tool gap on Windows.",
-              "kind": "config"
-            },
-            {
-              "text": "/release-readiness + /release-notes routines (.claude/commands/ + .github/workflows/claude-routines.yml). The Windows twin of Core's release routines: release-readiness reads the Conventional Commits + CHANGELOG since the last deliberate release and files a go/no-go verdict with the recommended next version — purpose-built for Windows' quirk that auto-tag patch-bumps on nvim/starship mirror-syncs, so meaningful feat/perf work drifts under patch tags (the tag line has run ahead of the CHANGELOG headings); release-notes drafts the CHANGELOG entry from those commits. Both report-first (file a deduped issue, change nothing). release-notes is dispatch-only; release-readiness also runs a monthly nudge. Inert by default — dormant until a CLAUDE_CODE_OAUTH_TOKEN repo secret is added. Run via Actions → claude-routines → Run workflow → routine.",
-              "kind": "security"
-            }
-          ]
-        },
-        {
-          "category": "Documentation",
-          "items": [
-            {
-              "text": "README second-pass polish. The dotgibson shield now tracks the dotfiles-core release version (the system's version); dropped the showcase and LinkedIn shields for a one-line header (LinkedIn moved to Contact); \"Explore the docs »\" and the [docs] link now point at the documentation hub root (/docs); and About gained Languages (PowerShell) + Tools (Windows Terminal, Scoop, WinGet, psmux) subsections. The machine-checked Layout box and bootstrap SHA marker are unchanged.",
-              "kind": "other"
-            },
-            {
-              "text": "README rebuilt as a lean showcase landing page. Brought the README up to the dotfiles-core exemplar bar — a reference-style shields header, the org logo, a collapsible TOC, then a lean body (lead, three-layer at-a-glance, real Getting Started, a host-specific contribution contract, License/Contact). The lead states plainly that this host replicates Core in PowerShell rather than vendoring it. Deep detail (the fragment loader, coverage gate, and WSL bridge) now defers to the documentation hub and the migrated architecture audit. Added a .markdownlint.jsonc (mirrored from Core) scoping the showcase HTML via MD033 allowed_elements.",
-              "kind": "perf"
-            },
-            {
-              "text": "aliases.md was missing three whole sections. os/33-psmux-pill.ps1 (psmux-pill-now/-enable/-disable/-status), os/40-maint.ps1 (maint-install/-run/-log/-status/-uninstall), and os/45-doctor.ps1 (dotfiles-doctor) had zero cheat-sheet coverage. Added sections for all three, and filled in the corresponding CLAUDE.md \"Where things are\" gaps (git/, maint/, ssh/, docs/, tests/).",
-              "kind": "feature"
-            }
-          ]
-        },
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "fix(module): the Dotfiles module surface runs under Set-StrictMode -Version Latest. The non-interactive helper surface (Dotfiles.psm1 → core/05-lib.ps1 + the *.Helpers.ps1) had no strict-mode guard, so a typo'd variable, a missing property, or a bad array index silently returned $null instead of erroring. StrictMode is now set inside the module — scoped to the module, so even under Import-Module -Global the interactive session stays lenient (a blanket StrictMode on the dot-sourced interactive layer would change everyday shell behaviour, which is why it stays off there). The Serve/Doctor/Help/WslBridge suites already exercise the surface via Import-Module, and Lib.Tests.ps1 now sets StrictMode too, so CI validates the helpers under strict mode.",
-              "kind": "fix"
-            },
-            {
-              "text": "fix(profile): the local-modules PSModulePath dedup guard compares literally. profile.ps1 used -notlike \"*$LocalModules*\", which treats the path as a wildcard pattern — a %LOCALAPPDATA% containing [ or ] (e.g. a user[1] name or a redirected profile) could mis-fire the guard and re-prepend PSModulePath on every shell start. It now splits on the path separator and uses -notcontains (a literal, case-insensitive compare).",
-              "kind": "fix"
-            },
-            {
-              "text": "Runaway git.exe processes that blocked updating git. git gets spawned all the time without you asking — starship's git_* prompt modules on every render, the background scoop update bucket pulls in core/15-update.ps1, the daily maint job. Any of those can wedge on an INTERACTIVE credential prompt (git's own terminal prompt, or a Git Credential Manager dialog) in a context with nobody to answer, so the git.exe waits forever and the next spawn stacks another — hundreds of orphans that hold the git binary busy so scoop update git / winget upgrade Git.Git can't replace it. Fix: a new early fragment core/08-git-safety.ps1 exports GIT_TERMINAL_PROMPT=0 + GCM_INTERACTIVE=Never (before 15-update and the prompt tools load) so shell-spawned git FAILS FAST instead of blocking on auth; escape hatch DOTFILES_GIT_ALLOW_PROMPT=1, and an already-set value is honoured. Adds a git-reap (Reset-StuckGit) verb to kill a pile that already formed. Paired with Core pinning starship command_timeout (reaps read-only prompt-git that wedges on a slow FS), synced into starship/starship.toml here (.core-ref bumped).",
-              "kind": "security"
-            },
-            {
-              "text": "Large multi-line pastes no longer switch modes / reorder text / run vim commands. Root cause: core/10-tools.ps1 sets EditMode Vi, and PSReadLine versions before 2.2.0 have no bracketed-paste support, so a pasted block is replayed keystroke-by-keystroke and :/d/i/a/o/Esc are taken as Vi commands. Fix: bumped the PSReadLine pin in packages/modules.ps1 from 2.2.0 to 2.3.6 (the current gallery release; first paste-safe release is 2.2.0), kept Vi mode (deliberate parity with Core's zsh-vi-mode), and added a cheap (Get-Module PSReadLine).Version guard that emits a one-line Write-DotWarn with the upgrade command if a stale in-box PSReadLine (< 2.2.0) is loaded, so a stale box self-diagnoses. tests/Repo.Tests.ps1 now asserts the >= 2.2.0 floor.",
-              "kind": "fix"
-            },
-            {
-              "text": "Windows nvim plugins are now pinned to Core's lazy-lock.json like the rest of the fleet. nvim-sync.ps1 previously excluded lazy-lock.json from the robocopy /MIR (/XF) as \"env-specific\" — but it pins plugin commit SHAs, which are cross-platform, so Windows nvim floated on plugin HEAD while every Unix repo (and Core's weekly nvim-lock bot) stayed pinned. The sync now mirrors it; the file is removed from .gitignore, committed (from Core v2.4.1), and the nvim parity gate (tests/Assert-NvimParity.ps1) now includes it so the pin can't drift. Also bumped stale nvim/.core-ref provenance from v2.3.0 (6e923f9) to v2.4.1 (75195df) so fleet-drift stops falsely reporting Windows behind.",
-              "kind": "perf"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "summary": "2026-06-29 — DX/UX overhaul — A structural + terminal-UX pass focused on a world-class bootstrap and shell experience, grouped by theme.",
-      "groups": [
-        {
-          "category": "Security / robustness (install)",
-          "items": [
-            {
-              "text": "install.ps1 now uses -LiteralPath for every existence/copy/move/remove in Link-Item and the seed/ppm steps. Bare Test-Path/Copy-Item/Move-Item treat [/] as wildcards, so a profile path containing brackets could read an existing real config as absent — skipping the back-up branch and clobbering it with no .bak. Brackets are now matched literally.",
-              "kind": "config"
-            },
-            {
-              "text": "DOTFILES_PPM_REF is rejected when it begins with -, closing the argument-injection seam (e.g. --upload-pack=…) that bootstrap.ps1 already guards for DOTFILES_REF. The ppm git checkout also gained a -- ref/pathspec separator to match (disambiguation, not the injection guard).",
-              "kind": "fix"
-            },
-            {
-              "text": "Dependency probes scoped to real executables — Get-Command gum/git/scoop/winget now pass -CommandType Application, so a user-defined function/alias of the same name can no longer satisfy a presence check (the repo's profile encourages such wrappers, which previously could flip Test-DotGum true with no real gum).",
-              "kind": "other"
-            }
-          ]
-        },
-        {
-          "category": "CI / structure (backend)",
-          "items": [
-            {
-              "text": "nvim-sync bot (.github/workflows/nvim-sync.yml) — runs nvim-sync.ps1 weekly (and on demand) and opens a PR when Core's nvim/ tree has actually moved ahead, so the host editor config can't silently fall behind. Judges drift on the Lua tree only (ignores .core-ref's per-run timestamp). First-party (GITHUB_TOKEN + gh), no third-party action.",
-              "kind": "config"
-            },
-            {
-              "text": ".core-ref records the Core release tag — nvim-sync.ps1 now stamps a tag field (git describe --tags of the vendored commit) alongside commit, so dotfiles-core's fleet-drift.sh can label the Windows row by release name (e.g. v2.0.0) like the Unix repos' core.lock core_tag, instead of a bare SHA. Best-effort and backward compatible: the line is omitted when Core carries no tag (the commit SHA stays the source of truth and the drift verdict). Read path covered by a new Get-CoreRefField test case.",
-              "kind": "feature"
-            },
-            {
-              "text": "package-freshness bot (.github/workflows/package-freshness.yml + packages/Check-PackageFreshness.ps1) — weekly on windows-latest, resolves the live scoop/winget version of each managed app and files a deduplicated findings issue when any is ahead of packages.lock.json. Findings only: re-pinning still runs locally via Update-PackageLock.ps1 (it needs the apps installed).",
-              "kind": "other"
-            },
-            {
-              "text": "Hermetic, incremental CI — GitHub Actions pinned to commit SHAs; Pester and PSScriptAnalyzer pinned to exact versions; PSGallery modules cached; a detect-changes gate skips the Windows jobs for docs-only changes.",
-              "kind": "perf"
-            },
-            {
-              "text": "PSScriptAnalyzer signature gate — after the pinned install, CI asserts the module manifest is Authenticode Valid and Microsoft-signed before running the analyzer, failing the build otherwise. Closes the last supply-chain gap in the fleet-wide CI-tool-download hardening (the Windows analogue of the SHA-256 verification the Linux gate tools get via dotfiles-core's setup-core-tools).",
-              "kind": "security"
-            },
-            {
-              "text": "Coverage gate — Pester enforces ≥85% coverage on the pure-helper library.",
-              "kind": "other"
-            },
-            {
-              "text": "uninstall.ps1 — reverse the bootstrap; removes only symlinks that point back into the repo, with -DryRun / -RestoreBackups.",
-              "kind": "other"
-            },
-            {
-              "text": "Pre-commit hook — .githooks/pre-commit runs the dependency-free validator; install.ps1 wires core.hooksPath.",
-              "kind": "other"
-            },
-            {
-              "text": "Fragment-load health gate — the profile records any fragment that fails to load; dotfiles-doctor reports it.",
-              "kind": "other"
-            },
-            {
-              "text": "More host-layer tests — extracted pure helpers (ConvertTo-WslPath, Get-FragmentHealthResult, the uninstall link map) with behavioral tests.",
-              "kind": "other"
-            },
-            {
-              "text": "Pinned module floors — packages/modules.ps1 carries -MinimumVersion floors for a reproducible baseline without freezing maintenance updates.",
-              "kind": "other"
-            },
-            {
-              "text": "Dependabot for the pinned actions.",
-              "kind": "other"
-            },
-            {
-              "text": "Install transcript log under %LOCALAPPDATA%\\dotfiles\\logs.",
-              "kind": "other"
-            },
-            {
-              "text": "editorconfig enforcement (final newline / trailing whitespace / LF) in the validator and Pester suite.",
-              "kind": "other"
-            },
-            {
-              "text": "Manifest provenance — winget ids must be Publisher.Package; scoop apps must name a declared bucket.",
-              "kind": "config"
-            },
-            {
-              "text": "This changelog.",
-              "kind": "other"
-            }
-          ]
-        },
-        {
-          "category": "Terminal UX",
-          "items": [
-            {
-              "text": "install.ps1 -DryRun previews every change and mutates nothing; -Help prints usage; -NonInteractive / -Yes for unattended runs.",
-              "kind": "other"
-            },
-            {
-              "text": "Graceful interrupts — install.ps1 and the package installer print where they stopped (and close the log) on Ctrl-C or error.",
-              "kind": "other"
-            },
-            {
-              "text": "Unified error/warning layout — Write-DotErr / Write-DotWarn used across the entry points.",
-              "kind": "other"
-            },
-            {
-              "text": "NO_COLOR + DOTFILES_ASCII fallbacks across every renderer.",
-              "kind": "other"
-            },
-            {
-              "text": "Install progress — per-package [n/total] with elapsed time.",
-              "kind": "other"
-            },
-            {
-              "text": "Interactive overwrite — confirm before backing up a real user file; stale links are rewired silently.",
-              "kind": "other"
-            },
-            {
-              "text": "Tab-completion for dothelp filters, derived from the catalog.",
-              "kind": "other"
-            },
-            {
-              "text": "Zero-config onboarding — prompt for git name/email at install time.",
-              "kind": "config"
-            },
-            {
-              "text": "dotfiles-doctor -Fix opt-in remediation for the common issues.",
-              "kind": "fix"
-            },
-            {
-              "text": "dothelp -i fuzzy command picker (fzf) that copies the pick.",
-              "kind": "other"
-            },
-            {
-              "text": "serve -Local — opt-in localhost-only bind (127.0.0.1) for the quick CWD HTTP server; LAN exposure stays the default.",
-              "kind": "config"
-            }
-          ]
-        },
-        {
-          "category": "Fixes",
-          "items": [
-            {
-              "text": "Retired the debian WSL-jump helper — dotfiles-Debian is no longer part of the fleet and Debian isn't a target distro, so the debian shortcut is removed from os/31-wsl-bridge.ps1 (function + provides: line), the dothelp WSL-bridge catalog (Help.Helpers.ps1), and the module header comment (Wsl.Helpers.ps1). kali and the generic cdwsl [distro] remain for jumping into any WSL distro.",
-              "kind": "other"
-            },
-            {
-              "text": "md no longer shadows mkdir — the glow markdown-render alias was bound to md, clobbering PowerShell's built-in md (mkdir). It's now gmd; md is mkdir again. README, docs/TOOLS.md, and the dothelp catalog updated.",
-              "kind": "other"
-            },
-            {
-              "text": "tools command implemented — the cheatsheet advertised tools (\"open the host tool docs\") but nothing defined it. It now renders docs/TOOLS.md (glow → bat → nvim → plain), and is listed in dothelp.",
-              "kind": "feature"
-            },
-            {
-              "text": "Dead-shim guards for fif / fbr — a tool that resolves on PATH but won't launch (a stale Chocolatey shim, or a scoop shim whose app was removed, shadowing the real binary) produced raw Program rg.exe failed to run / cannot find file ...fzf.exe errors. A new Test-CmdRuns helper probes executability so fif/fbr (and the same class of Ctrl+t/Ctrl+r breakage) fail with an actionable fix hint instead.",
-              "kind": "fix"
-            },
-            {
-              "text": "dotfiles-doctor now checks executability — a new Core toolchain runs probe flags tools that resolve but won't launch, which the resolve-only check could not see.",
-              "kind": "feature"
-            },
-            {
-              "text": "tools / gmd no longer abort when less is absent — glow (and bat) page through $PAGER, defaulting to less, which isn't on a stock Windows box, so glow --pager died with exec: \"less\" not found. Both now pass paging flags only when a pager actually exists and render inline otherwise. Per-finding backlog IDs and their status live in docs/ARCHITECTURE-AUDIT.md — the single ID registry, so this log stays prose with no competing B#/U# scheme.",
-              "kind": "other"
-            }
-          ]
-        }
-      ]
     }
   ],
   "feed": [
     {
       "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Security / robustness (install)",
-      "kind": "config",
-      "text": "install.ps1 now uses -LiteralPath for every existence/copy/move/remove in Link-Item and the seed/ppm steps. Bare Test-Path/Copy-Item/Move-Item treat [/] as wildcards, so a profile path containing brackets could read an existing real config as absent — skipping the back-up branch and clobbering it with no .bak. Brackets are now matched literally.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Security / robustness (install)",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "fix",
-      "text": "DOTFILES_PPM_REF is rejected when it begins with -, closing the argument-injection seam (e.g. --upload-pack=…) that bootstrap.ps1 already guards for DOTFILES_REF. The ppm git checkout also gained a -- ref/pathspec separator to match (disambiguation, not the injection guard).",
+      "text": "psmux power pill — the battery segment the macOS tmux bar has. New psmux/scripts/psmux-power.ps1, rendered right-most in status-right, which is where Core puts it too (its last slot is #{@status_right_os}, the hook each OS repo fills). It is the Windows port of Core's tmux/scripts/tmux-battery.sh and uses that scale, so the two *terminal* bars agree: green ≥60 / yellow ≥20 / red <20, with the level glyph swapped for a charging bolt on AC and the colour still tracking the level. One deliberate divergence — Core prints nothing when there's no battery, so its segment vanishes on a desktop; here it falls back to Zebar's AC placeholder, a lone green md-power-plug 󰚥, since an empty segment reads as a broken pill on a desktop-first host. Power state comes from SystemInformation.PowerStatus (one in-process GetSystemPowerStatus read), not Win32_Battery — a desktop returns nothing from the latter, so \"no battery\" and \"the query failed\" would be indistinguishable. Refreshed by the existing in-session timer alongside the VPN pill, so nothing new touches psmux's synchronous render path. psmux.conf seeds @pwr_pill with set -og (only-if-unset) so the desktop plug is right before the first tick, while a prefix + r reload can't clobber a live laptop reading. (psmux/, powershell/os/33-psmux-pill.ps1) Note this means the psmux bar and Zebar disagree between 40 and 60 % — deliberately. The bars are matched terminal-to-terminal (psmux ↔ Core tmux) and desktop-to-desktop (Zebar ↔ sketchybar), and those two references use different scales.",
       "core": false
     },
     {
       "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Security / robustness (install)",
-      "kind": "other",
-      "text": "Dependency probes scoped to real executables — Get-Command gum/git/scoop/winget now pass -CommandType Application, so a user-defined function/alias of the same name can no longer satisfy a presence check (the repo's profile encourages such wrappers, which previously could flip Test-DotGum true with no real gum).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "config",
-      "text": "nvim-sync bot (.github/workflows/nvim-sync.yml) — runs nvim-sync.ps1 weekly (and on demand) and opens a PR when Core's nvim/ tree has actually moved ahead, so the host editor config can't silently fall behind. Judges drift on the Lua tree only (ignores .core-ref's per-run timestamp). First-party (GITHUB_TOKEN + gh), no third-party action.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "feature",
-      "text": ".core-ref records the Core release tag — nvim-sync.ps1 now stamps a tag field (git describe --tags of the vendored commit) alongside commit, so dotfiles-core's fleet-drift.sh can label the Windows row by release name (e.g. v2.0.0) like the Unix repos' core.lock core_tag, instead of a bare SHA. Best-effort and backward compatible: the line is omitted when Core carries no tag (the commit SHA stays the source of truth and the drift verdict). Read path covered by a new Get-CoreRefField test case.",
+      "text": "Test coverage for the power pill's every state. The dev box is a desktop, so the laptop branches would otherwise ship unexecuted. psmux-power.ps1 takes a -SimulateState testing seam (no host read, no poke) and tests/Repo.Tests.ps1 asserts each colour and glyph threshold — including that a charging 15 % battery stays red, which is the case a naive \"on AC → blue\" reading would silently hide.",
       "core": false
     },
     {
       "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "package-freshness bot (.github/workflows/package-freshness.yml + packages/Check-PackageFreshness.ps1) — weekly on windows-latest, resolves the live scoop/winget version of each managed app and files a deduplicated findings issue when any is ahead of packages.lock.json. Findings only: re-pinning still runs locally via Update-PackageLock.ps1 (it needs the apps installed).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "perf",
-      "text": "Hermetic, incremental CI — GitHub Actions pinned to commit SHAs; Pester and PSScriptAnalyzer pinned to exact versions; PSGallery modules cached; a detect-changes gate skips the Windows jobs for docs-only changes.",
+      "text": "The VPN/IP pill never rendered — a PowerShell splatting bug. psmux-netinfo.ps1 poked the bar with psmux set -g @vpn_pill $text. In argument position a bare @name is PowerShell's splatting operator, so the undefined $vpn_pill expanded to nothing and the option name was dropped from the command line entirely; psmux received a single positional and silently discarded the whole command — exit 0, nothing on stderr, option never set. Every other layer (detection, cache file, timer, psmux.conf) was working, which is why it survived so long. Fixed by quoting '@vpn_pill' / '@vpn_fg'. (psmux/scripts/psmux-netinfo.ps1)",
       "core": false
     },
     {
       "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "security",
-      "text": "PSScriptAnalyzer signature gate — after the pinned install, CI asserts the module manifest is Authenticode Valid and Microsoft-signed before running the analyzer, failing the build otherwise. Closes the last supply-chain gap in the fleet-wide CI-tool-download hardening (the Windows analogue of the SHA-256 verification the Linux gate tools get via dotfiles-core's setup-core-tools).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "Coverage gate — Pester enforces ≥85% coverage on the pure-helper library.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "uninstall.ps1 — reverse the bootstrap; removes only symlinks that point back into the repo, with -DryRun / -RestoreBackups.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "Pre-commit hook — .githooks/pre-commit runs the dependency-free validator; install.ps1 wires core.hooksPath.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "Fragment-load health gate — the profile records any fragment that fails to load; dotfiles-doctor reports it.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "More host-layer tests — extracted pure helpers (ConvertTo-WslPath, Get-FragmentHealthResult, the uninstall link map) with behavioral tests.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "Pinned module floors — packages/modules.ps1 carries -MinimumVersion floors for a reproducible baseline without freezing maintenance updates.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "Dependabot for the pinned actions.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "Install transcript log under %LOCALAPPDATA%\\dotfiles\\logs.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "editorconfig enforcement (final newline / trailing whitespace / LF) in the validator and Pester suite.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "config",
-      "text": "Manifest provenance — winget ids must be Publisher.Package; scoop apps must name a declared bucket.",
+      "text": "A config reload repainted a live pill in the wrong colour. @vpn_fg was defaulted with a plain set -g, so every prefix + r overwrote whatever the refresher last poked. Because the pill's *text* is never defaulted, the two halves then disagreed until the next tick — up to a full refresh interval — and these pills encode their state in the colour: an active tunnel kept showing its address in the no-tunnel green, losing the orange that is the entire signal. Both colour options now use set -og (only-if-unset), which still guarantees a non-empty colour on first paint. Caught on review of the same mistake in @pwr_fg, where it would paint a 15 % battery healthy-green. psmux set -g @vpn_pill '', but an empty-string argument is dropped on the way to the exe and the set no-ops exactly like the splat above. Clearing now uses set -gu (unset). psmux-pill-disable clears the segment too, instead of only stopping the timer.",
       "core": false
     },
     {
       "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "CI / structure (backend)",
-      "kind": "other",
-      "text": "This changelog.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "install.ps1 -DryRun previews every change and mutates nothing; -Help prints usage; -NonInteractive / -Yes for unattended runs.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "Graceful interrupts — install.ps1 and the package installer print where they stopped (and close the log) on Ctrl-C or error.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "Unified error/warning layout — Write-DotErr / Write-DotWarn used across the entry points.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "NO_COLOR + DOTFILES_ASCII fallbacks across every renderer.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "Install progress — per-package [n/total] with elapsed time.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "Interactive overwrite — confirm before backing up a real user file; stale links are rewired silently.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "Tab-completion for dothelp filters, derived from the catalog.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "config",
-      "text": "Zero-config onboarding — prompt for git name/email at install time.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "fix",
-      "text": "dotfiles-doctor -Fix opt-in remediation for the common issues.",
+      "text": "Holding the prefix key shoved the IP pill two columns right. The prefix/mode indicator sits between #S and the pill with each branch padded to the same width — but the idle branch was three literal spaces, which psmux's parser collapsed to one (see the next entry), against a prefix branch of space + glyph + space that survived as three. The branches are now spaced with #{p<n>:} and are five rendered cells each, verified in both directions on a real terminal. A test asserts the three branches stay equal width, since eyeballing this is exactly what failed before.",
       "core": false
     },
     {
       "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
-      "kind": "other",
-      "text": "dothelp -i fuzzy command picker (fzf) that copies the pick.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Terminal UX",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "config",
-      "text": "serve -Local — opt-in localhost-only bind (127.0.0.1) for the quick CWD HTTP server; LAN exposure stays the default.",
+      "text": "Multi-space gaps in the status bar were rendering as a single space. psmux parses option values as split_whitespace() + join(\" \"), so every run of spaces collapses to one, quoted or not — which means the twelve-space cwd→clock gap added in #163 had never actually widened anything. Bar gaps now use #{p<n>:}, which pads an empty body at *render* time — after the parser has had its way — and is the same idiom Core's tmux.conf already uses (#{p19:}), so the two configs now read the same. The session→IP gap is wider as a result, and a test forbids multi-space runs in status-left/status-right so this can't silently regress. Note #{p<n>:} only works written directly in the config: a format arriving via a user option is not re-expanded, which is the same rule that keeps a #[…] style run from working inside @vpn_pill.",
       "core": false
     },
     {
       "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Fixes",
-      "kind": "other",
-      "text": "Retired the debian WSL-jump helper — dotfiles-Debian is no longer part of the fleet and Debian isn't a target distro, so the debian shortcut is removed from os/31-wsl-bridge.ps1 (function + provides: line), the dothelp WSL-bridge catalog (Help.Helpers.ps1), and the module header comment (Wsl.Helpers.ps1). kali and the generic cdwsl [distro] remain for jumping into any WSL distro.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Fixes",
-      "kind": "other",
-      "text": "md no longer shadows mkdir — the glow markdown-render alias was bound to md, clobbering PowerShell's built-in md (mkdir). It's now gmd; md is mkdir again. README, docs/TOOLS.md, and the dothelp catalog updated.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Fixes",
-      "kind": "feature",
-      "text": "tools command implemented — the cheatsheet advertised tools (\"open the host tool docs\") but nothing defined it. It now renders docs/TOOLS.md (glow → bat → nvim → plain), and is listed in dothelp.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Fixes",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "fix",
-      "text": "Dead-shim guards for fif / fbr — a tool that resolves on PATH but won't launch (a stale Chocolatey shim, or a scoop shim whose app was removed, shadowing the real binary) produced raw Program rg.exe failed to run / cannot find file ...fzf.exe errors. A new Test-CmdRuns helper probes executability so fif/fbr (and the same class of Ctrl+t/Ctrl+r breakage) fail with an actionable fix hint instead.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Fixes",
-      "kind": "feature",
-      "text": "dotfiles-doctor now checks executability — a new Core toolchain runs probe flags tools that resolve but won't launch, which the resolve-only check could not see.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.1.0",
-      "category": "Fixes",
-      "kind": "other",
-      "text": "tools / gmd no longer abort when less is absent — glow (and bat) page through $PAGER, defaulting to less, which isn't on a stock Windows box, so glow --pager died with exec: \"less\" not found. Both now pass paging flags only when a pager actually exists and render inline otherwise. Per-finding backlog IDs and their status live in docs/ARCHITECTURE-AUDIT.md — the single ID registry, so this log stays prose with no competing B#/U# scheme.",
+      "text": "Two stale psmux config tests. They asserted the pill was read via #(cmd /c type %LOCALAPPDATA%…) and passed only because that string still appeared in the *comment block* describing the retired transport — they had stopped testing anything real. Repointed at the live @vpn_pill / @pwr_pill segments, plus a static guard that every psmux set in the repo quotes its @option name, since the splatting bug above is invisible at runtime. (tests/Repo.Tests.ps1)",
       "core": false
     },
     {
       "repo": "dotfiles-core",
-      "version": "v4.5.0",
-      "date": "2026-07-28",
+      "version": "v4.7.1",
+      "date": "2026-08-03",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "/os-package-availability no longer files column-shifted matrix findings. The Alpine run on 2026-08-02 reported four PORTING-MATRIX.md cells as stale (starship/yazi/tree-sitter-cli/viddy still on script³/cargo³) and asked for two footnote rewrites. All six were already correct: the routine had read the Kali (apt) column — the last cell on each row — as if it were Alpine, and re-proposed footnote wording the footnotes already carried. A report-first routine that flags a correct table is worse than one that finds nothing, since it invites a \"fix\" that introduces the drift it claimed to catch. The prompt now anchors both reads: count columns from the header row (Arch | openSUSE | Alpine | Gentoo | Kali, last cell is Kali), quote the whole row and name the column header before citing a cell, and quote a footnote's current text before calling it stale. Reporting rules require that evidence in the issue body, so a misalignment is visible to a reader instead of shipping as a finding.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.1",
+      "date": "2026-08-03",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The freshness dashboard no longer renders GitHub API error bodies as data. The 2026-08-03 board (#324) printed {\"message\":\"Not Found\",…,\"status\":\"404\"} as dotfiles-web's release tag and a 403 secondary-rate-limit body as htpx's open-issue count. Cause: on an HTTP error gh api skips the --jq filter and copies the raw response body to stdout, writing only its one-line summary to stderr — so the helpers' 2>/dev/null || true silenced the wrong stream and discarded the one reliable signal, the exit code. The error JSON became \"the value\", and every // empty and emptiness guard downstream waved it through; the — (no tags) branch was unreachable for any repo whose 404 body carries a message key, and a third site (the Renovate tally) had the same latent defect. The helpers now capture stdout, test the exit code, and drop stdout on failure — and they propagate that status, so the board can tell \"the API answered: none\" (— (no tags)) from \"we never got an answer\" (?), a distinction it was previously asserting without evidence. The ~24 search-API calls are paced under GitHub's 30/minute authenticated ceiling (the workflow authenticates with the stock GITHUB_TOKEN and its lower shared quota), and a 403/429 gets a widening backoff under two brakes: an exhausted ladder latches, so the remaining calls stop re-waiting on a limit that demonstrably isn't clearing, while total backoff sleep is capped for the whole run — a ladder that recovers must not latch, but 24 calls each riding out a fresh transient limit would otherwise sleep for 12 minutes against a 15-minute job timeout. Both brakes are files, not variables, since the helpers run inside command substitution and a variable would not survive the subshell. scripts/test-core.sh now drives all of it against a gh stub reproducing the real error shape; the script had no behavioral coverage before.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
       "category": "Added",
       "kind": "feature",
-      "text": "jnv — interactive JSON explorer. 00-tools.zsh now detects jnv and sets HAVE_JNV: a dual-pane jq-filter editor + collapsible JSON viewer that fills the \"explore an unfamiliar API/JSON response\" gap between jq (transform), gron (grep), and yq (YAML). It's its own command with no alias (like jq/gron/ ast-grep) and is inert without the binary. A Rust CLI (embeds jaq, no external jq dependency). Detect-only for now — Core lights up HAVE_JNV when the binary is present, but jnv is not yet wired into any OS repo's Brewfile/packages.txt/ bootstrap.sh (install it via brew/AUR/Nix or cargo install --locked jnv); fleet auto-install is a tracked follow-up. New PORTING-MATRIX.md row and footnote. (zsh/00-tools.zsh, zsh/20-aliases.zsh, PORTING-MATRIX.md)",
-      "core": true
+      "text": "jnv — interactive JSON explorer (fleet parity with Core's HAVE_JNV). Added to packages/scoopfile.json (scoop Main). A jq-filter editor with a collapsible viewer that fills the \"explore an unfamiliar JSON response\" gap between jq (transform) and gron (grep). Its own command with no alias — jnv file.json or pipe into it — like jq/yq/ gron. This also retires the old jless-was-left-out caveat in docs/TOOLS.md: jnv is the packaged interactive explorer now.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v4.5.0",
-      "date": "2026-07-28",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fleet-drift false red on dotfiles-Windows. The sweep measures every repo against the latest Core release tag, but dotfiles-Windows vendors only the nvim/ subtree and tracks Core's main tip (synced by the nvim-sync bot, which re-stamps its marker only when nvim/ actually changes). So its recorded commit can legitimately be a descendant of the release tag (an unreleased nvim/ commit pulled between releases) or an ancestor of it (a release that changed no nvim/ files leaves the marker behind while the vendored tree is byte-identical) — and the old commit-vs-tag comparison flagged both as drift, failing the run and filing a spurious ci-failure issue. dotfiles-Windows is now judged against nvim/'s last change reachable from the reference (git rev-list -1 REF -- nvim), so both states read as current while a genuinely stale nvim/ tree still fails. (scripts/fleet-drift.sh)",
-      "core": true
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Added",
+      "kind": "config",
+      "text": "web — terminal web browser verb (parity with Core's web). Added a guarded web function in core/00-aliases.ps1 that resolves w3m→lynx→links→elinks and runs the first present (skipped entirely when none is installed, matching Core). w3m has no scoop manifest, so the host packages lynx (Core's own next fallback; scoop Main) in scoopfile.json. Unlike Core's headless path, $BROWSER is never exported — the Windows host is GUI-first, so web stays an explicit opt-in verb.",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v4.5.0",
-      "date": "2026-07-28",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "alpha-nvim greeter crash on nvim launch. The dashboard footer was built by assigning raw strings into startify's footer section, but that section is a group whose val must hold element tables — alpha then called layout_element[nil] and threw a VimEnter autocommand error (nil-call at alpha.lua:362). The footer is now a text element, mutated in place so the layout's captured reference renders it. (nvim/lua/gerrrt/plugins/alpha-nvim.lua)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.5.0",
-      "date": "2026-07-28",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "PORTING-MATRIX.md Alpine column caught up with community. starship, yazi, tree-sitter-cli and viddy have landed in Alpine's community repo (native musl builds) since these rows were written — the matrix now shows the apk package for each instead of script³/cargo³, footnote ⁵ notes the community tree-sitter-cli is the musl build that clears the ≥ 0.26.1 floor, and footnotes ⁸/¹⁶ drop the stale \"not in Alpine\" claim for jujutsu/viddy. Availability doc only; dotfiles-Alpine carries the matching packages.txt move. (PORTING-MATRIX.md)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.5.0",
-      "date": "2026-07-28",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "PORTING-MATRIX.md openSUSE yq corrected to the Go-install path. The row claimed stock yq on openSUSE is mikefarah's Go build, but the main OSS yq is kislyuk's separate Python yq (the Go build ships only from a personal OBS repo) — so a stock zypper in yq lands the wrong tool. The openSUSE cell is now go³ and footnote ⁶ explains it; dotfiles-openSUSE go-installs the mikefarah build in bootstrap.sh alongside doggo/carapace/sesh. (PORTING-MATRIX.md)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.5.0",
-      "date": "2026-07-28",
-      "category": "Security",
-      "kind": "fix",
-      "text": "Container digest-pin rule now covers every image surface, tightly. Rule 4 in check-modern.sh only anchored on an image: value or a docker run|build|pull command, so an unpinned container: node:20 shorthand or a uses: docker://alpine:3.21 container action slipped the floor — neither is owner/repo@sha form, so the action sha-pin rule (3) misses them too. The rule now extracts the single image reference from each clean surface (image:, container: shorthand, uses: docker://) and requires an @sha256: digest on it: this also catches a bare container: alpine / docker://alpine (implicit mutable latest, which a name:tag regex missed) and correctly accepts a digest-only alpine@sha256:… (previously mis-flagged), while docker run keeps its tolerant token scan. No live violations in the fleet today — pre-emptive, closing the gap before an OS/role repo (which inherit the *-call.yml@v3 workflows) reaches for one. (scripts/check-modern.sh, scripts/modern-baseline.yml)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.4.0",
-      "date": "2026-07-27",
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
       "category": "Added",
       "kind": "feature",
-      "text": "Terminal web browser wiring. 00-tools.zsh now resolves a BROWSER_BIN (prefers w3m, falls back to any present lynx/links2/links/elinks) and sets HAVE_BROWSER. 20-aliases.zsh exposes a web verb everywhere the browser is present, and exports $BROWSER only on a headless box (no $DISPLAY/ $WAYLAND_DISPLAY, non-macOS) so GUI-opening tools aren't hijacked on a desktop. The OS repos add w3m to their package lists. (zsh/00-tools.zsh, zsh/20-aliases.zsh)",
-      "core": true
+      "text": "**Command-block separators (parity with Core's _cmd_block_*). A thin full-width rule is drawn above each prompt that followed a command, colored by exit status — dim (#414868) on success, red (#f7768e) on failure — turning scrollback into scannable blocks. Ported as precmd/preexec (not** a key handler, so it can't collide with PSReadLine vi-mode): the AddToHistoryHandler sets $global:DotCmdBlockRan (a bare Enter never accepts a line, so no rule is drawn on an empty prompt), and Invoke-Starship-PreCommand draws the rule via [Console]::Write. Colour tracks $LASTEXITCODE (the status reliable at that point); pure-cmdlet failures still surface in starship's [status]. (powershell/core/10-tools.ps1)",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v4.3.0",
-      "date": "2026-07-25",
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Added",
+      "kind": "feature",
+      "text": "Zebar caffeine / keep-awake indicator. A placeholder matching sketchybar's caffeinate.sh — grey asleep, yellow awake — in the left island. Visual only for now: it renders state but doesn't yet drive a keep-awake mechanism on the host (see the Caffeine component comment in the HTML). (desktop/zebar/vanilla-clear/)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Added",
+      "kind": "feature",
+      "text": "Zebar battery shows an AC-power placeholder on desktops. A machine with no battery rendered nothing at all, leaving a gap in the right island; it now shows a green plug glyph. (desktop/zebar/vanilla-clear/)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
       "category": "Changed",
       "kind": "feature",
-      "text": "Linters now run on file open, not only on save. nvim-lint fired only on BufWritePost/InsertLeave, so an opened file showed no lint diagnostics until you saved it or toggled in/out of insert mode. Added BufReadPost to the trigger events (plus a one-shot replay of the first buffer, which loads just after its own BufReadPost), so diagnostics surface on open. Heavy whole-package/repo linters (golangci-lint, cpplint, checkstyle, phpstan, sqlfluff, tflint, semgrep) stay save-only — they run on BufWritePost and nowhere else. (nvim/lua/gerrrt/plugins/nvim-lint.lua)",
-      "core": true
+      "text": "Re-vendored nvim/ from Core (was v4.4.0-3, now current). Brings the Core changes that had not yet reached the host: the regex Tree-sitter parser (silences :checkhealth noice's \"regex parser is not installed\" cmdline-highlighting warning), the new :checkhealth gerrrt LSP / formatter / linter readiness sections, and the servers/init.lua read-only status() export those sections consume. nvim/.core-ref updated to the synced commit. (nvim/, via nvim-sync.ps1)",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v4.3.0",
-      "date": "2026-07-25",
-      "category": "Removed",
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "Re-synced nvim/ to Core main a53ac4f — a follow-up mirror picking up the lazy-lock.json plugin-pin refresh (4 SHAs); nvim/.core-ref re-pointed from the pre-merge branch tip to main. starship.toml verified byte-identical to Core (no sync needed). (nvim/lazy-lock.json, nvim/.core-ref)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
       "kind": "config",
-      "text": "Dropped Nix language support (added in v4.2.0) — unused in practice, and the only language of that batch with ongoing install cost. Removed the nil_ls server config, the alejandra formatter, the statix linter, the nix treesitter parser, and the alejandra/statix Mason packages (so they no longer install on every box). No .nix tooling remains; re-add per the v4.2.0 pattern if Nix ever comes back. (nvim/lua/gerrrt/servers/nil_ls.lua, nvim/lua/gerrrt/servers/init.lua, nvim/lua/gerrrt/plugins/{conform,nvim-lint,nvim-treesitter,mason-tool-installer}.lua)",
-      "core": true
+      "text": "Windows Terminal cursor → bar — cursorShape filledBox → bar to match MacBook's ghostty cursor-style = bar for cross-terminal parity. (windows-terminal/settings.json)",
+      "core": false
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v4.3.0",
-      "date": "2026-07-25",
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "psmux status bar → Core's centered floating-island look. Ported Core tmux.conf's island redesign to psmux/psmux.conf: a 2-line, centered, transparent bar (status 2 + blank status-format[1], status-justify centre — later absolute-centre, see Fixed — status-style bg=default, bg=default pill caps + pane borders) with flat underlined window tabs and monitor-activity • dots for unseen output (psmux has no monitor-bell) — replacing the old left-justified opaque-pill bar. All five psmux features were probed as supported (psmux 3.3.7) before porting. Stays within psmux's no-shell-out / no-process-table rules: the cwd pill keeps #{b:pane_path} (OSC 7) and Core's nvim-gated pane_current_path segment is intentionally not ported. (psmux/psmux.conf)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "Zebar adopts sketchybar's floating-islands design, and PARITY.md now describes it. The macOS bar had drifted to a 3-island look (transparent bar + bordered panels) without the shared contract being updated, so PARITY.md was false for one host. Resolved by adopting, not reverting: the bar goes transparent and .left/.center/.right each become a rounded island (rgba(29,32,47,0.93) fill, 2px rim, r=9) accented blue/magenta/ green. Weather moves into the left island (stable-width, non-urgent); two grey │ separators chunk the right island into I/O · load · power, each gated on its own group so a provider-startup transient can't leave a stray separator leading the island. PARITY.md (identical copy in dotfiles-MacBook) rewritten to match: three islands, weather left, transparent bar geometry, blur off, purple un-reserved and orange added to the palette. Not render-verified on a Windows host — reload Zebar and eyeball. (desktop/zebar/vanilla-clear/, desktop/PARITY.md)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "psmux bar is chip-less. Dropped the rounded pill caps (@cap_l/@cap_r) from the session / cwd / clock / IP segments in favour of plain coloured icon+text on the transparent bar — matching sketchybar, Zebar, and PARITY.md's \"items are chip-less\" spec. Also fixes the prefix and copy-mode glyphs being clipped by the cap they sat against. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Default psmux session renamed main → Gerrrt — both the 30-windows.ps1 auto-launch and the mux verb default in 32-psmux.ps1, with the docs/comments that still said main updated to match. (psmux/, docs/TOOLS.md, TERMINAL_WORKFLOW_GUIDE.md)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Zebar weather reads °F instead of °C (fahrenheitTemp). (desktop/zebar/vanilla-clear/vanilla-clear.html)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Zebar workspace pills match sketchybar's aerospace.sh. Only the focused workspace is highlighted (blue background, dark text); every other one is a plain grey number with no chip — GlazeWM's .displayed distinction is deliberately dropped for macOS parity, since aerospace shows only the single focused workspace. (desktop/zebar/vanilla-clear/styles.css)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Zebar spacing and font tuning from live use on a large external monitor. --item-gap 20px → 8px to match sketchybar's per-item padding (padding_left 4 + padding_right 4); left-island items dropped from a 16px to an 8px margin so both islands read at the same density; --bar-font-size 16px → 18px, since sketchybar's ~17pt suits a laptop panel but reads too small on a large panel (still fits the 28px island; 20px is the next comfortable step). (desktop/zebar/vanilla-clear/styles.css)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "psmux tabs no longer drift off-center — status-justify absolute-centre. Plain centre (Core's value) centers the window list in the gap between status-left and status-right, so the host's variable-width session pill (wider while prefix is active) and the #{b:pane_path} cwd in status-right pushed the tabs off the true middle — most visibly as a jump when a pane running nvim widened the right float. Switched to absolute-centre, which anchors the tabs to the bar's absolute center regardless of either float's width. Deliberate divergence from Core's centre (see docs/PORTING-NOTES.md); probed on psmux 3.3.7. This is the real fix for the tab-shifting the equal-width prefix cell below was working around. (psmux/psmux.conf)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
       "category": "Fixed",
       "kind": "perf",
-      "text": "Cleared the rustaceanvim vim.lsp.get_buffers_by_client_id() deprecation warning (removed in Nvim 0.13). The v6 line still calls it, so the fix required bumping the version spec from ^6 to ^8 (the fix landed in v7.0.0) and the lockfile to v8.0.5. Chose ^8 over ^9 on purpose — v9's only breaking change is dropping Neovim 0.11 support, and Core vendors to a fleet that may not all be on 0.12; v8 keeps the fix and neovim >= 0.11. The v7/v8 breaking changes (ra-multiplex → lspmux, drop .vscode/settings.json) don't affect this config. (The remaining vim.validate{} warning is from diffview.nvim, which upstream hasn't fixed — removal isn't until Nvim 1.0, so it's benign.) (nvim/lua/gerrrt/plugins/rustaceanvim.lua, nvim/lazy-lock.json)",
+      "text": "psmux IP / VPN pill rendered blank. Two distinct causes, found in that order. First, psmux.conf ran set -gq @vpn_pill \"\", which clobbered the refresher's poked value on every source-file reload — removed, so #{@vpn_pill} persists what the refresher sets. The segment still rendered empty, because the option was poked as a single pre-styled string ('#[fg=#9ece6a,bold]<glyph> <ip>') and an option value embedding a #[…] style run is not re-interpreted when the format expands it. That's why psmux-pill-status showed a populated cache (a plain file write, a separate code path) while the bar stayed empty. Split the transport to mirror the proven @tn_* colour pattern: @vpn_pill carries plain text only, @vpn_fg carries the accent hex, applied in status-left as #[fg=#{@vpn_fg}]#{@vpn_pill}. Only the colour is defaulted in the conf (so it's never empty on first paint); defaulting the text is what caused the original clobber. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "psmux prefix indicator style leaked into the window tabs. A #[default] reset after #{@vpn_pill} stops the pill's bold/fg bleeding into the tabs. The indicator was also widened to an equal-width padded cell ( 󰠠 / idle ) so its branches couldn't shift the tabs — kept for stable width, though absolute-centre above is what actually holds the tabs still. (psmux/psmux.conf)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "psmux nvim cwd jammed against the clock. Two passes: the status-right cwd↔clock gap sat inside a #{?} branch and psmux trims in-branch trailing spaces, so it was moved outside the branch — then widened (6 → 12 spaces) once the branch fix made the gap actually render and it was still too tight to read. (psmux/psmux.conf)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "psmux config warning: unknown option 'monitor-bell'. psmux 3.3.7 doesn't implement monitor-bell at all — its CLI setw/set returns exit 0 (so the capability probe was a false positive) but the config parser rejects it on load. Removed the setting; monitor-activity (which psmux does support) stays, so activity dots still work — only the bell dot is inert. (psmux/psmux.conf)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "Zebar network readout rendered white instead of blue. The .network module had no color class, so only its glyph got the global blue while the ↓↑ throughput values fell back to fg (white). Added .network { color: var(--tn-blue) } so icon and values are blue, matching sketchybar's network.sh (icon + label accent). (desktop/zebar/vanilla-clear/styles.css)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": ":checkhealth gerrrt no longer false-warns about the clipboard on the host. It read \"Core's cross-OS clipboard scripts are not on PATH (clip: found, clip-paste: missing)\" — misleading, since clip only resolved to Windows' built-in clip.exe and the Unix/WSL clip/clip-paste ladder does not apply on the host: config/clipboard.lua wires the clip-windows provider (clip.exe copy + PowerShell paste) instead. Fixed upstream in Core (health.lua now detects native Windows via has(\"win32\") and defers to :checkhealth vim.provider for the live backend) and pulled in with the nvim re-vendor above.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Docs",
+      "kind": "config",
+      "text": "Documented the psmux :checkhealth tmux cosmetic wart in docs/PORTING-NOTES.md: psmux has no show-option verb, so Neovim's built-in vim.health tmux probe shows ❌ ERRORs and a false \"true color could not be detected\" ⚠️ — cosmetic only (psmux renders 24-bit colour natively; nothing functional is affected), and not shimmed on purpose.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.5.0",
+      "date": "2026-08-02",
+      "category": "Docs",
+      "kind": "fix",
+      "text": "Refreshed the stale \"re-vendor nvim/\" manual step (the full tree is now vendored via nvim-sync.ps1, and the old <leader>rc keymap wart is fixed upstream), and dropped the now-inaccurate \"Known Windows wart\" banner nvim-sync.ps1 printed after each sync.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Added",
+      "kind": "fix",
+      "text": "prefix + a opens Claude Code in a tmux popup — tmux/scripts/tmux-claude.sh (new). The nvim integration gives you Claude coupled to an editing session (buffers, selection, diagnostics, diffs); this is the other half — Claude from a shell pane, mid-rebase, or in a directory with no editor open. Same shape as the prefix + g lazygit popup, rooted at #{pane_current_path}, and gated on the claude binary the way tmux-sesh.sh gates on sesh (absent, it puts the reason on the status line rather than doing a silent nothing). It is deliberately not display-popup -E claude, the way lazygit is bound. lazygit is stateless, so killing its popup costs nothing — a conversation is not, and dismissing a raw -E claude popup would take the thread with it. So this follows tmux-scratch.sh instead: a persistent detached session the popup attaches to, making prefix + a toggle visibility rather than lifetime. It inherits that script's three hard-won fixes — per-session detach-on-destroy on (or quitting hops the popup client onto your main session at popup dimensions and double-draws the real terminal), the TERM repair (display-popup launches with TERM unset, so a nested tmux attach otherwise dies with \"terminal does not support clear\"), and status off / prefix None / key-table popup so every keystroke reaches Claude's TUI. Sessions are keyed on the git root, not the cwd: every pane inside a repo shares one conversation, which is the granularity the work actually has, and a single global session would hand you dotfiles-Kali's thread while you sat in dotfiles-core. The name carries a cksum hash of the full path so two repos sharing a basename cannot collide onto one conversation — cksum rather than md5sum/md5, which diverge between Linux and macOS.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Added",
+      "kind": "perf",
+      "text": "<C-y> in fzf-lua sends the selection to Claude Code as @-mentions. The tree-based @-mention (<leader>as in nvim-tree/oil) adds one file, so putting six files in context meant six navigations. fzf is already multi-select — --multi is on for the file pickers, <Tab> marks and <A-a> toggles all — so plugins/fzf-lua.lua now turns \"the files involved in this change\" into one gesture. From the grep pickers each entry carries a line number, so a hit is sent as its own location rather than the whole file (fzf-lua reports 1-indexed lines; send_at_mention documents its range as 0-indexed, so the action converts). Entries are parsed with fzf-lua.path .entry_to_file rather than by hand, since they carry devicon prefixes and grep entries are file:line:col:text. Covers <leader>ff / fg / fb / fr from one actions.files entry, and is documented in cheatsheet.lua alongside the multi-select keys. Three details worth recording. The action table carries a leading true — fzf-lua's inheritance marker (config.lua switches the merge to tbl_deep_extend(\"keep\", yours, defaults) when [1] == true, then strips it). Without it a user action table replaces fzf-lua's defaults wholesale, silently dropping enter, ctrl-s/v/t and alt-q/Q/i/h/f — i.e. opening a file at all. Line forwarding is restricted to the grep family (resume key containing grep), because entry_to_file also reports a positive line for buffer entries — providers/buffers.lua serializes each buffer's current cursor lnum — so forwarding it everywhere would make <leader>fb send the one line you were parked on instead of the file. And unlike plugins/claudecode-nvim.lua this is not cond-gated: fzf-lua is a core finder that must load everywhere, so gating the spec would mean an executable() probe at startup on every box in the fleet. The action fails soft instead, and since it only runs on a keypress it can afford to probe properly and name which failure it hit — CLI absent, CLI installed after Neovim started (the cond is evaluated once at startup, so a restart is needed), or the plugin genuinely failing to load, in which case the real error is shown rather than swallowed.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Added",
+      "kind": "perf",
+      "text": "Claude Code IDE integration for Neovim (coder/claudecode.nvim). nvim/lua/gerrrt/plugins/claudecode-nvim.lua adds the first runtime Claude surface in the fleet — until now Claude Code existed only as pinned CI automation (scripts/tool-versions.env, .github/workflows/claude-routines.yml). The plugin speaks the same WebSocket/MCP protocol as the official VS Code and JetBrains extensions: Neovim runs the server and writes ~/.claude/ide/<port>.lock, and the claude CLI attaches to it. The payoff over a bare terminal pane is that Claude's edits arrive as a native :diffsplit you accept with :w (or <leader>aa) and can edit before accepting, visual selections send with their real file and line range, and Claude reads the session's LSP diagnostics over MCP rather than re-running a build. Keys live under a new <leader>a prefix (ac toggle, as send selection / add file from an nvim-tree or oil buffer, ab add buffer, aa/ad accept/deny diff, am model, ar/aC resume/continue, aS status), registered as the ai / claude group in plugins/which-key.lua and documented in cheatsheet.lua. Two deliberate departures from upstream's install spec, both fleet-driven: - No folke/snacks.nvim dependency. Upstream defaults its terminal to snacks, which Core does not ship and which would overlap fzf-lua, mini.notify and alpha. terminal.provider = \"native\" uses a plain :terminal split instead, keeping faith with the no-dap-ui/no-toggleterm stance in config/autocmds.lua and adding exactly one entry to lazy-lock.json. provider = \"none\" remains a one-line switch for driving claude from a tmux pane and attaching with /ide. - The whole spec is cond-gated on the claude binary. Core vendors into eight OS repos and the CLI is in none of their package lists, so on almost every box the plugin must be inert — the same reasoning as the existing uv gate for the pytest maps. nvim/lua/gerrrt/health.lua gains a :checkhealth gerrrt section that reports the gate (and, once loaded, the IDE lock file) so an absent <leader>a reads as intentional rather than broken. Installing the CLI itself stays out of Core: it is an npm/brew install and therefore OS-native.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Added",
+      "kind": "config",
+      "text": "Terminal buffers are escapable and navigable — nvim/lua/gerrrt/utils/term.lua (new). A Neovim terminal buffer forwards every keystroke to the program inside it, and both of Core's terminals call startinsert, so you land in terminal mode where Core's <C-h/j/k/l> (vim-tmux-navigator, normal mode only) never reach Neovim. The split reads as a trap. Neovim's reserved <C-\\><C-n> was always the way out, but nothing in the config said so — Core shipped no terminal-mode keymaps at all (mode = \"t\" appeared nowhere under nvim/). The defect was discoverability, not behavior. utils/term.lua now owns the rule, and both terminals opt in: Claude's split (plugins/claudecode-nvim.lua) and the pytest split (config/autocmds.lua), which shared the gap all along — it just never surfaced there, since that split is read-only output you glance at rather than a prompt you sit inside. Note :q needs normal mode too, so even closing one starts with <C-\\><C-n>. Buffer-local <M-h/j/k/l> leave terminal mode and navigate in one keystroke; cheatsheet.lua documents all of it as one Terminal buffers card rather than a copy per terminal, since the panel shows every card at once. The navigator's own <C-h/j/k/l> are deliberately not widened into terminal mode: <C-h> is ASCII 8 (backspace) and <C-j> is ASCII 10 (newline), so claiming them would break editing at an interactive prompt — <C-w> (delete-word) is out for the same reason. <M-…> is unclaimed by the TUIs involved; mini.move owns <A-h/j/k/l> in normal/visual only, a different mode. The maps stay buffer-local so a terminal Core did not open (:terminal, a plugin's own) keeps its keys untouched — for Claude's, the buffer is identified by asking the plugin (claudecode.terminal.get_active_terminal_bufnr()) rather than matching the term:// name, which would also hit a plain shell started in a directory containing the word \"claude\".",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Added",
+      "kind": "config",
+      "text": "Python workflow ergonomics for the Astral stack (uv/ruff/ty). Three small, additive changes that make the already-wired Python setup easier to drive day-to-day: - zsh/20-aliases.zsh adds uvr (uv run) and uvs (uv sync), guarded by a new HAVE_UV flag in zsh/00-tools.zsh so a bare box simply doesn't get them. uv run resolves the project's .venv itself, so these cover the daily loop without manual venv activation. - nvim/lua/gerrrt/config/autocmds.lua adds buffer-local pytest runners on Python buffers — <leader>tt (whole suite) and <leader>tf (current file) — running uv run pytest as an argv-form terminal job rooted at the uv project (not Neovim's cwd). Gated on uv being present, plugin-free (no neotest, matching the config's no-dap-ui/no-toggleterm stance), and complementing the existing DAP \"debug test method\" (<leader>dm). <leader>t is registered as the test group in nvim/lua/gerrrt/plugins/which-key.lua and documented in cheatsheet.lua; a headless probe in scripts/test-core.sh asserts the maps register on a Python buffer. - mise/config.toml documents the deliberate Python ownership split (mise supplies the global mise-managed interpreter for global tools; uv owns per-project envs) so the two managers' roles are explicit.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Added",
+      "kind": "config",
+      "text": "mise now supplies the zig, terraform, and foundry toolchains. plugins/conform.lua declares zigfmt, terraform_fmt, and forge_fmt fleet-wide, so :checkhealth (and :checkhealth gerrrt) reported them as \"unavailable — command not found\" on every box lacking the binary. Adding them to mise/config.toml means mise install provides zig fmt, terraform fmt, and forge fmt (via foundry's forge) everywhere Core lands, with a note that foundry's glibc-linked prebuilt must be excluded via disable_tools / MISE_DISABLE_TOOLS on Alpine (musl), since mise merges global + local [tools] and omission alone doesn't drop an inherited tool.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "buf-config is now a known filetype, silencing the :checkhealth vim.lsp \"Unknown filetype\" warning. nvim/lua/gerrrt/servers/buf_ls.lua advertises buf-config as one of buf_ls's filetypes, but nothing mapped buf's config files to it — so the health check flagged it and buf_ls never attached to buf.yaml / buf.gen.yaml. nvim/lua/gerrrt/config/autocmds.lua now registers buf's full v2 config surface (buf.yaml, buf.gen.yaml, buf.work.yaml, buf.policy.yaml, buf.lock) via vim.filetype.add, so the filetype is known (warning gone) and buf_ls serves them with buf-aware completion/diagnostics. Highlighting is preserved by aliasing buf-config to the yaml parser (vim.treesitter.language.register), which hands the buffers to nvim-treesitter's own install/start lifecycle. Covered by a new assertion in scripts/test-core.sh (each buf basename resolves to buf-config; the parser alias resolves to yaml).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.7.0",
+      "date": "2026-08-01",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "PORTING-MATRIX.md's openSUSE column no longer understates what Tumbleweed packages. Seven tools were marked bootstrap-only (script³/cargo³/go³) that the main OSS binary repo (repo-oss) now ships first-class — starship, atuin, yazi, viddy, ouch, doggo, ast-grep — so anyone stamping or maintaining dotfiles-openSUSE from the matrix was being told to build from source what zypper in already provides. Each now names its real package under a new footnote ¹⁸, which also records the caveat the audit could not close: Leap 15.x was not separately audited and rolls slower, so verify with zypper se there. Footnote ¹⁶ (viddy) dropped openSUSE from its \"not packaged\" list to match. Docs-only — no bootstrap.sh or packages.txt behavior changes. The correction also surfaced a latent overclaim: of the seven, only starship, atuin, yazi, viddy and doggo are actually installed by dotfiles-openSUSE's bootstrap.sh (presence-guarded, so a packaged binary short-circuits them). ouch and ast-grep have no installer there at all, so their old cargo³ cells promised a ³ fallback that never existed — footnote ¹⁸ now says so, and names packaging as their only automatic path.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.6.0",
+      "date": "2026-07-30",
+      "category": "Added",
+      "kind": "config",
+      "text": ":checkhealth gerrrt now reports LSP / formatter / linter readiness. The built-in :checkhealth vim.lsp only lists clients attached to the live session, so run from the dashboard it reads \"No active clients\" and says nothing about whether your configured tools are installed. Three new sections in nvim/lua/gerrrt/health.lua report per-tool state: - LSP servers — every wanted server (from nvim/lua/gerrrt/servers/init.lua) as attached / enabled-idle / pending-enable / binary-missing / override-failed, via a new read-only M.status() export that reuses the module's own wanted-list and binary_available(). It tracks registered (our override loaded) and enabled (we called vim.lsp.enable) as distinct facts — not inferred from vim.lsp.config[name], which also resolves upstream lspconfig defaults — so a failed override or an installed-but-not-yet- enabled binary is reported accurately. - Formatters (conform) — rendered from conform's own list_all_formatters() availability. - Linters (nvim-lint) — from linters_by_ft + the SAST semgrep, checking each linter's real builtin cmd. All three are side-effect-free: they observe package.loaded and never require() a plugin (which would force-load it and, for the LSP stack, register/enable servers before nvim-lspconfig's defaults are on the runtimepath), so from the dashboard they say \"open a file, then re-run\" rather than mutating the session. Missing binaries are info (not warnings) on DOTFILES_OFFLINE boxes. Covered by new assertions in scripts/test-core.sh (the D4 registry probe exercises status(); the checkhealth probe asserts all four sections render). (nvim/lua/gerrrt/health.lua, nvim/lua/gerrrt/servers/init.lua, scripts/test-core.sh)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.6.0",
+      "date": "2026-07-30",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "Dev toolchain and plugin pins rolled forward. Routine freshness sweep. The gate toolchain was bumped in scripts/tool-versions.env (the single source — ci.yml and make setup read it, and the audit's consistency gate enforces the .pre-commit-config.yaml revs match it): shellcheck 0.10.0 → 0.11.0 (with its SHELLCHECK_SHA256 recomputed via scripts/update-tool-checksums.sh), markdownlint-cli2 0.22.1 → 0.23.2, and pre-commit-hooks v5.0.0 → v6.0.0. Plugin pins were rolled to upstream: the zsh zsh-transient-prompt pin (zsh/45-plugins.zsh) and four Neovim plugins in nvim/lazy-lock.json (nvim-lspconfig, package-info.nvim, rainbow-delimiters.nvim, schemastore.nvim). (scripts/tool-versions.env, .pre-commit-config.yaml, zsh/45-plugins.zsh, nvim/lazy-lock.json)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.6.0",
+      "date": "2026-07-30",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": ":checkhealth gerrrt clipboard false alarm on native Windows. On the Windows host (where dotfiles-Windows vendors only nvim/ and never runs Core's bootstrap), the clipboard section warned \"Core's cross-OS clipboard scripts are not on PATH (clip: found, clip-paste: missing)\" — misleading, because clip only \"found\" as Windows' built-in clip.exe and the Unix/WSL clip/clip-paste ladder simply does not apply there: config/clipboard.lua wires an OS-appropriate provider instead (the clip-windows provider — clip.exe copy + PowerShell paste — when clip.exe is present, else the OSC52 fallback). nvim/lua/gerrrt/health.lua now detects native Windows (has(\"win32\"), false under WSL), records that the Unix probe is inapplicable, and defers to :checkhealth vim.provider for the live backend rather than running the ladder or re-deriving the provider itself. (nvim/lua/gerrrt/health.lua)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.6.0",
+      "date": "2026-07-30",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "noice.nvim cmdline regex highlighting. Added the regex Tree-sitter parser to ensure_installed in nvim/lua/gerrrt/plugins/nvim-treesitter.lua. noice runs a floating command line (cmdline_popup), which uses the regex parser to syntax- highlight the pattern in :s/…/ substitutions and searches; without it, :checkhealth noice warned \"regex parser is not installed. Highlighting of the cmdline for regex might be broken.\" It installs on next launch via the existing ensure_installed diff.",
       "core": true
     },
     {
@@ -1019,303 +873,6 @@
       "category": "Fixed",
       "kind": "feature",
       "text": "psmux/scripts/psmux-cheat.ps1 — prefix ? cheatsheet rendered as 3 columns of ~1 character each. The $rows array was built from newline-separated @(...) literals, so PowerShell emitted each inner array as a separate pipeline statement and the collecting @() flattened them into one string array; $_[0..2] then indexed single characters ('psmux'[0]='p'). Added the leading-comma idiom (,@(...)) to each row so unrolling preserves the row, plus a comment documenting why it must stay.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "feature",
-      "text": "QuickLook (QL-Win.QuickLook) — macOS-style spacebar file preview added to the optional gui winget group (winget.json + packages.lock.json). Opt-in like the rest of the group; deliberately kept out of the core set. Flow Launcher was considered and left out — it overlaps PowerToys Run, which the desktop group already installs.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "feature",
-      "text": "Everything (voidtools) instant file search + its es CLI. everything (the MFT-indexed search service, extras bucket) and everything-cli (the es command, main bucket) added to scoopfile.json + packages.lock.json. es pairs with the shell — es foo | fzf, or as an FZF_DEFAULT_COMMAND source — and needs the Everything service running, which is why both are installed together.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "windows/defaults.ps1 — Windows preferences as code (the pwsh twin of the sibling dotfiles-MacBook repo's macos/defaults.sh). A handful of privacy/telemetry + Explorer tweaks (disable the advertising ID, Start-menu suggestions, Bing-in-Start; show file extensions; open to This PC) codified as idempotent HKCU registry writes — no admin, nothing machine-wide. -DryRun previews, -RestartExplorer applies shell changes now. The point: the tweaks live in git (diffable, reproducible) instead of a one-shot debloat GUI. Standalone/opt-in — it is not wired into install.ps1.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "jujutsu (jj) config on the host. New jj/config.toml — the host-side twin of Core's core/jujutsu/config.toml — is symlinked to %APPDATA%\\jj\\config.toml (jj's native Windows config location) via Get-DotfilesLinkPlan, so the jjs/jjl/jjd aliases land on the same log-first, colocated-git setup as the Unix fleet. Windows-safe deviation: the pager is jj's built-in (:builtin) since Core's less -FRX isn't on the host. Identity stays unset (set once per machine with jj config set --user …).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "fix",
-      "text": "Windows↔Mac terminal parity pass — the PowerShell/psmux/Windows Terminal stack now matches the Core (zsh) baseline the Mac inherits, wherever it's reproducible. - Git shorthands: the full curated git.zsh set (~55 g* verbs) is now on the host — gap, the gca/gcam/gc!/gcn! commit family, gb* branch, gcb/gcom/ gsw/gswc/gswm checkout/switch, gds/gdw, gloga/glol/glola, gf/gfa/ gpr/gpu, gpf = push --force-with-lease (the safe force), the gsta* stash and grb* rebase families, grh/grhh/grs/grss, gr/grv/gm/gma, plus gdft (difftastic) and jjs/jjl/jjd (jujutsu). The built-in PowerShell aliases that shadow a git shorthand (gc→Get-Content, gcm→Get-Command, gp→Get-ItemProperty, gl→Get-Location, gm→Get-Member, gcb→Get-Clipboard) are removed at load so the functions win — which also fixes gl/gc/gcm/gp, previously shadowed and silently not doing their git thing. gbD (force-delete) is dropped: PowerShell is case-insensitive, so it can't coexist with gbd (use gbd -D). - Modern-CLI aliases: df→duf, fm/y→yazi, top/htop→btop, tree→eza, ping→gping, cdi→zoxide interactive, and notes. - Functions: ports (listening sockets + process), cdup, fcd, genpw (crypto RNG), please (elevated re-run of the last command), and pullall (parallel fast-forward of every repo under a dir). - Tools: gping, difftastic, and jj (jujutsu) added to scoopfile.json (+ packages.lock.json); the difftastic difftool + dft alias added to git/.gitconfig. - psmux keys: full-span splits (\\/_), zoom (m), kill/swap (x/X), toggle titles (P), synchronize-panes (*), a floating popup (F), window cycling (Alt+Shift+H/L), rename/kill window (,/&), enriched vi copy-mode (Enter/v/C-v/Escape), R/S/d QoL, double-tap-prefix → last-window, and a new prefix + u URL picker (psmux-url.ps1, host port of tmux-fzf-url). The cheatsheet moved from prefix + D to prefix + ? to match Core's tmux. - Ctrl+\\ now toggles PSReadLine predictions, mirroring zsh's autosuggest-toggle.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "A real winget import-compatible manifest and a winget configure baseline. winget.json is this repo's own shape ({ packages: [ id | { id, group } ] }) so the installer can carry optional-group tags — which means it is not consumable by winget import. New packages/Export-WingetImport.ps1 projects it down to the official export schema at packages/winget-import.json, so a fresh box restores the whole set in one command (winget import -i packages/winget-import.json …); -Frozen pins versions from packages.lock.json. New root configuration.dsc.yaml goes further — an idempotent winget configure baseline that also enables Developer Mode (symlinks without an admin prompt).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "Windows Terminal \"PowerShell (JetBrains Mono)\" profile. JetBrainsMono-NF was installed by scoopfile.json but unused; it now has a home as a second pwsh profile, alongside the CaskaydiaCove default.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "PSReadLine F2 toggles the prediction view (inline ghost ⇄ multi-row ListView) on demand, and the prediction UI is now tinted to the Tokyo Night palette instead of PSReadLine's default grey. The low-churn InlineView stays the default.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "feature",
-      "text": "Tab-completion of local branch names for bare git after a ref-consuming verb (checkout/switch/merge/rebase/branch) — filling the gap left by running no posh-git.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Windows Terminal now matches Ghostty's look: default font size 13 → 16 and useAcrylic: true (opacity stays 90) so the background is frosted glass like Ghostty's background-blur, rather than flat 90% opacity. The JetBrains Mono profile is bumped to 16 too.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Changed",
-      "kind": "config",
-      "text": "PSReadLine history depth raised 50000 → 200000, matching Core's zsh HISTSIZE/SAVEHIST.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Changed",
-      "kind": "config",
-      "text": "delta already followed the Tokyo Night ansi theme here; Core adopts ansi too (was TwoDark) so git diff renders identically on both OSes.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Windows Terminal opts into the AtlasEngine renderer explicitly (useAtlasEngine: true in profiles.defaults) — it's the modern default, but the setting documents intent and guards an older WT build.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Changed",
-      "kind": "config",
-      "text": "dotfiles-doctor and core version spawn one fewer git per run. The \"Repo version\" detail collapsed two of its three git invocations into a single git log -1 --format='%h%n%cs'.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Changed",
-      "kind": "config",
-      "text": "GlazeWM keymap reconciled with the Mac's AeroSpace into one shared cross-OS keymap. The tiled desktop now has identical muscle memory on Windows and macOS: desktop/glazewm/config.yaml is kept keystroke-for-keystroke in step with dotfiles-MacBook/aerospace/aerospace.toml. Workspaces trimmed from 9 to 5 (matching AeroSpace's persistent 1–5); resize mode is now HJKL-only (arrow duplicates removed). Bindings with no identical AeroSpace equivalent were dropped for strict parity: minimize (Alt+M), toggle-tiling (Alt+T), pause mode (Alt+Shift+P), redraw (Alt+Shift+W), exit-WM (Alt+Shift+E), and directional move-workspace-to-monitor (Alt+Shift+A/S/D/F). Quit GlazeWM from its system-tray icon now that wm-exit has no bind. desktop/README.md updated to match.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Removed",
-      "kind": "config",
-      "text": "Dropped Visual Studio Code, Obsidian, and Firefox from the winget manifest. VS Code was a core (always-installed) package; Obsidian and Firefox sat in the optional gui group. All three are editor/browser/app preferences rather than part of the host toolchain, so they're no longer installed by bootstrap/install.ps1. Removed from winget.json and packages.lock.json (the gui group is now just 1Password — the app and its CLI). Existing installs are untouched — this only stops future auto-installs; add any back by hand (winget install …) if you want it.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "The multi-flavor Windows Terminal settings link no longer prints a \"target folder not found — skipping\" warning per flavor you don't have. After the three-flavor support landed (Store / unpackaged / Preview), install.ps1 warned once for each absent flavor and dotfiles-doctor showed three link rows (two forever \"skipped\") — noise, since you normally have exactly one WT install. Both now treat the flavors as a group: link whichever is present, stay silent about the rest, and warn/skip once only when no Windows Terminal is installed at all.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "Windows Terminal settings now link for a scoop/unpackaged or Preview WT, not just the Store build. Get-DotfilesLinkPlan (powershell/core/05-lib.ps1) hardcoded the packaged …WindowsTerminal_8wekyb3d8bbwe\\LocalState path, and the row self-skips when that parent is absent — so an unpackaged WT silently never got its settings.json. Two more plan rows cover %LOCALAPPDATA%\\Microsoft\\Windows Terminal\\ (unpackaged) and the …WindowsTerminalPreview… package; only the installed flavor's row links.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "packages.lock.json pinned 1Password to a range (> 8.12.24.34), not an exact version — defeating -Frozen reproducibility for that one package. Pinned to an exact version (regenerate on a real box with Update-PackageLock.ps1).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "GlazeWM and Zebar failed to install (winget … NO_APPLICATIONS_FOUND). The desktop group used the CamelCase winget IDs glzr-io.GlazeWM / glzr-io.Zebar, but the community manifests publish them lowercase (glzr-io.glazewm / glzr-io.zebar) and winget install -e is case-sensitive — so both were skipped while PowerToys/TranslucentTB installed fine. Corrected the IDs in winget.json, packages.lock.json, and the docs.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "bootstrap.ps1 handoff to install.ps1 failed with \"A positional parameter cannot be found that accepts argument '$null'\". When no DOTFILES_BOOTSTRAP_ARGS were set (the common case), Get-BootstrapInstallArgs returned @(), which PowerShell unrolls to $null on assignment; splatting $null into the switch-only install.ps1 passed a literal $null positional argument. The call site now wraps the result in @() and guards the splat, so a fresh .\\bootstrap.ps1 (or the irm | iex one-liner) runs the installer cleanly.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "Zebar bar gains pomodoro, media controls, and a power menu. Cherry-picked from Gerrrt/yasb-glazewm-config into the vanilla-clear widget: a 25/5 pomodoro (click to start/pause, right-click to reset), now-playing title/artist with prev/play-pause/next (Zebar media provider), and a lock/sleep/restart/shutdown power menu (via shellExec, with shutdown/rundll32 whitelisted in zpack.json's privileges.shellCommands). The zebar client import is bumped to the @3 major to match the pinned app so those providers/APIs are present.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "Opt-in tiling-desktop layer (desktop/). A new optional layer that rices the desktop on top of the shell host, adapted from Gerrrt/make-windows-pretty and retuned to the fleet's Tokyo Night Storm palette. Ships GlazeWM (i3-style tiling WM), a Zebar top bar (the buildless-React vanilla-clear widget as a native Zebar v3 widget pack (zpack.json), wired to GlazeWM for live, clickable workspaces), and adds PowerToys + TranslucentTB. All four install via the new desktop optional package group in winget.json (opt out at the picker or with DOTFILES_PKG_GROUPS), pinned in packages.lock.json. desktop/glazewm/config.yaml and the Zebar widget are symlinked into ~/.glzr by the shared link plan, so dotfiles-doctor verifies them and uninstall.ps1 removes them. The GlazeWM keymap is deliberately re-bound off Alt+<arrow> (which Windows Terminal uses for pane focus) to vim keys (Alt+H/J/K/L), and Alt+Enter launches wt. Setup + full keymap in desktop/README.md.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "config",
-      "text": "duf added to the scoop manifest. The one modern-CLI tool core-doctor probes for that was missing from the Windows package set (macOS's Brewfile and the Linux lists lacked it too) — now installed from scoop main and pinned in packages.lock.json, closing the last doctor-tool gap on Windows.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Added",
-      "kind": "security",
-      "text": "/release-readiness + /release-notes routines (.claude/commands/ + .github/workflows/claude-routines.yml). The Windows twin of Core's release routines: release-readiness reads the Conventional Commits + CHANGELOG since the last deliberate release and files a go/no-go verdict with the recommended next version — purpose-built for Windows' quirk that auto-tag patch-bumps on nvim/starship mirror-syncs, so meaningful feat/perf work drifts under patch tags (the tag line has run ahead of the CHANGELOG headings); release-notes drafts the CHANGELOG entry from those commits. Both report-first (file a deduped issue, change nothing). release-notes is dispatch-only; release-readiness also runs a monthly nudge. Inert by default — dormant until a CLAUDE_CODE_OAUTH_TOKEN repo secret is added. Run via Actions → claude-routines → Run workflow → routine.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Documentation",
-      "kind": "other",
-      "text": "README second-pass polish. The dotgibson shield now tracks the dotfiles-core release version (the system's version); dropped the showcase and LinkedIn shields for a one-line header (LinkedIn moved to Contact); \"Explore the docs »\" and the [docs] link now point at the documentation hub root (/docs); and About gained Languages (PowerShell) + Tools (Windows Terminal, Scoop, WinGet, psmux) subsections. The machine-checked Layout box and bootstrap SHA marker are unchanged.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Documentation",
-      "kind": "perf",
-      "text": "README rebuilt as a lean showcase landing page. Brought the README up to the dotfiles-core exemplar bar — a reference-style shields header, the org logo, a collapsible TOC, then a lean body (lead, three-layer at-a-glance, real Getting Started, a host-specific contribution contract, License/Contact). The lead states plainly that this host replicates Core in PowerShell rather than vendoring it. Deep detail (the fragment loader, coverage gate, and WSL bridge) now defers to the documentation hub and the migrated architecture audit. Added a .markdownlint.jsonc (mirrored from Core) scoping the showcase HTML via MD033 allowed_elements.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Documentation",
-      "kind": "feature",
-      "text": "aliases.md was missing three whole sections. os/33-psmux-pill.ps1 (psmux-pill-now/-enable/-disable/-status), os/40-maint.ps1 (maint-install/-run/-log/-status/-uninstall), and os/45-doctor.ps1 (dotfiles-doctor) had zero cheat-sheet coverage. Added sections for all three, and filled in the corresponding CLAUDE.md \"Where things are\" gaps (git/, maint/, ssh/, docs/, tests/).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(module): the Dotfiles module surface runs under Set-StrictMode -Version Latest. The non-interactive helper surface (Dotfiles.psm1 → core/05-lib.ps1 + the *.Helpers.ps1) had no strict-mode guard, so a typo'd variable, a missing property, or a bad array index silently returned $null instead of erroring. StrictMode is now set inside the module — scoped to the module, so even under Import-Module -Global the interactive session stays lenient (a blanket StrictMode on the dot-sourced interactive layer would change everyday shell behaviour, which is why it stays off there). The Serve/Doctor/Help/WslBridge suites already exercise the surface via Import-Module, and Lib.Tests.ps1 now sets StrictMode too, so CI validates the helpers under strict mode.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "fix(profile): the local-modules PSModulePath dedup guard compares literally. profile.ps1 used -notlike \"*$LocalModules*\", which treats the path as a wildcard pattern — a %LOCALAPPDATA% containing [ or ] (e.g. a user[1] name or a redirected profile) could mis-fire the guard and re-prepend PSModulePath on every shell start. It now splits on the path separator and uses -notcontains (a literal, case-insensitive compare).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "security",
-      "text": "Runaway git.exe processes that blocked updating git. git gets spawned all the time without you asking — starship's git_* prompt modules on every render, the background scoop update bucket pulls in core/15-update.ps1, the daily maint job. Any of those can wedge on an INTERACTIVE credential prompt (git's own terminal prompt, or a Git Credential Manager dialog) in a context with nobody to answer, so the git.exe waits forever and the next spawn stacks another — hundreds of orphans that hold the git binary busy so scoop update git / winget upgrade Git.Git can't replace it. Fix: a new early fragment core/08-git-safety.ps1 exports GIT_TERMINAL_PROMPT=0 + GCM_INTERACTIVE=Never (before 15-update and the prompt tools load) so shell-spawned git FAILS FAST instead of blocking on auth; escape hatch DOTFILES_GIT_ALLOW_PROMPT=1, and an already-set value is honoured. Adds a git-reap (Reset-StuckGit) verb to kill a pile that already formed. Paired with Core pinning starship command_timeout (reaps read-only prompt-git that wedges on a slow FS), synced into starship/starship.toml here (.core-ref bumped).",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "Large multi-line pastes no longer switch modes / reorder text / run vim commands. Root cause: core/10-tools.ps1 sets EditMode Vi, and PSReadLine versions before 2.2.0 have no bracketed-paste support, so a pasted block is replayed keystroke-by-keystroke and :/d/i/a/o/Esc are taken as Vi commands. Fix: bumped the PSReadLine pin in packages/modules.ps1 from 2.2.0 to 2.3.6 (the current gallery release; first paste-safe release is 2.2.0), kept Vi mode (deliberate parity with Core's zsh-vi-mode), and added a cheap (Get-Module PSReadLine).Version guard that emits a one-line Write-DotWarn with the upgrade command if a stale in-box PSReadLine (< 2.2.0) is loaded, so a stale box self-diagnoses. tests/Repo.Tests.ps1 now asserts the >= 2.2.0 floor.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.2.0",
-      "date": "2026-07-14",
-      "category": "Fixed",
-      "kind": "perf",
-      "text": "Windows nvim plugins are now pinned to Core's lazy-lock.json like the rest of the fleet. nvim-sync.ps1 previously excluded lazy-lock.json from the robocopy /MIR (/XF) as \"env-specific\" — but it pins plugin commit SHAs, which are cross-platform, so Windows nvim floated on plugin HEAD while every Unix repo (and Core's weekly nvim-lock bot) stayed pinned. The sync now mirrors it; the file is removed from .gitignore, committed (from Core v2.4.1), and the nvim parity gate (tests/Assert-NvimParity.ps1) now includes it so the pin can't drift. Also bumped stale nvim/.core-ref provenance from v2.3.0 (6e923f9) to v2.4.1 (75195df) so fleet-drift stops falsely reporting Windows behind.",
       "core": false
     }
   ]
