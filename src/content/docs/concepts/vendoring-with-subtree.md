@@ -1,6 +1,6 @@
 ---
 title: Vendoring with git subtree
-description: Why Core is vendored into each OS repo with git subtree instead of a submodule, and how the copy is kept honest.
+description: Why Core is vendored into each OS repo (except Windows) with git subtree instead of a submodule, and how the copy is kept honest.
 section: Concepts
 order: 1
 ---
@@ -10,6 +10,10 @@ order: 1
 Core is authored once in `dotfiles-core` and **vendored** — copied in full — into every OS repo's
 `core/` directory using `git subtree`. Each machine repo therefore carries a real copy of Core,
 not a reference to it.
+
+The one exception is `dotfiles-Windows`, which carries no `core/` subtree: it replicates Core
+natively in PowerShell and mirrors only the Neovim and starship configs via sync scripts. Everything
+below describes the machine repos that do vendor Core.
 
 ## Why vendor at all
 

@@ -33,7 +33,8 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
   {
     repo.layer === 'core' ? (
       <p>
-        The keystone. Every OS repo vendors this into its <code>core/</code> directory via
+        The keystone. Every OS repo except Windows — which replicates Core natively in
+        PowerShell — vendors this into its <code>core/</code> directory via
         <code>git subtree</code>, so a change here fans out to the whole fleet. See{' '}
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> and{' '}
         <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring with git subtree</a>.
