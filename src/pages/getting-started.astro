@@ -146,8 +146,10 @@ const showSelect = channels.length > 1 || release.current !== 'main';
       <div class="afterword">
         <Callout type="important" title="Keeping Core current">
           <p>
-            Core is authored in <code>dotfiles-core</code> and vendored into every OS repo. To
-            pull the latest Core into a machine repo and re-wire links:
+            Core is authored in <code>dotfiles-core</code> and vendored into every OS repo —
+            except Windows, which replicates Core natively in PowerShell and has no
+            <code>core/</code> subtree to pull. To pull the latest Core into a machine repo and
+            re-wire links:
           </p>
           <CommandBlock
             code={`git subtree pull --prefix=core https://github.com/dotgibson/dotfiles-core main --squash

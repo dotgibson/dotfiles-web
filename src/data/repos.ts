@@ -100,7 +100,7 @@ export const repos: Repo[] = [
       {
         label: 'A change here fans out N-way',
         detail:
-          'Core is vendored into every OS repo via git subtree, so a defect fixed once lands everywhere on the next make sync. Treat every change as if it ships to all of them — because it does.',
+          'Core is vendored into every OS repo via git subtree — except Windows, which replicates it natively — so a defect fixed once lands in all of them on the next make sync. Treat every change as if it ships to all of them — because it does.',
       },
     ],
     docs: [
