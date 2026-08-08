@@ -1,9 +1,15 @@
 {
-  "ruleCount": 65,
-  "documentCount": 68,
-  "techniqueCount": 41,
-  "tacticCount": 9,
-  "logsourceCount": 21,
+  "generatedAt": "2026-08-08",
+  "generatedFrom": {
+    "repo": "dotfiles-Defense",
+    "path": "detections/sigma",
+    "commit": "2633c2192550b0bc6bf0f716fb490103c3c8558a"
+  },
+  "ruleCount": 89,
+  "documentCount": 101,
+  "techniqueCount": 67,
+  "tacticCount": 10,
+  "logsourceCount": 24,
   "tactics": [
     {
       "id": "TA0002",
@@ -14,50 +20,56 @@
     {
       "id": "TA0003",
       "name": "Persistence",
-      "techniques": 11,
-      "rules": 29
+      "techniques": 13,
+      "rules": 34
     },
     {
       "id": "TA0004",
       "name": "Privilege Escalation",
-      "techniques": 6,
-      "rules": 6
+      "techniques": 7,
+      "rules": 9
     },
     {
       "id": "TA0005",
       "name": "Defense Evasion",
-      "techniques": 6,
-      "rules": 10
+      "techniques": 7,
+      "rules": 11
     },
     {
       "id": "TA0006",
       "name": "Credential Access",
-      "techniques": 11,
-      "rules": 12
+      "techniques": 15,
+      "rules": 17
     },
     {
       "id": "TA0007",
       "name": "Discovery",
-      "techniques": 2,
-      "rules": 1
+      "techniques": 12,
+      "rules": 3
     },
     {
       "id": "TA0008",
       "name": "Lateral Movement",
-      "techniques": 4,
-      "rules": 5
+      "techniques": 9,
+      "rules": 7
     },
     {
       "id": "TA0009",
       "name": "Collection",
-      "techniques": 1,
-      "rules": 1
+      "techniques": 4,
+      "rules": 3
     },
     {
       "id": "TA0010",
       "name": "Exfiltration",
       "techniques": 2,
       "rules": 2
+    },
+    {
+      "id": "TA0040",
+      "name": "Impact",
+      "techniques": 4,
+      "rules": 7
     }
   ],
   "techniques": [
@@ -83,6 +95,55 @@
       ]
     },
     {
+      "id": "T1005",
+      "rules": 1,
+      "ruleNames": [
+        "mass_file_read_4663"
+      ]
+    },
+    {
+      "id": "T1007",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
+      ]
+    },
+    {
+      "id": "T1016",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
+      ]
+    },
+    {
+      "id": "T1018",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
+      ]
+    },
+    {
+      "id": "T1021",
+      "rules": 1,
+      "ruleNames": [
+        "passthehash_4624_fanout"
+      ]
+    },
+    {
+      "id": "T1033",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
+      ]
+    },
+    {
+      "id": "T1046",
+      "rules": 1,
+      "ruleNames": [
+        "ldap_recon_explicit_creds_4648"
+      ]
+    },
+    {
       "id": "T1047",
       "rules": 1,
       "ruleNames": [
@@ -90,10 +151,24 @@
       ]
     },
     {
+      "id": "T1049",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
+      ]
+    },
+    {
       "id": "T1053.005",
       "rules": 1,
       "ruleNames": [
         "scheduled_task_suspicious_4698"
+      ]
+    },
+    {
+      "id": "T1057",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
       ]
     },
     {
@@ -126,18 +201,41 @@
       ]
     },
     {
-      "id": "T1087.002",
+      "id": "T1074.001",
       "rules": 1,
       "ruleNames": [
+        "archive_staging_utility"
+      ]
+    },
+    {
+      "id": "T1082",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
+      ]
+    },
+    {
+      "id": "T1087.001",
+      "rules": 1,
+      "ruleNames": [
+        "host_recon_command_burst"
+      ]
+    },
+    {
+      "id": "T1087.002",
+      "rules": 2,
+      "ruleNames": [
+        "ldap_recon_explicit_creds_4648",
         "sharphound_ldap_sweep_4662"
       ]
     },
     {
       "id": "T1098",
-      "rules": 15,
+      "rules": 16,
       "ruleNames": [
         "aws_login_profile_created",
         "cloudflare_api_token_created",
+        "gcp_iam_policy_backdoor",
         "github_credential_backdoor",
         "gitlab_token_backdoor",
         "harbor_robot_account_created",
@@ -164,8 +262,10 @@
     },
     {
       "id": "T1098.003",
-      "rules": 1,
+      "rules": 3,
       "ruleNames": [
+        "aws_iam_privesc_policy",
+        "entra_directory_role_grant",
         "gws_admin_role_grant"
       ]
     },
@@ -185,9 +285,32 @@
     },
     {
       "id": "T1134.001",
+      "rules": 2,
+      "ruleNames": [
+        "potato_seimpersonate_4688",
+        "potato_seimpersonate_sysmon_1"
+      ]
+    },
+    {
+      "id": "T1135",
       "rules": 1,
       "ruleNames": [
-        "potato_seimpersonate_4688"
+        "host_recon_command_burst"
+      ]
+    },
+    {
+      "id": "T1136.001",
+      "rules": 1,
+      "ruleNames": [
+        "rogue_account_creation_4720"
+      ]
+    },
+    {
+      "id": "T1136.002",
+      "rules": 2,
+      "ruleNames": [
+        "machine_account_creation_burst_4741",
+        "rogue_account_creation_4720"
       ]
     },
     {
@@ -195,6 +318,14 @@
       "rules": 1,
       "ruleNames": [
         "snowflake_user_created"
+      ]
+    },
+    {
+      "id": "T1187",
+      "rules": 2,
+      "ruleNames": [
+        "coercion_named_pipes_5145",
+        "unconstrained_delegation_4624"
       ]
     },
     {
@@ -217,6 +348,37 @@
       "rules": 1,
       "ruleNames": [
         "okta_idp_created"
+      ]
+    },
+    {
+      "id": "T1485",
+      "rules": 1,
+      "ruleNames": [
+        "data_destruction_wipe"
+      ]
+    },
+    {
+      "id": "T1486",
+      "rules": 3,
+      "ruleNames": [
+        "bitlocker_abuse_encryption",
+        "mass_file_encryption_4663",
+        "mass_file_encryption_sysmon_11"
+      ]
+    },
+    {
+      "id": "T1489",
+      "rules": 2,
+      "ruleNames": [
+        "service_stop_burst",
+        "service_stop_protected_services"
+      ]
+    },
+    {
+      "id": "T1490",
+      "rules": 1,
+      "ruleNames": [
+        "recovery_inhibition_process"
       ]
     },
     {
@@ -251,6 +413,20 @@
       ]
     },
     {
+      "id": "T1550.002",
+      "rules": 1,
+      "ruleNames": [
+        "passthehash_4624_fanout"
+      ]
+    },
+    {
+      "id": "T1550.003",
+      "rules": 1,
+      "ruleNames": [
+        "unconstrained_delegation_4624"
+      ]
+    },
+    {
       "id": "T1552.006",
       "rules": 1,
       "ruleNames": [
@@ -259,8 +435,9 @@
     },
     {
       "id": "T1555",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
+        "dpapi_backupkey_5145",
         "vault_bulk_secret_read"
       ]
     },
@@ -280,6 +457,13 @@
       ]
     },
     {
+      "id": "T1558",
+      "rules": 1,
+      "ruleNames": [
+        "unconstrained_delegation_4624"
+      ]
+    },
+    {
       "id": "T1558.003",
       "rules": 1,
       "ruleNames": [
@@ -288,9 +472,24 @@
     },
     {
       "id": "T1558.004",
+      "rules": 2,
+      "ruleNames": [
+        "asrep_roast_4768",
+        "asrep_roast_probing_4771"
+      ]
+    },
+    {
+      "id": "T1558.005",
       "rules": 1,
       "ruleNames": [
-        "asrep_roast_probing_4771"
+        "ccache_theft_staging"
+      ]
+    },
+    {
+      "id": "T1560.001",
+      "rules": 1,
+      "ruleNames": [
+        "archive_staging_utility"
       ]
     },
     {
@@ -310,6 +509,13 @@
       "rules": 1,
       "ruleNames": [
         "snowflake_network_policy_change"
+      ]
+    },
+    {
+      "id": "T1562.008",
+      "rules": 1,
+      "ruleNames": [
+        "gcp_audit_log_sink_deleted"
       ]
     },
     {
@@ -384,7 +590,7 @@
         "azure",
         "gcp"
       ],
-      "rules": 5
+      "rules": 9
     },
     {
       "dir": "cloudflare",
@@ -394,11 +600,18 @@
       "rules": 3
     },
     {
+      "dir": "collection",
+      "products": [
+        "windows"
+      ],
+      "rules": 2
+    },
+    {
       "dir": "credential_access",
       "products": [
         "windows"
       ],
-      "rules": 7
+      "rules": 10
     },
     {
       "dir": "defense_evasion",
@@ -412,7 +625,7 @@
       "products": [
         "windows"
       ],
-      "rules": 1
+      "rules": 3
     },
     {
       "dir": "github",
@@ -436,6 +649,13 @@
       "rules": 3
     },
     {
+      "dir": "impact",
+      "products": [
+        "windows"
+      ],
+      "rules": 7
+    },
+    {
       "dir": "jenkins",
       "products": [
         "jenkins"
@@ -454,7 +674,14 @@
       "products": [
         "windows"
       ],
-      "rules": 3
+      "rules": 5
+    },
+    {
+      "dir": "linux",
+      "products": [
+        "linux"
+      ],
+      "rules": 1
     },
     {
       "dir": "npm",
@@ -475,14 +702,14 @@
       "products": [
         "windows"
       ],
-      "rules": 2
+      "rules": 4
     },
     {
       "dir": "privilege_escalation",
       "products": [
         "windows"
       ],
-      "rules": 4
+      "rules": 5
     },
     {
       "dir": "pypi",

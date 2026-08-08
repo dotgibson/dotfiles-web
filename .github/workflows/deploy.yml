@@ -85,8 +85,13 @@ jobs:
           fi
           root="${RUNNER_TEMP}/fleet"
           mkdir -p "$root"
+          # htpx is not a dotfiles layer — it is the source collect-corpus.mjs reads for
+          # the /purple page. Without it in this list that collector took its defensive
+          # no-op path on every pinned build, so the deployed corpus was whatever happened
+          # to be committed rather than the pinned ref's.
           repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Kali dotfiles-Defense \
-                 dotfiles-Fedora dotfiles-Arch dotfiles-openSUSE dotfiles-Alpine dotfiles-Gentoo"
+                 dotfiles-Fedora dotfiles-Arch dotfiles-openSUSE dotfiles-Alpine dotfiles-Gentoo \
+                 htpx"
           for r in $repos; do
             url="https://x-access-token:${GH_TOKEN}@github.com/${OWNER}/${r}.git"
             if [ -n "${REF:-}" ] && git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>/dev/null; then
@@ -100,9 +105,14 @@ jobs:
           done
           echo "root=$root" >> "$GITHUB_OUTPUT"
 
-      - name: Regenerate metrics + config snippets from the pinned fleet
+      - name: Regenerate the derived data from the pinned fleet
         if: ${{ steps.fleet.outputs.root != '' }}
-        run: npm run data # metrics + snippets, both defensive (no-op if a repo is absent)
+        # All four collectors — metrics, snippets, corpus, coverage — each defensive
+        # (no-op if its source repo is absent). Nothing is committed back here; the
+        # refreshed JSON lives only in this build's dist/. fleet-sync.yml is what PRs it
+        # into the repo, and data-freshness.yml is what fails when the committed copy has
+        # fallen behind.
+        run: npm run data
         env:
           DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
 

@@ -19,6 +19,7 @@
 // missing sibling a HARD ERROR instead, so an "about to publish" run can't ship stale data.
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -135,7 +136,27 @@ const logsources = [...dirRules.keys()].sort().map((d) => ({
   rules: dirRules.get(d).size,
 }));
 
+// Provenance stamp — same rationale as collect-corpus.mjs: without a date and a source
+// reference, a stale coverage.json is indistinguishable from a fresh one. Defensive by
+// design, so a non-git source directory stamps a null commit instead of failing.
+function sourceCommit(dir) {
+  try {
+    return execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+
 const coverage = {
+  generatedAt: new Date().toISOString().slice(0, 10),
+  generatedFrom: {
+    repo: 'dotfiles-Defense',
+    path: 'detections/sigma',
+    commit: sourceCommit(join(root, 'dotfiles-Defense')),
+  },
   ruleCount,
   documentCount,
   techniqueCount: techniques.length,

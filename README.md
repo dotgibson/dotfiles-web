@@ -131,14 +131,31 @@ Content is data-driven — edit these and the site updates:
 - `src/data/install.ts` — per-platform install steps
 - `src/content/docs/**/*.md` — the documentation hub pages
 
-The "by the numbers" strip, per-card package counts, and the changelog are **not**
-hand-typed — they come from `src/data/generated.json`, which
-`scripts/collect-metrics.mjs` derives by reading the sibling repos. Regenerate and
-commit it whenever a source repo changes:
+The "by the numbers" strip, per-card package counts, the changelog, the Config
+explorer's baked files, and the `/purple` corpus + detection-coverage tables are
+**not** hand-typed — four collectors under `scripts/` derive them from the sibling
+repos into `src/data/`:
+
+| file | collector | source repo |
+| --- | --- | --- |
+| `generated.json` | `collect-metrics.mjs` | the ten dotfiles repos |
+| `snippets.json` | `collect-snippets.mjs` | the OS repos' config files |
+| `corpus.json` | `collect-corpus.mjs` | `htpx` |
+| `coverage.json` | `collect-coverage.mjs` | `dotfiles-Defense` |
+
+Regenerate and commit whenever a source repo changes — run all four, not just one, or
+the untouched files quietly fall behind:
 
 ```bash
-npm run metrics    # checkout the sibling repos next to this one first
+npm run data          # checkout the sibling repos next to this one first
+npm run data:strict   # same, but fails instead of no-opping when a repo is missing
 ```
+
+Each collector is defensive: with its source repo absent it leaves the committed file
+alone and exits 0, so a fleet-less runner can't zero the data. `fleet-sync.yml` runs all
+four weekly and opens a PR when the output drifts; `data-freshness.yml` fails CI when
+the committed `corpus.json` / `coverage.json` no longer match their sources, or when
+`generated.json`'s Core version is behind the latest `dotfiles-core` release.
 
 Pushing to `main` triggers `.github/workflows/deploy.yml` (Astro build → GitHub
 Pages). A source repo can ping a rebuild via `repository_dispatch`; the token and

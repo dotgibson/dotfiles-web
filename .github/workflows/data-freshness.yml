@@ -8,6 +8,12 @@ name: Data freshness
 # asks the GitHub API for the latest dotfiles-core release tag and compares it to
 # the Core version baked into the committed src/data/generated.json. If the data is
 # behind the latest Core release, it FAILS with a nudge to regenerate and commit.
+#
+# Note the narrow scope of that first job: it compares TWO VERSION STRINGS. Everything
+# else in generated.json — package counts, CI flags, the changelog, fleet.publicRepos,
+# every core.* metric and all nine per-repo drift entries — is unvalidated by it. The
+# derived-data job below covers the other two generated files (corpus.json,
+# coverage.json), which until it existed were checked by nothing at all.
 on:
   schedule:
     - cron: "17 6 * * 1" # Mondays 06:17 UTC — weekly drift sweep
@@ -15,7 +21,11 @@ on:
   pull_request:
     paths:
       - "src/data/generated.json"
+      - "src/data/corpus.json"
+      - "src/data/coverage.json"
       - "scripts/collect-metrics.mjs"
+      - "scripts/collect-corpus.mjs"
+      - "scripts/collect-coverage.mjs"
       - "src/content/docs/reference/porting-matrix.md"
       - ".github/workflows/data-freshness.yml"
 
@@ -155,3 +165,86 @@ jobs:
           echo "--- dotfiles-core (${latest})  +++ this repo ---"
           diff -u /tmp/core-matrix.md /tmp/web-matrix.md | head -100 || true
           exit 1
+
+  # corpus.json and coverage.json are the OTHER two generated files, and until this job
+  # existed nothing validated them — not the version guard above (it only opens
+  # generated.json), not fleet-sync (it ran neither collector and didn't clone htpx), not
+  # deploy (it runs them but commits nothing back, and its clone list omitted htpx so the
+  # corpus collector silently no-opped every time). They also carried no stamp, so their
+  # staleness was undetectable even in principle. The result was predictable: by 2026-08-08
+  # the committed corpus.json was 5 pairs behind htpx and coverage.json was 24 Sigma rules
+  # behind dotfiles-Defense, while /showcase-accuracy's own instructions told every run to
+  # treat both as CI-verified ground truth.
+  #
+  # Unlike the jobs above this one needs the sources, so it clones the two repos those
+  # collectors read and REGENERATES the files, then fails if the result differs from what
+  # is committed. Content-diffing rather than comparing source SHAs is deliberate: an
+  # unrelated commit to htpx must not turn this red, only one that actually moves the
+  # numbers the site publishes.
+  #
+  # On the weekly cron this is an ALARM, not a defect: it runs Monday and fleet-sync runs
+  # Tuesday, so a genuine drift shows up here a day before the bot PRs the refresh. On a
+  # pull request it is a gate — the paths filter above scopes it to PRs that touch the
+  # data or its collectors.
+  derived-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.repository_owner == 'dotgibson'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Clone the corpus + coverage sources (read-only, shallow)
+        id: fleet
+        env:
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+          root="${RUNNER_TEMP}/fleet"
+          mkdir -p "$root"
+          # Both required. The collectors exit 0 when a source is missing (leaving the
+          # committed file untouched), which would make an unrefreshed snapshot look
+          # green — so a failed clone has to fail the job here, and --strict below is the
+          # second line of defence if one ever gets past this.
+          for r in htpx dotfiles-Defense; do
+            git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$root/$r"
+          done
+          echo "root=$root" >> "$GITHUB_OUTPUT"
+
+      - name: Regenerate the corpus + coverage snapshots
+        env:
+          DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
+        run: |
+          set -euo pipefail
+          node scripts/collect-corpus.mjs --strict
+          node scripts/collect-coverage.mjs --strict
+
+      - name: Compare the regenerated snapshots against what is committed
+        run: |
+          set -euo pipefail
+
+          # generatedAt is day-granular and generatedFrom.commit tracks the source repo's
+          # HEAD; both move without the published numbers changing, so neither may turn
+          # the build red on its own. Same trick fleet-sync.yml uses for generated.json's
+          # generatedAt. Only those two are stripped, NOT generatedFrom wholesale:
+          # .repo and .path are hardcoded in the collectors, so they change only when
+          # someone repoints a collector at a different source — a change that must be
+          # committed, and which would otherwise slip through whenever the new source
+          # happened to yield identical numbers.
+          stale=0
+          for f in corpus coverage; do
+            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom.commit)')"
+            new="$(jq 'del(.generatedAt, .generatedFrom.commit)' "src/data/${f}.json")"
+            if [ "$old" = "$new" ]; then
+              echo "OK — src/data/${f}.json matches its source."
+              continue
+            fi
+            stale=1
+            echo "::error::src/data/${f}.json is BEHIND its source repo. The showcase" \
+                 "would publish stale counts on /purple. Check out the fleet as siblings" \
+                 "and run 'npm run ${f}' (or 'npm run data:strict'), then commit the result."
+            echo "--- committed  +++ regenerated (src/data/${f}.json) ---"
+            diff -u <(printf '%s\n' "$old") <(printf '%s\n' "$new") | head -60 || true
+          done
+
+          exit "$stale"
