@@ -1,8 +1,14 @@
 {
-  "totalPairs": 85,
+  "generatedAt": "2026-08-08",
+  "generatedFrom": {
+    "repo": "htpx",
+    "path": "entries",
+    "commit": "9be4323f8f6ec6912bb03251dda2056496ff5bbc"
+  },
+  "totalPairs": 90,
   "groupCount": 16,
-  "techniqueCount": 57,
-  "tacticCount": 11,
+  "techniqueCount": 59,
+  "tacticCount": 12,
   "groups": [
     {
       "label": "On-prem AD / Windows",
@@ -10,7 +16,7 @@
     },
     {
       "label": "Cloud IAM (Entra · AWS · GCP)",
-      "count": 6
+      "count": 11
     },
     {
       "label": "Okta",
@@ -84,7 +90,7 @@
     {
       "id": "adcs-esc1-certipy",
       "attack": "AD CS ESC1 (request a cert as admin via arbitrary SAN)",
-      "detection": "Detect AD CS SAN abuse (4886 ESC1/relay)",
+      "detection": "Detect AD CS SAN abuse (4886/4887 ESC1/relay)",
       "group": "On-prem AD / Windows",
       "phase": "Credential Access",
       "tactic": "TA0006",
@@ -95,7 +101,7 @@
     {
       "id": "asreproast-getnpusers",
       "attack": "AS-REP roast (no-preauth accounts)",
-      "detection": "Detect AS-REP / Kerbrute probing (4771 0x18)",
+      "detection": "Detect AS-REP roast (4768 no-preauth) + Kerbrute probing (4771)",
       "group": "On-prem AD / Windows",
       "phase": "Credential Access",
       "tactic": "TA0006",
@@ -141,8 +147,8 @@
       "attack": "DCShadow (register a rogue DC, push directory changes)",
       "detection": "Detect DCShadow (rogue DC registration, 4742 GC SPN)",
       "group": "On-prem AD / Windows",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
         "T1207"
       ]
@@ -326,7 +332,7 @@
     {
       "id": "password-spray-kerbrute",
       "attack": "Password spray (kerbrute, low & slow)",
-      "detection": "Detect password spray (4625 one source, many accounts)",
+      "detection": "Detect password spray (one source, many accounts — 4771 + 4625)",
       "group": "On-prem AD / Windows",
       "phase": "Credential Access",
       "tactic": "TA0006",
@@ -364,7 +370,7 @@
       "phase": "Impact",
       "tactic": "TA0040",
       "techniques": [
-        "T1496"
+        "T1496.001"
       ]
     },
     {
@@ -500,6 +506,28 @@
       ]
     },
     {
+      "id": "aws-iam-privesc-policy",
+      "attack": "AWS IAM privilege escalation (AttachUserPolicy / PassRole → AssumeRole)",
+      "detection": "Detect IAM privilege escalation (CloudTrail AttachUserPolicy / PassRole)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Privilege Escalation",
+      "tactic": "TA0004",
+      "techniques": [
+        "T1098.003"
+      ]
+    },
+    {
+      "id": "aws-s3-mass-exfil",
+      "attack": "AWS S3 bulk object exfil (mass GetObject / CopyObject)",
+      "detection": "Detect S3 bulk exfil (CloudTrail data events + access logs)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Collection",
+      "tactic": "TA0009",
+      "techniques": [
+        "T1530"
+      ]
+    },
+    {
       "id": "cloud-snapshot-destroy",
       "attack": "Destroy cloud backups & data (snapshot / bucket deletion)",
       "detection": "Detect cloud data destruction (CloudTrail delete burst)",
@@ -508,6 +536,39 @@
       "tactic": "TA0040",
       "techniques": [
         "T1485"
+      ]
+    },
+    {
+      "id": "entra-directory-role",
+      "attack": "Entra privileged directory-role grant (tenant persistence)",
+      "detection": "Detect privileged directory-role grant (Entra audit, Add member to role)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.003"
+      ]
+    },
+    {
+      "id": "gcp-audit-log-disable",
+      "attack": "GCP Cloud Audit log tamper (delete sink / strip auditConfigs)",
+      "detection": "Detect audit-log tamper (GCP, DeleteSink / auditConfig strip)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
+      "techniques": [
+        "T1685.002"
+      ]
+    },
+    {
+      "id": "gcp-iam-policy-backdoor",
+      "attack": "GCP IAM policy backdoor (setIamPolicy → rogue principal)",
+      "detection": "Detect IAM policy backdoor (GCP audit, SetIamPolicy binding ADD)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098"
       ]
     },
     {
@@ -659,10 +720,10 @@
       "attack": "Disable/override branch protection (merge unreviewed code)",
       "detection": "Detect branch-protection tamper (GitHub audit log)",
       "group": "GitHub Actions",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
-        "T1562.001"
+        "T1685"
       ]
     },
     {
@@ -703,10 +764,10 @@
       "attack": "Remove protected-branch rules (merge unreviewed code)",
       "detection": "Detect protected-branch tamper (GitLab audit events)",
       "group": "GitLab CI/CD",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
-        "T1562.001"
+        "T1685"
       ]
     },
     {
@@ -758,7 +819,7 @@
       "attack": "Delete the trusted artifact (force re-pull + anti-forensics)",
       "detection": "Detect artifact deletion (Harbor audit log)",
       "group": "Harbor registry",
-      "phase": "Defense Evasion",
+      "phase": "Stealth",
       "tactic": "TA0005",
       "techniques": [
         "T1070"
@@ -791,10 +852,10 @@
       "attack": "Disable the Vault audit device (blind the SIEM)",
       "detection": "Detect audit-device disable (Vault audit log)",
       "group": "HashiCorp Vault",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
-        "T1562.001"
+        "T1685"
       ]
     },
     {
@@ -868,10 +929,10 @@
       "attack": "Snowflake network-policy tamper (open the IP allowlist)",
       "detection": "Detect network-policy change (Snowflake QUERY_HISTORY)",
       "group": "Snowflake",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
-        "T1562.007"
+        "T1686.001"
       ]
     },
     {
@@ -890,10 +951,10 @@
       "attack": "Cloudflare WAF/firewall rule disable (open the edge)",
       "detection": "Detect WAF/firewall rule disable (Cloudflare audit log)",
       "group": "Cloudflare edge",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
-        "T1562.001"
+        "T1686.001"
       ]
     },
     {
@@ -923,10 +984,10 @@
       "attack": "npm publish-2FA disable (open the publish path)",
       "detection": "Detect publish-2FA disable (npm audit log)",
       "group": "npm registry",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
-        "T1562.001"
+        "T1685"
       ]
     },
     {
@@ -978,10 +1039,10 @@
       "attack": "Slack 2FA enforcement disable (weaken workspace auth)",
       "detection": "Detect 2FA enforcement disable (Slack audit log)",
       "group": "Slack",
-      "phase": "Defense Evasion",
-      "tactic": "TA0005",
+      "phase": "Defense Impairment",
+      "tactic": "TA0112",
       "techniques": [
-        "T1562.001"
+        "T1685"
       ]
     },
     {

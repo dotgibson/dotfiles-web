@@ -16,6 +16,7 @@
 // htpx a HARD ERROR instead, so an "about to publish" run can't silently ship stale data.
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -145,7 +146,29 @@ for (const p of pairs) {
 const techniques = [...new Set(pairs.flatMap((p) => p.techniques))].sort();
 const tactics = [...new Set(pairs.map((p) => p.tactic).filter(Boolean))].sort();
 
+// Provenance stamp. Without it corpus.json carries no date and no source reference, so
+// nothing — not CI, not a human, not the /showcase-accuracy routine — can tell a snapshot
+// taken today from one taken two htpx releases ago. `git -C … rev-parse HEAD` works on the
+// --depth 1 clones CI makes; a source that isn't a git checkout (a tarball, a vendored
+// copy) stamps a null commit rather than failing the run.
+function sourceCommit(dir) {
+  try {
+    return execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+
 const corpus = {
+  generatedAt: new Date().toISOString().slice(0, 10),
+  generatedFrom: {
+    repo: 'htpx',
+    path: 'entries',
+    commit: sourceCommit(join(root, 'htpx')),
+  },
   totalPairs: pairs.length,
   groupCount: groups.length,
   techniqueCount: techniques.length,

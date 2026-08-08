@@ -87,16 +87,17 @@ jobs:
           # All required: collect-metrics.mjs exits 0 (leaving generated.json untouched)
           # if a repo is missing, which would masquerade as "in step" — so a failed clone
           # must fail the job instead. (dotfiles-Debian is intentionally absent — no repo.)
+          # htpx is here for collect-corpus.mjs: it is not a dotfiles layer, it is the
+          # source of the red/blue corpus the /purple page publishes, and leaving it out
+          # is why corpus.json used to drift for months between hand refreshes.
           for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Defense \
                    dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
-                   dotfiles-openSUSE dotfiles-Windows; do
+                   dotfiles-openSUSE dotfiles-Windows htpx; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r"
           done
-      - name: Regenerate the derived data (metrics + config snippets)
+      - name: Regenerate the derived data (all four collectors)
         working-directory: dotfiles-web
-        run: |
-          node scripts/collect-metrics.mjs
-          node scripts/collect-snippets.mjs
+        run: npm run data
       - name: Open a PR if the derived data drifted
         working-directory: dotfiles-web
         env:
@@ -107,15 +108,22 @@ jobs:
           REPO: ${{ github.event.repository.name }}
         run: |
           set -euo pipefail
-          # generatedAt is a day-granular stamp that changes on every run; judge metrics
-          # drift on the real content only, and discard a stamp-only change so we don't PR
-          # noise. snippets.json carries no timestamp, so a plain git diff is its drift test.
-          old="$(git show HEAD:src/data/generated.json | jq 'del(.generatedAt)')"
-          new="$(jq 'del(.generatedAt)' src/data/generated.json)"
-          snips_changed=no
-          git diff --quiet -- src/data/snippets.json || snips_changed=yes
-          if [ "$old" = "$new" ] && [ "$snips_changed" = no ]; then
-            git checkout -- src/data/generated.json src/data/snippets.json
+          # generatedAt is a day-granular stamp that changes on every run; judge drift on
+          # the real content only, and discard a stamp-only change so we don't PR noise.
+          # corpus.json and coverage.json carry the same stamp plus a generatedFrom source
+          # commit that moves whenever htpx / dotfiles-Defense get ANY commit, related or
+          # not — so they need the same treatment, not the plain git diff that suffices for
+          # snippets.json (which is unstamped).
+          content_changed=no
+          for f in generated corpus coverage; do
+            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom)')"
+            new="$(jq 'del(.generatedAt, .generatedFrom)' "src/data/${f}.json")"
+            [ "$old" = "$new" ] || content_changed=yes
+          done
+          git diff --quiet -- src/data/snippets.json || content_changed=yes
+          if [ "$content_changed" = no ]; then
+            git checkout -- src/data/generated.json src/data/snippets.json \
+                            src/data/corpus.json src/data/coverage.json
             echo "✅ site data already in step with the fleet" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -125,13 +133,14 @@ jobs:
           # so the push authenticates as the App (or PAT), the identity that triggers CI.
           git remote set-url origin "https://x-access-token:${FLEET_TOKEN}@github.com/${OWNER}/${REPO}.git"
           git switch -C "$BRANCH"
-          git add src/data/generated.json src/data/snippets.json
-          git commit -m "chore(data): refresh fleet metrics + changelog + config snippets (fleet-sync bot)"
+          git add src/data/generated.json src/data/snippets.json \
+                  src/data/corpus.json src/data/coverage.json
+          git commit -m "chore(data): refresh fleet metrics, config snippets, corpus + coverage (fleet-sync bot)"
           git push -f -u origin "$BRANCH"
           # Idempotent: update the existing PR if one is already open for this branch.
           if [ -z "$(gh pr list --repo "${OWNER}/${REPO}" --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
             gh pr create --repo "${OWNER}/${REPO}" --head "$BRANCH" --base "$DEFAULT_BRANCH" \
-              --title "chore(data): refresh fleet metrics + changelog + config snippets" \
-              --body "Automated by the fleet-sync bot. The derived site data (\`src/data/generated.json\` — changelog + by-the-numbers; \`src/data/snippets.json\` — the Config explorer's baked source files) was behind the fleet; this regenerates it via \`collect-metrics.mjs\` + \`collect-snippets.mjs\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
+              --title "chore(data): refresh fleet metrics, config snippets, corpus + coverage" \
+              --body "Automated by the fleet-sync bot. The derived site data (\`generated.json\` — changelog + by-the-numbers; \`snippets.json\` — the Config explorer's baked source files; \`corpus.json\` — the red/blue corpus from htpx; \`coverage.json\` — Sigma detection coverage from dotfiles-Defense) was behind the fleet; this regenerates all four via \`npm run data\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
           fi
           echo "📊 opened/updated PR on \`$BRANCH\`" >> "$GITHUB_STEP_SUMMARY"
