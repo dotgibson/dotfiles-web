@@ -224,13 +224,17 @@ jobs:
           set -euo pipefail
 
           # generatedAt is day-granular and generatedFrom.commit tracks the source repo's
-          # HEAD; both move without the published numbers changing. Judge drift on the
-          # content alone so a stamp-only difference can't turn the build red. Same trick
-          # fleet-sync.yml uses for generated.json's generatedAt.
+          # HEAD; both move without the published numbers changing, so neither may turn
+          # the build red on its own. Same trick fleet-sync.yml uses for generated.json's
+          # generatedAt. Only those two are stripped, NOT generatedFrom wholesale:
+          # .repo and .path are hardcoded in the collectors, so they change only when
+          # someone repoints a collector at a different source — a change that must be
+          # committed, and which would otherwise slip through whenever the new source
+          # happened to yield identical numbers.
           stale=0
           for f in corpus coverage; do
-            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom)')"
-            new="$(jq 'del(.generatedAt, .generatedFrom)' "src/data/${f}.json")"
+            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom.commit)')"
+            new="$(jq 'del(.generatedAt, .generatedFrom.commit)' "src/data/${f}.json")"
             if [ "$old" = "$new" ]; then
               echo "OK — src/data/${f}.json matches its source."
               continue

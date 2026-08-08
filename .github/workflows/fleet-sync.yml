@@ -110,14 +110,19 @@ jobs:
           set -euo pipefail
           # generatedAt is a day-granular stamp that changes on every run; judge drift on
           # the real content only, and discard a stamp-only change so we don't PR noise.
-          # corpus.json and coverage.json carry the same stamp plus a generatedFrom source
-          # commit that moves whenever htpx / dotfiles-Defense get ANY commit, related or
-          # not — so they need the same treatment, not the plain git diff that suffices for
-          # snippets.json (which is unstamped).
+          # corpus.json and coverage.json carry the same stamp plus generatedFrom.commit,
+          # which moves whenever htpx / dotfiles-Defense get ANY commit, related or not —
+          # so they need the same treatment, not the plain git diff that suffices for
+          # snippets.json (which is unstamped). generatedFrom.repo / .path are deliberately
+          # NOT stripped: they are hardcoded in the collectors, so a change there means a
+          # collector was repointed at a different source and must land — otherwise the
+          # revert below would discard the corrected provenance and the committed file
+          # would keep advertising the old one. (del is a no-op on generated.json, which
+          # has no generatedFrom.)
           content_changed=no
           for f in generated corpus coverage; do
-            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom)')"
-            new="$(jq 'del(.generatedAt, .generatedFrom)' "src/data/${f}.json")"
+            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom.commit)')"
+            new="$(jq 'del(.generatedAt, .generatedFrom.commit)' "src/data/${f}.json")"
             [ "$old" = "$new" ] || content_changed=yes
           done
           git diff --quiet -- src/data/snippets.json || content_changed=yes
