@@ -30,8 +30,8 @@ A change belongs in **Core** only if it is **identical on every machine**, **not
 - **Everything else that's truly universal → Core.**
 
 Core is authored once and **vendored** into each OS repo — except Windows, which replicates Core
-natively in PowerShell — so a defect in Core fans out to every machine at once. That leverage is the whole point — and the reason Core changes go through a
-single audit gate before they ship. See
+natively in PowerShell — so a defect in Core fans out to all of them at once. That leverage is the
+whole point — and the reason Core changes go through a single audit gate before they ship. See
 [Vendoring with git subtree](/docs/concepts/vendoring-with-subtree) for how the fan-out works.
 
 ## Why split it this way

@@ -35,7 +35,8 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
       <p>
         The keystone. Every OS repo except Windows — which replicates Core natively in
         PowerShell — vendors this into its <code>core/</code> directory via
-        <code>git subtree</code>, so a change here fans out to the whole fleet. See{' '}
+        <code>git subtree</code>, so a change here fans out to all of them at once; Windows
+        picks up only the mirrored Neovim and starship configs. See{' '}
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> and{' '}
         <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring with git subtree</a>.
       </p>
