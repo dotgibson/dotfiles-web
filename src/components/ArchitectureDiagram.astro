@@ -23,9 +23,13 @@ const accentVar: Record<string, string> = {
 // Live vendoring drift (from generated.json): colour each edge by whether the repo
 // carries Core's CURRENT release. 'unknown' stays neutral so an un-regenerated
 // generated.json just renders the old static look — never a misleading red.
+// 'replicated' is not a drift verdict — the Windows host vendors no Core — so it
+// takes the cyan of the mirror relationship it actually has (the same cyan as its
+// dashed edge and its Host layer swatch), never green or orange.
 const driftColor: Record<DriftStatus, string | null> = {
   current: 'var(--tn-green)',
   behind: 'var(--tn-orange)',
+  replicated: 'var(--tn-cyan)',
   unknown: null,
 };
 
@@ -70,14 +74,20 @@ const nodes = consumers.map((r, i) => {
     accent: accentVar[layerMeta[r.layer].accent],
     driftStatus: d.status,
     driftRef: d.ref, // the release/sha this repo currently carries
+    // A vendoring repo's label IS the release it carries; the host's is only the
+    // Core ref its nvim/starship mirror came from. Prefix that one so a bare
+    // "v4.6.0" under the Windows node can't be read as "vendors v4.6.0".
+    driftRefLabel: d.mirroredFrom ? `mirror ${d.mirroredFrom}` : d.ref,
     driftColor: driftColor[d.status],
   };
 });
 
-// Only surface the drift legend/labels when generated.json actually carries the
-// data (any repo resolved to current/behind) — otherwise the diagram stays in its
-// neutral, pre-drift look.
-const hasDrift = nodes.some((n) => n.driftStatus !== 'unknown');
+// Only surface the green/orange drift legend when generated.json actually carries
+// VENDORING data (a repo resolved to current/behind) — otherwise the diagram stays
+// in its neutral, pre-drift look. 'replicated' is not vendoring drift, so it can't
+// switch that legend on by itself; it gets its own flag.
+const hasDrift = nodes.some((n) => n.driftStatus === 'current' || n.driftStatus === 'behind');
+const hasReplicated = nodes.some((n) => n.driftStatus === 'replicated');
 
 // cubic bezier from the core hub's bottom-centre to each node's top-centre
 const edge = (cx: number) => {
@@ -93,8 +103,8 @@ const edge = (cx: number) => {
       dotfiles-core is vendored into {consumers.filter((c) => c.layer !== 'host').length} machine
       repositories via git subtree (solid edges); dotfiles-Windows mirrors only the Neovim and
       starship configs via sync scripts (dashed edge). Edges are coloured by live vendoring drift — green when the
-      repo carries Core's current release, orange when it is behind — from each repo's recorded
-      provenance.
+      repo carries Core's current release, orange when it is behind, cyan when the repo replicates
+      Core instead of vendoring it — from each repo's recorded provenance.
     </desc>
 
     <!-- edges: solid = full subtree, dashed = nvim-only mirror -->
@@ -140,11 +150,11 @@ const edge = (cx: number) => {
           <text x={n.cx} y={rowY + 43} class="arch-node__sub" text-anchor="middle">
             {n.sub}
           </text>
-          {n.driftStatus !== 'unknown' && (
+          {n.driftColor && (
             <circle cx={n.cx} cy={rowY} r="4.5" class="arch-dot" style={`fill:${n.driftColor}`} />
           )}
-          {n.driftRef && (
-            <text x={n.cx} y={rowY + nodeH + 14} class="arch-ref" text-anchor="middle">{n.driftRef}</text>
+          {n.driftRefLabel && (
+            <text x={n.cx} y={rowY + nodeH + 14} class="arch-ref" text-anchor="middle">{n.driftRefLabel}</text>
           )}
         </g>
       ))
@@ -170,6 +180,19 @@ const edge = (cx: number) => {
         )
       }
 
+      {
+        /* Same row as the drift swatches — the legend block sits at y = H - 70, so
+           rows are at y 6/30/54 and a fourth would fall outside the viewBox. Kept in
+           its own group so a dot on the diagram always has a matching legend entry,
+           whichever combination of states the data resolves to. */
+        hasReplicated && (
+          <g>
+            <circle cx="380" cy="54" r="4.5" style="fill:var(--tn-cyan)" />
+            <text x="394" y="58" class="arch-legend">replicated — no Core vendored</text>
+          </g>
+        )
+      }
+
       <g transform={`translate(${W - 2 * padX - 366}, 0)`}>
         {
         ([['core', 'Core'], ['os', 'OS-native'], ['host', 'Host'], ['role', 'Role']] as [Layer, string][]).map(
@@ -190,11 +213,12 @@ const edge = (cx: number) => {
     <strong>dotfiles-Kali</strong> stacks a Role layer on its OS layer; <strong>dotfiles-Windows</strong>
     carries no <code>core/</code> subtree and mirrors only the Neovim and starship configs.
     {
-      hasDrift && (
+      (hasDrift || hasReplicated) && (
         <span>
           {' '}Edge colour tracks live vendoring drift — green = carrying Core
           {metrics.drift?.coreVersion ? ` v${metrics.drift.coreVersion}` : ''}, orange = behind (run
-          a sync). Each repo's label shows the release it currently vendors.
+          a sync), cyan = replicated, with no vendored release to drift. Each vendoring repo's
+          label shows the release it carries; the host's shows the Core ref its mirror came from.
         </span>
       )
     }

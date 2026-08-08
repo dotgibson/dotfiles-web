@@ -310,10 +310,17 @@ const feed = changelog
   });
 
 // ── Vendoring drift: which Core RELEASE each consumer carries vs core.version ──
-// File-only (no git), matching this script's "read the repos" model: each Unix repo
-// stamps core.lock (core_version/core_tag/core_sha); Windows stamps nvim/.core-ref
-// (tag/commit). "current" = same release as Core now; "behind" = an older one;
-// "unknown" = no release recorded yet (e.g. Windows before nvim-sync stamps a tag).
+// File-only (no git), matching this script's "read the repos" model: each vendoring
+// repo stamps core.lock (core_version/core_tag/core_sha). "current" = same release as
+// Core now; "behind" = an older one; "unknown" = no release recorded yet.
+//
+// dotfiles-Windows is NOT a vendoring repo: it has no core/ subtree and replicates the
+// host config natively in PowerShell, mirroring only nvim/ and starship.toml. Its
+// nvim/.core-ref stamp records which Core tag that MIRROR was last synced from — real
+// provenance, but a different fact from "the Core release this repo vendors". Folding
+// it into `carried` made Windows compare against core.version and render as
+// "behind — run a sync", advising a `git subtree pull` it cannot perform. It gets
+// status "replicated" and reports the mirror stamp separately as `mirroredFrom`.
 function readKv(file, key) {
   if (!existsSync(file)) return null;
   const m = readFileSync(file, 'utf8').match(new RegExp(`^\\s*${key}\\s*=\\s*(.+?)\\s*$`, 'm'));
@@ -328,21 +335,27 @@ const stripV = (s) => (s || '').replace(/^v/, '');
 const stripDescribe = (s) => (s || '').replace(/-\d+-g[0-9a-f]+$/, '');
 const driftRepos = {};
 for (const name of osRepos) {
-  let carried = null;
-  let ref = null;
+  // The host repo replicates Core rather than vendoring it, so it has no vendoring
+  // drift to report — only the tag its nvim/starship mirror was last synced from.
+  // Absence of that stamp still means "replicated", never "unknown": a missing mirror
+  // ref does not turn Windows into a repo that carries Core.
   if (name === 'dotfiles-Windows') {
     const cr = join(repoPath(name), 'nvim', '.core-ref');
     const tag = stripDescribe(readKv(cr, 'tag'));
     const commit = readKv(cr, 'commit');
-    carried = tag ? stripV(tag) : null;
-    ref = tag || (commit ? commit.slice(0, 12) : null);
-  } else {
-    const lock = join(repoPath(name), 'core.lock');
-    carried = readKv(lock, 'core_version');
-    const tag = stripDescribe(readKv(lock, 'core_tag'));
-    const sha = readKv(lock, 'core_sha');
-    ref = tag || (sha ? sha.slice(0, 12) : null);
+    driftRepos[name] = {
+      ref: null,
+      carried: null,
+      mirroredFrom: tag || (commit ? commit.slice(0, 12) : null),
+      status: 'replicated',
+    };
+    continue;
   }
+  const lock = join(repoPath(name), 'core.lock');
+  const carried = readKv(lock, 'core_version');
+  const tag = stripDescribe(readKv(lock, 'core_tag'));
+  const sha = readKv(lock, 'core_sha');
+  const ref = tag || (sha ? sha.slice(0, 12) : null);
   const status =
     carried == null || coreVersion == null
       ? 'unknown'
