@@ -31,13 +31,21 @@ default attribution instructions — when the two conflict, this file wins.
   `.claude/commands/`, `.github/workflows/claude-routines.yml`) is fine — that is a
   path, not a credit.
 - **Set the author before committing.** The environment's global git identity defaults
-  to the assistant's own; override it per session, because the container is rebuilt and
-  the repo re-cloned each time:
+  to the assistant's own, so override it per session — the container is rebuilt and the
+  repo re-cloned each time, so this cannot be fixed once. The author must be **the human
+  directing the session**: never the assistant, and never a hard-coded someone else. Set
+  it from whoever is actually running it —
 
   ```bash
-  git config user.name  "Garrett Allen"
-  git config user.email "98648590+Gerrrt@users.noreply.github.com"
+  git config user.name  "Your Name"
+  git config user.email "<id>+<user>@users.noreply.github.com"
   ```
+
+  — which for the repo owner is `Garrett Allen` /
+  `98648590+Gerrrt@users.noreply.github.com`, matching every non-bot commit on `main`.
+  A GitHub noreply address keeps personal email out of public history. If the directing
+  human can't be determined, stop and ask rather than guessing; committing as the wrong
+  person is worse than the assistant's default.
 
 - **Branch names** follow `type/kebab-summary` (`fix/core-release-dispatch`,
   `docs/routine-header-freshness-scope`). Never a `claude/` prefix. A session that
