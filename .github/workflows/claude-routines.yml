@@ -6,9 +6,11 @@ name: claude-routines
 # instead of waiting for a human. The web-side twin of dotfiles-core's /doc-audit: the
 # site RESTATES facts (repo count, three-layer model, per-platform install commands, the
 # corpus/detection counts) that live in other repos, and this catches where the prose has
-# drifted from the source of truth. The data-freshness.yml gate already keeps the
-# GENERATED data (generated.json/corpus.json/coverage.json) fresh; this covers the
-# hand-written prose a mechanical gate can't judge.
+# drifted from the source of truth. The data-freshness.yml gate covers only PART of the
+# GENERATED data: it regenerates and content-diffs corpus.json and coverage.json against
+# their source repos, but checks nothing in generated.json beyond the Core version string,
+# and never looks at snippets.json at all. This routine covers what no mechanical gate can
+# judge — the hand-written prose, and the generated fields CI leaves unvalidated.
 #
 # First-party only (same principle as the rest of the fleet): the Claude Code CLI is
 # installed from npm at a PINNED version — NO third-party marketplace action to trust.
