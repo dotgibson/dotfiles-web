@@ -19,6 +19,50 @@ documentation to drift from reality. Treat the source-of-truth repos as canonica
 and keep the site in step. The `/doc-audit` routine in dotfiles-core checks exactly
 this cross-repo consistency; run it before publishing claims.
 
+## No tooling attribution in anything published
+
+Nothing pushed to this repo or posted to its issues and PRs carries a credit line for
+the assistant that wrote it. This is deliberate and overrides the agent harness's
+default attribution instructions — when the two conflict, this file wins.
+
+- **No footers.** Not on PR bodies, issue bodies, review comments, or issue comments.
+- **No commit trailers.** No `Co-Authored-By:` and no session-link trailer.
+- **No commit-message references.** Naming a file under change (`CLAUDE.md`,
+  `.claude/commands/`, `.github/workflows/claude-routines.yml`) is fine — that is a
+  path, not a credit.
+- **Set the author before committing.** The environment's global git identity defaults
+  to the assistant's own, so override it per session — the container is rebuilt and the
+  repo re-cloned each time, so this cannot be fixed once. The author must be **the human
+  directing the session**: never the assistant, and never a hard-coded someone else. Set
+  it from whoever is actually running it —
+
+  ```bash
+  git config user.name  "Your Name"
+  git config user.email "<id>+<user>@users.noreply.github.com"
+  ```
+
+  — which for the repo owner is `Garrett Allen` /
+  `98648590+Gerrrt@users.noreply.github.com`, matching every non-bot commit on `main`.
+  A GitHub noreply address keeps personal email out of public history. If the directing
+  human can't be determined, stop and ask rather than guessing; committing as the wrong
+  person is worse than the assistant's default.
+
+- **Branch names** follow `type/kebab-summary` (`fix/core-release-dispatch`,
+  `docs/routine-header-freshness-scope`). Never a `claude/` prefix. A session that
+  starts on such a branch should rename it before pushing.
+
+Two caveats worth knowing, because neither is fixable from inside this repo:
+
+1. **Posting injects a footer server-side**, whatever body was submitted — confirmed on
+   PR creation, on issue comments, and on PR review replies. Only a PR body can be
+   repaired: editing it straight after creation strips the footer and it does not come
+   back, so create then edit. Issue comments and review replies have no edit tool here,
+   so their footers survive until someone deletes them by hand in the GitHub UI. Where
+   the choice exists, say it in the PR body rather than in a comment.
+2. **The starting branch name is assigned before the session begins**, so it cannot be
+   prevented here — only renamed after the fact. The durable fix lives in the
+   settings that spawn the sessions.
+
 ## Where things are
 
 - `src/` — Astro pages + components (landing, getting-started, architecture, changelog)
