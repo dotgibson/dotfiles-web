@@ -53,10 +53,12 @@ default attribution instructions — when the two conflict, this file wins.
 
 Two caveats worth knowing, because neither is fixable from inside this repo:
 
-1. **Opening a PR injects a footer server-side**, whatever the body says. Editing the
-   body immediately after creation removes it and it does not come back — so create,
-   then edit. The same injection may apply to issue comments, where there is no
-   edit tool available and the removal has to be done by hand in the GitHub UI.
+1. **Posting injects a footer server-side**, whatever body was submitted — confirmed on
+   PR creation, on issue comments, and on PR review replies. Only a PR body can be
+   repaired: editing it straight after creation strips the footer and it does not come
+   back, so create then edit. Issue comments and review replies have no edit tool here,
+   so their footers survive until someone deletes them by hand in the GitHub UI. Where
+   the choice exists, say it in the PR body rather than in a comment.
 2. **The starting branch name is assigned before the session begins**, so it cannot be
    prevented here — only renamed after the fact. The durable fix lives in the
    settings that spawn the sessions.
