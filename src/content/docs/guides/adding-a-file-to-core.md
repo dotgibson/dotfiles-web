@@ -25,7 +25,7 @@ Sourced zsh modules load in a fixed order, and it matters — detection flags mu
 aliases that read them, options before history, and so on:
 
 ```text
-tools → ui → options → history → aliases → git → functions → fzf → bindings → plugins → op → maint → update → os → local
+tools → ui → options → history → aliases → git → functions → fzf → bindings → plugins → op → maint → update → os → role → local
 ```
 
 Add a new module in the position its dependencies require; don't reorder casually.

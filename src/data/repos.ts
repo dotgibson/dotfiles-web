@@ -85,7 +85,7 @@ export const repos: Repo[] = [
       {
         label: 'Load order is load-bearing',
         detail:
-          'The zsh chain is tools → ui → options → history → aliases → git → functions → fzf → bindings → plugins → op → maint → update → os → local. Reordering it breaks detection and completion.',
+          'The zsh chain is tools → ui → options → history → aliases → git → functions → fzf → bindings → plugins → op → maint → update → os → role → local. Reordering it breaks detection and completion.',
       },
       {
         label: 'Modern-CLI swaps are guarded',
