@@ -12,8 +12,8 @@ order: 3
   `contents/PORTING-MATRIX.md?ref=<releases/latest>`, NOT against Core's main.
 
   So: do NOT hand-edit the body here, and do NOT mirror from Core's main —
-  lagging main while matching the newest release is CORRECT, not drift. Copying
-  main's content in turns a green check red until that work is released.
+  lagging main while matching the newest release is CORRECT, not drift. Mirroring
+  main's content here turns a green check red until that work is released.
 
   To update: fix it in Core, wait for the release that carries the fix, then
   replace everything below this comment with the file at that tag, keeping the
