@@ -7,11 +7,26 @@ order: 3
 
 <!--
   MIRROR — everything below this comment is a verbatim copy of
-  dotfiles-core/PORTING-MATRIX.md, which is the canonical source. This page had
-  silently rotted to a pre-v4.x snapshot once already (it named packages that
-  don't exist), so: do NOT hand-edit the body here. Fix it in Core, then replace
-  everything below this comment with the new Core file, keeping the frontmatter
-  and this note. dotfiles-core's /doc-audit routine cross-checks the two weekly.
+  dotfiles-core/PORTING-MATRIX.md at its LATEST RELEASE TAG, which is the
+  canonical source. The ref matters: data-freshness.yml diffs this page against
+  `contents/PORTING-MATRIX.md?ref=<releases/latest>`, NOT against Core's main.
+
+  So: do NOT hand-edit the body here, and do NOT mirror from Core's main —
+  lagging main while matching the newest release is CORRECT, not drift. Mirroring
+  main's content here turns a green check red until that work is released.
+
+  To update: fix it in Core, wait for the release that carries the fix, then
+  replace everything below this comment with the file at that tag, keeping the
+  frontmatter and this note:
+
+    gh api repos/dotgibson/dotfiles-core/contents/PORTING-MATRIX.md \
+      --jq .content --raw-field ref="$(gh api repos/dotgibson/dotfiles-core/releases/latest --jq .tag_name)" \
+      | base64 -d
+
+  This page had silently rotted to a pre-v4.x snapshot once (it named packages
+  that don't exist), and was once "fixed" by mirroring main, which broke the
+  check the other way — hence the emphasis on the ref. dotfiles-core's
+  /doc-audit routine cross-checks the two weekly, against the tag.
 -->
 
 # Distro Porting Matrix
