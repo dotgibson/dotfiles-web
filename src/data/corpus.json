@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-11",
+  "generatedAt": "2026-08-14",
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "9be4323f8f6ec6912bb03251dda2056496ff5bbc"
+    "commit": "32af59e06bd2c365f9347d4b906ecfed3ba69b0f"
   },
   "totalPairs": 90,
   "groupCount": 16,

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-08-11",
+  "generatedAt": "2026-08-14",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "aa1c36b3db3c2480d21fcc8a80292ff6ebd35d29"
+    "commit": "c27bb5b2ea1575daab7b82cf8a5cdd0570b64d60"
   },
-  "ruleCount": 89,
-  "documentCount": 101,
-  "techniqueCount": 67,
+  "ruleCount": 94,
+  "documentCount": 111,
+  "techniqueCount": 70,
   "tacticCount": 10,
   "logsourceCount": 24,
   "tactics": [
@@ -44,8 +44,8 @@
     {
       "id": "TA0007",
       "name": "Discovery",
-      "techniques": 12,
-      "rules": 3
+      "techniques": 13,
+      "rules": 5
     },
     {
       "id": "TA0008",
@@ -56,8 +56,8 @@
     {
       "id": "TA0009",
       "name": "Collection",
-      "techniques": 4,
-      "rules": 3
+      "techniques": 5,
+      "rules": 4
     },
     {
       "id": "TA0010",
@@ -68,8 +68,8 @@
     {
       "id": "TA0040",
       "name": "Impact",
-      "techniques": 4,
-      "rules": 7
+      "techniques": 5,
+      "rules": 9
     }
   ],
   "techniques": [
@@ -131,8 +131,9 @@
     },
     {
       "id": "T1033",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
+        "host_enum_srvsvc_wkssvc_5145",
         "host_recon_command_burst"
       ]
     },
@@ -152,8 +153,9 @@
     },
     {
       "id": "T1049",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
+        "host_enum_srvsvc_wkssvc_5145",
         "host_recon_command_burst"
       ]
     },
@@ -176,6 +178,13 @@
       "rules": 1,
       "ruleNames": [
         "jenkins_script_console"
+      ]
+    },
+    {
+      "id": "T1069.001",
+      "rules": 1,
+      "ruleNames": [
+        "local_group_enum_sweep_4798_4799"
       ]
     },
     {
@@ -216,9 +225,10 @@
     },
     {
       "id": "T1087.001",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "local_group_enum_sweep_4798_4799"
       ]
     },
     {
@@ -293,8 +303,9 @@
     },
     {
       "id": "T1135",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
+        "host_enum_srvsvc_wkssvc_5145",
         "host_recon_command_burst"
       ]
     },
@@ -352,8 +363,9 @@
     },
     {
       "id": "T1485",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
+        "aws_data_destruction",
         "data_destruction_wipe"
       ]
     },
@@ -394,6 +406,20 @@
       "ruleNames": [
         "entra_illicit_consent_grant",
         "gws_illicit_oauth_grant"
+      ]
+    },
+    {
+      "id": "T1530",
+      "rules": 1,
+      "ruleNames": [
+        "aws_s3_bulk_exfil"
+      ]
+    },
+    {
+      "id": "T1531",
+      "rules": 1,
+      "ruleNames": [
+        "account_access_removal_4725"
       ]
     },
     {
@@ -590,7 +616,7 @@
         "azure",
         "gcp"
       ],
-      "rules": 9
+      "rules": 11
     },
     {
       "dir": "cloudflare",
@@ -625,7 +651,7 @@
       "products": [
         "windows"
       ],
-      "rules": 3
+      "rules": 5
     },
     {
       "dir": "github",
@@ -653,7 +679,7 @@
       "products": [
         "windows"
       ],
-      "rules": 7
+      "rules": 8
     },
     {
       "dir": "jenkins",
