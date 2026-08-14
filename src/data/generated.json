@@ -18,9 +18,9 @@
     "coreVersion": "4.10.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -29,46 +29,46 @@
         "status": "replicated"
       },
       "dotfiles-Kali": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v4.9.3",
-        "carried": "4.9.3",
-        "status": "behind"
+        "ref": "v4.10.0",
+        "carried": "4.10.0",
+        "status": "current"
       }
     }
   },
   "core": {
     "version": "4.10.0",
     "sourcedModules": 13,
-    "zshLoc": 3902,
+    "zshLoc": 3994,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 28
@@ -96,6 +96,80 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "PORTABILITY.md — how to write Core that survives the fan-out. The rules were real and consistently followed, but recorded only in ~8 scattered code comments, so they were unteachable to a new contributor and unenforced for new files. That is the likely root cause of the Homebrew paths that sat in maint/ and tmux/scripts/. It documents the bash 3.2 floor (with the banned constructs and their portable forms), the BSD/busybox coreutils traps, the shim pattern with the full inventory of shipped shims, what to do when a capability genuinely cannot be probed, and why the have() probe is redefined per loading context on purpose.",
+              "kind": "feature"
+            },
+            {
+              "text": "VENDORING.md — the same contract from an OS repo's side. Previously scattered across ARCHITECTURE.md, RELEASE-RUNBOOK.md and a source comment, so a downstream maintainer had no single answer to: which core/ paths may I touch, what does core.lock mean, which number band may I claim, how do I upstream a fix. Includes the footgun that was documented only in zsh/loader.zsh — a fragment dropped in a gap in the Core band (say 22-foo.zsh) is gated as Core and silently vanishes under CORE_PROFILE=minimal.",
+              "kind": "fix"
+            },
+            {
+              "text": "CODE_OF_CONDUCT.md — the one standard community-health file that was missing while the README actively solicits contributions.",
+              "kind": "feature"
+            },
+            {
+              "text": "Core now performs a real bootstrap link run in its own suite. bootstrap-test.yml asserts the symlink graph, but it is workflow_call-only and dotfiles-core ships no bootstrap.sh — so it only ever runs from the eight OS repos. Core unit-tested the blib_* helpers and never linked anything, which meant a bootstrap-lib.sh regression was caught downstream, in eight repos, instead of here. Seven assertions now link the actual Core tree into a sandbox $HOME/$XDG_CONFIG_HOME and check the graph a consumer depends on: every numbered fragment lands flat in $ZSH_CFG (the load-order contract loader.zsh globs), loader.zsh itself is linked, nvim/ resolves as a directory symlink, tmux/starship/lazygit/jj/gitconfig/vimrc land at their promised destinations, clip and clip-paste are executable on ~/.local/bin, the seeded files (local.gitconfig, sesh.toml) are real copies rather than symlinks — a symlink there would track a user's git identity back into Core — and a second pass is a no-op that backs nothing up. Hermetic: the tpm directory is pre-seeded so the one network call in the function is skipped.",
+              "kind": "perf"
+            },
+            {
+              "text": "scripts/sync-core.sh has tests. The highest-blast-radius script in the repo — it gates on the audit, git subtree pulls into eight working trees, and stamps core.lock — had no coverage at all. Its only proof was sync-fanout.yml running it for real against the live fleet, i.e. the fleet was the test. Twelve assertions on hermetic fixtures (a miniature of the real topology: a vendored origin, a local checkout, and a throwaway fleet, with audit-core.sh stubbed so the gate can be driven red and green in-process). Every case is a refusal or an idempotency property, because that is how this script fails: a broken guard does not throw, it fans a bad tree out to eight repos and reports success. Covered: a red audit refuses the fan-out and refuses before mutating anything; local HEAD ≠ remote tip refuses (what you audited is not what would vendor); an uncloned repo and a core/-less repo are skipped, not failed; dotfiles-Windows appears in neither the fleet file nor the fallback array; --dry-run prints the plan and commits nothing; core.lock lands at the repo root with the full sha, version and branch; the tree is clean afterwards so the next run is not self-blocked; re-syncing an unchanged sha manufactures no commit; and a dirty target is refused, counted failed, and does not abandon the repos after it.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "ARCHITECTURE.md now names Core's two deliberate exceptions instead of leaving them to be rediscovered as drift. zsh/55-maint.zsh was already excepted in writing at the gate; zsh/60-update.zsh — ~480 lines of seven-package-manager logic, including a Tumbleweed check to choose zypper dup over zypper up — was justified only in a code comment. The reasoning is sound (one verb, N backends, exactly like bin/clip) and now says so where the layering rule is stated.",
+              "kind": "config"
+            },
+            {
+              "text": "The maint runner no longer names an OS prefix; the scheduler unit supplies the PATH. A scheduler starts the runner with a stripped environment, which is why the Homebrew prefixes were hardcoded. maint-install now captures the live PATH of the shell installing it and bakes it into the unit — Environment=\"PATH=…\" (systemd), an EnvironmentVariables dict (launchd, XML-escaped), and an env-prefixed command (cron, POSIX single-quoted and then %-escaped, in that order — cron hands its command field to /bin/sh, so an unquoted or double-quoted value containing $(…) or a backtick would be evaluated on every scheduled run). Whatever prefix this OS uses is already correct in that PATH, so the OS supplies the truth and Core hardcodes nothing. The brew step is now gated on have brew alone. Action required on an existing schedule: a unit written before this change carries no PATH, so the runner falls back to the POSIX floor and the brew/mise steps skip silently — the job still succeeds while doing less. Re-run maint-install once. maint-status detects this and says so rather than leaving it to be noticed.",
+              "kind": "fix"
+            },
+            {
+              "text": "tmux-cheat.sh discovers a brew prefix instead of naming one — $HOMEBREW_PREFIX (exported by brew shellenv, so the tmux server usually carries it), falling back to brew --prefix. When neither resolves it adds nothing and takes the existing pager fallback: a missing tool degrades visibly, where a wrong absolute path was a silent lie on every non-brew machine.",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "The boundary scan no longer strips comments at all. Stripping was a false-negative machine: # is a comment in shell and TOML but the length operator in Lua, so local p = t[#t] .. \"<prefix>/bin\" was truncated and passed; a delimiter inside a string is code, so export P=\"#<prefix>/bin\" was truncated too; and a line inside a heredoc or a Lua long-bracket string is runtime data however it starts. Each fix uncovered the next, because getting it right needs a parser for all five grammars the gate now scans. The rule is flat instead: a manifested Core file must not contain an OS-absolute path anywhere, prose included — name the prefix rather than spelling it. Two comments in maint/ and tmux/scripts/ were reworded to comply. That costs a wording choice and buys a gate with no hiding places. The one sanctioned exemption is now redacted rather than dropped. Removing the whole LaunchAgents line exempted everything else on it, so a second literal riding along on a legitimate assignment evaded the gate; only the sanctioned segment is replaced now, and the rest of the line is scanned normally. Verified against the old filter: with _x=\"<prefix>/bin\" appended to a LaunchAgents line, the line-drop passed it and the redaction catches it.",
+              "kind": "fix"
+            },
+            {
+              "text": "V4-PROPOSAL.md no longer claims v4 is unreleased. Its status block said \"IMPLEMENTED … pending the v4.0.0 release cut\" and described the work as sitting on a branch — ten minor releases after v4.0.0 shipped. It is now marked as the historical design record it is, pointing at ARCHITECTURE.md / PORTABILITY.md / VENDORING.md for how the shipped system actually behaves.",
+              "kind": "feature"
+            },
+            {
+              "text": "The Core⇄OS boundary gate was green while two Core files carried Homebrew paths. audit-core.sh §5c rejects OS-absolute paths in portable Core, but its file list stopped at zsh/*.zsh plus the symlinked configs — so bin/, maint/, and tmux/scripts/, all manifested Core that ships to eight repos, were never scanned. They were not clean: maint/dotfiles-maint.sh hardcoded /opt/homebrew/{bin,sbin} and /home/linuxbrew/.linuxbrew/bin in its PATH and probed both by absolute path to run brew shellenv, and tmux/scripts/tmux-cheat.sh did the same in its pop-up PATH. The rule was documented, believed enforced, and was not — on seven of the eight target machines those paths do not exist. The gate's scope is now derived from core.manifest rather than hand-kept. That list had fallen behind three separate times — first the symlinked configs, then the bin//maint//tmux/scripts/ executables, and even then it still omitted zsh/completions/*, lib/ux.sh, lib/bootstrap-lib.sh and .bin/sync-upstream.sh. Every omission was the same bug, so the fix is structural: the manifest already is the definition of \"what is Core\", and a file added to it is scanned automatically. The blind spot cannot silently reopen, because reopening it would mean the file is not Core at all — which the manifest gate already fails on. Coverage went from 19 files to 167 (including the vendored nvim/ tree). The gate is also unconditional now: it used to be SCOPE_SHELL-gated, but it is pure sed+grep and cross-cutting, so a narrowed --scope run must not be able to skip a fan-out-correctness check. The one exemption — zsh/55-maint.zsh, whose launchd arm legitimately writes ~/Library/LaunchAgents — is now per-line rather than per-file. Skipping the whole module would have re-opened the blind spot inside it: an accidental /opt/homebrew added to maint-install, or to any other function there, would have sailed through. Only the LaunchAgents lines are dropped; everything else in the file is scanned. Verified the way a gate change has to be: the previous tree is red under the new scope and green under the old one, which is the only evidence that the widening bites.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Security",
+          "items": [
+            {
+              "text": "Caller-supplied workflow inputs no longer reach a run: body as code. auto-tag-call.yml spliced ${{ inputs.bump }} straight into its script in a job holding contents: write and persist-credentials: true, so a caller passing bump: 'patch\"; …; #' could run arbitrary code with the tag-push token. It was the one place the fleet broke the rule notify-web-call.yml states outright — \"a caller-supplied string must not be able to write shell\". Both bump and release now arrive through env:, and bump is checked against a patch|minor|major allowlist at runtime — workflow_call inputs cannot be type: choice (that is workflow_dispatch-only), so the type system will not do it. A typo now fails with the valid set instead of reaching auto-tag.sh's arg parser. claude-routines-call.yml had the same shape with ${{ inputs.distro }} in a job holding CLAUDE_CODE_OAUTH_TOKEN; it now goes through env: too, and is likewise allowlisted to the six distro names its own input contract already documents — env: makes the value shell-safe, but the Claude prompt is an instruction channel, so an arbitrary string there remains a prompt-injection vector. No run: body in any workflow interpolates an expression any more. Neither rejection path echoes the raw value back. The runner parses stdout line by line, so a multiline input can open a new ::…:: command on the following line and forge or suppress annotations no matter how well it is shell-quoted; both paths strip CR/LF/%/: and truncate first, mirroring how atuin-guard-verify.yml already handles upstream-derived text.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.10.0",
@@ -391,30 +465,6 @@
       ]
     },
     {
-      "repo": "dotfiles-core",
-      "version": "v4.9.2",
-      "date": "2026-08-05",
-      "groups": [
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "RELEASE-RUNBOOK.md §1.1 now branches before staging, so a cut never touches main. The old order ran make release / make tag from main and only created release/vX.Y.Z at the push in step 3 — but tag-release.sh commits to whatever branch you are standing on, so the release commit landed on the operator's local main, one ahead of origin, on a protected branch it must never be pushed to. Every cut then needed a git reset --hard origin/main afterwards that the runbook never mentioned; cutting v4.9.1 tripped it twice. Branching first (new step 1) makes the cleanup unnecessary rather than undocumented — verified by running both orders end-to-end in a throwaway clone: the new one leaves main 0 ahead, the old one 1 ahead. Steps renumbered 0–5, and the four cross-references to \"§1.1 step 4\" (including the @vN bump-type callout heading) moved with them.",
-              "kind": "feature"
-            },
-            {
-              "text": "The local vN alias move is now stated where it happens. make tag force-moves vN onto the not-yet-merged release commit (scripts/tag-release.sh), so between step 3 and step 5 a local read of v4 reports a commit origin does not have. Nothing was wrong with the behaviour — it is what keeps the alias from drifting — but it was undocumented, and an unexplained local/remote disagreement on the ref every reusable-workflow caller pins to is worth one sentence. Both the runbook and the script's own printed recipe now say it.",
-              "kind": "config"
-            },
-            {
-              "text": "New \"Abandoning a cut\" section, for a release staged and then reconsidered (a bump reclassified, a wrong version) — which is exactly what happened between v4.10.0 and v4.9.1. It restages rather than patching the branch in place, since the branch name encodes the version, and it undoes both local-only artefacts. The git tag -d vX.Y.Z vN line deletes the alias explicitly rather than leaving it to the fetch: --tags --force only updates tags origin already has, so on a MAJOR — where the alias is newly minted and origin has never seen it — a fetch leaves a bogus local v5 pointing at a deleted commit. Found by running the recipe against both cases in a throwaway clone, not by reading it. There is now one cleanup recipe, not two. The troubleshooting table carried its own, written for the old flow — delete vX.Y.Z, git reset --hard HEAD~1 — which under branch-first leaves the release branch standing and vN still on the abandoned commit. It now points at the section instead of competing with it. The same vN omission was in tag-release.sh's printed guidance, which claimed to undo \"both local artefacts\" while naming only one; both found in review by Copilot. The genuinely distinct cases the table covered are kept: staging without committing is still a plain git checkout -- core.version CHANGELOG.md, and abandoning after the tag reached origin — the PUSH=1 path, where a Release is published and the fan-out has already fired — is now written out in the section, with the advice to cut the intended version forward rather than unwind a published one.",
-              "kind": "feature"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "repo": "dotfiles-Windows",
       "version": "v1.6.0",
       "date": "2026-08-05",
@@ -622,6 +672,102 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "PORTABILITY.md — how to write Core that survives the fan-out. The rules were real and consistently followed, but recorded only in ~8 scattered code comments, so they were unteachable to a new contributor and unenforced for new files. That is the likely root cause of the Homebrew paths that sat in maint/ and tmux/scripts/. It documents the bash 3.2 floor (with the banned constructs and their portable forms), the BSD/busybox coreutils traps, the shim pattern with the full inventory of shipped shims, what to do when a capability genuinely cannot be probed, and why the have() probe is redefined per loading context on purpose.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "VENDORING.md — the same contract from an OS repo's side. Previously scattered across ARCHITECTURE.md, RELEASE-RUNBOOK.md and a source comment, so a downstream maintainer had no single answer to: which core/ paths may I touch, what does core.lock mean, which number band may I claim, how do I upstream a fix. Includes the footgun that was documented only in zsh/loader.zsh — a fragment dropped in a gap in the Core band (say 22-foo.zsh) is gated as Core and silently vanishes under CORE_PROFILE=minimal.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "CODE_OF_CONDUCT.md — the one standard community-health file that was missing while the README actively solicits contributions.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "Core now performs a real bootstrap link run in its own suite. bootstrap-test.yml asserts the symlink graph, but it is workflow_call-only and dotfiles-core ships no bootstrap.sh — so it only ever runs from the eight OS repos. Core unit-tested the blib_* helpers and never linked anything, which meant a bootstrap-lib.sh regression was caught downstream, in eight repos, instead of here. Seven assertions now link the actual Core tree into a sandbox $HOME/$XDG_CONFIG_HOME and check the graph a consumer depends on: every numbered fragment lands flat in $ZSH_CFG (the load-order contract loader.zsh globs), loader.zsh itself is linked, nvim/ resolves as a directory symlink, tmux/starship/lazygit/jj/gitconfig/vimrc land at their promised destinations, clip and clip-paste are executable on ~/.local/bin, the seeded files (local.gitconfig, sesh.toml) are real copies rather than symlinks — a symlink there would track a user's git identity back into Core — and a second pass is a no-op that backs nothing up. Hermetic: the tpm directory is pre-seeded so the one network call in the function is skipped.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "scripts/sync-core.sh has tests. The highest-blast-radius script in the repo — it gates on the audit, git subtree pulls into eight working trees, and stamps core.lock — had no coverage at all. Its only proof was sync-fanout.yml running it for real against the live fleet, i.e. the fleet was the test. Twelve assertions on hermetic fixtures (a miniature of the real topology: a vendored origin, a local checkout, and a throwaway fleet, with audit-core.sh stubbed so the gate can be driven red and green in-process). Every case is a refusal or an idempotency property, because that is how this script fails: a broken guard does not throw, it fans a bad tree out to eight repos and reports success. Covered: a red audit refuses the fan-out and refuses before mutating anything; local HEAD ≠ remote tip refuses (what you audited is not what would vendor); an uncloned repo and a core/-less repo are skipped, not failed; dotfiles-Windows appears in neither the fleet file nor the fallback array; --dry-run prints the plan and commits nothing; core.lock lands at the repo root with the full sha, version and branch; the tree is clean afterwards so the next run is not self-blocked; re-syncing an unchanged sha manufactures no commit; and a dirty target is refused, counted failed, and does not abandon the repos after it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "ARCHITECTURE.md now names Core's two deliberate exceptions instead of leaving them to be rediscovered as drift. zsh/55-maint.zsh was already excepted in writing at the gate; zsh/60-update.zsh — ~480 lines of seven-package-manager logic, including a Tumbleweed check to choose zypper dup over zypper up — was justified only in a code comment. The reasoning is sound (one verb, N backends, exactly like bin/clip) and now says so where the layering rule is stated.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "The maint runner no longer names an OS prefix; the scheduler unit supplies the PATH. A scheduler starts the runner with a stripped environment, which is why the Homebrew prefixes were hardcoded. maint-install now captures the live PATH of the shell installing it and bakes it into the unit — Environment=\"PATH=…\" (systemd), an EnvironmentVariables dict (launchd, XML-escaped), and an env-prefixed command (cron, POSIX single-quoted and then %-escaped, in that order — cron hands its command field to /bin/sh, so an unquoted or double-quoted value containing $(…) or a backtick would be evaluated on every scheduled run). Whatever prefix this OS uses is already correct in that PATH, so the OS supplies the truth and Core hardcodes nothing. The brew step is now gated on have brew alone. Action required on an existing schedule: a unit written before this change carries no PATH, so the runner falls back to the POSIX floor and the brew/mise steps skip silently — the job still succeeds while doing less. Re-run maint-install once. maint-status detects this and says so rather than leaving it to be noticed.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "tmux-cheat.sh discovers a brew prefix instead of naming one — $HOMEBREW_PREFIX (exported by brew shellenv, so the tmux server usually carries it), falling back to brew --prefix. When neither resolves it adds nothing and takes the existing pager fallback: a missing tool degrades visibly, where a wrong absolute path was a silent lie on every non-brew machine.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The boundary scan no longer strips comments at all. Stripping was a false-negative machine: # is a comment in shell and TOML but the length operator in Lua, so local p = t[#t] .. \"<prefix>/bin\" was truncated and passed; a delimiter inside a string is code, so export P=\"#<prefix>/bin\" was truncated too; and a line inside a heredoc or a Lua long-bracket string is runtime data however it starts. Each fix uncovered the next, because getting it right needs a parser for all five grammars the gate now scans. The rule is flat instead: a manifested Core file must not contain an OS-absolute path anywhere, prose included — name the prefix rather than spelling it. Two comments in maint/ and tmux/scripts/ were reworded to comply. That costs a wording choice and buys a gate with no hiding places. The one sanctioned exemption is now redacted rather than dropped. Removing the whole LaunchAgents line exempted everything else on it, so a second literal riding along on a legitimate assignment evaded the gate; only the sanctioned segment is replaced now, and the rest of the line is scanned normally. Verified against the old filter: with _x=\"<prefix>/bin\" appended to a LaunchAgents line, the line-drop passed it and the redaction catches it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "V4-PROPOSAL.md no longer claims v4 is unreleased. Its status block said \"IMPLEMENTED … pending the v4.0.0 release cut\" and described the work as sitting on a branch — ten minor releases after v4.0.0 shipped. It is now marked as the historical design record it is, pointing at ARCHITECTURE.md / PORTABILITY.md / VENDORING.md for how the shipped system actually behaves.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The Core⇄OS boundary gate was green while two Core files carried Homebrew paths. audit-core.sh §5c rejects OS-absolute paths in portable Core, but its file list stopped at zsh/*.zsh plus the symlinked configs — so bin/, maint/, and tmux/scripts/, all manifested Core that ships to eight repos, were never scanned. They were not clean: maint/dotfiles-maint.sh hardcoded /opt/homebrew/{bin,sbin} and /home/linuxbrew/.linuxbrew/bin in its PATH and probed both by absolute path to run brew shellenv, and tmux/scripts/tmux-cheat.sh did the same in its pop-up PATH. The rule was documented, believed enforced, and was not — on seven of the eight target machines those paths do not exist. The gate's scope is now derived from core.manifest rather than hand-kept. That list had fallen behind three separate times — first the symlinked configs, then the bin//maint//tmux/scripts/ executables, and even then it still omitted zsh/completions/*, lib/ux.sh, lib/bootstrap-lib.sh and .bin/sync-upstream.sh. Every omission was the same bug, so the fix is structural: the manifest already is the definition of \"what is Core\", and a file added to it is scanned automatically. The blind spot cannot silently reopen, because reopening it would mean the file is not Core at all — which the manifest gate already fails on. Coverage went from 19 files to 167 (including the vendored nvim/ tree). The gate is also unconditional now: it used to be SCOPE_SHELL-gated, but it is pure sed+grep and cross-cutting, so a narrowed --scope run must not be able to skip a fan-out-correctness check. The one exemption — zsh/55-maint.zsh, whose launchd arm legitimately writes ~/Library/LaunchAgents — is now per-line rather than per-file. Skipping the whole module would have re-opened the blind spot inside it: an accidental /opt/homebrew added to maint-install, or to any other function there, would have sailed through. Only the LaunchAgents lines are dropped; everything else in the file is scanned. Verified the way a gate change has to be: the previous tree is red under the new scope and green under the old one, which is the only evidence that the widening bites.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Security",
+      "kind": "fix",
+      "text": "Caller-supplied workflow inputs no longer reach a run: body as code. auto-tag-call.yml spliced ${{ inputs.bump }} straight into its script in a job holding contents: write and persist-credentials: true, so a caller passing bump: 'patch\"; …; #' could run arbitrary code with the tag-push token. It was the one place the fleet broke the rule notify-web-call.yml states outright — \"a caller-supplied string must not be able to write shell\". Both bump and release now arrive through env:, and bump is checked against a patch|minor|major allowlist at runtime — workflow_call inputs cannot be type: choice (that is workflow_dispatch-only), so the type system will not do it. A typo now fails with the valid set instead of reaching auto-tag.sh's arg parser. claude-routines-call.yml had the same shape with ${{ inputs.distro }} in a job holding CLAUDE_CODE_OAUTH_TOKEN; it now goes through env: too, and is likewise allowlisted to the six distro names its own input contract already documents — env: makes the value shell-safe, but the Claude prompt is an instruction channel, so an arbitrary string there remains a prompt-injection vector. No run: body in any workflow interpolates an expression any more. Neither rejection path echoes the raw value back. The runner parses stdout line by line, so a multiline input can open a new ::…:: command on the following line and forge or suppress annotations no matter how well it is shell-quoted; both paths strip CR/LF/%/: and truncate first, mirroring how atuin-guard-verify.yml already handles upstream-derived text.",
+      "core": true
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.10.0",
@@ -1205,33 +1351,6 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "The atuin daemon opt-in never worked. ATUIN_DAEMON__ENABLED=true was silently ignored on every machine. Core shipped atuin/config.toml with [daemon] enabled = false written out explicitly, and that assertion is what broke it: atuin builds its config as defaults → environment → config file, adding the file source last (settings.rs — the Environment source goes in at the builder, the file at build_config() afterwards), and in the config crate the later source wins. So any key this file mentions **shadows its ATUIN_* override. The one key the whole per-OS design depends on being overridable was the one Core asserted. The fix is to write no value: enabled and autostart are now left unset. Upstream's own defaults are already false/false (settings.rs:1515-1516), so Core still ships the daemon off — off by default rather than off by assertion — and the override reaches it. Measured, not reasoned, against atuin 18.19.0 built from crates.io. atuin doctor reports the resolved daemon_enabled, and the client was straced for connect() on the socket, which is the only thing that distinguishes the two paths — exit codes cannot, because the client degrades silently to direct SQLite when the daemon is unreachable, which is exactly why this went unnoticed: | Config | daemon_enabled | connect(atuin.sock) | | --- | --- | --- | | enabled = false written + ATUIN_DAEMON__ENABLED=true | false | 0 calls | | key absent + ATUIN_DAEMON__ENABLED=true | true | 1 call | | no config file at all + ATUIN_DAEMON__ENABLED=true | true | — | | after this change, no env | false | — | | after this change, ATUIN_DAEMON__ENABLED=true | true | 1 call | What this was costing the fleet: dotfiles-Fedora's bootstrap installed and enabled a systemd unit that started a daemon no client ever talked to, and dotfiles-Alpine's exports were inert. Core's guard made it quieter still — it reads ATUIN_DAEMON__ENABLED from the environment, where it was set, so on Fedora it found the unit's socket present, stood down satisfied, and reported healthy while every write went straight to SQLite. Nothing was broken for a user; the feature simply did not exist. scripts/test-core.sh now asserts the two keys stay unset, negative-tested by putting enabled = false back and watching it fail. The check is static because the behavioural proof needs an atuin binary CI does not have. The same trap applies to any future per-machine key — asserting even its default disables the override — which is now stated in the config header, PORTING-MATRIX.md footnote 20, and beside the block itself. Three follow-ups from review, all of them the same defect wearing other hats: - The guard scanned only inside a literal [daemon] table, so the equally valid dotted form daemon.enabled = false at top level recreated the bug and passed green. Widening the regex was still the wrong shape — daemon = { enabled = false } and daemon . enabled = false are also valid and also deserialize to the same key, so a pattern match can only ever cover the spellings someone thought of. The guard now parses the TOML with tomllib (the idiom audit-core.sh's config gate already uses) and inspects the resolved daemon table, which is what atuin itself resolves. All four spellings negative-tested; an unparseable file fails distinctly rather than being read as clean. - The config header advertised export ATUIN_SEARCH_MODE=prefix as its example of an override — while the same file writes search_mode = \"fuzzy\", which makes that export silently ignored. Documenting the precedence trap and then demonstrating it was the worst of both. The example now uses sync_address, a key the file genuinely leaves unset, and the header names the ten settings that are deliberately not** overridable so the distinction is explicit rather than inferred. - The v4.8.0 upgrade note told adopters to port sync_address, auto_sync and filter_mode to ATUIN_* overrides. The first two work; filter_mode is written by this file and cannot. That entry now carries the correction inline rather than being quietly rewritten — it was wrong when shipped, and the record should say so. Verified against atuin 18.19.0 rather than assumed: with Core's config in place, ATUIN_SEARCH_MODE=prefix still resolves to fuzzy and ATUIN_FILTER_MODE=prefix still resolves to global.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.9.2",
-      "date": "2026-08-05",
-      "category": "Changed",
-      "kind": "feature",
-      "text": "RELEASE-RUNBOOK.md §1.1 now branches before staging, so a cut never touches main. The old order ran make release / make tag from main and only created release/vX.Y.Z at the push in step 3 — but tag-release.sh commits to whatever branch you are standing on, so the release commit landed on the operator's local main, one ahead of origin, on a protected branch it must never be pushed to. Every cut then needed a git reset --hard origin/main afterwards that the runbook never mentioned; cutting v4.9.1 tripped it twice. Branching first (new step 1) makes the cleanup unnecessary rather than undocumented — verified by running both orders end-to-end in a throwaway clone: the new one leaves main 0 ahead, the old one 1 ahead. Steps renumbered 0–5, and the four cross-references to \"§1.1 step 4\" (including the @vN bump-type callout heading) moved with them.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.9.2",
-      "date": "2026-08-05",
-      "category": "Changed",
-      "kind": "config",
-      "text": "The local vN alias move is now stated where it happens. make tag force-moves vN onto the not-yet-merged release commit (scripts/tag-release.sh), so between step 3 and step 5 a local read of v4 reports a commit origin does not have. Nothing was wrong with the behaviour — it is what keeps the alias from drifting — but it was undocumented, and an unexplained local/remote disagreement on the ref every reusable-workflow caller pins to is worth one sentence. Both the runbook and the script's own printed recipe now say it.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.9.2",
-      "date": "2026-08-05",
-      "category": "Changed",
-      "kind": "feature",
-      "text": "New \"Abandoning a cut\" section, for a release staged and then reconsidered (a bump reclassified, a wrong version) — which is exactly what happened between v4.10.0 and v4.9.1. It restages rather than patching the branch in place, since the branch name encodes the version, and it undoes both local-only artefacts. The git tag -d vX.Y.Z vN line deletes the alias explicitly rather than leaving it to the fetch: --tags --force only updates tags origin already has, so on a MAJOR — where the alias is newly minted and origin has never seen it — a fetch leaves a bogus local v5 pointing at a deleted commit. Found by running the recipe against both cases in a throwaway clone, not by reading it. There is now one cleanup recipe, not two. The troubleshooting table carried its own, written for the old flow — delete vX.Y.Z, git reset --hard HEAD~1 — which under branch-first leaves the release branch standing and vN still on the abandoned commit. It now points at the section instead of competing with it. The same vN omission was in tag-release.sh's printed guidance, which claimed to undo \"both local artefacts\" while naming only one; both found in review by Copilot. The genuinely distinct cases the table covered are kept: staging without committing is still a plain git checkout -- core.version CHANGELOG.md, and abandoning after the tag reached origin — the PUSH=1 path, where a Release is published and the fan-out has already fired — is now written out in the section, with the advice to cut the intended version forward rather than unwind a published one.",
       "core": true
     },
     {
