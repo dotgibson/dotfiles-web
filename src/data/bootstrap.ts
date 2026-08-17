@@ -93,6 +93,13 @@ const noUnattended: BootstrapFlag = {
   help: 'Skip enabling automatic security-pocket updates. Bootstrap otherwise turns them on, because these boxes are unattended by definition.',
   kind: 'provision',
 };
+const forceOs: BootstrapFlag = {
+  key: 'force-os',
+  label: 'Allow a Debian-like derivative',
+  flag: '--force-os',
+  help: 'The bootstrap refuses to run unless /etc/os-release reports ID=ubuntu or ID=debian. Derivatives (Mint, Pop!_OS, Raspbian) report ID_LIKE=debian and need this to proceed — their package sets are close but not CI-proven.',
+  kind: 'provision',
+};
 
 export const targets: BootstrapTarget[] = [
   {
@@ -211,10 +218,10 @@ export const targets: BootstrapTarget[] = [
     modules: true,
     blurb:
       'apt, targeting Ubuntu 24.04 LTS. The only frozen release in the fleet — so most of the stack arrives as pinned, checksum-verified upstream assets.',
-    flags: [linksOnly, noUpgrade, noUnattended],
+    flags: [linksOnly, noUpgrade, noUnattended, forceOs],
     notes: [
       'Land in the new shell with `exec zsh`.',
-      'Debian trixie is proven in CI; Mint/Pop!_OS/Raspbian need --force-os.',
+      'Ubuntu 24.04 LTS is the target; Debian trixie is also proven in CI.',
     ],
   },
   {

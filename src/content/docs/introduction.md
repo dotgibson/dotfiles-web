@@ -7,7 +7,7 @@ order: 0
 
 # Introduction
 
-**dotgibson** is a cross-platform terminal environment shipped as a **eleven-repo, three-layer**
+**dotgibson** is a cross-platform terminal environment shipped as an **eleven-repo, three-layer**
 dotfiles system. The goal is a single, opinionated setup — shell, editor, multiplexer, prompt,
 git — that stays **identical on every machine you touch**, with no productivity gaps when you
 hop between them and no per-host drift creeping in over time.
