@@ -645,9 +645,16 @@ const generatedFrom = {
         ? {
             commit: s.commit,
             branch: s.branch, // null when detached
+            // Emitted, not just used for the verdict: `branch` alone is not readable
+            // after the fact — "on 'release'" only means something next to what this
+            // repo's default IS. Also what makes the two stamps one shape, so a reader
+            // (or a jq strip) can treat generated.json and snippets.json alike.
+            defaultBranch: s.defaultBranch, // null when origin/HEAD is unset
             dirty: s.changed.some((p) => feedsTheCollector(s.name, p)),
           }
-        : { commit: null, branch: null, dirty: null }, // unverifiable, not clean
+        : // Unverifiable — not a git checkout. Same four keys with nulls rather than a
+          // shorter object, so a consumer reads nulls instead of probing for keys.
+          { commit: null, branch: null, defaultBranch: null, dirty: null },
     ])
   ),
 };
