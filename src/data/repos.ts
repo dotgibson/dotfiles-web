@@ -229,6 +229,44 @@ wsl.exe --shutdown             # from Windows, after dropping windows.wslconfig.
     docs: [{ label: 'Offensive methodology', slug: 'reference/offensive-methodology' }],
   },
   {
+    name: 'dotfiles-Debian',
+    layer: 'os',
+    status: 'stable',
+    icon: '◈',
+    blurb:
+      'Debian-family apt layer targeting Ubuntu 24.04 LTS. The fleet’s only frozen release — so most of the modern-CLI stack arrives as pinned, checksum-verified upstream assets.',
+    highlights: ['apt + vendor repos', 'SHA-256 pinned assets', 'version-floor CI gate', 'Ubuntu 24.04 + Debian trixie'],
+    install: `git clone https://github.com/dotgibson/dotfiles-Debian ~/dotfiles-Debian
+cd ~/dotfiles-Debian
+./bootstrap.sh
+exec zsh`,
+    installNote:
+      'Targets Ubuntu 24.04 LTS; Debian trixie is proven in CI. Flags: --links-only, --no-upgrade, --no-unattended, --force-os (for Mint/Pop!_OS/Raspbian).',
+    specifics: [
+      {
+        label: 'A frozen archive changes the question',
+        detail:
+          'Ubuntu LTS froze in April 2024, so “apt has it” is not the same as “apt has a version Core can use”. noble resolves neovim 0.9.5 and tree-sitter-cli 0.20.8 perfectly happily; Core needs 0.12 and 0.26.1. install/packages.txt declares # min: floors and CI enforces them — a resolution-only check would call that box healthy.',
+      },
+      {
+        label: 'Pinned assets, never curl | sh',
+        detail:
+          'Twelve tools apt cannot supply come from GitHub release assets pinned by version AND SHA-256 in install/tool-versions.env. It is fail-closed: a missing pin, failed download, or hash mismatch skips that tool loudly rather than installing anything unverified. Neovim needs a tree install (bin/ + share/nvim/runtime), not a lone binary.',
+      },
+      {
+        label: 'Vendor apt repos yes, PPAs no',
+        detail:
+          'glow/gum come from Charm’s signed repo and op from 1Password’s — both vendor-signed and identical on Debian and Ubuntu. A PPA is keyed to an Ubuntu series, so it 404s on Debian and would break the trixie CI lane, and it is unpinned and single-maintainer besides.',
+      },
+      {
+        label: 'Not the same repo as Kali',
+        detail:
+          'Both are Debian-family and both use apt, but Kali is a rolling sid derivative that exists for its offensive role layer. This is a plain OS-native layer for a frozen LTS — and the freeze is the entire difference.',
+      },
+    ],
+    docs: [{ label: 'Porting matrix', slug: 'reference/porting-matrix' }],
+  },
+  {
     name: 'dotfiles-Defense',
     layer: 'role',
     status: 'stable',
@@ -282,7 +320,7 @@ exec zsh`,
       {
         label: 'The template the others stamp from',
         detail:
-          'OS-native structure changes start here, then propagate to Arch/openSUSE/Alpine/Gentoo per the porting matrix — swap the package manager and clipboard backend, keep the structure.',
+          'OS-native structure changes start here, then propagate to Arch/Debian/openSUSE/Alpine/Gentoo per the porting matrix — swap the package manager and clipboard backend, keep the structure.',
       },
       {
         label: 'dnf5 + RPM Fusion',

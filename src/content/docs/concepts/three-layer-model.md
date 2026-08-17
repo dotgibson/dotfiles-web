@@ -15,7 +15,7 @@ put something in is decided by **one question: what does it change with?**
 | Layer | Lives in | Owns |
 | --- | --- | --- |
 | **Core** | `dotfiles-core`, vendored into every OS repo's `core/` (except Windows — replicated natively) | zsh modules, tmux, nvim, git, starship |
-| **OS-native** | `dotfiles-{MacBook,Windows,Fedora,Arch,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
+| **OS-native** | `dotfiles-{MacBook,Windows,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
 | **Role** | `dotfiles-Kali`, `dotfiles-Defense` | offensive / defensive tooling on the OS layer |
 
 ## The rule for where a change belongs
