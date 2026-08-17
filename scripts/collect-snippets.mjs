@@ -23,10 +23,15 @@
 //
 // This script was the last link in `npm run data` without that flag, which made the
 // whole pipeline only as fail-closed as its weakest step: metrics, corpus and coverage
-// would each refuse a missing fleet while this one shrugged and returned 0. That gap
-// widens as the fleet moves to git worktrees for isolation, since a worktree is not
-// beside its siblings — so `resolve(webRepo, '..')` resolves NONE of the curated files
-// and the no-op path becomes the common case rather than the CI corner case.
+// each refuse a missing fleet, while this one shrugged and returned 0. A publish run
+// that resolved nothing therefore kept the committed snapshot and reported success.
+//
+// resolveFleetRoot() below now finds the fleet from a linked worktree as well, which
+// removes the likeliest way to resolve 0/8 by accident — but not the possibility. A
+// non-standard layout, a genuinely absent sibling, or a curated path renamed upstream
+// all still land on the bail branch, and in every one of those cases republishing the
+// previous snapshot as though it were current is the wrong answer. Which of the two
+// behaviours you get is the point of the flag, not an implementation detail.
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
