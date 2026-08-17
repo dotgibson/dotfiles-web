@@ -190,5 +190,106 @@ if (unresolved.length) {
   process.exit(0);
 }
 
-writeFileSync(out, JSON.stringify({ generatedFrom: 'sibling repos', snippets }, null, 2) + '\n');
+// ── Provenance stamp ────────────────────────────────────────────────────────
+// Until now this file recorded `generatedFrom: "sibling repos"` — a literal string —
+// and no date at all, while corpus.json and coverage.json both carry a source commit
+// and a generatedAt. So there was no way to answer "what was this generated from?"
+// after the fact, and no way to notice that a past run had baked in uncommitted work.
+// For a file of NUMBERS that is untidy; for this one it matters more, because what
+// gets baked is CONTENT, rendered on /config as a repo's real configuration.
+//
+// Per-repo rather than the single object corpus/coverage use, because the curated set
+// spans six repos. Shape follows generated.json's stamp so one reader can check both.
+//
+// `dirty` is computed from the EXACT paths CURATED names, not a pattern: this
+// collector knows precisely which eight files it read, so a modified README in a
+// source repo is correctly not a problem, while a modified os/arch.zsh is.
+const gitIn = (dir, args) => {
+  try {
+    return execFileSync('git', ['-C', dir, ...args], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+  } catch {
+    return null; // not a git checkout, or no git on PATH
+  }
+};
+
+const sourceRepos = [...new Set(CURATED.map((e) => e.repo))];
+const repoProvenance = {};
+const unclean = [];
+let unverifiable = 0;
+
+for (const name of sourceRepos) {
+  const dir = join(root, name);
+  const head = gitIn(dir, ['rev-parse', 'HEAD']);
+  if (head == null) {
+    // Legitimate — a tarball or vendored copy. corpus.json tolerates the same and
+    // stamps a null commit rather than failing. Recorded as unverifiable, not clean.
+    repoProvenance[name] = { commit: null, branch: null, dirty: null };
+    unverifiable++;
+    continue;
+  }
+  const abbrev = (gitIn(dir, ['rev-parse', '--abbrev-ref', 'HEAD']) || '').trim();
+  // A detached HEAD abbreviates to the literal "HEAD". Recorded as a null branch and
+  // NOT a problem: it is a committed, addressable state the commit above pins exactly,
+  // and it is how a pinned release build checks out (clone --branch <tag> lands here).
+  const branch = abbrev === 'HEAD' ? null : abbrev;
+
+  const paths = CURATED.filter((e) => e.repo === name).map((e) => e.path);
+  const status = gitIn(dir, ['status', '--porcelain', '-z', '--', ...paths]) ?? '';
+  const dirty = status.split('\0').filter(Boolean).length > 0;
+
+  // Off-default-branch counts too, for the reason generated.json's stamp gives: a repo
+  // on a feature branch whose edits are COMMITTED has a clean working tree (dirty
+  // false) while its unmerged content is every bit as contaminating. Checking whether
+  // this branch's content actually differs from the default would be more precise, but
+  // it needs an up-to-date origin/HEAD and reports a false clean from a stale one; the
+  // blunt check has no such failure mode.
+  const defaultBranch =
+    (gitIn(dir, ['symbolic-ref', '--short', 'refs/remotes/origin/HEAD']) || '')
+      .trim()
+      .replace(/^origin\//, '') || null;
+  const offDefault = branch != null && defaultBranch != null && branch !== defaultBranch;
+
+  if (dirty || offDefault) {
+    unclean.push(
+      dirty && offDefault
+        ? `${name} (modified, and on '${branch}' not '${defaultBranch}')`
+        : dirty
+          ? `${name} (modified)`
+          : `${name} (on '${branch}' not '${defaultBranch}')`,
+    );
+  }
+
+  repoProvenance[name] = { commit: head.trim(), branch, defaultBranch, dirty };
+}
+
+const generatedFrom = {
+  // The verdict, so the file carries its own indictment and a reader needs no second
+  // opinion: true — every source verified and none dirty; false — at least one file
+  // this collector read was modified in its working tree; null — nothing dirty, but a
+  // source could not be verified, which is neither a failure nor a clean bill.
+  clean: unclean.length ? false : unverifiable ? null : true,
+  ...(unclean.length ? { unclean } : {}),
+  repos: repoProvenance,
+};
+
+if (unclean.length) {
+  console.warn(
+    `[collect-snippets] WARNING: sources are not publish-clean, so the baked snippets ` +
+      `may not be what those repos publish:\n` +
+      unclean.map((u) => `  • ${u}`).join('\n') +
+      `\nRecorded in generatedFrom.clean — the file says so about itself.`,
+  );
+}
+
+writeFileSync(
+  out,
+  JSON.stringify(
+    { generatedAt: new Date().toISOString().slice(0, 10), generatedFrom, snippets },
+    null,
+    2,
+  ) + '\n',
+);
 console.log(`[collect-snippets] wrote ${snippets.length} snippets to ${rel}`);
