@@ -37,9 +37,59 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webRepo = resolve(__dirname, '..');
-const root = process.env.DOTFILES_ROOT
-  ? resolve(process.env.DOTFILES_ROOT)
-  : resolve(webRepo, '..');
+const core = 'dotfiles-core';
+
+// Where the fleet lives, in precedence order:
+//
+//   1. DOTFILES_ROOT, if set — an explicit answer always wins.
+//   2. Beside this checkout — the ordinary case, dotfiles-web sitting in the fleet dir.
+//   3. Beside the MAIN worktree — the case (2) cannot reach.
+//
+// Step 3 exists because a LINKED WORKTREE lives outside the fleet directory, so `..`
+// from it holds no repos at all. That is not an edge case any more: sharing one clone
+// between concurrent sessions is what let an unmerged CHANGELOG.md get published on
+// 2026-08-16, and the remedy everyone was moved onto is a per-session worktree. Without
+// this step the remedy breaks the collector — a bare `npm run metrics` from a worktree
+// finds 0/10 repos and exits 0 keeping the stale snapshot, which is the same silent
+// staleness the preflight below exists to prevent, arriving through a different door.
+//
+// `git rev-parse --git-common-dir` resolves to the MAIN worktree's .git even when run
+// from a linked one, so its grandparent is the fleet directory. In a normal clone it
+// resolves to our own .git and step 3 lands back on step 2's answer — hence the
+// `!== beside` guard, which makes this a no-op off the worktree path.
+function resolveFleetRoot() {
+  if (process.env.DOTFILES_ROOT) return { root: resolve(process.env.DOTFILES_ROOT), via: 'DOTFILES_ROOT' };
+
+  const beside = resolve(webRepo, '..');
+  if (existsSync(join(beside, core))) return { root: beside, via: 'siblings' };
+
+  try {
+    const commonDir = execFileSync('git', ['-C', webRepo, 'rev-parse', '--git-common-dir'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    // --git-common-dir may answer relatively (a bare ".git"); resolve against webRepo.
+    const mainWorktree = dirname(resolve(webRepo, commonDir));
+    const fromMain = resolve(mainWorktree, '..');
+    if (fromMain !== beside && existsSync(join(fromMain, core))) {
+      return { root: fromMain, via: 'main worktree' };
+    }
+  } catch {
+    // No git, or not a checkout. Fall through — the missing-repos block below reports it.
+  }
+
+  // Nothing found. Return the conventional answer so the existing diagnostics name the
+  // path a reader expects, rather than some deduced one. CI (which clones dotfiles-web
+  // alone) lands here and keeps its current behaviour exactly.
+  return { root: beside, via: 'siblings' };
+}
+
+const { root, via: rootVia } = resolveFleetRoot();
+if (rootVia === 'main worktree') {
+  // Say so. Silently reaching outside this checkout for inputs is the kind of thing
+  // that should appear in a build log, not be inferred later from a surprising diff.
+  console.log(`[collect-metrics] running from a linked worktree — reading the fleet at ${root}`);
+}
 const out = join(webRepo, 'src', 'data', 'generated.json');
 
 const repoPath = (name) => join(root, name);
@@ -69,7 +119,6 @@ function packageCount(name) {
   return null;
 }
 
-const core = 'dotfiles-core';
 const osRepos = [
   'dotfiles-MacBook',
   'dotfiles-Windows',
