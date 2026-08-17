@@ -451,7 +451,21 @@ function classify(text, category) {
 // How many version blocks to surface per repo: the newest Unreleased (when it has
 // content) plus the most recent releases, so the page shows real release history
 // instead of only a perpetual "Unreleased" section.
-const MAX_VERSIONS_PER_REPO = 3;
+//
+// The cap counts RELEASES ONLY, which is what that sentence has always described but
+// not what the code did (#142). Counting Unreleased as one of the three meant a single
+// unreleased bullet evicted a whole release: dotfiles-core's one-item Unreleased pushed
+// v4.10.0 and its 64 entries off /changelog and out of the feed, an 854-line deletion
+// that reads as ordinary regenerated data in a refresh PR. That inverts the stated
+// purpose — an Unreleased section REDUCED the real release history rather than
+// accompanying it.
+const MAX_VERSIONS_PER_REPO = 3; // released blocks
+const MAX_UNRELEASED_PER_REPO = 1; // plus the Unreleased section, when it has content
+
+// A release heading is "## [vX.Y.Z]" (a leading v is optional, as deriveReleases()
+// also allows). Anything else — canonically the single "## [Unreleased]" at the top —
+// is not a release and so does not consume a release slot.
+const RELEASE_VERSION = /^v?\d+\.\d+\.\d+$/;
 
 // Parse one "## [version] - date" block — lines[start..end) — into an entry.
 function parseBlock(name, lines, start, end) {
@@ -512,8 +526,9 @@ function parseBlock(name, lines, start, end) {
   };
 }
 
-// Up to MAX_VERSIONS_PER_REPO non-empty version blocks from a repo's CHANGELOG.md,
-// newest first. Repos without one are skipped.
+// Up to MAX_VERSIONS_PER_REPO non-empty RELEASE blocks from a repo's CHANGELOG.md,
+// newest first, plus up to MAX_UNRELEASED_PER_REPO leading Unreleased block. Repos
+// without a CHANGELOG.md are skipped.
 function parseChangelog(name) {
   const file = join(repoPath(name), 'CHANGELOG.md');
   if (!existsSync(file)) return [];
@@ -521,9 +536,22 @@ function parseChangelog(name) {
   const heads = [];
   for (let j = 0; j < lines.length; j++) if (/^##\s+\[.+\]/.test(lines[j])) heads.push(j);
   const entries = [];
-  for (let h = 0; h < heads.length && entries.length < MAX_VERSIONS_PER_REPO; h++) {
+  let releases = 0;
+  let unreleased = 0;
+  for (let h = 0; h < heads.length && releases < MAX_VERSIONS_PER_REPO; h++) {
     const entry = parseBlock(name, lines, heads[h], heads[h + 1] ?? lines.length);
-    if (entry.groups.length) entries.push(entry);
+    if (!entry.groups.length) continue; // an empty section is not history
+    if (RELEASE_VERSION.test(entry.version)) {
+      releases += 1;
+    } else {
+      // Only BEFORE the first release, and only so many: Keep a Changelog puts the one
+      // Unreleased section at the top, so a non-semver heading appearing later is a
+      // typo or a stray section, and letting those through would quietly raise the cap
+      // for the repo — the same "one file exempted from the rule" shape as #139.
+      if (releases > 0 || unreleased >= MAX_UNRELEASED_PER_REPO) continue;
+      unreleased += 1;
+    }
+    entries.push(entry);
   }
   return entries;
 }
