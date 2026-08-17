@@ -5,7 +5,7 @@ import { repos } from './repos';
 
 export interface GeneratedMetrics {
   generatedAt: string;
-  fleet: { publicRepos: number; layers: number; loadOrderStages: number };
+  fleet: { publicRepos: number; layers: number };
   // Release channels for the version-switcher, derived from dotfiles-core's
   // CHANGELOG by collect-metrics.mjs and consumed in data/site.ts.
   releases?: { current: string; channels: string[] };

@@ -390,7 +390,6 @@ const data = {
   fleet: {
     publicRepos,
     layers: 3,
-    loadOrderStages: 15, // tools … update os local (+ offensive on Kali)
   },
   releases,
   drift: { coreVersion, repos: driftRepos },

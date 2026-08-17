@@ -2,8 +2,7 @@
   "generatedAt": "2026-08-14",
   "fleet": {
     "publicRepos": 10,
-    "layers": 3,
-    "loadOrderStages": 15
+    "layers": 3
   },
   "releases": {
     "current": "v4.10.0",
