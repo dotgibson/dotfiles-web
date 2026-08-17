@@ -199,8 +199,7 @@ jobs:
           # the real content only, and discard a stamp-only change so we don't PR noise.
           # corpus.json and coverage.json carry the same stamp plus generatedFrom.commit,
           # which moves whenever htpx / dotfiles-Defense get ANY commit, related or not —
-          # so they need the same treatment, not the plain git diff that suffices for
-          # snippets.json (which is unstamped). generatedFrom.repo / .path are deliberately
+          # so they need the same treatment. generatedFrom.repo / .path are deliberately
           # NOT stripped: they are hardcoded in the collectors, so a change there means a
           # collector was repointed at a different source and must land — otherwise the
           # revert below would discard the corrected provenance and the committed file
@@ -215,14 +214,30 @@ jobs:
           # snapshot was generated from a feature branch or a dirty tree. That is precisely
           # the local-publish accident the collector's preflight warns about, and this bot
           # replacing it with a clean regeneration is the right outcome, not noise.
+          #
+          # ALL FOUR files go through the same strip, snippets.json included — even though
+          # it is the one file carrying no stamp today, so the strip is a no-op on it. That
+          # is the point. It used to be compared with a plain `git diff`, which was correct
+          # only for as long as it stayed unstamped, and a PR to stamp it is open now. The
+          # moment a generatedAt appeared there, the plain diff would have reported drift
+          # EVERY DAY with no content change, and the bot would have opened a refresh PR
+          # every day — the failure this strip exists to prevent, reintroduced through the
+          # one file that had been exempted from it. Handling it here removes the ordering
+          # hazard instead of documenting it.
+          #
+          # The type guard is load-bearing, not defensive habit: snippets.json's
+          # generatedFrom is currently the STRING "sibling repos", and `del(.x.commit)`
+          # against a string is a hard jq error (exit 5), which under `set -e` would fail
+          # this step and break the bot outright. Guarding on the type keeps one strip
+          # correct across all four shapes — string, {repo,path,commit}, {clean,repos{}},
+          # and absent entirely.
           content_changed=no
-          for f in generated corpus coverage; do
-            strip='del(.generatedAt, .generatedFrom.commit, .generatedFrom.repos[]?.commit)'
+          for f in generated corpus coverage snippets; do
+            strip='del(.generatedAt) | if (.generatedFrom|type)=="object" then del(.generatedFrom.commit, .generatedFrom.repos[]?.commit) else . end'
             old="$(git show "HEAD:src/data/${f}.json" | jq "$strip")"
             new="$(jq "$strip" "src/data/${f}.json")"
             [ "$old" = "$new" ] || content_changed=yes
           done
-          git diff --quiet -- src/data/snippets.json || content_changed=yes
           if [ "$content_changed" = no ]; then
             git checkout -- src/data/generated.json src/data/snippets.json \
                             src/data/corpus.json src/data/coverage.json
