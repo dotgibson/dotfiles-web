@@ -1,5 +1,60 @@
 {
   "generatedAt": "2026-08-17",
+  "generatedFrom": {
+    "clean": true,
+    "repos": {
+      "dotfiles-core": {
+        "commit": "98f9a4ec0784c088bf50d68ceb5737267a2bade4",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-MacBook": {
+        "commit": "1310fd44a8d447e8b05090fdc755dbc766ac89a0",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-Windows": {
+        "commit": "370966bf8d86b8337a6fb98547a91eca94158355",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-Kali": {
+        "commit": "4d226d1cff13b35032b7c4907eceb612045e5bf3",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-Defense": {
+        "commit": "3e8f973621ef5def478f4ed9a2ae623d50ef8442",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-Fedora": {
+        "commit": "6687af8cebf986b61e3a13d3e60e586cdb98e5bc",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-Arch": {
+        "commit": "2394217ea2edb1d1f7709de6f755dea51acd779b",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-openSUSE": {
+        "commit": "5e24564648fef68b1cc40cdab1b3b50a026aa62c",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-Alpine": {
+        "commit": "9f8c891ac1399e742fb187197337ca97856be14f",
+        "branch": "main",
+        "dirty": false
+      },
+      "dotfiles-Gentoo": {
+        "commit": "60624eb90a1cf5fbe7a9d79c7e23e58af2715c05",
+        "branch": "main",
+        "dirty": false
+      }
+    }
+  },
   "fleet": {
     "publicRepos": 10,
     "layers": 3
@@ -95,6 +150,21 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "A failed tpm clone announced itself as a status line, so tmux quietly ended up with no plugin manager. blib_link_core's one-time clone reported failure with blib_say — the blue :: on stdout, the identical shape to the cloning tpm progress line immediately above it — and discarded git's error with >/dev/null 2>&1. Behind a proxy, offline, or against a rate limit, the run therefore produced a box whose tmux had no theme and no resurrect/continuum, with nothing in the log that stood out and no way to find out why. It now uses blib_note_fail, which warns on stderr and records the step, and git's own output is captured and printed indented under the failure instead of dropped — on a clone failure that output is the diagnosis (DNS, proxy, TLS, rate limit). Scope — this is the first lib-internal caller of blib_note_fail. The v4.11.0 entry below scoped that API as \"new, not yet wired into any bootstrap\", meaning adoption by consumers. A clone that happens inside Core is the case a consumer cannot observe for itself: dotfiles-MacBook had to add a post-hoc \"is the tpm directory there?\" check to its own bootstrap.sh precisely because this failure was unreportable (dotfiles-MacBook#133). No consumer changes behaviour from this alone — blib_note_fail calls blib_warn internally, so a bootstrap that ignores BLIB_FAILED sees exactly the corrected warning and nothing else. A bootstrap that does fold the tally in now learns about a failure it previously could not see, and can drop its local directory probe. Same shape, same fix, one line away: blib_set_login_shell's \"chsh not found\" branch also used blib_say while its sibling failure branch used blib_warn, though the outcome — login shell unchanged — is identical. It is a warning now too. Covered by four assertions in scripts/test-core.sh's link-run section, hermetic and offline: GIT_ALLOW_PROTOCOL=file makes git refuse the https transport, so the clone fails deterministically without depending on the remote being reachable or unreachable. They pin the stream (stderr, not stdout), the tally, and the git-error passthrough.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.12.1",
@@ -1072,6 +1142,14 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "A failed tpm clone announced itself as a status line, so tmux quietly ended up with no plugin manager. blib_link_core's one-time clone reported failure with blib_say — the blue :: on stdout, the identical shape to the cloning tpm progress line immediately above it — and discarded git's error with >/dev/null 2>&1. Behind a proxy, offline, or against a rate limit, the run therefore produced a box whose tmux had no theme and no resurrect/continuum, with nothing in the log that stood out and no way to find out why. It now uses blib_note_fail, which warns on stderr and records the step, and git's own output is captured and printed indented under the failure instead of dropped — on a clone failure that output is the diagnosis (DNS, proxy, TLS, rate limit). Scope — this is the first lib-internal caller of blib_note_fail. The v4.11.0 entry below scoped that API as \"new, not yet wired into any bootstrap\", meaning adoption by consumers. A clone that happens inside Core is the case a consumer cannot observe for itself: dotfiles-MacBook had to add a post-hoc \"is the tpm directory there?\" check to its own bootstrap.sh precisely because this failure was unreportable (dotfiles-MacBook#133). No consumer changes behaviour from this alone — blib_note_fail calls blib_warn internally, so a bootstrap that ignores BLIB_FAILED sees exactly the corrected warning and nothing else. A bootstrap that does fold the tally in now learns about a failure it previously could not see, and can drop its local directory probe. Same shape, same fix, one line away: blib_set_login_shell's \"chsh not found\" branch also used blib_say while its sibling failure branch used blib_warn, though the outcome — login shell unchanged — is identical. It is a warning now too. Covered by four assertions in scripts/test-core.sh's link-run section, hermetic and offline: GIT_ALLOW_PROTOCOL=file makes git refuse the https transport, so the clone fails deterministically without depending on the remote being reachable or unreachable. They pin the stream (stderr, not stdout), the tally, and the git-error passthrough.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Kali",
       "version": "Unreleased",
