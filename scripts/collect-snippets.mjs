@@ -27,7 +27,15 @@ const root = process.env.DOTFILES_ROOT
   : resolve(webRepo, '..');
 const out = join(webRepo, 'src', 'data', 'snippets.json');
 
-const MAX_LINES = 140; // cap a baked file; the rest is one click away on GitHub
+// Cap a baked file; the rest is one click away on GitHub. Set from the shape of the
+// curated set rather than picked round: the OS/role overlays cluster at 96-144 lines
+// and the long reference files start at 200 (Core's aliases, starship.toml, Kali's
+// offensive.zsh), so anything in that gap keeps every overlay whole while still
+// capping the three that actually need it. At 140 this truncated Arch's 144-line
+// overlay to hide FOUR lines behind a "read the full file" link — all the cost of
+// truncation for none of the benefit. 160 leaves that gap's headroom on the overlays
+// (Arch grew 138 -> 144 in three days), so ordinary growth doesn't re-trip it.
+const MAX_LINES = 160;
 
 // The curated slice — one representative file per idea, grouped by the three layers.
 // Keep it tight: a few punchy files that SHOW the model, not a mirror of every repo.
