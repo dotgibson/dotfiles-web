@@ -15,6 +15,18 @@
 // Defensive, exactly like collect-metrics.mjs: if a sibling repo isn't checked out
 // (the Pages CI runner only clones dotfiles-web), the committed snippets.json is left
 // untouched and the script exits 0 — so a partial checkout can't blank the page.
+//
+// And, exactly like collect-metrics.mjs, that lenient default is how a stale snapshot
+// silently ships: an "about to publish" run that resolves none of the fleet keeps the
+// old file and exits clean. Pass --strict (or STRICT=1) so a partial resolve is a HARD
+// ERROR (exit 1) instead. `npm run data` passes it; `npm run data:lenient` does not.
+//
+// This script was the last link in `npm run data` without that flag, which made the
+// whole pipeline only as fail-closed as its weakest step: metrics, corpus and coverage
+// would each refuse a missing fleet while this one shrugged and returned 0. That gap
+// widens as the fleet moves to git worktrees for isolation, since a worktree is not
+// beside its siblings — so `resolve(webRepo, '..')` resolves NONE of the curated files
+// and the no-op path becomes the common case rather than the CI corner case.
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
@@ -80,18 +92,34 @@ function load(entry) {
   };
 }
 
-const snippets = CURATED.map(load).filter(Boolean);
+const strict = process.argv.includes('--strict') || process.env.STRICT === '1';
+const rel = out.replace(webRepo + '/', '');
 
 // Bail without overwriting the committed snapshot unless we resolved the WHOLE curated
 // set — a partial checkout would silently drop files from the page.
-if (snippets.length !== CURATED.length) {
+const loaded = CURATED.map((entry) => ({ entry, snippet: load(entry) }));
+const snippets = loaded.map((r) => r.snippet).filter(Boolean);
+// Name the files that did not resolve, rather than only counting them. "8/9" sends you
+// diffing the curated list against ten checkouts by hand; the path says at once whether
+// a repo is absent, a file was renamed upstream, or the root is wrong.
+const unresolved = loaded.filter((r) => !r.snippet).map((r) => `${r.entry.repo}/${r.entry.path}`);
+
+if (unresolved.length) {
+  const why =
+    `resolved ${snippets.length}/${CURATED.length} curated files under ${root} — ` +
+    `missing: ${unresolved.join(', ')}`;
+  const tail = `Check out the full fleet beside this repo, or set DOTFILES_ROOT to point at it.`;
+  if (strict) {
+    // Publish path: refuse to leave a possibly-stale snapshot in place silently.
+    console.error(`[collect-snippets] STRICT: ${why} — cannot regenerate ${rel}. ${tail}`);
+    process.exit(1);
+  }
   console.warn(
-    `[collect-snippets] resolved ${snippets.length}/${CURATED.length} files under ${root} ` +
-      `— keeping the committed ${out.replace(webRepo + '/', '')} as-is. Check out the full ` +
-      `fleet beside this repo, or set DOTFILES_ROOT.`,
+    `[collect-snippets] ${why} — keeping the committed ${rel} as-is. ${tail} ` +
+      `(pass --strict to fail instead.)`,
   );
   process.exit(0);
 }
 
 writeFileSync(out, JSON.stringify({ generatedFrom: 'sibling repos', snippets }, null, 2) + '\n');
-console.log(`[collect-snippets] wrote ${snippets.length} snippets to ${out.replace(webRepo + '/', '')}`);
+console.log(`[collect-snippets] wrote ${snippets.length} snippets to ${rel}`);
