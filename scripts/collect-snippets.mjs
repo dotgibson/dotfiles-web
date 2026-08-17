@@ -37,62 +37,14 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolveFleetRoot } from './lib/fleet-root.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webRepo = resolve(__dirname, '..');
 
-// Any repo CURATED reads, used only to test whether a candidate directory IS the fleet.
-// Core is the safe pick: it is the one repo the curated set can never stop naming.
-const FLEET_SENTINEL = 'dotfiles-core';
 
-// Where the fleet lives, in precedence order:
-//
-//   1. DOTFILES_ROOT, if set — an explicit answer always wins.
-//   2. Beside this checkout — the ordinary case, dotfiles-web sitting in the fleet dir.
-//   3. Beside the MAIN worktree — the case (2) cannot reach.
-//
-// Step 3 exists because a LINKED WORKTREE lives outside the fleet directory, so `..`
-// from it holds no repos. That stopped being an edge case when per-session worktrees
-// became the way to keep concurrent sessions from sharing one checkout: without this,
-// a bare run from a worktree resolves 0/8 files and exits 0 keeping the committed
-// snapshot — silently publishing stale content, which for THIS collector means stale
-// config source rendered on /config as the real thing.
-//
-// `git rev-parse --git-common-dir` resolves to the MAIN worktree's .git even when run
-// from a linked one, so its grandparent is the fleet directory. In a normal clone it
-// resolves to our own .git and step 3 lands back on step 2's answer — hence the
-// `!== beside` guard, which makes this a no-op off the worktree path. Step 2 also
-// returns early whenever the fleet is beside us, so an ordinary clone never runs git.
-function resolveFleetRoot() {
-  if (process.env.DOTFILES_ROOT) {
-    return { root: resolve(process.env.DOTFILES_ROOT), via: 'DOTFILES_ROOT' };
-  }
 
-  const beside = resolve(webRepo, '..');
-  if (existsSync(join(beside, FLEET_SENTINEL))) return { root: beside, via: 'siblings' };
-
-  try {
-    const commonDir = execFileSync('git', ['-C', webRepo, 'rev-parse', '--git-common-dir'], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-    // --git-common-dir may answer relatively (a bare ".git"); resolve against webRepo.
-    const mainWorktree = dirname(resolve(webRepo, commonDir));
-    const fromMain = resolve(mainWorktree, '..');
-    if (fromMain !== beside && existsSync(join(fromMain, FLEET_SENTINEL))) {
-      return { root: fromMain, via: 'main worktree' };
-    }
-  } catch {
-    // No git, or not a checkout. Fall through — the resolve-count check below reports it.
-  }
-
-  // Nothing found. Return the conventional answer so the existing warning names the
-  // path a reader expects. CI (which clones dotfiles-web alone) lands here and keeps
-  // its current behaviour exactly.
-  return { root: beside, via: 'siblings' };
-}
-
-const { root, via: rootVia } = resolveFleetRoot();
+const { root, via: rootVia } = resolveFleetRoot(webRepo);
 if (rootVia === 'main worktree') {
   // Say so. Silently reaching outside this checkout for inputs is the kind of thing
   // that should appear in a build log, not be inferred later from a surprising diff.
