@@ -1,5 +1,46 @@
 {
-  "generatedFrom": "sibling repos",
+  "generatedAt": "2026-08-17",
+  "generatedFrom": {
+    "clean": true,
+    "repos": {
+      "dotfiles-core": {
+        "commit": "98f9a4ec0784c088bf50d68ceb5737267a2bade4",
+        "branch": "main",
+        "defaultBranch": "main",
+        "dirty": false
+      },
+      "dotfiles-Fedora": {
+        "commit": "6687af8cebf986b61e3a13d3e60e586cdb98e5bc",
+        "branch": "main",
+        "defaultBranch": "main",
+        "dirty": false
+      },
+      "dotfiles-Arch": {
+        "commit": "2394217ea2edb1d1f7709de6f755dea51acd779b",
+        "branch": "main",
+        "defaultBranch": "main",
+        "dirty": false
+      },
+      "dotfiles-MacBook": {
+        "commit": "1310fd44a8d447e8b05090fdc755dbc766ac89a0",
+        "branch": "main",
+        "defaultBranch": "main",
+        "dirty": false
+      },
+      "dotfiles-Alpine": {
+        "commit": "9f8c891ac1399e742fb187197337ca97856be14f",
+        "branch": "main",
+        "defaultBranch": "main",
+        "dirty": false
+      },
+      "dotfiles-Kali": {
+        "commit": "4d226d1cff13b35032b7c4907eceb612045e5bf3",
+        "branch": "main",
+        "defaultBranch": "main",
+        "dirty": false
+      }
+    }
+  },
   "snippets": [
     {
       "id": "dotfiles-core:zsh/20-aliases.zsh",
