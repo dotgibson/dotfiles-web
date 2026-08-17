@@ -226,7 +226,7 @@ for (const name of sourceRepos) {
   if (head == null) {
     // Legitimate — a tarball or vendored copy. corpus.json tolerates the same and
     // stamps a null commit rather than failing. Recorded as unverifiable, not clean.
-    repoProvenance[name] = { commit: null, branch: null, dirty: null };
+    repoProvenance[name] = { commit: null, branch: null, defaultBranch: null, dirty: null };
     unverifiable++;
     continue;
   }
@@ -250,15 +250,26 @@ for (const name of sourceRepos) {
     (gitIn(dir, ['symbolic-ref', '--short', 'refs/remotes/origin/HEAD']) || '')
       .trim()
       .replace(/^origin\//, '') || null;
-  const offDefault = branch != null && defaultBranch != null && branch !== defaultBranch;
+
+  // A clone that never set origin/HEAD resolves defaultBranch to null. Comparing
+  // against null would force offDefault false and hand back a publish-clean verdict
+  // for a repo sitting on a feature branch — the exact false-clean this stamp exists
+  // to prevent. Fall back to the conventional names instead, matching what
+  // generated.json's stamp does: if we are ON main/master, that IS the default; any
+  // other branch is compared against 'main' and correctly reads off-default. The raw
+  // (nullable) value is what gets recorded, so "we could not determine it" survives
+  // in the data even though the verdict never depends on a null.
+  const assumedDefault =
+    defaultBranch ?? (['main', 'master'].includes(branch) ? branch : 'main');
+  const offDefault = branch != null && branch !== assumedDefault;
 
   if (dirty || offDefault) {
     unclean.push(
       dirty && offDefault
-        ? `${name} (modified, and on '${branch}' not '${defaultBranch}')`
+        ? `${name} (modified, and on '${branch}' not '${assumedDefault}')`
         : dirty
           ? `${name} (modified)`
-          : `${name} (on '${branch}' not '${defaultBranch}')`,
+          : `${name} (on '${branch}' not '${assumedDefault}')`,
     );
   }
 
