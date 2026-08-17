@@ -1,5 +1,5 @@
 <!--
-  STATUS-BADGES.md — copy-paste CI status badges for the ten-repo fleet.
+  STATUS-BADGES.md — copy-paste CI status badges for the eleven-repo fleet.
 
   Two ready-to-integrate blocks:
     1. Markdown table  — drop into any README / docs page.
@@ -13,7 +13,7 @@
 
   Workflow file per repo:
     • dotfiles-core / -MacBook / -Windows  → ci.yml   (full existing pipeline)
-    • the seven distro/role repos          → lint.yml (shellcheck · shfmt · syntax)
+    • the eight distro/role repos          → lint.yml (shellcheck · shfmt · syntax)
 
   When a repo's primary workflow file is renamed, update the matching row/card.
 -->
@@ -33,6 +33,7 @@ Live build status for every repository in the fleet. Owner: **dotgibson**.
 | [dotfiles-Defense](https://github.com/dotgibson/dotfiles-Defense) | Role / defensive | [![lint](https://github.com/dotgibson/dotfiles-Defense/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Defense/actions/workflows/lint.yml) |
 | [dotfiles-Fedora](https://github.com/dotgibson/dotfiles-Fedora) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Fedora/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Fedora/actions/workflows/lint.yml) |
 | [dotfiles-Arch](https://github.com/dotgibson/dotfiles-Arch) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Arch/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Arch/actions/workflows/lint.yml) |
+| [dotfiles-Debian](https://github.com/dotgibson/dotfiles-Debian) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Debian/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Debian/actions/workflows/lint.yml) |
 | [dotfiles-openSUSE](https://github.com/dotgibson/dotfiles-openSUSE) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-openSUSE/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-openSUSE/actions/workflows/lint.yml) |
 | [dotfiles-Alpine](https://github.com/dotgibson/dotfiles-Alpine) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Alpine/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Alpine/actions/workflows/lint.yml) |
 | [dotfiles-Gentoo](https://github.com/dotgibson/dotfiles-Gentoo) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Gentoo/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Gentoo/actions/workflows/lint.yml) |
@@ -47,7 +48,7 @@ component.
 ```html
 <section class="ci-badges" aria-label="Fleet CI status">
   <h2 class="ci-badges__title">Continuous integration</h2>
-  <p class="ci-badges__lead">Live build status across the ten-repo fleet.</p>
+  <p class="ci-badges__lead">Live build status across the eleven-repo fleet.</p>
 
   <div class="ci-badges__grid">
     <!-- Core -->
@@ -118,6 +119,16 @@ component.
       </div>
       <img class="ci-card__badge" loading="lazy" alt="dotfiles-Arch lint status"
         src="https://github.com/dotgibson/dotfiles-Arch/actions/workflows/lint.yml/badge.svg" />
+    </a>
+
+    <!-- Debian -->
+    <a class="ci-card" href="https://github.com/dotgibson/dotfiles-Debian/actions/workflows/lint.yml" target="_blank" rel="noopener">
+      <div class="ci-card__head">
+        <span class="ci-card__name">◈ dotfiles-Debian</span>
+        <span class="ci-card__layer tone-blue">OS-native</span>
+      </div>
+      <img class="ci-card__badge" loading="lazy" alt="dotfiles-Debian lint status"
+        src="https://github.com/dotgibson/dotfiles-Debian/actions/workflows/lint.yml/badge.svg" />
     </a>
 
     <!-- openSUSE -->

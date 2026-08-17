@@ -102,11 +102,11 @@ export const platforms: Platform[] = [
     repo: 'dotfiles-Fedora',
     available: true,
     intro:
-      'Fedora is the template; Arch, openSUSE, Alpine, and Gentoo are stamped from it — same structure every time, only the package manager and a few distro quirks change. Pick the repo for your distro; the flow below is identical across all of them.',
+      'Fedora is the template; Arch, Debian/Ubuntu, openSUSE, Alpine, and Gentoo are stamped from it — same structure every time, only the package manager and a few distro quirks change. Pick the repo for your distro; the flow below is identical across all of them. Debian/Ubuntu is the one with a twist: it targets a frozen LTS, so it installs more from pinned upstream assets than the rest.',
     steps: [
       {
         title: 'Clone your distro’s repo',
-        body: 'Swap Fedora for Arch, openSUSE, Alpine, or Gentoo. Core is already vendored under core/, so the clone is self-contained.',
+        body: 'Swap Fedora for Arch, Debian, openSUSE, Alpine, or Gentoo. Core is already vendored under core/, so the clone is self-contained.',
         code: 'git clone https://github.com/dotgibson/dotfiles-Fedora ~/dotfiles-Fedora\ncd ~/dotfiles-Fedora',
       },
       {
@@ -122,7 +122,7 @@ export const platforms: Platform[] = [
       {
         title: 'Per-distro flags',
         body:
-          'Fedora / openSUSE: --no-flatpak skips Flatpak. Gentoo: --no-sync skips the slow emerge --sync on re-runs. Arch: a manual/minimal box needs the stage-0 prep in SETUP.md first (git, sudo, a UTF-8 locale). Alpine: run as root or with doas; enable the community repo.',
+          'Fedora / openSUSE: --no-flatpak skips Flatpak. Gentoo: --no-sync skips the slow emerge --sync on re-runs. Arch: a manual/minimal box needs the stage-0 prep in SETUP.md first (git, sudo, a UTF-8 locale). Alpine: run as root or with doas; enable the community repo. Debian/Ubuntu: --no-upgrade keeps apt-get update but skips full-upgrade, --no-unattended leaves automatic security updates off, and --force-os is needed on derivatives like Mint or Pop!_OS.',
       },
     ],
   },

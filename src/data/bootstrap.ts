@@ -9,6 +9,8 @@
 // everywhere else, so a target only ever lists flags it genuinely supports.
 // Verified against each repo's bootstrap.sh / install.ps1 case-arms:
 //   Fedora/Arch/openSUSE: --links-only --no-flatpak  + --only/--skip (modules)
+//   Debian:               --links-only --no-upgrade --no-unattended --force-os
+//                          + --only/--skip (modules)
 //   Alpine:               --links-only               + --only/--skip (modules)
 //   Gentoo:               --links-only --no-sync      + --only/--skip (modules)
 //   Kali:                 --links-only --no-offensive + --only/--skip (modules)
@@ -75,6 +77,27 @@ const noFlatpak: BootstrapFlag = {
   label: 'Skip Flatpak / GUI apps',
   flag: '--no-flatpak',
   help: 'Skip Flathub desktop apps — recommended on servers and under WSL.',
+  kind: 'provision',
+};
+const noUpgrade: BootstrapFlag = {
+  key: 'no-upgrade',
+  label: 'Skip the full-upgrade',
+  flag: '--no-upgrade',
+  help: 'Still run apt-get update, but skip full-upgrade — useful when you want the tools without moving the whole system.',
+  kind: 'provision',
+};
+const noUnattended: BootstrapFlag = {
+  key: 'no-unattended',
+  label: "Don't configure unattended-upgrades",
+  flag: '--no-unattended',
+  help: 'Skip enabling automatic security-pocket updates. Bootstrap otherwise turns them on, because these boxes are unattended by definition.',
+  kind: 'provision',
+};
+const forceOs: BootstrapFlag = {
+  key: 'force-os',
+  label: 'Allow a Debian-like derivative',
+  flag: '--force-os',
+  help: 'The bootstrap refuses to run unless /etc/os-release reports ID=ubuntu or ID=debian. Derivatives (Mint, Pop!_OS, Raspbian) report ID_LIKE=debian and need this to proceed — their package sets are close but not CI-proven.',
   kind: 'provision',
 };
 
@@ -184,6 +207,22 @@ export const targets: BootstrapTarget[] = [
     blurb: 'The Linux template every other distro repo is stamped from. dnf + RPM Fusion.',
     flags: [linksOnly, noFlatpak],
     notes: ['Land in the new shell with `exec zsh`.'],
+  },
+  {
+    id: 'debian',
+    label: 'Debian / Ubuntu',
+    repo: 'dotfiles-Debian',
+    dialect: 'sh',
+    entry: './bootstrap.sh',
+    cloneDir: '~/dotfiles-Debian',
+    modules: true,
+    blurb:
+      'apt, targeting Ubuntu 24.04 LTS. The only frozen release in the fleet — so most of the stack arrives as pinned, checksum-verified upstream assets.',
+    flags: [linksOnly, noUpgrade, noUnattended, forceOs],
+    notes: [
+      'Land in the new shell with `exec zsh`.',
+      'Ubuntu 24.04 LTS is the target; Debian trixie is also proven in CI.',
+    ],
   },
   {
     id: 'arch',

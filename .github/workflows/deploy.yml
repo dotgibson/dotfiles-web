@@ -90,8 +90,8 @@ jobs:
           # no-op path on every pinned build, so the deployed corpus was whatever happened
           # to be committed rather than the pinned ref's.
           repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Kali dotfiles-Defense \
-                 dotfiles-Fedora dotfiles-Arch dotfiles-openSUSE dotfiles-Alpine dotfiles-Gentoo \
-                 htpx"
+                 dotfiles-Fedora dotfiles-Arch dotfiles-Debian dotfiles-openSUSE dotfiles-Alpine \
+                 dotfiles-Gentoo htpx"
           for r in $repos; do
             url="https://x-access-token:${GH_TOKEN}@github.com/${OWNER}/${r}.git"
             if [ -n "${REF:-}" ] && git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>/dev/null; then

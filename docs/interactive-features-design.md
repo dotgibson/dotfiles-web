@@ -348,7 +348,7 @@ render if a stale JSON is present.
 - **Highlight rail:** perf + security items get a left accent bar (`--tn-green` /
   `--tn-red`) and a `kind` badge, so "what got faster" is scannable — directly
   answering the request.
-- **Core fan-out badge:** items with `core:true` show a `↳ ships to all 9 repos`
+- **Core fan-out badge:** items with `core:true` show a `↳ ships to all 10 repos`
   pill. This is the system's signature fact and the feed should lead with it.
 - **Per-item permalinks + source link** to the repo's `CHANGELOG.md` (already have
   the URL pattern).
