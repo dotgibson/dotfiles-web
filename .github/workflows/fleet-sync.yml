@@ -204,12 +204,22 @@ jobs:
           # NOT stripped: they are hardcoded in the collectors, so a change there means a
           # collector was repointed at a different source and must land — otherwise the
           # revert below would discard the corrected provenance and the committed file
-          # would keep advertising the old one. (del is a no-op on generated.json, which
-          # has no generatedFrom.)
+          # would keep advertising the old one.
+          #
+          # generated.json now carries a PER-REPO stamp (generatedFrom.repos[].commit /
+          # .branch / .dirty) recording which sibling commit each figure came from, so its
+          # .commit values need the same strip for the same reason — ten repos means ten
+          # SHAs moving on every unrelated commit, which would otherwise PR every hour.
+          # .branch and .dirty are deliberately KEPT in the comparison: in CI they are
+          # always the default branch and false, so they can only differ when the COMMITTED
+          # snapshot was generated from a feature branch or a dirty tree. That is precisely
+          # the local-publish accident the collector's preflight warns about, and this bot
+          # replacing it with a clean regeneration is the right outcome, not noise.
           content_changed=no
           for f in generated corpus coverage; do
-            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom.commit)')"
-            new="$(jq 'del(.generatedAt, .generatedFrom.commit)' "src/data/${f}.json")"
+            strip='del(.generatedAt, .generatedFrom.commit, .generatedFrom.repos[]?.commit)'
+            old="$(git show "HEAD:src/data/${f}.json" | jq "$strip")"
+            new="$(jq "$strip" "src/data/${f}.json")"
             [ "$old" = "$new" ] || content_changed=yes
           done
           git diff --quiet -- src/data/snippets.json || content_changed=yes

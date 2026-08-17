@@ -15,10 +15,23 @@
 //
 // BUT that lenient default is also how stale data silently ships: a local
 // "I'm about to publish" run that can't see the fleet keeps the old snapshot and
-// exits clean. Pass --strict (or STRICT=1) on that path so a missing fleet is a
-// HARD ERROR (exit 1) instead — regenerate against the real repos, or fail loud.
+// exits clean. --strict (or STRICT=1) makes a missing fleet a HARD ERROR (exit 1)
+// instead — regenerate against the real repos, or fail loud.
+//
+// A missing fleet is not the only way this ships fiction, though. Everything below
+// is read from the siblings' WORKING TREES, so a repo parked on a feature branch or
+// carrying uncommitted edits gets that unmerged work absorbed into generated.json
+// and published as fact. See the fleet-cleanliness preflight below, which --strict
+// also gates.
+//
+// WHICH MODE YOU GET. `npm run data` — the publish path, and what CI runs — passes
+// --strict for you, so neither hazard depends on anyone remembering a flag. Running
+// this script bare (or `npm run metrics`) stays lenient and only WARNS, which is the
+// right default for an exploratory run but is exactly how the 2026-08-16 incident
+// shipped; `npm run data:lenient` is the whole pipeline in that mode.
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -93,6 +106,190 @@ if (missing.length || coreZshMissing) {
       `${relative(webRepo, out)} as-is. ${tail} (pass --strict to fail instead.)`
   );
   process.exit(0);
+}
+
+// ── Fleet-cleanliness preflight ─────────────────────────────────────────────
+// Everything this script reads comes from the siblings' working trees, never from
+// git. So whatever is checked out — a feature branch, a half-finished edit, a merge
+// conflict — IS the input. On 2026-08-16 that shipped: dotfiles-core sat on
+// fix/tpm-clone-failure-reporting with uncommitted CHANGELOG.md edits, and an
+// `npm run metrics` run published a changelog entry that exists nowhere on Core's
+// main. It was caught by hand, which is not a control.
+//
+// WHY THIS LIVES HERE AND NOT IN A PRE-SCRIPT. The obvious alternative — a separate
+// scripts/preflight-fleet.mjs wired into `npm run data` — keeps this file free of
+// child_process, and it is the wrong call for three reasons:
+//
+//   1. It does not fix the bug, it shrinks it. A separate process finishes before
+//      this one starts reading, so the tree can still move in between. That is the
+//      same time-of-check/time-of-use gap that made the "just survey the fleet at
+//      session start" habit useless: two sessions ran `git status` across the fleet,
+//      both got a clean bill for dotfiles-core, and the tree moved underneath them
+//      before the collector ran — within one session the sweep fully inverted
+//      (dotfiles-core main/clean -> feature/dirty while dotfiles-MacBook went the
+//      other way). A TOCTOU bug is only closed by moving the check next to the read.
+//   2. It would have missed the actual incident. The run that published the phantom
+//      entry was `npm run metrics`, not `npm run data` — a pre-script on the
+//      aggregate target does not cover the command that caused this.
+//   3. The purity it protects is already gone. collect-corpus.mjs and
+//      collect-coverage.mjs both shell out to git for their provenance stamps, so
+//      child_process in a collector is this repo's existing pattern, not a new
+//      design axis. And a separate process could not stamp generatedFrom.repos
+//      below — provenance has to be recorded by whoever does the reading.
+//
+// This only bites LOCAL runs. fleet-sync.yml and data-freshness.yml's derived-data
+// job clone fresh into a temp root, and deploy.yml's pinned build does too, so CI is
+// structurally immune; the gap being closed is the human/agent publish path.
+const gitIn = (dir, args) => {
+  try {
+    return execFileSync('git', ['-C', dir, ...args], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+  } catch {
+    return null; // not a git checkout, or no git on PATH
+  }
+};
+
+// `git status --porcelain -z` emits "XY <path>\0" per entry, with rename/copy
+// entries followed by a second NUL-terminated field holding the source path. -uall
+// expands untracked directories to individual files, which matters: an untracked
+// zsh/NN-new.zsh moves sourcedModules and zshLoc just as surely as a tracked edit.
+function changedPaths(z) {
+  const fields = z.split('\0').filter(Boolean);
+  const paths = [];
+  for (let i = 0; i < fields.length; i++) {
+    const code = fields[i].slice(0, 2);
+    paths.push(fields[i].slice(3));
+    if (code[0] === 'R' || code[0] === 'C') i++; // skip the rename/copy source
+  }
+  return paths;
+}
+
+// Which working-tree paths can actually reach generated.json. A dirty README or a
+// half-written test in a sibling repo cannot move a single number here, and failing
+// a publish over one trains people to pass --no-verify at the numbers that matter.
+// Kept as an explicit list of what the reads below touch, so it is auditable against
+// them rather than being a vague "src/-ish" heuristic.
+//
+// Scoped PER REPO, because the same path is load-bearing in one repo and inert in
+// another: zsh/ is where every core.* metric comes from in Core, while an OS repo's
+// zsh/os.zsh is never read here — treating it as contaminating would block publishes
+// over the ordinary business of editing an OS layer.
+const READS_EVERYWHERE = [
+  /^CHANGELOG\.md$/, // changelog + feed (+ release channels, in Core)
+  /^install\//, // packages.txt, offensive-packages.txt
+  /^(macos\/)?Brewfile$/, // macOS package counts
+  /^\.github\/workflows\//, // the ci[] flags
+];
+const READS_PER_REPO = {
+  [core]: [
+    /^core\.version$/, // the Core version string
+    /^zsh\//, // sourcedModules, zshLoc, gitAliases, pinnedPlugins, completions
+  ],
+  // The host repo replicates Core rather than vendoring it, so it has no core.lock —
+  // its mirror stamp is the only extra file read from it (see the drift block below).
+  'dotfiles-Windows': [/^nvim\/\.core-ref$/],
+};
+// The fallback: every repo without an entry above is a vendoring OS repo, and the
+// only extra file read from one is its Core pin.
+const VENDORING_LOCK = [/^core\.lock$/];
+const readsOf = (repo) => [...READS_EVERYWHERE, ...(READS_PER_REPO[repo] ?? VENDORING_LOCK)];
+const feedsTheCollector = (repo, p) => readsOf(repo).some((re) => re.test(p));
+
+function repoState(name) {
+  const dir = repoPath(name);
+  const head = gitIn(dir, ['rev-parse', 'HEAD']);
+  if (head == null) return { name, tracked: false, commit: null, branch: null, changed: [] };
+  const abbrev = (gitIn(dir, ['rev-parse', '--abbrev-ref', 'HEAD']) || '').trim();
+  // A detached HEAD abbreviates to the literal "HEAD". Recorded as null branch and
+  // deliberately NOT treated as a problem: it is a committed, addressable state that
+  // the provenance stamp pins exactly, and it is how deploy.yml builds a pinned
+  // release (`git clone --depth 1 --branch <tag>` lands detached at the tag). Failing
+  // on it would redden every release build to catch nothing.
+  const branch = abbrev === 'HEAD' ? null : abbrev;
+  const defaultBranch =
+    (gitIn(dir, ['symbolic-ref', '--short', 'refs/remotes/origin/HEAD']) || '')
+      .trim()
+      .replace(/^origin\//, '') || null;
+  return {
+    name,
+    tracked: true,
+    commit: head.trim(),
+    branch,
+    defaultBranch,
+    changed: changedPaths(gitIn(dir, ['status', '--porcelain', '-z', '-uall']) ?? ''),
+  };
+}
+
+// Branch-vs-default is a blunt proxy for "carries unmerged work", and intentionally
+// so: the precise question (does this branch's committed content differ from the
+// default branch in a path the collector reads?) needs an up-to-date origin/main and
+// gets a wrong answer from a stale one. The blunt check has no such failure mode.
+function branchProblem(s) {
+  if (s.branch == null) return null; // detached — see above
+  // No origin/HEAD (a clone that never set it) — fall back to the conventional names
+  // rather than declaring every repo off-default.
+  const def = s.defaultBranch ?? (['main', 'master'].includes(s.branch) ? s.branch : 'main');
+  return s.branch === def ? null : `on branch '${s.branch}' (default: '${def}')`;
+}
+
+const fleetState = [core, ...osRepos].map(repoState);
+const unverifiable = fleetState.filter((s) => !s.tracked).map((s) => s.name);
+const unclean = [];
+const dirtyElsewhere = [];
+for (const s of fleetState) {
+  if (!s.tracked) continue;
+  const relevant = s.changed.filter((p) => feedsTheCollector(s.name, p));
+  const reasons = [branchProblem(s)].filter(Boolean);
+  if (relevant.length) {
+    const shown = relevant.slice(0, 4).join(', ');
+    const more = relevant.length > 4 ? ` (+${relevant.length - 4} more)` : '';
+    reasons.push(`uncommitted changes to ${shown}${more}`);
+  } else if (s.changed.length) {
+    dirtyElsewhere.push(s.name);
+  }
+  if (reasons.length) unclean.push(`${s.name} — ${reasons.join('; ')}`);
+}
+
+if (unclean.length) {
+  const why =
+    `the fleet is not publish-clean, so unmerged work would be read as fact:\n` +
+    unclean.map((l) => `  • ${l}`).join('\n');
+  const tail =
+    `Commit, stash, or switch those repos back to their default branch, then ` +
+    `re-run. (Only paths this collector actually reads are counted — see readsOf().)`;
+  if (strict) {
+    console.error(`[collect-metrics] STRICT: ${why}\n${tail}`);
+    process.exit(1);
+  }
+  console.warn(
+    `[collect-metrics] WARNING: ${why}\n${tail} (pass --strict to fail instead.)\n` +
+      `Proceeding — the state above is recorded in generatedFrom.repos.`
+  );
+}
+if (dirtyElsewhere.length) {
+  console.log(
+    `[collect-metrics] note: local changes in ${dirtyElsewhere.join(', ')}, but none ` +
+      `in a path this collector reads — not treated as a problem.`
+  );
+}
+if (unverifiable.length) {
+  // A source that is not a git checkout is legitimate (a tarball, a vendored copy) —
+  // collect-corpus.mjs tolerates the same and stamps a null commit. But if NOTHING is
+  // verifiable the gate is not lenient, it is absent, and --strict would be advertising
+  // a guarantee it cannot make — so that case is fatal on the publish path.
+  const why =
+    `cannot verify ${unverifiable.join(', ')} — not a git checkout (or git is not on PATH)`;
+  if (strict && unverifiable.length === fleetState.length) {
+    console.error(
+      `[collect-metrics] STRICT: ${why}. No repo in the fleet can be checked, so the ` +
+        `cleanliness gate cannot run at all. Point DOTFILES_ROOT at git checkouts, or ` +
+        `drop --strict and accept unverified provenance.`
+    );
+    process.exit(1);
+  }
+  console.warn(`[collect-metrics] ${why} — its provenance stamp will be null.`);
 }
 
 // ── Core metrics ────────────────────────────────────────────────────────────
@@ -385,8 +582,45 @@ function deriveReleases() {
 }
 const releases = deriveReleases();
 
+// Provenance stamp, same rationale as corpus.json / coverage.json but per-repo, since
+// this file's figures come from ten sources rather than one. Until now generated.json
+// carried only a day-granular generatedAt, so a snapshot taken from a dirty tree was
+// indistinguishable from a clean one after the fact — the 2026-08-16 incident left no
+// trace in the file at all. `dirty` records whether a COLLECTOR-RELEVANT path was
+// modified, i.e. exactly the condition the preflight warns about, so a snapshot
+// published over that warning says so in its own data.
+const generatedFrom = {
+  // The preflight's VERDICT, not just its raw inputs, so the file carries its own
+  // indictment and a reader (or a hook) needs no second opinion:
+  //   true  — the preflight was satisfied
+  //   false — regenerated over a warning; `unclean` says which repos and why
+  //   null  — no problems found, but some repo could not be verified (a non-git
+  //           source), which is not a failure and is not a clean bill either
+  //
+  // Recording the verdict is what makes this gateable. Per-repo `dirty` alone is not
+  // enough: a sibling sitting on a feature branch whose edits are COMMITTED has a
+  // clean working tree (dirty: false) while its unmerged content is every bit as
+  // contaminating. The 2026-08-16 incident had both conditions at once, which is
+  // exactly the sort of coincidence that hides a hole like that.
+  clean: unclean.length ? false : unverifiable.length ? null : true,
+  ...(unclean.length ? { unclean } : {}),
+  repos: Object.fromEntries(
+    fleetState.map((s) => [
+      s.name,
+      s.tracked
+        ? {
+            commit: s.commit,
+            branch: s.branch, // null when detached
+            dirty: s.changed.some((p) => feedsTheCollector(s.name, p)),
+          }
+        : { commit: null, branch: null, dirty: null }, // unverifiable, not clean
+    ])
+  ),
+};
+
 const data = {
   generatedAt: new Date().toISOString().slice(0, 10),
+  generatedFrom,
   fleet: {
     publicRepos,
     layers: 3,

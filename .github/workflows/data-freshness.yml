@@ -86,8 +86,8 @@ jobs:
           if [ "${stale}" -eq 1 ]; then
             echo "::error::The committed src/data/generated.json is BEHIND the latest" \
                  "dotfiles-core release (${latest}). The showcase would advertise a" \
-                 "stale Core version. Check out the fleet, run 'npm run data' (or" \
-                 "'npm run data:strict'), and commit the refreshed generated.json."
+                 "stale Core version. Check out the fleet, run 'npm run data', and" \
+                 "commit the refreshed generated.json."
             exit 1
           fi
 
@@ -242,9 +242,67 @@ jobs:
             stale=1
             echo "::error::src/data/${f}.json is BEHIND its source repo. The showcase" \
                  "would publish stale counts on /purple. Check out the fleet as siblings" \
-                 "and run 'npm run ${f}' (or 'npm run data:strict'), then commit the result."
+                 "and run 'npm run ${f}' (or 'npm run data'), then commit the result."
             echo "--- committed  +++ regenerated (src/data/${f}.json) ---"
             diff -u <(printf '%s\n' "$old") <(printf '%s\n' "$new") | head -60 || true
           done
 
           exit "$stale"
+
+  # generated.json is derived from the sibling repos' WORKING TREES, so a sibling parked
+  # on a feature branch or holding uncommitted edits gets that unmerged work absorbed and
+  # published. It happened on 2026-08-16: dotfiles-core sat on a feature branch and an
+  # `npm run metrics` run published a changelog entry that exists on no branch of Core's
+  # main. collect-metrics.mjs now records the verdict of its own preflight in
+  # generatedFrom.clean, and scripts/install-hooks.mjs installs a pre-commit hook that
+  # refuses such a snapshot.
+  #
+  # That hook protects exactly ONE machine — it lives in .git/hooks, is untracked, is
+  # skipped when core.hooksPath is set, and is one --no-verify away from irrelevant. This
+  # job is the durable half, and it is the cheap half too: it clones nothing and re-derives
+  # nothing, it just reads the stamp on the file being proposed.
+  committed-data-provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.repository_owner == 'dotgibson'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Refuse site data derived from an unclean fleet
+        run: |
+          set -euo pipefail
+
+          # NOT `.generatedFrom.clean // "absent"` — jq's // treats false as empty, so the
+          # single value this job exists to catch would report as "absent" and pass. Ask
+          # whether the key EXISTS, then stringify it.
+          clean="$(jq -r '
+            if (.generatedFrom | type) == "object" and (.generatedFrom | has("clean"))
+            then (.generatedFrom.clean | tostring) else "absent" end
+          ' src/data/generated.json)"
+
+          case "$clean" in
+            true)
+              echo "OK — src/data/generated.json was derived from a clean fleet."
+              ;;
+            false)
+              echo "::error::src/data/generated.json was derived from an UNCLEAN fleet, so it" \
+                   "publishes unmerged work as fact. Offending repos:"
+              jq -r '.generatedFrom.unclean[]? | "  • " + .' src/data/generated.json
+              echo "::error::Settle those sibling repos (commit, stash, or return them to their" \
+                   "default branch), re-run 'npm run data' — which now fails rather than" \
+                   "absorbing — and commit the regenerated file."
+              exit 1
+              ;;
+            null)
+              echo "::warning::src/data/generated.json could not fully verify its sources" \
+                   "(a sibling was not a git checkout), so its provenance is incomplete."
+              ;;
+            absent)
+              # A file committed before the stamp existed, or hand-edited. Not worth failing
+              # a build over on its own — the freshness jobs above already catch staleness —
+              # but it means this guard has nothing to check.
+              echo "::warning::src/data/generated.json carries no generatedFrom.clean stamp," \
+                   "so its provenance is unverifiable. Regenerate it with 'npm run data'."
+              ;;
+          esac

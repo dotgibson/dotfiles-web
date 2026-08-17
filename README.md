@@ -148,14 +148,45 @@ the untouched files quietly fall behind:
 
 ```bash
 npm run data          # checkout the sibling repos next to this one first
-npm run data:strict   # same, but fails instead of no-opping when a repo is missing
+npm run data:lenient  # warn instead of failing — read the caveat below first
 ```
 
-Each collector is defensive: with its source repo absent it leaves the committed file
-alone and exits 0, so a fleet-less runner can't zero the data. `fleet-sync.yml` runs all
-four weekly and opens a PR when the output drifts; `data-freshness.yml` fails CI when
-the committed `corpus.json` / `coverage.json` no longer match their sources, or when
-`generated.json`'s Core version is behind the latest `dotfiles-core` release.
+`npm run data` is the **publish** path, so it is strict: a missing repo, and a sibling
+that is parked on a feature branch or carrying uncommitted edits in a file the
+collectors read, both fail the run instead of being absorbed into the committed data.
+That second check exists because it happened — a `dotfiles-core` checked out on a
+feature branch published a changelog entry that was on no branch of Core's `main`.
+
+Each individual collector (`npm run metrics`, `corpus`, `coverage`) stays lenient for
+exploratory runs, and `npm run data:lenient` is the whole pipeline in that mode. Note
+that "lenient" means two different things depending on which check trips, and only one
+of them is harmless:
+
+- **source repo absent** — the committed file is left alone and the run exits 0, so a
+  fleet-less runner can't zero the data. Nothing is published that wasn't already there.
+- **fleet present but unclean** — the run warns and **still writes**, absorbing the
+  unmerged work. The snapshot is stamped `generatedFrom.clean: false`, which is what the
+  two guards below key on, but the contaminated file is on disk either way.
+
+So the lenient path is fine for looking, and is not a publish path. `fleet-sync.yml` runs all four weekly and opens a PR when the
+output drifts; `data-freshness.yml` fails CI when the committed `corpus.json` /
+`coverage.json` no longer match their sources, or when `generated.json`'s Core version
+is behind the latest `dotfiles-core` release.
+
+Because the lenient path still *writes* (with a warning), the thing that actually
+publishes — the commit — is guarded in two places, both reading the
+`generatedFrom.clean` verdict that `collect-metrics.mjs` stamps into the file:
+
+| guard | scope | installed by |
+| --- | --- | --- |
+| `pre-commit` hook | one machine | `npm install` (or `npm run hooks:install`) |
+| `committed-data-provenance` | every PR, every machine | `data-freshness.yml` |
+
+The hook follows the same rules as `dotfiles-core`'s core guard: it never clobbers an
+existing `pre-commit`, and it *skips* — loudly — when `core.hooksPath` is set, since
+writing into an ignored `.git/hooks` would be false protection rather than protection.
+Bypass a single commit with `DOTFILES_ALLOW_DIRTY_DATA=1 git commit …` or
+`--no-verify`; the CI job is the one that can't be bypassed.
 
 Pushing to `main` triggers `.github/workflows/deploy.yml` (Astro build → GitHub
 Pages). A source repo can ping a rebuild via `repository_dispatch`; the token and
