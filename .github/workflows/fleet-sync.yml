@@ -173,12 +173,12 @@ jobs:
           set -euo pipefail
           # All required: collect-metrics.mjs exits 0 (leaving generated.json untouched)
           # if a repo is missing, which would masquerade as "in step" — so a failed clone
-          # must fail the job instead. (dotfiles-Debian is intentionally absent — no repo.)
+          # must fail the job instead.
           # htpx is here for collect-corpus.mjs: it is not a dotfiles layer, it is the
           # source of the red/blue corpus the /purple page publishes, and leaving it out
           # is why corpus.json used to drift for months between hand refreshes.
-          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Defense \
-                   dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
+          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Debian \
+                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
                    dotfiles-openSUSE dotfiles-Windows htpx; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r"
           done

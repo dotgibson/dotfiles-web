@@ -121,7 +121,7 @@ const rel = relative(webRepo, out);
 const loaded = CURATED.map((entry) => ({ entry, snippet: load(entry) }));
 const snippets = loaded.map((r) => r.snippet).filter(Boolean);
 // Name the files that did not resolve, rather than only counting them. "8/9" sends you
-// diffing the curated list against ten checkouts by hand; the path says at once whether
+// diffing the curated list against eleven checkouts by hand; the path says at once whether
 // a repo is absent, a file was renamed upstream, or the root is wrong.
 const unresolved = loaded.filter((r) => !r.snippet).map((r) => `${r.entry.repo}/${r.entry.path}`);
 

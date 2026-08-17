@@ -35,27 +35,27 @@ still lets it modify `dotfiles-web`'s own contents (not just fire a dispatch), s
 treat it like any real credential: keep it in Actions secrets only, and rotate it
 if it's ever exposed.
 
-## 2. Add it as a secret in each source repo (10×)
+## 2. Add it as a secret in each source repo (11×)
 
-The same token value goes into all ten repos, added per-repo below. (`dotgibson`
+The same token value goes into all eleven repos, added per-repo below. (`dotgibson`
 is an org, so you could alternatively set a single organization-level secret and
 skip the repeat — the per-repo setup keeps each source repo self-contained.)
 
 For each of `dotfiles-core`, `dotfiles-MacBook`, `dotfiles-Windows`,
 `dotfiles-Kali`, `dotfiles-Defense`, `dotfiles-Fedora`, `dotfiles-Arch`,
-`dotfiles-openSUSE`, `dotfiles-Alpine`, `dotfiles-Gentoo`:
+`dotfiles-Debian`, `dotfiles-openSUSE`, `dotfiles-Alpine`, `dotfiles-Gentoo`:
 
 1. Repo → **Settings → Secrets and variables → Actions**
 2. **New repository secret**
 3. **Name:** `WEBHOOK_SECRET` (must match exactly) — **Value:** the token
 4. **Add secret**
 
-### Or do all ten from the terminal with `gh`
+### Or do all eleven from the terminal with `gh`
 
 ```bash
 read -rs TOKEN   # paste github_pat_..., press Enter — kept off-screen & out of history
 
-for r in core MacBook Windows Kali Defense Fedora Arch openSUSE Alpine Gentoo; do
+for r in core MacBook Windows Kali Defense Fedora Arch Debian openSUSE Alpine Gentoo; do
   printf '%s' "$TOKEN" | gh secret set WEBHOOK_SECRET --repo "dotgibson/dotfiles-$r" --body -
   echo "set on dotfiles-$r"
 done

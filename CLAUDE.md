@@ -5,7 +5,7 @@ source-of-truth rules live in [dotfiles-core](https://github.com/dotgibson/dotfi
 
 ## What this repo is
 
-`dotfiles-web` is the **public showcase + docs site** for a ten-repo dotfiles
+`dotfiles-web` is the **public showcase + docs site** for an eleven-repo dotfiles
 system built on a three-layer model (Core → OS-native → Role). It *documents* the
 system rather than configuring a machine, so it is **not** itself one of the three
 layers. Built with **Astro**, themed in **Tokyo Night**, deployed to **GitHub
