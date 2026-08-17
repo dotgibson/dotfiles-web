@@ -11,10 +11,18 @@
 //
 //   node scripts/collect-snippets.mjs            # repos are siblings of this one
 //   DOTFILES_ROOT=/path/to/repos node scripts/collect-snippets.mjs
+//   node scripts/collect-snippets.mjs --strict   # a partial fleet is a HARD ERROR
 //
 // Defensive, exactly like collect-metrics.mjs: if a sibling repo isn't checked out
 // (the Pages CI runner only clones dotfiles-web), the committed snippets.json is left
 // untouched and the script exits 0 — so a partial checkout can't blank the page.
+//
+// BUT that lenient default is also how stale content silently ships, and the stakes
+// here are higher than for a stale metric: this file bakes CONTENTS, rendered on
+// /config as a repo's real configuration under a "read the full file" link implying
+// it matches main. A run that quietly kept the old snapshot is indistinguishable from
+// one that regenerated — same exit code, same silence. Pass --strict (or STRICT=1) on
+// the publish path so a partial fleet is a HARD ERROR (exit 1) instead.
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -148,11 +156,35 @@ const snippets = CURATED.map(load).filter(Boolean);
 
 // Bail without overwriting the committed snapshot unless we resolved the WHOLE curated
 // set — a partial checkout would silently drop files from the page.
+//
+// Which way it bails depends on --strict, matching collect-metrics.mjs. The lenient
+// default is right for the Pages runner (it clones dotfiles-web alone, so it MUST be
+// able to build against the committed snapshot) and for an exploratory local run. It
+// is wrong for the publish path, where "kept the old snapshot" and "regenerated"
+// produce the same exit code and the same silence, so a stale page ships looking
+// identical to a fresh one — a warning in a build log is not a control.
+const strict = process.argv.includes('--strict') || process.env.STRICT === '1';
+
 if (snippets.length !== CURATED.length) {
+  const missing = CURATED.filter((e) => !snippets.some((s) => s.id === `${e.repo}:${e.path}`))
+    .map((e) => `${e.repo}/${e.path}`);
+  const why =
+    `resolved ${snippets.length}/${CURATED.length} files under ${root} ` +
+    `(missing: ${missing.join(', ')})`;
+  const tail = `Check out the full fleet beside this repo, or set DOTFILES_ROOT.`;
+
+  if (strict) {
+    // Publish path: refuse to leave a possibly-stale snapshot in place silently.
+    console.error(
+      `[collect-snippets] STRICT: ${why} — cannot regenerate ` +
+        `${out.replace(webRepo + '/', '')}. ${tail}`,
+    );
+    process.exit(1);
+  }
+
   console.warn(
-    `[collect-snippets] resolved ${snippets.length}/${CURATED.length} files under ${root} ` +
-      `— keeping the committed ${out.replace(webRepo + '/', '')} as-is. Check out the full ` +
-      `fleet beside this repo, or set DOTFILES_ROOT.`,
+    `[collect-snippets] ${why} — keeping the committed ` +
+      `${out.replace(webRepo + '/', '')} as-is. ${tail} (pass --strict to fail instead.)`,
   );
   process.exit(0);
 }
