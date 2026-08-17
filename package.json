@@ -16,7 +16,7 @@
     "snippets": "node scripts/collect-snippets.mjs",
     "corpus": "node scripts/collect-corpus.mjs",
     "coverage": "node scripts/collect-coverage.mjs",
-    "data": "node scripts/collect-metrics.mjs --strict && npm run snippets && node scripts/collect-corpus.mjs --strict && node scripts/collect-coverage.mjs --strict",
+    "data": "node scripts/collect-metrics.mjs --strict && node scripts/collect-snippets.mjs --strict && node scripts/collect-corpus.mjs --strict && node scripts/collect-coverage.mjs --strict",
     "data:strict": "npm run data",
     "data:lenient": "npm run metrics && npm run snippets && npm run corpus && npm run coverage",
     "verify:flags": "node scripts/verify-bootstrap-flags.mjs",
