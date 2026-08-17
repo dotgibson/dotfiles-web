@@ -118,8 +118,11 @@ const HOOK = `#!/usr/bin/env bash
 set -u
 [ -n "\${DOTFILES_ALLOW_DIRTY_DATA:-}" ] && exit 0
 
-# Nothing staged for that file — nothing to say.
-git diff --cached --name-only -- src/data/generated.json 2>/dev/null | grep -q . || exit 0
+# Nothing staged for that file — nothing to say. --quiet exits 0 when there is no
+# staged change and 1 when there is, which answers this without a pipeline or any
+# tool beyond git itself. A staged DELETION also reports 1; that falls through to
+# the git show below, which fails for a path absent from the index and exits 0.
+git diff --cached --quiet -- src/data/generated.json 2>/dev/null && exit 0
 
 staged="\$(git show :src/data/generated.json 2>/dev/null)" || exit 0
 [ -z "\$staged" ] && exit 0

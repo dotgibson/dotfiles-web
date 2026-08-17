@@ -148,7 +148,7 @@ the untouched files quietly fall behind:
 
 ```bash
 npm run data          # checkout the sibling repos next to this one first
-npm run data:lenient  # skip a missing/unclean repo instead of failing (see below)
+npm run data:lenient  # warn instead of failing — read the caveat below first
 ```
 
 `npm run data` is the **publish** path, so it is strict: a missing repo, and a sibling
@@ -158,9 +158,17 @@ That second check exists because it happened — a `dotfiles-core` checked out o
 feature branch published a changelog entry that was on no branch of Core's `main`.
 
 Each individual collector (`npm run metrics`, `corpus`, `coverage`) stays lenient for
-exploratory runs: with its source repo absent it leaves the committed file alone and
-exits 0, so a fleet-less runner can't zero the data. `npm run data:lenient` is the whole
-pipeline in that mode. `fleet-sync.yml` runs all four weekly and opens a PR when the
+exploratory runs, and `npm run data:lenient` is the whole pipeline in that mode. Note
+that "lenient" means two different things depending on which check trips, and only one
+of them is harmless:
+
+- **source repo absent** — the committed file is left alone and the run exits 0, so a
+  fleet-less runner can't zero the data. Nothing is published that wasn't already there.
+- **fleet present but unclean** — the run warns and **still writes**, absorbing the
+  unmerged work. The snapshot is stamped `generatedFrom.clean: false`, which is what the
+  two guards below key on, but the contaminated file is on disk either way.
+
+So the lenient path is fine for looking, and is not a publish path. `fleet-sync.yml` runs all four weekly and opens a PR when the
 output drifts; `data-freshness.yml` fails CI when the committed `corpus.json` /
 `coverage.json` no longer match their sources, or when `generated.json`'s Core version
 is behind the latest `dotfiles-core` release.
