@@ -35,7 +35,7 @@
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { join, dirname, resolve } from 'node:path';
+import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -162,7 +162,7 @@ function load(entry) {
 }
 
 const strict = process.argv.includes('--strict') || process.env.STRICT === '1';
-const rel = out.replace(webRepo + '/', '');
+const rel = relative(webRepo, out);
 
 // Bail without overwriting the committed snapshot unless we resolved the WHOLE curated
 // set — a partial checkout would silently drop files from the page.
