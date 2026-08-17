@@ -26,7 +26,7 @@
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { join, dirname, resolve } from 'node:path';
+import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -177,17 +177,17 @@ if (snippets.length !== CURATED.length) {
     // Publish path: refuse to leave a possibly-stale snapshot in place silently.
     console.error(
       `[collect-snippets] STRICT: ${why} — cannot regenerate ` +
-        `${out.replace(webRepo + '/', '')}. ${tail}`,
+        `${relative(webRepo, out)}. ${tail}`,
     );
     process.exit(1);
   }
 
   console.warn(
     `[collect-snippets] ${why} — keeping the committed ` +
-      `${out.replace(webRepo + '/', '')} as-is. ${tail} (pass --strict to fail instead.)`,
+      `${relative(webRepo, out)} as-is. ${tail} (pass --strict to fail instead.)`,
   );
   process.exit(0);
 }
 
 writeFileSync(out, JSON.stringify({ generatedFrom: 'sibling repos', snippets }, null, 2) + '\n');
-console.log(`[collect-snippets] wrote ${snippets.length} snippets to ${out.replace(webRepo + '/', '')}`);
+console.log(`[collect-snippets] wrote ${snippets.length} snippets to ${relative(webRepo, out)}`);
