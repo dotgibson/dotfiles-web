@@ -210,7 +210,7 @@ const edge = (cx: number) => {
   <figcaption>
     One Core, vendored into {consumers.filter((c) => c.layer !== 'host').length} machine repos via
     <code>git subtree</code> — each clone is self-contained (no submodule init).
-    <strong>dotfiles-Kali</strong> stacks a Role layer on its OS layer; <strong>dotfiles-Windows</strong>
+    <strong>dotfiles-Offense</strong> and <strong>dotfiles-Defense</strong> are Role layers that stack on any OS layer; <strong>dotfiles-Windows</strong>
     carries no <code>core/</code> subtree and mirrors only the Neovim and starship configs.
     {
       (hasDrift || hasReplicated) && (

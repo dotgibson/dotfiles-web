@@ -84,7 +84,7 @@ jobs:
       - name: Clone the source-of-truth fleet (read-only, shallow)
         run: |
           for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch \
-                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
+                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Offense \
                    dotfiles-openSUSE dotfiles-Windows htpx; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r" 2>/dev/null \
               || echo "::warning::could not clone $r (skipping it in the sweep)"

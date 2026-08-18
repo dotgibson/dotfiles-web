@@ -180,7 +180,7 @@ cd dotfiles-Windows
       {
         label: 'No offensive layer — it bridges to one',
         detail:
-          'This is a host/productivity repo only; the offensive role lives on the Kali station inside WSL. kali / cdwsl bridge you there from the host shell.',
+          'This is a host/productivity repo only; the offensive role lives on the Kali station inside WSL (dotfiles-Debian + dotfiles-Offense). kali / cdwsl bridge you there from the host shell.',
       },
       {
         label: 'Supply-chain-gated bootstrap',
@@ -191,24 +191,26 @@ cd dotfiles-Windows
     docs: [{ label: 'Windows architecture audit', slug: 'reference/windows-architecture-audit' }],
   },
   {
-    name: 'dotfiles-Kali',
+    name: 'dotfiles-Offense',
     layer: 'role',
     status: 'stable',
     icon: '⚔',
     blurb:
-      'The Kali node — Core + apt OS layer + a unique offensive role layer for authorized engagements.',
-    highlights: ['engagement scaffolding', 'scope-first workflow', 'NetExec / BloodHound CE', 'WSL2 mirrored net'],
-    install: `git clone https://github.com/dotgibson/dotfiles-Kali ~/dotfiles-Kali
-cd ~/dotfiles-Kali
-./bootstrap.sh                 # apt base + offensive tools + symlinks
-wsl.exe --shutdown             # from Windows, after dropping windows.wslconfig.example`,
+      'The offensive role layer for authorized engagements — stacked on whatever OS-native layer the box already runs. The red twin of dotfiles-Defense.',
+    highlights: ['engagement scaffolding', 'scope-first workflow', 'NetExec / BloodHound CE', 'installs nothing by default'],
+    install: `git clone https://github.com/dotgibson/dotfiles-Debian ~/dotfiles-Debian
+~/dotfiles-Debian/bootstrap.sh  # the OS-native layer first (it covers Kali)
+git clone https://github.com/dotgibson/dotfiles-Offense ~/dotfiles-Offense
+cd ~/dotfiles-Offense
+./bootstrap.sh                  # symlinks + a report of which tools you have
+./bootstrap.sh --install        # opt-in: the offensive tool stack`,
     installNote:
-      'Built for Kali on WSL2. Flags: --no-offensive (skip the heavy tool install), --links-only.',
+      'Distro-agnostic and report-only by default. Flags: --install (opt into the tool install), --links-only, --no-check.',
     specifics: [
       {
-        label: 'Three layers, not two',
+        label: 'A role layer, not an OS one',
         detail:
-          'Kali adds an offensive stage to the zsh loader (… os offensive local), slotted after os so paths/clipboard resolve first and before local so a machine override still wins. It is Debian-family (apt) and its own lineage — not stamped from Fedora.',
+          'It adds an offensive stage to the zsh loader (… os offensive local) at band 85 — after the OS layer so paths/clipboard resolve first, before local so a machine override still wins. It owns no package manager, clipboard or paths; that is the OS repo’s job. It used to own an apt OS layer too, which now lives in dotfiles-Debian.',
       },
       {
         label: 'Engagement data never lives in the repo',
@@ -221,9 +223,14 @@ wsl.exe --shutdown             # from Windows, after dropping windows.wslconfig.
           'CrackMapExec is gone — it is nxc (NetExec) now, the single highest-leverage tool in the kit. BloodHound is Community Edition; the bhce helper drives nxc’s --bloodhound module for a CE-ready collection.',
       },
       {
+        label: 'Two routes for --install, and they differ',
+        detail:
+          'On Kali it apt-installs install/offensive-packages.txt. On any other Debian-family box it installs a smaller portable subset via pipx and go — the rest of that list is Kali-packaged. Anywhere else it refuses and says why, rather than guessing at a package manager.',
+      },
+      {
         label: 'WSL2 is NAT’d',
         detail:
-          'A listener / reverse shell / C2 in Kali is not LAN-reachable until you set networkingMode=mirrored in the Windows-side %UserProfile%\\.wslconfig (Win11 22H2+) — not /etc/wsl.conf.',
+          'A listener / reverse shell / C2 in Kali is not LAN-reachable until you set networkingMode=mirrored in the Windows-side %UserProfile%\\.wslconfig (Win11 22H2+) — not /etc/wsl.conf. That config now ships in dotfiles-Debian.',
       },
     ],
     docs: [{ label: 'Offensive methodology', slug: 'reference/offensive-methodology' }],
@@ -259,9 +266,9 @@ exec zsh`,
           'glow/gum come from Charm’s signed repo and op from 1Password’s — both vendor-signed and identical on Debian and Ubuntu. A PPA is keyed to an Ubuntu series, so it 404s on Debian and would break the trixie CI lane, and it is unpinned and single-maintainer besides.',
       },
       {
-        label: 'Not the same repo as Kali',
+        label: 'This is the Kali repo now, too',
         detail:
-          'Both are Debian-family and both use apt, but Kali is a rolling sid derivative that exists for its offensive role layer. This is a plain OS-native layer for a frozen LTS — and the freeze is the entire difference.',
+          'It accepts ID=kali as a first-class target alongside Ubuntu and Debian, and it carries the WSL bootstrap. The three do not share an archive age — Ubuntu 24.04 froze in April 2024 while Kali tracks sid — so install/packages.txt is distro-tiered with # only:kali annotations: names Kali gets straight from apt are fetched as pinned, checksum-verified assets on the frozen LTS. The offensive tooling lives in dotfiles-Offense, stacked on top.',
       },
     ],
     docs: [{ label: 'Porting matrix', slug: 'reference/porting-matrix' }],
@@ -272,7 +279,7 @@ exec zsh`,
     status: 'stable',
     icon: '⛨',
     blurb:
-      'The blue mirror of Kali — the defensive role. Detection engineering & investigation: hunt/triage tooling, version-controlled detection content (Sigma, Sysmon, Zeek/Suricata, SIEM), and a Dockerized detection lab. Distro-agnostic.',
+      'The blue mirror of dotfiles-Offense — the defensive role. Detection engineering & investigation: hunt/triage tooling, version-controlled detection content (Sigma, Sysmon, Zeek/Suricata, SIEM), and a Dockerized detection lab. Distro-agnostic.',
     highlights: ['Sigma / Sysmon / Zeek', 'mkcase hunt workflow', 'Dockerized detection lab', 'distro-agnostic + Core'],
     install: `git clone https://github.com/dotgibson/dotfiles-Defense ~/dotfiles-Defense
 cd ~/dotfiles-Defense
@@ -289,7 +296,7 @@ exec zsh`,
       {
         label: 'Case data never lives in the repo',
         detail:
-          'Investigation data lives under ~/cases (outside the repo), exactly like Kali keeps engagements in ~/engagements. mkcase scaffolds a case outside the repo by design; the .gitignore is a backstop.',
+          'Investigation data lives under ~/cases (outside the repo), exactly like dotfiles-Offense keeps engagements in ~/engagements. mkcase scaffolds a case outside the repo by design; the .gitignore is a backstop.',
       },
       {
         label: 'No blue-team distro required',
@@ -299,7 +306,7 @@ exec zsh`,
       {
         label: 'Red vs blue is a split, not a merge',
         detail:
-          "Attacker-authored detections stay in Kali's PURPLE-TEAM.md; defender-authored capability lives here. The two cross-link rather than copy.",
+          "Attacker-authored detections stay in dotfiles-Offense's PURPLE-TEAM.md; defender-authored capability lives here. The two cross-link rather than copy.",
       },
     ],
     docs: [{ label: 'Offensive methodology (the red mirror)', slug: 'reference/offensive-methodology' }],

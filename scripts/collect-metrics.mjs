@@ -79,7 +79,7 @@ function packageCount(name) {
 const osRepos = [
   'dotfiles-MacBook',
   'dotfiles-Windows',
-  'dotfiles-Kali',
+  'dotfiles-Offense',
   'dotfiles-Defense',
   'dotfiles-Fedora',
   'dotfiles-Arch',
@@ -341,11 +341,14 @@ for (const name of [core, ...osRepos]) {
   ci[name] =
     existsSync(wf) && readdirSync(wf).some((f) => f.endsWith('.yml') || f.endsWith('.yaml'));
 }
-// Kali's offensive stack is a second list — surface it separately.
-const kaliOffensive = countMeaningful(
-  join(repoPath('dotfiles-Kali'), 'install', 'offensive-packages.txt')
+// The offensive stack is a second list — surface it separately. Note dotfiles-Offense
+// has NO install/packages.txt any more (it handed its OS-native layer to dotfiles-Debian),
+// so packageCount() above yields nothing for it and only this offensive count lands. The
+// `-offensive` suffix is what RepoCard.astro looks up as `${repo.name}-offensive`.
+const offensivePkgs = countMeaningful(
+  join(repoPath('dotfiles-Offense'), 'install', 'offensive-packages.txt')
 );
-if (kaliOffensive != null) packages['dotfiles-Kali-offensive'] = kaliOffensive;
+if (offensivePkgs != null) packages['dotfiles-Offense-offensive'] = offensivePkgs;
 
 const publicRepos = [core, ...osRepos].filter(has).length;
 

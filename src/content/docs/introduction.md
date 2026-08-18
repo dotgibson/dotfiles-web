@@ -25,7 +25,7 @@ into a Core that is authored once, and let each machine layer only its own diffe
 | --- | --- | --- |
 | **Core** | `dotfiles-core`, vendored into every OS repo's `core/` (except Windows — replicated natively) | zsh, tmux, nvim, git, starship — identical everywhere |
 | **OS-native** | `dotfiles-{MacBook,Windows,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
-| **Role** | `dotfiles-Kali` (offensive), `dotfiles-Defense` (defensive) | engagement / detection tooling on top of the OS layer |
+| **Role** | `dotfiles-Offense` (offensive), `dotfiles-Defense` (defensive) | engagement / detection tooling on top of the OS layer |
 
 Core is the **single source of truth**. It is authored here and **vendored** into each OS repo via
 `git subtree` (except Windows, which replicates Core natively in PowerShell), so every machine repo

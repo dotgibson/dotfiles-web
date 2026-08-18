@@ -178,7 +178,7 @@ jobs:
           # source of the red/blue corpus the /purple page publishes, and leaving it out
           # is why corpus.json used to drift for months between hand refreshes.
           for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Debian \
-                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Kali \
+                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Offense \
                    dotfiles-openSUSE dotfiles-Windows htpx; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r"
           done

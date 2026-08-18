@@ -10,61 +10,61 @@
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "2945a9ebd25c8f2b70677aa16ddcbf4ee4da5d9b",
+        "commit": "7d4449553431eb6a25a5e0fdb9af989aa43340d3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "b648aaec2c29e505611efc3a1641ac42abdb312e",
+        "commit": "6825b6cc6d7962b09592e25636188455a3a81380",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
-      "dotfiles-Kali": {
-        "commit": "710354db727204a74f2085f5e06dd73c49e8bf52",
+      "dotfiles-Offense": {
+        "commit": "6c839ee60eff1b0608d87fd9722f98e24e0528e5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "4022eeb6659d14443df948caa4f2e4e1fb14d469",
+        "commit": "9f5666649057cc8f6a86223355bfbad85bb50402",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "66cffb383be652f0350ab0ac3c0f11608a5c0f03",
+        "commit": "4c79d2b0fdf36870c37d74dd997a9e726db970cb",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "24ccec43dd26a496d107ca55b3d4e76f3648da4a",
+        "commit": "b7c5c99ab8f0bc9a74ee47b04ca5c88cd84e1bad",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "edaddd38a8153c570c12b2065b6c5e14d42ea39c",
+        "commit": "76e843bef51d00316c879027833a04a47da2b3e9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "6b4014635a1ba0d73283a927eeb74e5cf1a2e3da",
+        "commit": "32c9de7904d6e6a5a515f70e6b416835f46c90ad",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "1a0b8d9e8f02d07c207fa6d96c454bb54859a93c",
+        "commit": "075f60999a6ea82b318e7f7e5414ca66c868c878",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "0277abb3eb0722979681b47bed12c5d2182e8e9b",
+        "commit": "4073ff9f63b52d7510bdfa9526e66f45a2d0270a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -89,8 +89,8 @@
     "repos": {
       "dotfiles-MacBook": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -98,45 +98,45 @@
         "mirroredFrom": "v4",
         "status": "replicated"
       },
-      "dotfiles-Kali": {
+      "dotfiles-Offense": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-Defense": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-Fedora": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-Arch": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v4.12.2",
-        "carried": "4.12.2",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-Alpine": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
         "ref": "v4",
-        "carried": "4.12.2",
-        "status": "behind"
+        "carried": "4.13.1",
+        "status": "current"
       }
     }
   },
@@ -150,20 +150,19 @@
   },
   "packages": {
     "dotfiles-MacBook": 77,
-    "dotfiles-Kali": 44,
     "dotfiles-Fedora": 37,
     "dotfiles-Arch": 44,
     "dotfiles-Debian": 46,
     "dotfiles-openSUSE": 43,
     "dotfiles-Alpine": 60,
     "dotfiles-Gentoo": 39,
-    "dotfiles-Kali-offensive": 67
+    "dotfiles-Offense-offensive": 67
   },
   "ci": {
     "dotfiles-core": true,
     "dotfiles-MacBook": true,
     "dotfiles-Windows": true,
-    "dotfiles-Kali": true,
+    "dotfiles-Offense": true,
     "dotfiles-Defense": true,
     "dotfiles-Fedora": true,
     "dotfiles-Arch": true,
@@ -548,7 +547,7 @@
       ]
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "groups": [
         {
@@ -608,7 +607,7 @@
               "kind": "fix"
             },
             {
-              "text": "dotsync hardcoded ~/dotfiles-Kali; it now resolves this checkout.",
+              "text": "dotsync hardcoded ~/dotfiles-Offense; it now resolves this checkout.",
               "kind": "fix"
             },
             {
@@ -674,6 +673,22 @@
           "category": "Changed",
           "items": [
             {
+              "text": "This repo is now a pure Role layer. It used to be both the OS-native layer for Kali *and* the offensive role on top. dotfiles-Debian now covers the Debian family properly and accepts ID=kali as a first-class target, so the OS half moved there and what is left here is the role. Concretely: - Removed: os/kali.zsh, os/kali.gitconfig, install/packages.txt, install/tool-versions.env, scripts/update-tool-checksums.sh, wsl/, ssh/config. Every one of them has an equivalent in dotfiles-Debian, whose package list carries the Kali tier as # only:kali annotations. - bootstrap.sh is distro-agnostic and installs nothing by default. The ID=kali gate, the apt base install, the full-upgrade, the SHA-pinned verified_install block, the carapace .deb, the 1Password repo and the /etc/wsl.conf write are all gone — they belong to the OS-native layer. What replaces them is a report: a three-state host-tool probe (on $PATH / present-but-unreachable / missing), modelled on dotfiles-Defense. - --install is the new opt-in. On Kali it apt-installs install/offensive-packages.txt as before. On any other Debian-family box it installs a small portable subset via pipx (impacket, certipy-ad, netexec, bloodyAD, ldapdomaindump) and go (nuclei, gobuster, ffuf, kerbrute). On anything else it refuses and says why rather than guessing at a package manager. - --no-offensive and --no-upgrade are accepted but inert, with a note — the behaviour they asked for is now the default, so aborting on them would be worse than honouring them. - --links-only with --install is refused: one wires symlinks only, the other installs packages.",
+              "kind": "config"
+            },
+            {
+              "text": "install/tools.lst is new — the host-tool probe list, and the one place it is written. Twin of dotfiles-Defense's. A command belongs there only if offensive/offensive.zsh probes or invokes it by bare name.",
+              "kind": "feature"
+            },
+            {
+              "text": "offsync replaces this repo's half of dotsync. dotsync came from os/kali.zsh and now belongs to the OS-native layer (band 80). offensive.zsh exports $DOTFILES_OFFENSE and binds offsync to it — a distinct verb, because reusing dotsync at band 85 would silently shadow the OS layer's.",
+              "kind": "config"
+            },
+            {
+              "text": "test/check-packages.sh and make packages-check now check one manifest (install/offensive-packages.txt); make tool-checksums is gone with the pins.",
+              "kind": "config"
+            },
+            {
               "text": "The gating workflows (lint, bootstrap, companion, routine-filter) no longer use trigger-level path filters: a paths:-skipped workflow produces no check run, so requiring one would hang every non-matching PR.",
               "kind": "config"
             },
@@ -684,6 +699,23 @@
             {
               "text": "offensive/templates/engagement.md documents the layout mkengagement actually creates.",
               "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Known gaps",
+          "items": [
+            {
+              "text": "os/kali.conf survives this pass, and is the last OS-layer file here. It carries the prefix + e engagement popup — role config living in an OS overlay ($CONFIG/tmux/os.conf) because Core had exactly one tmux overlay hook when it was written. Core v4.13.1 adds source-file -q ~/.config/tmux/role.conf; once this repo vendors that Core, the binding moves to offensive/offensive.conf on the role hook and the file goes. Dropping it now would silently kill prefix + e. While it lasts, Offense and Debian both write os.conf and the last bootstrap to run wins — the status quo, and exactly what the role hook exists to end.",
+              "kind": "config"
+            },
+            {
+              "text": "pipx installs different binary names than Kali does. PyPI's impacket ships secretsdump.py, not Kali's impacket-secretsdump wrapper; certipy-ad ships certipy. offensive.zsh probes the Kali names, so those HAVE_* flags do not fire on a pipx box. The bootstrap's probe recognises both names, so the report is honest; teaching the shell layer to resolve both is a separate change.",
+              "kind": "other"
+            },
+            {
+              "text": "The WSL Git-Credential-Manager note that lived in os/kali.gitconfig (how to point credential.helper at the Windows host's GCM) did not travel with the file. It belongs in dotfiles-Debian's git overlay now that that repo owns WSL.",
+              "kind": "security"
             }
           ]
         }
@@ -923,7 +955,7 @@
   ],
   "feed": [
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Security",
       "kind": "fix",
@@ -931,7 +963,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Security",
       "kind": "security",
@@ -939,7 +971,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Security",
       "kind": "security",
@@ -947,7 +979,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Security",
       "kind": "security",
@@ -955,7 +987,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Security",
       "kind": "security",
@@ -963,7 +995,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Security",
       "kind": "security",
@@ -971,7 +1003,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Security",
       "kind": "security",
@@ -979,7 +1011,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
@@ -987,7 +1019,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
@@ -995,7 +1027,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
@@ -1003,7 +1035,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
@@ -1011,7 +1043,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
@@ -1019,15 +1051,15 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
-      "text": "dotsync hardcoded ~/dotfiles-Kali; it now resolves this checkout.",
+      "text": "dotsync hardcoded ~/dotfiles-Offense; it now resolves this checkout.",
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "config",
@@ -1035,7 +1067,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
@@ -1043,7 +1075,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "config",
@@ -1051,7 +1083,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "config",
@@ -1059,7 +1091,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
@@ -1067,7 +1099,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
@@ -1075,7 +1107,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
@@ -1083,7 +1115,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
@@ -1091,7 +1123,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "config",
@@ -1099,7 +1131,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
@@ -1107,7 +1139,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "security",
@@ -1115,7 +1147,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
@@ -1123,7 +1155,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
@@ -1131,7 +1163,39 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "This repo is now a pure Role layer. It used to be both the OS-native layer for Kali *and* the offensive role on top. dotfiles-Debian now covers the Debian family properly and accepts ID=kali as a first-class target, so the OS half moved there and what is left here is the role. Concretely: - Removed: os/kali.zsh, os/kali.gitconfig, install/packages.txt, install/tool-versions.env, scripts/update-tool-checksums.sh, wsl/, ssh/config. Every one of them has an equivalent in dotfiles-Debian, whose package list carries the Kali tier as # only:kali annotations. - bootstrap.sh is distro-agnostic and installs nothing by default. The ID=kali gate, the apt base install, the full-upgrade, the SHA-pinned verified_install block, the carapace .deb, the 1Password repo and the /etc/wsl.conf write are all gone — they belong to the OS-native layer. What replaces them is a report: a three-state host-tool probe (on $PATH / present-but-unreachable / missing), modelled on dotfiles-Defense. - --install is the new opt-in. On Kali it apt-installs install/offensive-packages.txt as before. On any other Debian-family box it installs a small portable subset via pipx (impacket, certipy-ad, netexec, bloodyAD, ldapdomaindump) and go (nuclei, gobuster, ffuf, kerbrute). On anything else it refuses and says why rather than guessing at a package manager. - --no-offensive and --no-upgrade are accepted but inert, with a note — the behaviour they asked for is now the default, so aborting on them would be worse than honouring them. - --links-only with --install is refused: one wires symlinks only, the other installs packages.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "install/tools.lst is new — the host-tool probe list, and the one place it is written. Twin of dotfiles-Defense's. A command belongs there only if offensive/offensive.zsh probes or invokes it by bare name.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "offsync replaces this repo's half of dotsync. dotsync came from os/kali.zsh and now belongs to the OS-native layer (band 80). offensive.zsh exports $DOTFILES_OFFENSE and binds offsync to it — a distinct verb, because reusing dotsync at band 85 would silently shadow the OS layer's.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "test/check-packages.sh and make packages-check now check one manifest (install/offensive-packages.txt); make tool-checksums is gone with the pins.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Changed",
       "kind": "config",
@@ -1139,7 +1203,7 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Changed",
       "kind": "config",
@@ -1147,11 +1211,35 @@
       "core": false
     },
     {
-      "repo": "dotfiles-Kali",
+      "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Changed",
       "kind": "config",
       "text": "offensive/templates/engagement.md documents the layout mkengagement actually creates.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Known gaps",
+      "kind": "config",
+      "text": "os/kali.conf survives this pass, and is the last OS-layer file here. It carries the prefix + e engagement popup — role config living in an OS overlay ($CONFIG/tmux/os.conf) because Core had exactly one tmux overlay hook when it was written. Core v4.13.1 adds source-file -q ~/.config/tmux/role.conf; once this repo vendors that Core, the binding moves to offensive/offensive.conf on the role hook and the file goes. Dropping it now would silently kill prefix + e. While it lasts, Offense and Debian both write os.conf and the last bootstrap to run wins — the status quo, and exactly what the role hook exists to end.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Known gaps",
+      "kind": "other",
+      "text": "pipx installs different binary names than Kali does. PyPI's impacket ships secretsdump.py, not Kali's impacket-secretsdump wrapper; certipy-ad ships certipy. offensive.zsh probes the Kali names, so those HAVE_* flags do not fire on a pipx box. The bootstrap's probe recognises both names, so the report is honest; teaching the shell layer to resolve both is a separate change.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Known gaps",
+      "kind": "security",
+      "text": "The WSL Git-Credential-Manager note that lived in os/kali.gitconfig (how to point credential.helper at the Windows host's GCM) did not travel with the file. It belongs in dotfiles-Debian's git overlay now that that repo owns WSL.",
       "core": false
     },
     {

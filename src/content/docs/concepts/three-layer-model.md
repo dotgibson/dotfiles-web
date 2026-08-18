@@ -16,7 +16,7 @@ put something in is decided by **one question: what does it change with?**
 | --- | --- | --- |
 | **Core** | `dotfiles-core`, vendored into every OS repo's `core/` (except Windows — replicated natively) | zsh modules, tmux, nvim, git, starship |
 | **OS-native** | `dotfiles-{MacBook,Windows,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
-| **Role** | `dotfiles-Kali`, `dotfiles-Defense` | offensive / defensive tooling on the OS layer |
+| **Role** | `dotfiles-Offense`, `dotfiles-Defense` | offensive / defensive tooling on the OS layer |
 
 ## The rule for where a change belongs
 
@@ -26,7 +26,7 @@ A change belongs in **Core** only if it is **identical on every machine**, **not
 - **Changes with the OS → the OS repo.** Anything that differs by package manager, clipboard
   backend, or filesystem path is OS-native, not Core.
 - **Changes with the operator's role → the role repo.** Offensive engagement tooling belongs in
-  `dotfiles-Kali`; defensive detection tooling in `dotfiles-Defense`.
+  `dotfiles-Offense`; defensive detection tooling in `dotfiles-Defense`.
 - **Everything else that's truly universal → Core.**
 
 Core is authored once and **vendored** into each OS repo — except Windows, which replicates Core

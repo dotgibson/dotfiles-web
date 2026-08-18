@@ -70,7 +70,7 @@ export const driftFor = (
   return { ref: d?.ref ?? null, status: d?.status ?? 'unknown', mirroredFrom: null };
 };
 
-// Package count for a repo card ("dotfiles-Kali" -> 28). Returns null when the
+// Package count for a repo card ("dotfiles-Offense" -> 28). Returns null when the
 // repo ships no package list (e.g. the Windows host uses scoop/winget manifests).
 export const packageCount = (repo: string): number | null =>
   metrics.packages[repo] ?? null;

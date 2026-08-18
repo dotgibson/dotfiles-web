@@ -74,25 +74,38 @@ export const platforms: Platform[] = [
     ],
   },
   {
-    id: 'kali',
-    label: 'Kali (WSL2)',
-    repo: 'dotfiles-Kali',
+    // A ROLE layer, so this guide is a TWO-REPO stack: the OS-native layer first,
+    // then this on top. dotfiles-Offense owns no package manager, clipboard or paths.
+    id: 'offense',
+    label: 'Offense (role layer)',
+    repo: 'dotfiles-Offense',
     available: true,
-    intro: 'Three layers: Core + apt OS layer + the offensive role layer. Built for Kali on WSL2. Engagement data never lives in the repo.',
+    intro:
+      'The offensive role layer, stacked on an OS-native layer rather than replacing one. Kali is the box it is built for, and dotfiles-Debian provisions that — so this is two repos, in order. It installs nothing by default. Engagement data never lives in the repo.',
     steps: [
       {
-        title: 'Clone the repo',
-        code: 'git clone https://github.com/dotgibson/dotfiles-Kali ~/dotfiles-Kali\ncd ~/dotfiles-Kali',
+        title: 'Install the OS-native layer first',
+        body: 'dotfiles-Debian covers Ubuntu, Debian and Kali. Skip this step only if you already run one of the fleet’s OS layers.',
+        code: 'git clone https://github.com/dotgibson/dotfiles-Debian ~/dotfiles-Debian\n~/dotfiles-Debian/bootstrap.sh',
       },
       {
-        title: 'Provision + wire',
-        body: 'Full run installs apt base + offensive tools + symlinks. Add --no-offensive to skip the heavy tools.',
-        code: './bootstrap.sh',
+        title: 'Clone the role layer',
+        code: 'git clone https://github.com/dotgibson/dotfiles-Offense ~/dotfiles-Offense\ncd ~/dotfiles-Offense',
+      },
+      {
+        title: 'Wire it, and see what you have',
+        body: 'The default run creates the symlinks and reports which offensive tools are on $PATH, installed but unreachable, or missing. It installs nothing.',
+        code: './bootstrap.sh\nexec zsh',
+      },
+      {
+        title: 'Install the tool stack (opt-in)',
+        body: 'On Kali this is apt from install/offensive-packages.txt. On any other Debian-family box it is a smaller portable subset via pipx and go — the rest of that list is Kali-packaged.',
+        code: './bootstrap.sh --install',
       },
       {
         title: 'Apply WSL networking',
-        body: 'WSL2 is NAT’d — a listener isn’t reachable from your LAN until you enable mirrored networking on the Windows side.',
-        code: '# drop windows.wslconfig.example at %UserProfile%\\.wslconfig, then from Windows:\nwsl.exe --shutdown',
+        body: 'Running Kali under WSL2? It is NAT’d — a listener isn’t reachable from your LAN until you enable mirrored networking on the Windows side. The example file ships in dotfiles-Debian.',
+        code: '# drop wsl/windows.wslconfig.example at %UserProfile%\\.wslconfig, then from Windows:\nwsl.exe --shutdown',
       },
     ],
   },
@@ -102,7 +115,7 @@ export const platforms: Platform[] = [
     repo: 'dotfiles-Fedora',
     available: true,
     intro:
-      'Fedora is the template; Arch, Debian/Ubuntu, openSUSE, Alpine, and Gentoo are stamped from it — same structure every time, only the package manager and a few distro quirks change. Pick the repo for your distro; the flow below is identical across all of them. Debian/Ubuntu is the one with a twist: it targets a frozen LTS, so it installs more from pinned upstream assets than the rest.',
+      'Fedora is the template; Arch, Debian/Ubuntu/Kali, openSUSE, Alpine, and Gentoo are stamped from it — same structure every time, only the package manager and a few distro quirks change. Pick the repo for your distro; the flow below is identical across all of them. Debian/Ubuntu is the one with a twist: it targets a frozen LTS, so it installs more from pinned upstream assets than the rest.',
     steps: [
       {
         title: 'Clone your distro’s repo',
@@ -122,7 +135,7 @@ export const platforms: Platform[] = [
       {
         title: 'Per-distro flags',
         body:
-          'Fedora / openSUSE: --no-flatpak skips Flatpak. Gentoo: --no-sync skips the slow emerge --sync on re-runs. Arch: a manual/minimal box needs the stage-0 prep in SETUP.md first (git, sudo, a UTF-8 locale). Alpine: run as root or with doas; enable the community repo. Debian/Ubuntu: --no-upgrade keeps apt-get update but skips full-upgrade, --no-unattended leaves automatic security updates off, and --force-os is needed on derivatives like Mint or Pop!_OS.',
+          'Fedora / openSUSE: --no-flatpak skips Flatpak. Gentoo: --no-sync skips the slow emerge --sync on re-runs. Arch: a manual/minimal box needs the stage-0 prep in SETUP.md first (git, sudo, a UTF-8 locale). Alpine: run as root or with doas; enable the community repo. Debian/Ubuntu: the same repo also covers Kali rolling — --no-upgrade keeps apt-get update but skips full-upgrade, --no-unattended leaves automatic security updates off, and --force-os is needed on other derivatives like Mint or Pop!_OS.',
       },
     ],
   },
