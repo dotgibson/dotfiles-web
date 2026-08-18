@@ -1,16 +1,16 @@
 ---
 title: Offensive methodology
-description: The TTP map behind the Kali role layer — how the tools line up against a real engagement and MITRE ATT&CK, gated on written authorization and scope.
+description: The TTP map behind the offensive role layer — how the tools line up against a real engagement and MITRE ATT&CK, gated on written authorization and scope.
 section: Reference
 order: 4
 ---
 
 <!--
   MIRROR — everything below this comment mirrors
-  dotfiles-Kali/OFFENSIVE-METHODOLOGY.md, which is the canonical source.
+  dotfiles-Offense/OFFENSIVE-METHODOLOGY.md, which is the canonical source.
   Synced from: v1.3.62 (2026-08-16), where the file is identical to main.
 
-  Do NOT hand-edit the body below — fix dotfiles-Kali first, then re-sync, or
+  Do NOT hand-edit the body below — fix dotfiles-Offense first, then re-sync, or
   the next sync silently reverts you. Unlike porting-matrix.md there is no CI
   differ here, because the mirror is not verbatim: one site-local transform is
   applied on every sync and a byte-for-byte check would always be red.
@@ -32,17 +32,17 @@ Caldera) organizes around. It's a reference, not a runbook — every step is gat
 on **written authorization and a defined scope**.
 
 > Looking for the concrete, copy-paste command syntax per service/port? That's
-> the field reference in [`offensive/hacktheplanet`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/hacktheplanet) —
+> the field reference in [`offensive/hacktheplanet`](https://github.com/dotgibson/dotfiles-Offense/blob/main/offensive/hacktheplanet) —
 > this doc is the map, that file is the commands. (Symlinked to `~/hacktheplanet`
 > by `bootstrap.sh`; `htp` opens it.) Companion field references sit at the
-> same altitude: [`offensive/exploitdev`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/exploitdev) (`xdev`) for binary
-> exploitation, and [`offensive/evasion`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/evasion) (`evade`) for AV/AMSI/
+> same altitude: [`offensive/exploitdev`](https://github.com/dotgibson/dotfiles-Offense/blob/main/offensive/exploitdev) (`xdev`) for binary
+> exploitation, and [`offensive/evasion`](https://github.com/dotgibson/dotfiles-Offense/blob/main/offensive/evasion) (`evade`) for AV/AMSI/
 > AppLocker evasion and breaching hardened defenses. One altitude *up* — the
 > working **method** that decides which command you reach for and what to do when
 > you're stuck (the "always be running recon" loop, shell stabilization, the
-> scripted pseudo-shell) — is [`offensive/ippsec`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/ippsec) (`ipp`),
+> scripted pseudo-shell) — is [`offensive/ippsec`](https://github.com/dotgibson/dotfiles-Offense/blob/main/offensive/ippsec) (`ipp`),
 > distilled from IppSec's HTB catalog. The defensive mirror — what each attack
-> trips, as Splunk/Sentinel detections — is in [`PURPLE-TEAM.md`](https://github.com/dotgibson/dotfiles-Kali/blob/main/PURPLE-TEAM.md).
+> trips, as Splunk/Sentinel detections — is in [`PURPLE-TEAM.md`](https://github.com/dotgibson/dotfiles-Offense/blob/main/PURPLE-TEAM.md).
 >
 > Rule zero: `mkengagement` writes `scope/scope.txt` *before* anything else and
 > opens it in your editor. Fill it in first. Installing a tool is not permission
@@ -73,7 +73,7 @@ on **written authorization and a defined scope**.
 > its detection. Roughly two-thirds of the corpus is that material and none of it is
 > projected into `hacktheplanet` or `PURPLE-TEAM.md`; the corpus is the map for it.
 > The CLIs those entries invoke are accounted for in
-> [`install/offensive-packages.txt`](https://github.com/dotgibson/dotfiles-Kali/blob/main/install/offensive-packages.txt).
+> [`install/offensive-packages.txt`](https://github.com/dotgibson/dotfiles-Offense/blob/main/install/offensive-packages.txt).
 
 ### The one naming change that bites people
 
@@ -106,7 +106,7 @@ now owns the compose file under an XDG config dir.
   engagement's `notes/` so you can reconstruct exactly what you ran and when —
   for the report and for deconfliction. `note "<text>"` adds timestamped
   observations to `notes.md` as you go (IppSec's note discipline — see
-  [`offensive/ippsec`](https://github.com/dotgibson/dotfiles-Kali/blob/main/offensive/ippsec)): capture every state change, cred, and
+  [`offensive/ippsec`](https://github.com/dotgibson/dotfiles-Offense/blob/main/offensive/ippsec)): capture every state change, cred, and
   host the instant it happens so the report writes itself.
 - **WSL2 gotcha (already in PORTING-MATRIX).** A listener / reverse shell in Kali
   under WSL2 isn't reachable from your LAN until you set

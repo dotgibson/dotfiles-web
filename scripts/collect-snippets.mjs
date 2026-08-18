@@ -82,7 +82,7 @@ const CURATED = [
   { layer: 'os', repo: 'dotfiles-Alpine', path: 'os/alpine.zsh', lang: 'bash',
     title: 'os/alpine.zsh', blurb: 'Alpine overlay: apk + doas (not sudo) + musl realities. The lean outlier of the fleet.' },
   // ── Role: the offensive layer, on top of the OS layer ──
-  { layer: 'role', repo: 'dotfiles-Kali', path: 'offensive/offensive.zsh', lang: 'bash',
+  { layer: 'role', repo: 'dotfiles-Offense', path: 'offensive/offensive.zsh', lang: 'bash',
     title: 'offensive/offensive.zsh', blurb: 'Engagement field helpers: lhost (your VPN IP), ttyup (TTY-stabilise a shell), note (timestamped engagement log), mkengagement (scope-first workspace).' },
 ];
 

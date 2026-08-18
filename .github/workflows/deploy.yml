@@ -89,7 +89,7 @@ jobs:
           # the /purple page. Without it in this list that collector took its defensive
           # no-op path on every pinned build, so the deployed corpus was whatever happened
           # to be committed rather than the pinned ref's.
-          repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Kali dotfiles-Defense \
+          repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Offense dotfiles-Defense \
                  dotfiles-Fedora dotfiles-Arch dotfiles-Debian dotfiles-openSUSE dotfiles-Alpine \
                  dotfiles-Gentoo htpx"
           for r in $repos; do

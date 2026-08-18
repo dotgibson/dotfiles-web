@@ -24,14 +24,14 @@ const platforms = [
     ],
   },
   {
-    id: 'kali',
-    label: 'Kali · WSL2',
-    repo: 'dotfiles-Kali',
+    id: 'offense',
+    label: 'Offense · role layer',
+    repo: 'dotfiles-Offense',
     flags: [
-      // No --dry-run: only dotfiles-MacBook's bootstrap implements it; the Kali
-      // bootstrap rejects unknown flags (exit 1). --links-only is the preview-ish option.
-      { flag: '--links-only', label: 'Links only — skip apt packages' },
-      { flag: '--no-offensive', label: 'Skip the heavy offensive toolchain' },
+      // A ROLE layer: it installs nothing unless --install is passed, and it stacks on an
+      // OS-native layer (dotfiles-Debian covers Kali) rather than replacing one.
+      { flag: '--links-only', label: 'Links only — skip the host-tool report' },
+      { flag: '--install', label: 'Also install the offensive tool stack' },
     ],
   },
   {

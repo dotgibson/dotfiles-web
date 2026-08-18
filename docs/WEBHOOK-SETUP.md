@@ -42,7 +42,7 @@ is an org, so you could alternatively set a single organization-level secret and
 skip the repeat — the per-repo setup keeps each source repo self-contained.)
 
 For each of `dotfiles-core`, `dotfiles-MacBook`, `dotfiles-Windows`,
-`dotfiles-Kali`, `dotfiles-Defense`, `dotfiles-Fedora`, `dotfiles-Arch`,
+`dotfiles-Offense`, `dotfiles-Defense`, `dotfiles-Fedora`, `dotfiles-Arch`,
 `dotfiles-Debian`, `dotfiles-openSUSE`, `dotfiles-Alpine`, `dotfiles-Gentoo`:
 
 1. Repo → **Settings → Secrets and variables → Actions**

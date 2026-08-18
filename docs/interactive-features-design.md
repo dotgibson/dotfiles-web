@@ -171,10 +171,10 @@ export interface BootstrapFlag {
 export interface BootstrapTarget {
   id: string;             // 'kali', 'macos', 'fedora', ...
   label: string;
-  repo: string;           // 'dotfiles-Kali'
+  repo: string;           // 'dotfiles-Offense'
   dialect: Dialect;       // drives clone form + prompt glyph + flag syntax
   entry: string;          // './bootstrap.sh' | '.\\install.ps1'
-  cloneDir?: string;      // '~/dotfiles-Kali'
+  cloneDir?: string;      // '~/dotfiles-Offense'
   flags: BootstrapFlag[]; // only the flags THIS target really supports
   notes?: string[];       // post-install reminders (e.g. WSL mirrored net)
 }
@@ -402,7 +402,7 @@ install.ps1 →  detect host/pwsh/admin →  git clone dotfiles-Windows
 | --- | --- | --- |
 | `uname -s` = Darwin | kernel | `dotfiles-MacBook` |
 | `/etc/os-release` `ID`/`ID_LIKE` | os-release | Fedora/Arch/openSUSE/Alpine/Gentoo repo |
-| Kali (`ID=kali`) | os-release | `dotfiles-Kali` |
+| Kali (`ID=kali`) | os-release | `dotfiles-Offense` |
 | WSL (`$WSL_DISTRO_NAME` or `microsoft` in `/proc/version`) | env/proc | distro repo + emit WSL networking note |
 | `ID_LIKE` fallback (e.g. `debian`) when exact `ID` unknown | os-release | nearest supported repo, with a confirm prompt |
 | musl (`ldd --version` mentions musl) / `doas` present | toolchain | Alpine path |

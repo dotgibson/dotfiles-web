@@ -21,7 +21,7 @@ const loadOrder = [
   ['55', 'maint', 'daily-maintenance surface (maint-install, …)'],
   ['60', 'update', 'the up updater + once/day "updates available" nudge'],
   ['80', 'os', 'the OS-native layer (os/<platform>.zsh)'],
-  ['85', 'role', 'role stage, one per repo (mutually exclusive) — Kali 85-offensive.zsh · Defense 85-defense.zsh'],
+  ['85', 'role', 'role stage, one per repo (mutually exclusive) — Offense 85-offensive.zsh · Defense 85-defense.zsh'],
   ['99', 'local', 'machine-specific overrides (99-local.zsh, untracked) — always wins'],
 ];
 
@@ -87,9 +87,9 @@ const deepDives = [
   },
   {
     title: 'Offensive methodology',
-    repo: 'dotfiles-Kali',
+    repo: 'dotfiles-Offense',
     href: withBase('/docs/reference/offensive-methodology'),
-    body: 'How the Kali role layer maps to MITRE ATT&CK tactics — NetExec, BloodHound CE, Impacket, certipy-ad — and where loot lands under ~/engagements.',
+    body: 'How the offensive role layer maps to MITRE ATT&CK tactics — NetExec, BloodHound CE, Impacket, certipy-ad — and where loot lands under ~/engagements.',
   },
   {
     title: 'Security policy',
@@ -167,8 +167,8 @@ const deepDives = [
         </div>
         <div class="layer-table__row">
           <span class="tone-red text-mono">Role</span>
-          <span><code>dotfiles-Kali</code> · <code>dotfiles-Defense</code></span>
-          <span class="muted">offensive engagement (Kali) · defensive detection/hunt (Defense)</span>
+          <span><code>dotfiles-Offense</code> · <code>dotfiles-Defense</code></span>
+          <span class="muted">offensive engagement (Offense) · defensive detection/hunt (Defense)</span>
         </div>
       </div>
 

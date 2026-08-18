@@ -10,10 +10,11 @@
 // Verified against each repo's bootstrap.sh / install.ps1 case-arms:
 //   Fedora/Arch/openSUSE: --links-only --no-flatpak  + --only/--skip (modules)
 //   Debian:               --links-only --no-upgrade --no-unattended --force-os
-//                          + --only/--skip (modules)
+//                          + --only/--skip (modules)  [covers Ubuntu, Debian AND Kali]
 //   Alpine:               --links-only               + --only/--skip (modules)
 //   Gentoo:               --links-only --no-sync      + --only/--skip (modules)
-//   Kali:                 --links-only --no-offensive + --only/--skip (modules)
+//   Offense (role):       --links-only --install --no-check --dry-run
+//                          + --only/--skip (modules)
 //   macOS:                --links-only --no-brew --macos-defaults --set-shell --dry-run
 //                          + --only/--skip (modules)
 //   Windows (install.ps1): -SkipPackages -DryRun
@@ -34,7 +35,7 @@ export interface BootstrapFlag {
 }
 
 export interface BootstrapTarget {
-  id: string; // 'macos', 'kali', 'fedora', ...
+  id: string; // 'macos', 'debian', 'offense', ...  (OS-native layers and role layers)
   label: string; // tab label
   repo: string; // repo slug under dotgibson
   dialect: Dialect; // drives clone form, prompt glyph, and flag syntax
@@ -97,7 +98,7 @@ const forceOs: BootstrapFlag = {
   key: 'force-os',
   label: 'Allow a Debian-like derivative',
   flag: '--force-os',
-  help: 'The bootstrap refuses to run unless /etc/os-release reports ID=ubuntu or ID=debian. Derivatives (Mint, Pop!_OS, Raspbian) report ID_LIKE=debian and need this to proceed — their package sets are close but not CI-proven.',
+  help: 'The bootstrap refuses to run unless /etc/os-release reports ID=ubuntu, ID=debian or ID=kali. Other derivatives (Mint, Pop!_OS, Raspbian) report ID_LIKE=debian and need this to proceed — their package sets are close but not CI-proven.',
   kind: 'provision',
 };
 
@@ -173,27 +174,39 @@ export const targets: BootstrapTarget[] = [
     ],
   },
   {
-    id: 'kali',
-    label: 'Kali (WSL2)',
-    repo: 'dotfiles-Kali',
+    // A ROLE layer, not an OS one: it stacks on whatever OS-native layer the box
+    // already runs (the `debian` target covers Kali). It installs NOTHING by default —
+    // the default run wires symlinks and reports which offensive tools are present.
+    id: 'offense',
+    label: 'Offense (role layer)',
+    repo: 'dotfiles-Offense',
     dialect: 'sh',
     entry: './bootstrap.sh',
-    cloneDir: '~/dotfiles-Kali',
+    cloneDir: '~/dotfiles-Offense',
     modules: true,
-    blurb: 'Three layers: Core + apt OS layer + the offensive role layer. Built for Kali on WSL2.',
+    blurb:
+      'The offensive role layer, stacked on an OS-native layer you install first — the Debian / Ubuntu target covers a Kali box. Distro-agnostic, and it installs nothing unless you ask.',
     flags: [
       linksOnly,
       {
-        key: 'no-offensive',
-        label: 'Skip offensive tooling',
-        flag: '--no-offensive',
-        help: 'Install the apt base + symlinks only; skip the heavy offensive tool set.',
+        key: 'install',
+        label: 'Also install the offensive tool stack',
+        flag: '--install',
+        help: 'Opt in to the tool install. On Kali that is apt from install/offensive-packages.txt; on any other Debian-family box it is a smaller portable subset via pipx and go.',
+        kind: 'provision',
+      },
+      {
+        key: 'no-check',
+        label: 'Skip the host-tool report',
+        flag: '--no-check',
+        help: 'Skip the probe that reports which offensive tools are on $PATH, installed but unreachable, or missing. The probe only ever reports — it never installs.',
         kind: 'provision',
       },
     ],
     notes: [
-      'WSL2 is NAT’d — enable mirrored networking on the Windows side (`%UserProfile%\\.wslconfig`) for a LAN-reachable listener, then `wsl.exe --shutdown`.',
+      'Install an OS-native layer FIRST — this repo owns no package manager, clipboard or paths.',
       'Keep engagement data in ~/engagements, outside the repo.',
+      'Running Kali under WSL2? Enable mirrored networking on the Windows side (`%UserProfile%\\.wslconfig`) for a LAN-reachable listener, then `wsl.exe --shutdown`. That config lives in dotfiles-Debian.',
     ],
   },
   {
@@ -217,11 +230,12 @@ export const targets: BootstrapTarget[] = [
     cloneDir: '~/dotfiles-Debian',
     modules: true,
     blurb:
-      'apt, targeting Ubuntu 24.04 LTS. The only frozen release in the fleet — so most of the stack arrives as pinned, checksum-verified upstream assets.',
+      'apt, covering Ubuntu 24.04 LTS, Debian trixie and Kali rolling. Ubuntu is the only frozen release in the fleet — so on it most of the stack arrives as pinned, checksum-verified upstream assets; Kali has nearly all of it in apt.',
     flags: [linksOnly, noUpgrade, noUnattended, forceOs],
     notes: [
       'Land in the new shell with `exec zsh`.',
-      'Ubuntu 24.04 LTS is the target; Debian trixie is also proven in CI.',
+      'Ubuntu 24.04 LTS is the primary target; Debian trixie and Kali rolling are also proven in CI.',
+      'On Kali, add the Offense role layer afterwards for the engagement tooling.',
     ],
   },
   {

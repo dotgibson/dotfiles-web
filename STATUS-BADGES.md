@@ -29,7 +29,7 @@ Live build status for every repository in the fleet. Owner: **dotgibson**.
 | [dotfiles-core](https://github.com/dotgibson/dotfiles-core) | Core | [![CI](https://github.com/dotgibson/dotfiles-core/actions/workflows/ci.yml/badge.svg)](https://github.com/dotgibson/dotfiles-core/actions/workflows/ci.yml) |
 | [dotfiles-MacBook](https://github.com/dotgibson/dotfiles-MacBook) | OS-native | [![CI](https://github.com/dotgibson/dotfiles-MacBook/actions/workflows/ci.yml/badge.svg)](https://github.com/dotgibson/dotfiles-MacBook/actions/workflows/ci.yml) |
 | [dotfiles-Windows](https://github.com/dotgibson/dotfiles-Windows) | Native host | [![CI](https://github.com/dotgibson/dotfiles-Windows/actions/workflows/ci.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Windows/actions/workflows/ci.yml) |
-| [dotfiles-Kali](https://github.com/dotgibson/dotfiles-Kali) | Role / offensive | [![lint](https://github.com/dotgibson/dotfiles-Kali/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Kali/actions/workflows/lint.yml) |
+| [dotfiles-Offense](https://github.com/dotgibson/dotfiles-Offense) | Role / offensive | [![lint](https://github.com/dotgibson/dotfiles-Offense/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Offense/actions/workflows/lint.yml) |
 | [dotfiles-Defense](https://github.com/dotgibson/dotfiles-Defense) | Role / defensive | [![lint](https://github.com/dotgibson/dotfiles-Defense/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Defense/actions/workflows/lint.yml) |
 | [dotfiles-Fedora](https://github.com/dotgibson/dotfiles-Fedora) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Fedora/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Fedora/actions/workflows/lint.yml) |
 | [dotfiles-Arch](https://github.com/dotgibson/dotfiles-Arch) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Arch/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Arch/actions/workflows/lint.yml) |
@@ -82,13 +82,13 @@ component.
     </a>
 
     <!-- Kali -->
-    <a class="ci-card" href="https://github.com/dotgibson/dotfiles-Kali/actions/workflows/lint.yml" target="_blank" rel="noopener">
+    <a class="ci-card" href="https://github.com/dotgibson/dotfiles-Offense/actions/workflows/lint.yml" target="_blank" rel="noopener">
       <div class="ci-card__head">
-        <span class="ci-card__name">⚔ dotfiles-Kali</span>
+        <span class="ci-card__name">⚔ dotfiles-Offense</span>
         <span class="ci-card__layer tone-red">Role / offensive</span>
       </div>
-      <img class="ci-card__badge" loading="lazy" alt="dotfiles-Kali lint status"
-        src="https://github.com/dotgibson/dotfiles-Kali/actions/workflows/lint.yml/badge.svg" />
+      <img class="ci-card__badge" loading="lazy" alt="dotfiles-Offense lint status"
+        src="https://github.com/dotgibson/dotfiles-Offense/actions/workflows/lint.yml/badge.svg" />
     </a>
 
     <!-- Defense -->
