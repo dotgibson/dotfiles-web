@@ -1,70 +1,70 @@
 {
-  "generatedAt": "2026-08-18",
+  "generatedAt": "2026-08-19",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "3d70634d5fb8cb6eeb49ae53cb91c049df0a3bbc",
+        "commit": "2f0456880f4db97bc72201266bc39f5e99b6bb39",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "7d4449553431eb6a25a5e0fdb9af989aa43340d3",
+        "commit": "72868fcca95e1637b77e445bb59680db4d6da114",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "6825b6cc6d7962b09592e25636188455a3a81380",
+        "commit": "9fd4cbdeaed112b5bea571dc6d0f5499d84546b5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "6c839ee60eff1b0608d87fd9722f98e24e0528e5",
+        "commit": "7027ba6e2c4e760626dd93be04fb47717988068a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "9f5666649057cc8f6a86223355bfbad85bb50402",
+        "commit": "6d60cbc924d0e1fb235e8432a866dead4e4cca6f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "4c79d2b0fdf36870c37d74dd997a9e726db970cb",
+        "commit": "d9cf0e85831b2725974c6824dfc62adbb59686e9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "b7c5c99ab8f0bc9a74ee47b04ca5c88cd84e1bad",
+        "commit": "b9c573d8bd19b578e80c6fb970915d0ab69ad5af",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "76e843bef51d00316c879027833a04a47da2b3e9",
+        "commit": "a543b17a1c4d53194d3d5d25605089a50309d97b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "32c9de7904d6e6a5a515f70e6b416835f46c90ad",
+        "commit": "e599eeb8060979601d2a8fdee957c64c6c6718dc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "075f60999a6ea82b318e7f7e5414ca66c868c878",
+        "commit": "2b7355f26a151a987bb2d4ba0ce737d13f3042df",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "4073ff9f63b52d7510bdfa9526e66f45a2d0270a",
+        "commit": "f6de784fb13afd9b3cf9c9785c2f834ede9ea766",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,21 +76,21 @@
     "layers": 3
   },
   "releases": {
-    "current": "v4.13.1",
+    "current": "v4.13.2",
     "channels": [
+      "v4.13.2",
       "v4.13.1",
       "v4.13.0",
-      "v4.12.2",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "4.13.1",
+    "coreVersion": "4.13.2",
     "repos": {
       "dotfiles-MacBook": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -101,47 +101,47 @@
       "dotfiles-Offense": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Defense": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Fedora": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Arch": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Debian": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-openSUSE": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Alpine": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Gentoo": {
         "ref": "v4",
         "carried": "4.13.1",
-        "status": "current"
+        "status": "behind"
       }
     }
   },
   "core": {
-    "version": "4.13.1",
+    "version": "4.13.2",
     "sourcedModules": 13,
     "zshLoc": 4460,
     "gitAliases": 57,
@@ -172,6 +172,43 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.13.2",
+      "date": "2026-08-19",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "make audit no longer reds blib_user_bindirs_on_path for anyone with CARGO_HOME set. The helper resolves the cargo bindir through ${CARGO_HOME:-$HOME/.cargo}/bin deliberately — hard-coding ~/.cargo/bin would break a box that relocates it, which is the bug it exists to prevent. Its fixture asserts the $HOME-relative defaults, and those are reached only when the vars are absent; but the subshell pinned just HOME and PATH, so an exported CARGO_HOME retargeted the lookup and the fixture's own .cargo/bin never landed. A developer with Rust configured — most operators, and exactly who make audit runs for — saw a failure on a healthy tree, while no CI runner exports it and all four lanes stayed green. The fixture now unsets CARGO_HOME, GOBIN and GOPATH. Worth noting where the leak actually lived: the relocation block further down the same file sets these vars explicitly and was always immune — it was the default-path cases that inherited. A gap between two blocks rather than a coverage hole, and the same shape as the GHOSTTY_SHELL_FEATURES leak fixed one release earlier.",
+              "kind": "fix"
+            },
+            {
+              "text": "A stalled Ubuntu security index no longer reds CI lanes that never needed it. The Linux setup step gated on apt-get update succeeding, and under set -euxo pipefail a second failed refresh killed the step before apt-get install zsh was ever attempted. On both 2026-08-18 and 2026-08-19 archive.ubuntu.com's noble-security index stalled mid-fetch (with the Azure regional mirror dark, every index Ign:), and the job died at timeout(1)'s exit 124 with no test executed — while the same logs showed Hit: … noble InRelease succeeding. Only the security pocket wedged; zsh lives in noble/main. The archive was reachable for everything the job actually needed, and it failed anyway. The refresh is now best-effort and the install is the gate — a stale index nothing reads is not this job's problem, whereas not having zsh still fails it. The install carries its own timeout(1) bound so it cannot hang in the refresh's place. The block was duplicated verbatim across five workflows (ci.yml twice, plus lint-call.yml, sync-fanout.yml, atuin-guard-verify.yml); all five are fixed, since fixing one would have left the same stall live on four other lanes.",
+              "kind": "security"
+            },
+            {
+              "text": "make audit no longer reds 7 OSC 133 assertions when it is run from inside Ghostty. 00-tools.zsh deliberately stands the marks down when GHOSTTY_SHELL_FEATURES is set and $TMUX is empty — Ghostty injects its own prompt marking outside tmux, so Core must not double-mark. Every mark-ON case in scripts/test-core.sh's OSC 133 section pins TERM and TMUX explicitly for exactly that reason, but ucheck ran a bare env, which inherits the caller's environment. Auditing from the terminal this repo ships a config for therefore cleared _CORE_OSC133, left _core_osc133_prompt undefined, and failed 7 assertions about the shell layer while proving nothing about it. ucheck now runs env -u GHOSTTY_SHELL_FEATURES; the per-case assignments come after the option, so the two cases that set it deliberately still win. CI could not have caught this — no runner is hosted in Ghostty, so all four audit lanes were green on the identical tree — which is why the regression gate added alongside drives a mark-ON case with the variable genuinely exported rather than passed as an argument.",
+              "kind": "fix"
+            },
+            {
+              "text": "A repo renamed upstream is no longer skipped by the whole fleet toolchain because its clone directory still carries the old name. scripts/os-repos.txt names the fleet by repo NAME, and sync-core.sh, fleet-drift.sh and core-integrity.sh each turned that name into a path by string-joining it onto the fleet root. Git follows a GitHub rename on its own; a directory name does not. So a machine that cloned dotfiles-Kali before it became dotfiles-Offense had a correct remote, a correct core/ subtree and a correct core.lock — and the fan-out skipped it as \"not cloned\", drift reported \"not checked out\", and the integrity sweep could not have seen a tampered core/ there at all. Two of those three are false-CLEAN results on gates whose entire job is to notice, and the only remedy on offer was \"go mv the directory\", on every machine, for every future rename. All three now resolve through one shared resolve_repo_dir (scripts/lib/common.sh): the directory-name lookup stays the fast path and keeps precedence, and only when no such directory exists does it ask each sibling clone what it actually is, matching on the repo slug in origin's URL. Both URL shapes parse (https://host/owner/repo and git@host:owner/repo, with or without .git) and matching is case-insensitive, as GitHub itself is. A clone whose origin names a different repo is not adopted, one with no origin is stepped over rather than aborting the sweep, and a genuinely absent repo still reports against the conventional path so the advice names where it looked. sync-core.sh prints the resolved path when it isn't the conventional one, so a fan-out into a pre-rename directory is visible in the log instead of a surprise underneath the git output.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Documentation",
+          "items": [
+            {
+              "text": "blib_link_role_layer's migration note described a migration that has since happened. It read, in the present tense, that \"the offensive repo hand-rolls <config>/kali/templates\" and instructed a consumer to relocate them and update two shipped docs \"in the same change that adopts the helper\". dotfiles-Offense adopted the helper and did exactly that, so the instruction now describes work that is done — misleading anyone reading the helper to decide what a consumer still owes it. Rewritten as the record of a completed move, keeping the reasoning that matters (why the destination is named for the ROLE rather than the distro, and why neither a compat symlink nor a namespace parameter was the answer). Comment only — no behaviour changes, but it is vendored into all nine consuming repos, so the stale text was live fleet-wide.",
+              "kind": "config"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.13.1",
@@ -294,47 +331,6 @@
             {
               "text": "PORTING-MATRIX.md gains a Debian/Ubuntu column in both tables, a quirks paragraph, a clipboard row, and footnotes ²⁸ (pinned upstream release asset) and ²⁹ (deliberately not installed). The column-order contract changed: the last cell on a package row is now Debian/Ubuntu, not Kali — /os-package-availability asserted the old order and has been updated with it.",
               "kind": "feature"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.12.2",
-      "date": "2026-08-17",
-      "groups": [
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "CI now fails a fix(…) PR that closes no issue and gives no reason. #446 fixed two reported bugs — #420 (starship) and #423 (carapace) — and merged green with no closing keyword in its body. GitHub therefore linked nothing, both issues stayed open, and days later a reader re-derived a 2021 upstream function rename and re-ran the reproducer to re-confirm a bug that had already shipped in v4.12.0. The code was correct the whole time; the link was missing, and no check objected. .github/workflows/pr-link-check.yml now asks GitHub for the PR's closingIssuesReferences — the same field GitHub itself uses to auto-close on merge, so cosmetic text like \"Refs #420\" cannot satisfy it — and requires a fix(…) PR to close at least one issue. The escape hatch is a No-Issue: <reason> line in the body, because a genuine fix is often found and fixed in one pass with nothing filed; the reason is what a future reader finds in place of a link. pull_request_template.md documents both routes. Gated set is fix only, matched with the delimiter-aware Conventional-Commit regex from scripts/gen-release-notes.sh, so fixup: and ordinary prose that merely starts with the word are untouched. That is deliberately the stricter of the repo's two parsers — cliff.toml groups on a bare ^fix, which would also sweep in fixup: — because a false not-gated only declines to ask for a link, while a false gate would demand one from a PR that is not a fix and teach authors to route around the check. The verdict logic lives in scripts/ci-pr-link.sh rather than inline YAML — shellcheck'd and unit-tested in scripts/test-core.sh, following the scripts/ci-classify.sh precedent — and it is its own workflow rather than a job in ci.yml so that a body edit re-runs one GraphQL query instead of the whole nine-repo audit matrix.",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "The pipefail SIGPIPE scanner was half-blind, and was hiding a live hazard in the PR-link gate. _core_pipefail_hits required grep's q to be the last letter of the flag cluster, so grep -q and grep -xq were caught while grep -qx and grep -Eqi walked straight past — the identical hazard, differing only in spelling. Widening the pattern to allow the q anywhere flags exactly one line that was already in the tree: ci-pr-link.sh's No-Issue: probe, printf … | grep -Eqi under set -o pipefail. grep exits on its first match, printf takes EPIPE, and the pipeline reports 141 — so a PR body larger than the pipe buffer would make a valid No-Issue: line evaluate false and fail a correctly-exempt PR. That is the escape hatch failing into a false accusation: the same shape as the probe bug above, one layer down. It survived because a PR body fits the buffer, which is precisely the \"happens to work\" the scanner exists to eliminate. Both land together — widening the regex without fixing the line it newly catches would turn the audit red. Four assertions now pin every spelling (-q, -xq, -qx, -Eqi) plus a grep with no quiet flag at all, so the gate cannot go half-blind again.",
-              "kind": "fix"
-            },
-            {
-              "text": "pr-link-check no longer tells a correctly-linked PR that it has no linked issue. The probe coerced any non-numeric count to zero, so \"I could not reach the API\" and \"this PR has no link\" produced the same verdict and the same message. During a run of GitHub 503s it failed #499 — which links #498 — with \"this fix(…) PR closes no issue and gives no reason\", and offered No-Issue: as the remedy. The link was intact throughout; re-running the identical job minutes later returned linked=1. Fail-closed was the right call and is unchanged — a broken probe must never silently pass an unlinked fix PR. What was wrong is that the check asserted something it did not know. An undeterminable count now gets its own probe-failed verdict which says plainly that the API was unreachable and the job should be re-run, so the exit code carries the policy while the verdict carries the claim. The workflow also retries the probe four times with quadratic backoff (0s/2s/6s/12s), requiring a numeric result rather than merely exit 0 — gh can return success with an empty body on a partial GraphQL response, which the old code would have read as a confident zero. And the No-Issue: escape hatch is now evaluated before the probe-failure verdict: it is read from the PR body and needs no API call, so a PR that already carries its reason is no longer blocked by an outage it does not depend on.",
-              "kind": "fix"
-            },
-            {
-              "text": "make audit could report a fully green run while never reading the file the change was about. The audit's content gates — bash -n, zsh -n, shellcheck, the pipefail scanner, and the toml/yaml/json parsers — enumerated their targets with a bare git ls-files, which lists only tracked files. A brand-new script or config was therefore invisible until the moment it was git added, and each gate still printed its \"all clean\" pass. A green audit that had not opened the file is strictly worse than a red one: it is indistinguishable from a real pass. This shipped. scripts/ci-pr-link.sh passed a local 261 pass / 0 fail audit while still untracked, then failed all four CI legs (ubuntu, macOS, Alpine, Arch) on two SC2016 violations that had been in the file the whole time. The audit was already inconsistent with itself about this: its --changed scope derivation counts untracked files when deciding which areas run, and the walk-based gates (luacheck ., markdownlint's **/*.md glob) have always seen them. Only the git ls-files gates disagreed, and nothing surfaced the disagreement. All twelve content gates now enumerate through a shared _audit_ls helper (scripts/lib/common.sh) that unions tracked with untracked-but-not-ignored, honouring .gitignore so scratch files stay out. That covers every gate script make audit consults, not just audit-core.sh: check-modern.sh's workflow inventory and nvim-reachability.sh's lua-module inventory had the same blind spot, so an untracked workflow could evade the modernization floor and an untracked module the orphan backstop. audit-core.sh's own §5c boundary scan was affected too, in a form worth naming — it expands nvim/ from the manifest and then reads every file it names, so it reads like a manifest question while actually being a content one. The rule is documented where the next gate author will read it: a gate asking \"is this file's content valid?\" uses _audit_ls, while a gate asking \"what does git record?\" (manifest drift, index exec-bits) keeps plain git ls-files, because an untracked file has no git state to check. The helper lives in the shared lib rather than in audit-core.sh so scripts/test-core.sh exercises the real implementation instead of a copy that could drift; five new assertions pin the behaviour, including that a gitignored script stays excluded and that the enumeration split stays exact, per file — twelve content gates through the helper, three git-state gates direct. That last one is deliberately a tripwire rather than a floor: an \"at least N helper calls\" check would sit green while a newly added gate reintroduced the bug with a bare git ls-files, so adding either kind of enumeration now fails the suite until someone decides which side of the rule it belongs on. Exec-bits deliberately unchanged. That gate reads index modes (git ls-files -s), and an untracked file has no index entry — it falls on the git-state side of the rule above.",
-              "kind": "fix"
-            },
-            {
-              "text": "A failed tpm clone announced itself as a status line, so tmux quietly ended up with no plugin manager. blib_link_core's one-time clone reported failure with blib_say — the blue :: on stdout, the identical shape to the cloning tpm progress line immediately above it — and discarded git's error with >/dev/null 2>&1. Behind a proxy, offline, or against a rate limit, the run therefore produced a box whose tmux had no theme and no resurrect/continuum, with nothing in the log that stood out and no way to find out why. It now uses blib_note_fail, which warns on stderr and records the step, and git's own output is captured and printed indented under the failure instead of dropped — on a clone failure that output is the diagnosis (DNS, proxy, TLS, rate limit). Scope — this is the first lib-internal caller of blib_note_fail. The v4.11.0 entry below scoped that API as \"new, not yet wired into any bootstrap\", meaning adoption by consumers. A clone that happens inside Core is the case a consumer cannot observe for itself: dotfiles-MacBook had to add a post-hoc \"is the tpm directory there?\" check to its own bootstrap.sh precisely because this failure was unreportable (dotfiles-MacBook#133). No consumer changes behaviour from this alone — blib_note_fail calls blib_warn internally, so a bootstrap that ignores BLIB_FAILED sees exactly the corrected warning and nothing else. A bootstrap that does fold the tally in now learns about a failure it previously could not see, and can drop its local directory probe. Same shape, same fix, one line away: blib_set_login_shell's \"chsh not found\" branch also used blib_say while its sibling failure branch used blib_warn, though the outcome — login shell unchanged — is identical. It is a warning now too. Covered by four assertions in scripts/test-core.sh's link-run section, hermetic and offline: GIT_ALLOW_PROTOCOL=file makes git refuse the https transport, so the clone fails deterministically without depending on the remote being reachable or unreachable. They pin the stream (stderr, not stdout), the tally, and the git-error passthrough.",
-              "kind": "fix"
-            },
-            {
-              "text": "One repo's failed push aborted the entire fan-out, so a release reached none of the fleet. The per-repo loop in sync-fanout.yml treats every error as per-repo — record it, set fail=1, move to the next repo — except the three calls that talk to the remote: git push and the gh pr list / gh pr create after it, all unguarded under set -euo pipefail (a failing command substitution exits too). The first failure therefore exited the step outright, skipping the remaining repos entirely. It fired on the v4.12.1 cut. dotfiles-MacBook is first in scripts/os-repos.txt, and its push was refused with \"refusing to allow a GitHub App to create or update workflow .github/workflows/auto-tag.yml without workflows permission\" — the fleet App has no workflows grant, and since #482 the fan-out rewrites .github/workflows/* SHA pins in repos that pin a Core caller. That one repo took the other seven with it: five had synced cleanly and were ready to open a PR, and none did. The release existed on main and in no OS repo at all. All three are now guarded like every other per-repo step, so a bad repo costs one PR instead of the fleet. The workflows-permission rejection is recognised by name and reported with the grant to make, since GitHub's message is opaque unless you already know the fan-out edits workflow files. GITHUB-APP-AUTH.md prescribed the failure it now has to fix: it listed Contents and Pull requests and said \"Everything else: No access\", so an operator following the setup guide built an App that cannot push the workflow-pin changes #482 added. It now requires Workflows: Read and write, says why only some repos trigger it while every installation still needs the grant (the permission is a property of the App; the SHA pin belongs to each caller workflow, and only those repos put one in a sync branch), and warns that editing an existing App's permissions mints the OLD set until the installation owner accepts the review request. The same staleness ran through the release docs: RELEASE-RUNBOOK.md and RELEASE-STRATEGY.md both named dotfiles-Windows as the sole SHA-pinning caller (the runbook froze it as \"27 of 28\"), when dotfiles-MacBook pins four callers and dotfiles-Defense one. Both now split the cases by the property that actually matters at release time — pinned inside the fan-out (MacBook, Defense: sync-core.sh moves the pin automatically since #482, which is why the App needs Workflows write) versus pinned outside it (Windows: vendors no core/, so nothing moves its pin and it needs a hand bump). The frozen count is replaced by a one-liner that derives it from the callers, since a hand-maintained tally is what rotted here. Guarding the gh calls matters as much as the push, and fails in a nastier shape: a rate limit or a per-repo API error there strands every later repo even though this one's branch is already on the remote — work done and merely unannounced. Those cases now say so explicitly rather than surfacing as an opaque step abort, and they report the PR state as unknown: the lookup itself is what failed, so an open PR may simply be hidden by the same outage, and \"no PR exists\" would invite a duplicate. The summary asks the operator to check the branch and open one only if none is there. Deliberately not \"retry without the workflow changes\". core.lock and the pins name the same Core; landing the lock while silently keeping stale pins is exactly the vendors-one-Core-runs-another split #482 closed, and it is invisible to core-integrity and verify-core — which is what let it survive the first time. Failing that repo loudly is the correct degradation; re-creating the split is not.",
-              "kind": "fix"
             }
           ]
         }
@@ -673,6 +669,22 @@
           "category": "Changed",
           "items": [
             {
+              "text": "The last OS-layer file is gone, and the role wiring is Core's now. os/kali.conf carried the prefix + e engagement popup as *role* config living in an *OS* overlay ($CONFIG/tmux/os.conf), because Core had exactly one tmux overlay hook when it was written. Vendoring Core v4.13.1 brings the second hook, so the binding moves to offensive/offensive.conf → $CONFIG/tmux/role.conf, and os/ is deleted outright. Two consequences worth stating plainly: - role.conf is sourced last by Core's tmux.conf, after Core's own bindings. os.conf is sourced before them, so a future Core bind e could have silently taken the key back. That ordering is the actual reason the hook exists. - dotfiles-Debian and this repo no longer race for $CONFIG/tmux/os.conf. Until now whichever bootstrap ran last won it; the OS repo owns band 80 alone again. The battery and net-speed status probes did not move here — they are OS-native and dotfiles-Debian's os/debian.conf already carries them.",
+              "kind": "perf"
+            },
+            {
+              "text": "bootstrap.sh calls blib_link_role_layer instead of hand-rolling three links. The block it replaces had already drifted from dotfiles-Defense's copy of the same wiring: Defense honoured BLIB_DRY when dropping the stale pre-v4 link and this repo did not, so --dry-run mutated the box here and not there. One shared definition ends that class of drift.",
+              "kind": "config"
+            },
+            {
+              "text": "Templates moved to $CONFIG/offensive/templates (from $CONFIG/kali/templates) — named for the role rather than the distro, matching Defense's $CONFIG/defense/. The two shipped docs that quote the path by hand, offensive/hacktheplanet and offensive/ippsec, are updated in the same change. Core deliberately declined a compat symlink, since it would preserve a ~/.config/kali/ on a repo no longer called Kali.",
+              "kind": "config"
+            },
+            {
+              "text": "Bootstrap now cleans up after the old wiring. A box bootstrapped before this change carries $CONFIG/tmux/os.conf and $CONFIG/kali/templates pointing into this checkout; both dangle afterwards. Each is removed only when it is a symlink resolving inside this repo, so a box also running dotfiles-Debian never has that repo's live os.conf touched, and --dry-run only reports.",
+              "kind": "config"
+            },
+            {
               "text": "This repo is now a pure Role layer. It used to be both the OS-native layer for Kali *and* the offensive role on top. dotfiles-Debian now covers the Debian family properly and accepts ID=kali as a first-class target, so the OS half moved there and what is left here is the role. Concretely: - Removed: os/kali.zsh, os/kali.gitconfig, install/packages.txt, install/tool-versions.env, scripts/update-tool-checksums.sh, wsl/, ssh/config. Every one of them has an equivalent in dotfiles-Debian, whose package list carries the Kali tier as # only:kali annotations. - bootstrap.sh is distro-agnostic and installs nothing by default. The ID=kali gate, the apt base install, the full-upgrade, the SHA-pinned verified_install block, the carapace .deb, the 1Password repo and the /etc/wsl.conf write are all gone — they belong to the OS-native layer. What replaces them is a report: a three-state host-tool probe (on $PATH / present-but-unreachable / missing), modelled on dotfiles-Defense. - --install is the new opt-in. On Kali it apt-installs install/offensive-packages.txt as before. On any other Debian-family box it installs a small portable subset via pipx (impacket, certipy-ad, netexec, bloodyAD, ldapdomaindump) and go (nuclei, gobuster, ffuf, kerbrute). On anything else it refuses and says why rather than guessing at a package manager. - --no-offensive and --no-upgrade are accepted but inert, with a note — the behaviour they asked for is now the default, so aborting on them would be worse than honouring them. - --links-only with --install is refused: one wires symlinks only, the other installs packages.",
               "kind": "config"
             },
@@ -705,10 +717,6 @@
         {
           "category": "Known gaps",
           "items": [
-            {
-              "text": "os/kali.conf survives this pass, and is the last OS-layer file here. It carries the prefix + e engagement popup — role config living in an OS overlay ($CONFIG/tmux/os.conf) because Core had exactly one tmux overlay hook when it was written. Core v4.13.1 adds source-file -q ~/.config/tmux/role.conf; once this repo vendors that Core, the binding moves to offensive/offensive.conf on the role hook and the file goes. Dropping it now would silently kill prefix + e. While it lasts, Offense and Debian both write os.conf and the last bootstrap to run wins — the status quo, and exactly what the role hook exists to end.",
-              "kind": "config"
-            },
             {
               "text": "pipx installs different binary names than Kali does. PyPI's impacket ships secretsdump.py, not Kali's impacket-secretsdump wrapper; certipy-ad ships certipy. offensive.zsh probes the Kali names, so those HAVE_* flags do not fire on a pipx box. The bootstrap's probe recognises both names, so the report is honest; teaching the shell layer to resolve both is a separate change.",
               "kind": "other"
@@ -1166,6 +1174,38 @@
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Changed",
+      "kind": "perf",
+      "text": "The last OS-layer file is gone, and the role wiring is Core's now. os/kali.conf carried the prefix + e engagement popup as *role* config living in an *OS* overlay ($CONFIG/tmux/os.conf), because Core had exactly one tmux overlay hook when it was written. Vendoring Core v4.13.1 brings the second hook, so the binding moves to offensive/offensive.conf → $CONFIG/tmux/role.conf, and os/ is deleted outright. Two consequences worth stating plainly: - role.conf is sourced last by Core's tmux.conf, after Core's own bindings. os.conf is sourced before them, so a future Core bind e could have silently taken the key back. That ordering is the actual reason the hook exists. - dotfiles-Debian and this repo no longer race for $CONFIG/tmux/os.conf. Until now whichever bootstrap ran last won it; the OS repo owns band 80 alone again. The battery and net-speed status probes did not move here — they are OS-native and dotfiles-Debian's os/debian.conf already carries them.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "bootstrap.sh calls blib_link_role_layer instead of hand-rolling three links. The block it replaces had already drifted from dotfiles-Defense's copy of the same wiring: Defense honoured BLIB_DRY when dropping the stale pre-v4 link and this repo did not, so --dry-run mutated the box here and not there. One shared definition ends that class of drift.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Templates moved to $CONFIG/offensive/templates (from $CONFIG/kali/templates) — named for the role rather than the distro, matching Defense's $CONFIG/defense/. The two shipped docs that quote the path by hand, offensive/hacktheplanet and offensive/ippsec, are updated in the same change. Core deliberately declined a compat symlink, since it would preserve a ~/.config/kali/ on a repo no longer called Kali.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Bootstrap now cleans up after the old wiring. A box bootstrapped before this change carries $CONFIG/tmux/os.conf and $CONFIG/kali/templates pointing into this checkout; both dangle afterwards. Each is removed only when it is a symlink resolving inside this repo, so a box also running dotfiles-Debian never has that repo's live os.conf touched, and --dry-run only reports.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
       "kind": "config",
       "text": "This repo is now a pure Role layer. It used to be both the OS-native layer for Kali *and* the offensive role on top. dotfiles-Debian now covers the Debian family properly and accepts ID=kali as a first-class target, so the OS half moved there and what is left here is the role. Concretely: - Removed: os/kali.zsh, os/kali.gitconfig, install/packages.txt, install/tool-versions.env, scripts/update-tool-checksums.sh, wsl/, ssh/config. Every one of them has an equivalent in dotfiles-Debian, whose package list carries the Kali tier as # only:kali annotations. - bootstrap.sh is distro-agnostic and installs nothing by default. The ID=kali gate, the apt base install, the full-upgrade, the SHA-pinned verified_install block, the carapace .deb, the 1Password repo and the /etc/wsl.conf write are all gone — they belong to the OS-native layer. What replaces them is a report: a three-state host-tool probe (on $PATH / present-but-unreachable / missing), modelled on dotfiles-Defense. - --install is the new opt-in. On Kali it apt-installs install/offensive-packages.txt as before. On any other Debian-family box it installs a small portable subset via pipx (impacket, certipy-ad, netexec, bloodyAD, ldapdomaindump) and go (nuclei, gobuster, ffuf, kerbrute). On anything else it refuses and says why rather than guessing at a package manager. - --no-offensive and --no-upgrade are accepted but inert, with a note — the behaviour they asked for is now the default, so aborting on them would be worse than honouring them. - --links-only with --install is refused: one wires symlinks only, the other installs packages.",
       "core": false
@@ -1216,14 +1256,6 @@
       "category": "Changed",
       "kind": "config",
       "text": "offensive/templates/engagement.md documents the layout mkengagement actually creates.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Offense",
-      "version": "Unreleased",
-      "category": "Known gaps",
-      "kind": "config",
-      "text": "os/kali.conf survives this pass, and is the last OS-layer file here. It carries the prefix + e engagement popup — role config living in an OS overlay ($CONFIG/tmux/os.conf) because Core had exactly one tmux overlay hook when it was written. Core v4.13.1 adds source-file -q ~/.config/tmux/role.conf; once this repo vendors that Core, the binding moves to offensive/offensive.conf on the role hook and the file goes. Dropping it now would silently kill prefix + e. While it lasts, Offense and Debian both write os.conf and the last bootstrap to run wins — the status quo, and exactly what the role hook exists to end.",
       "core": false
     },
     {
@@ -1580,6 +1612,51 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v4.13.2",
+      "date": "2026-08-19",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make audit no longer reds blib_user_bindirs_on_path for anyone with CARGO_HOME set. The helper resolves the cargo bindir through ${CARGO_HOME:-$HOME/.cargo}/bin deliberately — hard-coding ~/.cargo/bin would break a box that relocates it, which is the bug it exists to prevent. Its fixture asserts the $HOME-relative defaults, and those are reached only when the vars are absent; but the subshell pinned just HOME and PATH, so an exported CARGO_HOME retargeted the lookup and the fixture's own .cargo/bin never landed. A developer with Rust configured — most operators, and exactly who make audit runs for — saw a failure on a healthy tree, while no CI runner exports it and all four lanes stayed green. The fixture now unsets CARGO_HOME, GOBIN and GOPATH. Worth noting where the leak actually lived: the relocation block further down the same file sets these vars explicitly and was always immune — it was the default-path cases that inherited. A gap between two blocks rather than a coverage hole, and the same shape as the GHOSTTY_SHELL_FEATURES leak fixed one release earlier.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.13.2",
+      "date": "2026-08-19",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "A stalled Ubuntu security index no longer reds CI lanes that never needed it. The Linux setup step gated on apt-get update succeeding, and under set -euxo pipefail a second failed refresh killed the step before apt-get install zsh was ever attempted. On both 2026-08-18 and 2026-08-19 archive.ubuntu.com's noble-security index stalled mid-fetch (with the Azure regional mirror dark, every index Ign:), and the job died at timeout(1)'s exit 124 with no test executed — while the same logs showed Hit: … noble InRelease succeeding. Only the security pocket wedged; zsh lives in noble/main. The archive was reachable for everything the job actually needed, and it failed anyway. The refresh is now best-effort and the install is the gate — a stale index nothing reads is not this job's problem, whereas not having zsh still fails it. The install carries its own timeout(1) bound so it cannot hang in the refresh's place. The block was duplicated verbatim across five workflows (ci.yml twice, plus lint-call.yml, sync-fanout.yml, atuin-guard-verify.yml); all five are fixed, since fixing one would have left the same stall live on four other lanes.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.13.2",
+      "date": "2026-08-19",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make audit no longer reds 7 OSC 133 assertions when it is run from inside Ghostty. 00-tools.zsh deliberately stands the marks down when GHOSTTY_SHELL_FEATURES is set and $TMUX is empty — Ghostty injects its own prompt marking outside tmux, so Core must not double-mark. Every mark-ON case in scripts/test-core.sh's OSC 133 section pins TERM and TMUX explicitly for exactly that reason, but ucheck ran a bare env, which inherits the caller's environment. Auditing from the terminal this repo ships a config for therefore cleared _CORE_OSC133, left _core_osc133_prompt undefined, and failed 7 assertions about the shell layer while proving nothing about it. ucheck now runs env -u GHOSTTY_SHELL_FEATURES; the per-case assignments come after the option, so the two cases that set it deliberately still win. CI could not have caught this — no runner is hosted in Ghostty, so all four audit lanes were green on the identical tree — which is why the regression gate added alongside drives a mark-ON case with the variable genuinely exported rather than passed as an argument.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.13.2",
+      "date": "2026-08-19",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "A repo renamed upstream is no longer skipped by the whole fleet toolchain because its clone directory still carries the old name. scripts/os-repos.txt names the fleet by repo NAME, and sync-core.sh, fleet-drift.sh and core-integrity.sh each turned that name into a path by string-joining it onto the fleet root. Git follows a GitHub rename on its own; a directory name does not. So a machine that cloned dotfiles-Kali before it became dotfiles-Offense had a correct remote, a correct core/ subtree and a correct core.lock — and the fan-out skipped it as \"not cloned\", drift reported \"not checked out\", and the integrity sweep could not have seen a tampered core/ there at all. Two of those three are false-CLEAN results on gates whose entire job is to notice, and the only remedy on offer was \"go mv the directory\", on every machine, for every future rename. All three now resolve through one shared resolve_repo_dir (scripts/lib/common.sh): the directory-name lookup stays the fast path and keeps precedence, and only when no such directory exists does it ask each sibling clone what it actually is, matching on the repo slug in origin's URL. Both URL shapes parse (https://host/owner/repo and git@host:owner/repo, with or without .git) and matching is case-insensitive, as GitHub itself is. A clone whose origin names a different repo is not adopted, one with no origin is stepped over rather than aborting the sweep, and a genuinely absent repo still reports against the conventional path so the advice names where it looked. sync-core.sh prints the resolved path when it isn't the conventional one, so a fan-out into a pre-rename directory is visible in the log instead of a surprise underneath the git output.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.13.2",
+      "date": "2026-08-19",
+      "category": "Documentation",
+      "kind": "config",
+      "text": "blib_link_role_layer's migration note described a migration that has since happened. It read, in the present tense, that \"the offensive repo hand-rolls <config>/kali/templates\" and instructed a consumer to relocate them and update two shipped docs \"in the same change that adopts the helper\". dotfiles-Offense adopted the helper and did exactly that, so the instruction now describes work that is done — misleading anyone reading the helper to decide what a consumer still owes it. Rewritten as the record of a completed move, keeping the reasoning that matters (why the destination is named for the ROLE rather than the distro, and why neither a compat symlink nor a namespace parameter was the answer). Comment only — no behaviour changes, but it is vendored into all nine consuming repos, so the stale text was live fleet-wide.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v4.13.1",
       "date": "2026-08-18",
       "category": "Fixed",
@@ -1774,60 +1851,6 @@
       "category": "Added",
       "kind": "feature",
       "text": "PORTING-MATRIX.md gains a Debian/Ubuntu column in both tables, a quirks paragraph, a clipboard row, and footnotes ²⁸ (pinned upstream release asset) and ²⁹ (deliberately not installed). The column-order contract changed: the last cell on a package row is now Debian/Ubuntu, not Kali — /os-package-availability asserted the old order and has been updated with it.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.12.2",
-      "date": "2026-08-17",
-      "category": "Added",
-      "kind": "fix",
-      "text": "CI now fails a fix(…) PR that closes no issue and gives no reason. #446 fixed two reported bugs — #420 (starship) and #423 (carapace) — and merged green with no closing keyword in its body. GitHub therefore linked nothing, both issues stayed open, and days later a reader re-derived a 2021 upstream function rename and re-ran the reproducer to re-confirm a bug that had already shipped in v4.12.0. The code was correct the whole time; the link was missing, and no check objected. .github/workflows/pr-link-check.yml now asks GitHub for the PR's closingIssuesReferences — the same field GitHub itself uses to auto-close on merge, so cosmetic text like \"Refs #420\" cannot satisfy it — and requires a fix(…) PR to close at least one issue. The escape hatch is a No-Issue: <reason> line in the body, because a genuine fix is often found and fixed in one pass with nothing filed; the reason is what a future reader finds in place of a link. pull_request_template.md documents both routes. Gated set is fix only, matched with the delimiter-aware Conventional-Commit regex from scripts/gen-release-notes.sh, so fixup: and ordinary prose that merely starts with the word are untouched. That is deliberately the stricter of the repo's two parsers — cliff.toml groups on a bare ^fix, which would also sweep in fixup: — because a false not-gated only declines to ask for a link, while a false gate would demand one from a PR that is not a fix and teach authors to route around the check. The verdict logic lives in scripts/ci-pr-link.sh rather than inline YAML — shellcheck'd and unit-tested in scripts/test-core.sh, following the scripts/ci-classify.sh precedent — and it is its own workflow rather than a job in ci.yml so that a body edit re-runs one GraphQL query instead of the whole nine-repo audit matrix.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.12.2",
-      "date": "2026-08-17",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The pipefail SIGPIPE scanner was half-blind, and was hiding a live hazard in the PR-link gate. _core_pipefail_hits required grep's q to be the last letter of the flag cluster, so grep -q and grep -xq were caught while grep -qx and grep -Eqi walked straight past — the identical hazard, differing only in spelling. Widening the pattern to allow the q anywhere flags exactly one line that was already in the tree: ci-pr-link.sh's No-Issue: probe, printf … | grep -Eqi under set -o pipefail. grep exits on its first match, printf takes EPIPE, and the pipeline reports 141 — so a PR body larger than the pipe buffer would make a valid No-Issue: line evaluate false and fail a correctly-exempt PR. That is the escape hatch failing into a false accusation: the same shape as the probe bug above, one layer down. It survived because a PR body fits the buffer, which is precisely the \"happens to work\" the scanner exists to eliminate. Both land together — widening the regex without fixing the line it newly catches would turn the audit red. Four assertions now pin every spelling (-q, -xq, -qx, -Eqi) plus a grep with no quiet flag at all, so the gate cannot go half-blind again.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.12.2",
-      "date": "2026-08-17",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "pr-link-check no longer tells a correctly-linked PR that it has no linked issue. The probe coerced any non-numeric count to zero, so \"I could not reach the API\" and \"this PR has no link\" produced the same verdict and the same message. During a run of GitHub 503s it failed #499 — which links #498 — with \"this fix(…) PR closes no issue and gives no reason\", and offered No-Issue: as the remedy. The link was intact throughout; re-running the identical job minutes later returned linked=1. Fail-closed was the right call and is unchanged — a broken probe must never silently pass an unlinked fix PR. What was wrong is that the check asserted something it did not know. An undeterminable count now gets its own probe-failed verdict which says plainly that the API was unreachable and the job should be re-run, so the exit code carries the policy while the verdict carries the claim. The workflow also retries the probe four times with quadratic backoff (0s/2s/6s/12s), requiring a numeric result rather than merely exit 0 — gh can return success with an empty body on a partial GraphQL response, which the old code would have read as a confident zero. And the No-Issue: escape hatch is now evaluated before the probe-failure verdict: it is read from the PR body and needs no API call, so a PR that already carries its reason is no longer blocked by an outage it does not depend on.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.12.2",
-      "date": "2026-08-17",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "make audit could report a fully green run while never reading the file the change was about. The audit's content gates — bash -n, zsh -n, shellcheck, the pipefail scanner, and the toml/yaml/json parsers — enumerated their targets with a bare git ls-files, which lists only tracked files. A brand-new script or config was therefore invisible until the moment it was git added, and each gate still printed its \"all clean\" pass. A green audit that had not opened the file is strictly worse than a red one: it is indistinguishable from a real pass. This shipped. scripts/ci-pr-link.sh passed a local 261 pass / 0 fail audit while still untracked, then failed all four CI legs (ubuntu, macOS, Alpine, Arch) on two SC2016 violations that had been in the file the whole time. The audit was already inconsistent with itself about this: its --changed scope derivation counts untracked files when deciding which areas run, and the walk-based gates (luacheck ., markdownlint's **/*.md glob) have always seen them. Only the git ls-files gates disagreed, and nothing surfaced the disagreement. All twelve content gates now enumerate through a shared _audit_ls helper (scripts/lib/common.sh) that unions tracked with untracked-but-not-ignored, honouring .gitignore so scratch files stay out. That covers every gate script make audit consults, not just audit-core.sh: check-modern.sh's workflow inventory and nvim-reachability.sh's lua-module inventory had the same blind spot, so an untracked workflow could evade the modernization floor and an untracked module the orphan backstop. audit-core.sh's own §5c boundary scan was affected too, in a form worth naming — it expands nvim/ from the manifest and then reads every file it names, so it reads like a manifest question while actually being a content one. The rule is documented where the next gate author will read it: a gate asking \"is this file's content valid?\" uses _audit_ls, while a gate asking \"what does git record?\" (manifest drift, index exec-bits) keeps plain git ls-files, because an untracked file has no git state to check. The helper lives in the shared lib rather than in audit-core.sh so scripts/test-core.sh exercises the real implementation instead of a copy that could drift; five new assertions pin the behaviour, including that a gitignored script stays excluded and that the enumeration split stays exact, per file — twelve content gates through the helper, three git-state gates direct. That last one is deliberately a tripwire rather than a floor: an \"at least N helper calls\" check would sit green while a newly added gate reintroduced the bug with a bare git ls-files, so adding either kind of enumeration now fails the suite until someone decides which side of the rule it belongs on. Exec-bits deliberately unchanged. That gate reads index modes (git ls-files -s), and an untracked file has no index entry — it falls on the git-state side of the rule above.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.12.2",
-      "date": "2026-08-17",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "A failed tpm clone announced itself as a status line, so tmux quietly ended up with no plugin manager. blib_link_core's one-time clone reported failure with blib_say — the blue :: on stdout, the identical shape to the cloning tpm progress line immediately above it — and discarded git's error with >/dev/null 2>&1. Behind a proxy, offline, or against a rate limit, the run therefore produced a box whose tmux had no theme and no resurrect/continuum, with nothing in the log that stood out and no way to find out why. It now uses blib_note_fail, which warns on stderr and records the step, and git's own output is captured and printed indented under the failure instead of dropped — on a clone failure that output is the diagnosis (DNS, proxy, TLS, rate limit). Scope — this is the first lib-internal caller of blib_note_fail. The v4.11.0 entry below scoped that API as \"new, not yet wired into any bootstrap\", meaning adoption by consumers. A clone that happens inside Core is the case a consumer cannot observe for itself: dotfiles-MacBook had to add a post-hoc \"is the tpm directory there?\" check to its own bootstrap.sh precisely because this failure was unreportable (dotfiles-MacBook#133). No consumer changes behaviour from this alone — blib_note_fail calls blib_warn internally, so a bootstrap that ignores BLIB_FAILED sees exactly the corrected warning and nothing else. A bootstrap that does fold the tally in now learns about a failure it previously could not see, and can drop its local directory probe. Same shape, same fix, one line away: blib_set_login_shell's \"chsh not found\" branch also used blib_say while its sibling failure branch used blib_warn, though the outcome — login shell unchanged — is identical. It is a warning now too. Covered by four assertions in scripts/test-core.sh's link-run section, hermetic and offline: GIT_ALLOW_PROTOCOL=file makes git refuse the https transport, so the clone fails deterministically without depending on the remote being reachable or unreachable. They pin the stream (stderr, not stdout), the tally, and the git-error passthrough.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.12.2",
-      "date": "2026-08-17",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "One repo's failed push aborted the entire fan-out, so a release reached none of the fleet. The per-repo loop in sync-fanout.yml treats every error as per-repo — record it, set fail=1, move to the next repo — except the three calls that talk to the remote: git push and the gh pr list / gh pr create after it, all unguarded under set -euo pipefail (a failing command substitution exits too). The first failure therefore exited the step outright, skipping the remaining repos entirely. It fired on the v4.12.1 cut. dotfiles-MacBook is first in scripts/os-repos.txt, and its push was refused with \"refusing to allow a GitHub App to create or update workflow .github/workflows/auto-tag.yml without workflows permission\" — the fleet App has no workflows grant, and since #482 the fan-out rewrites .github/workflows/* SHA pins in repos that pin a Core caller. That one repo took the other seven with it: five had synced cleanly and were ready to open a PR, and none did. The release existed on main and in no OS repo at all. All three are now guarded like every other per-repo step, so a bad repo costs one PR instead of the fleet. The workflows-permission rejection is recognised by name and reported with the grant to make, since GitHub's message is opaque unless you already know the fan-out edits workflow files. GITHUB-APP-AUTH.md prescribed the failure it now has to fix: it listed Contents and Pull requests and said \"Everything else: No access\", so an operator following the setup guide built an App that cannot push the workflow-pin changes #482 added. It now requires Workflows: Read and write, says why only some repos trigger it while every installation still needs the grant (the permission is a property of the App; the SHA pin belongs to each caller workflow, and only those repos put one in a sync branch), and warns that editing an existing App's permissions mints the OLD set until the installation owner accepts the review request. The same staleness ran through the release docs: RELEASE-RUNBOOK.md and RELEASE-STRATEGY.md both named dotfiles-Windows as the sole SHA-pinning caller (the runbook froze it as \"27 of 28\"), when dotfiles-MacBook pins four callers and dotfiles-Defense one. Both now split the cases by the property that actually matters at release time — pinned inside the fan-out (MacBook, Defense: sync-core.sh moves the pin automatically since #482, which is why the App needs Workflows write) versus pinned outside it (Windows: vendors no core/, so nothing moves its pin and it needs a hand bump). The frozen count is replaced by a one-liner that derives it from the callers, since a hand-maintained tally is what rotted here. Guarding the gh calls matters as much as the push, and fails in a nastier shape: a rate limit or a per-repo API error there strands every later repo even though this one's branch is already on the remote — work done and merely unannounced. Those cases now say so explicitly rather than surfacing as an opaque step abort, and they report the PR state as unknown: the lookup itself is what failed, so an open PR may simply be hidden by the same outage, and \"no PR exists\" would invite a duplicate. The summary asks the operator to check the branch and open one only if none is there. Deliberately not \"retry without the workflow changes\". core.lock and the pins name the same Core; landing the lock while silently keeping stale pins is exactly the vendors-one-Core-runs-another split #482 closed, and it is invisible to core-integrity and verify-core — which is what let it survive the first time. Failing that repo loudly is the correct degradation; re-creating the split is not.",
       "core": true
     },
     {
