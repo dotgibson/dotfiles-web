@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "0fe706ba855ddb720c694543728948ab20d8b5d7",
+        "commit": "c50645a9f600644b93dd26d57ecb59a4122ba26d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "cc8bef42671e05cea9ee6a1a3ac27ee99747c419",
+        "commit": "737988a88318cba8ed94a60625f37cd7d85ee233",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "dacfadae14076d2c4c3cf46fee2fbadffac4d8bf",
+        "commit": "3c5647a17f2bebdc1958925f9a5d4acec02b1d94",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "f7ec606582067ac381a70f514aa80ca4747800fd",
+        "commit": "7d6d6b9f4be43a6942ef7ee384481b3f1de0a4a5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "785b7cf13891c15e8e7d03f850a0c883ae884523",
+        "commit": "0fcfdaf2a2dbe48befd3d985b91dabbedfdf9a80",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "e72dcddb31c311089d79d401cd76672285f43a2d",
+        "commit": "40deb414fcf15ed8827475e97376e6d7060227a7",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "833be5d2ae41256b93dfd2c94c4ae8bf70e4d766",
+        "commit": "5105fb81b67d9435a48c3da28db3bb87f773183f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "5d7561233b5d8c0d660e804379c694786b244985",
+        "commit": "480025d952f4afb7255a946bd6f973ff7ce96293",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "98a24c2083947b69352ea2862c7962e00176613d",
+        "commit": "c6c2d7914df51baec83a7733451bc52bff78a15b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "27b811177f6048dba44aa954fd805d1aced26269",
+        "commit": "86a1a8102173ccf64b244b6bff967fe0a92048ec",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,9 +88,9 @@
     "coreVersion": "4.14.1",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -99,44 +99,44 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v4.14.0",
-        "carried": "4.14.0",
-        "status": "behind"
+        "ref": "v4",
+        "carried": "4.14.1",
+        "status": "current"
       }
     }
   },
@@ -172,6 +172,21 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "Footnote ³² said the OS layer wires direnv; v4.14.1 moved that into Core, in the same release. (#449) The direnv row's footnote was written days before #578 landed and described the arrangement it replaced — \"what makes it work is each OS repo's os/<distro>.zsh at band 80\". v4.14.1 ships both that sentence and the commit that made it false, which is precisely the defect class #568 and #569 were filed for, reintroduced by the footnote that was added alongside them. Rewritten to what the code now does: Core wires direnv at zsh/00-tools.zsh band 00, and the footnote records why that band rather than 45 (it registers a hook, not a compdef, and band 00 loads under every CORE_PROFILE while 45 is ceilinged out of minimal) and why it is sourced last of the four inits (direnv prepends to precmd_functions/chpwd_functions, so sourcing after mise reproduces the resolution order an .envrc pinning tool versions expects). The thesis changes with it: direnv is no longer \"the one row Core neither installs nor detects\" — Core now wires it while still neither installing nor detecting it. The Kali paragraph needed the same correction and for the same reason. It argued dotfiles-Offense misses the hook because it has no os/ layer — true at band 80, false at band 00, where the hook reaches it from Core like everywhere else. It is live there now and simply finds no binary, since that repo still installs none.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.14.1",
@@ -1002,6 +1017,14 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Footnote ³² said the OS layer wires direnv; v4.14.1 moved that into Core, in the same release. (#449) The direnv row's footnote was written days before #578 landed and described the arrangement it replaced — \"what makes it work is each OS repo's os/<distro>.zsh at band 80\". v4.14.1 ships both that sentence and the commit that made it false, which is precisely the defect class #568 and #569 were filed for, reintroduced by the footnote that was added alongside them. Rewritten to what the code now does: Core wires direnv at zsh/00-tools.zsh band 00, and the footnote records why that band rather than 45 (it registers a hook, not a compdef, and band 00 loads under every CORE_PROFILE while 45 is ceilinged out of minimal) and why it is sourced last of the four inits (direnv prepends to precmd_functions/chpwd_functions, so sourcing after mise reproduces the resolution order an .envrc pinning tool versions expects). The thesis changes with it: direnv is no longer \"the one row Core neither installs nor detects\" — Core now wires it while still neither installing nor detecting it. The Kali paragraph needed the same correction and for the same reason. It argued dotfiles-Offense misses the hook because it has no os/ layer — true at band 80, false at band 00, where the hook reaches it from Core like everywhere else. It is live there now and simply finds no binary, since that repo still installs none.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
