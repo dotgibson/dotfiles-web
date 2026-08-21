@@ -105,27 +105,40 @@ if (existsSync(hookFile)) {
 // It reads the STAGED blob (`git show :path`), never the working tree. Those differ
 // exactly when it matters most: `npm run metrics`, `git add`, then edit or revert the
 // file — the working copy would look innocent while the staged one ships.
+//
+// BOTH stamped files, not just generated.json. collect-snippets.mjs stamps the identical
+// clean/unclean verdict over its own six sources, and until this loop existed snippets.json
+// was checked at commit time on no machine at all — CI's committed-data-provenance was its
+// only guard. It is also the file where an absorbed local edit does the most damage:
+// generated.json would publish a wrong NUMBER, while snippets.json publishes the edited
+// file's CONTENT on /config as that repo's real configuration.
 const HOOK = `#!/usr/bin/env bash
 # ${MARKER} — installed by scripts/install-hooks.mjs; do not edit by hand.
 #
-# Refuses to commit an src/data/generated.json that was derived from an unclean fleet
-# (a sibling repo on a feature branch, or with uncommitted edits in a file the collector
-# reads). Such a snapshot publishes unmerged work as fact — it has happened.
+# Refuses to commit site data that was derived from an unclean fleet (a sibling repo on a
+# feature branch, or with uncommitted edits in a file the collector reads). Such a snapshot
+# publishes unmerged work as fact — it has happened. Covers both stamped files:
+# src/data/generated.json and src/data/snippets.json.
 #
-# Regenerate against a clean fleet:  npm run data      (fails loudly rather than absorbing)
+# Regenerate against a clean fleet:  npm run data      (settle the repos FIRST — see below)
 # Sanctioned bypass:                 DOTFILES_ALLOW_DIRTY_DATA=1 git commit …
 #                                    (or: git commit --no-verify)
 set -u
 [ -n "\${DOTFILES_ALLOW_DIRTY_DATA:-}" ] && exit 0
 
+# Accumulate rather than exiting on the first offender: when the fleet was dirty at
+# generation time BOTH files are usually contaminated, and reporting one at a time turns
+# one fix into two round trips.
+bad=0
+for f in generated snippets; do
 # Nothing staged for that file — nothing to say. --quiet exits 0 when there is no
 # staged change and 1 when there is, which answers this without a pipeline or any
 # tool beyond git itself. A staged DELETION also reports 1; that falls through to
-# the git show below, which fails for a path absent from the index and exits 0.
-git diff --cached --quiet -- src/data/generated.json 2>/dev/null && exit 0
+# the git show below, which fails for a path absent from the index and continues.
+git diff --cached --quiet -- "src/data/\${f}.json" 2>/dev/null && continue
 
-staged="\$(git show :src/data/generated.json 2>/dev/null)" || exit 0
-[ -z "\$staged" ] && exit 0
+staged="\$(git show ":src/data/\${f}.json" 2>/dev/null)" || continue
+[ -z "\$staged" ] && continue
 
 verdict="\$(printf '%s' "\$staged" | node -e '
 let s = "";
@@ -139,12 +152,13 @@ process.stdin.on("data", (d) => (s += d)).on("end", () => {
   if (g.clean === null) return console.log("WARN\\tsome sibling could not be verified");
   console.log("OK\\t");
 });
-' 2>/dev/null)" || exit 0
+' 2>/dev/null)" || continue
 
 case "\${verdict%%$'\\t'*}" in
   BLOCK)
+    bad=1
     {
-      printf '${MARKER}: refusing to commit site data derived from an unclean fleet.\\n\\n'
+      printf '${MARKER}: refusing to commit src/data/%s.json — derived from an unclean fleet.\\n\\n' "\$f"
       printf '%s\\n' "\${verdict#*$'\\t'}" | sed 's/^/    /'
       printf '%s\\n' \\
         '' \\
@@ -152,16 +166,23 @@ case "\${verdict%%$'\\t'*}" in
         'default branch, or not committed — so it would publish as fact something that' \\
         'exists on no branch of the source repo.' \\
         '' \\
-        'Fix:      settle those repos, then re-run  npm run data' \\
+        'Fix:      settle those repos (commit, stash, or switch back to the default' \\
+        '          branch), THEN re-run  npm run data' \\
         'Override: DOTFILES_ALLOW_DIRTY_DATA=1 git commit …   (or: git commit --no-verify)'
     } >&2
-    exit 1
     ;;
   WARN)
-    printf '${MARKER}: %s — provenance is incomplete, allowing the commit.\\n' \\
-      "\${verdict#*$'\\t'}" >&2
+    printf '${MARKER}: src/data/%s.json: %s — provenance is incomplete, allowing the commit.\\n' \\
+      "\$f" "\${verdict#*$'\\t'}" >&2
     ;;
 esac
+done
+
+# Settling the repos is the whole fix, and the order matters differently per file:
+# collect-metrics.mjs REFUSES an unclean fleet outright, but collect-snippets.mjs only
+# warns and writes anyway — so re-running against a still-dirty tree reproduces this for
+# snippets.json rather than fixing it.
+[ "\$bad" -ne 0 ] && exit 1
 exit 0
 `;
 

@@ -54,7 +54,7 @@ const out = join(webRepo, 'src', 'data', 'snippets.json');
 
 // Cap a baked file; the rest is one click away on GitHub. Set from the shape of the
 // curated set rather than picked round: the OS/role overlays cluster at 96-144 lines
-// and the long reference files start at 200 (Core's aliases, starship.toml, Kali's
+// and the long reference files start at 200 (Core's aliases, starship.toml, Offense's
 // offensive.zsh), so anything in that gap keeps every overlay whole while still
 // capping the three that actually need it. At 140 this truncated Arch's 144-line
 // overlay to hide FOUR lines behind a "read the full file" link — all the cost of
@@ -120,8 +120,8 @@ const rel = relative(webRepo, out);
 // set — a partial checkout would silently drop files from the page.
 const loaded = CURATED.map((entry) => ({ entry, snippet: load(entry) }));
 const snippets = loaded.map((r) => r.snippet).filter(Boolean);
-// Name the files that did not resolve, rather than only counting them. "8/9" sends you
-// diffing the curated list against eleven checkouts by hand; the path says at once whether
+// Name the files that did not resolve, rather than only counting them. A bare "7/8" sends
+// you diffing the curated list against six checkouts by hand; the path says at once whether
 // a repo is absent, a file was renamed upstream, or the root is wrong.
 const unresolved = loaded.filter((r) => !r.snippet).map((r) => `${r.entry.repo}/${r.entry.path}`);
 
