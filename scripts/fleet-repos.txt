@@ -1,0 +1,61 @@
+# scripts/fleet-repos.txt — the canonical fleet this site reads.
+# ──────────────────────────────────────────────────────────────────────────────
+# ONE list of the repos dotfiles-web clones and derives its data from. Read by
+# .github/actions/clone-fleet (every workflow that clones the fleet) and by
+# scripts/lib/fleet-repos.mjs (collect-metrics.mjs). Before this file the same
+# list was hand-maintained in FIVE places — four workflow loops plus the
+# collector's own array — and one of them had already lost dotfiles-Debian
+# without anyone noticing, because that loop only warns on a failed clone.
+#
+# Why one file rather than four careful copies: the lists are load-bearing in
+# opposite directions and must agree. fleet-sync.yml decides whether to open a
+# refresh PR; data-freshness.yml decides whether to fail the build. Drift makes
+# the failure silent in the worst direction — a green build sitting beside an
+# open "the data drifted" PR, or worse, green on drift the bot will not PR.
+#
+# Format: `<repo-name> <role>`, one per line. Blank lines and `#` comments
+# ignored. Roles:
+#   core — dotfiles-core, the shared layer every Core metric is read from
+#   os   — the ten machine/role repos collect-metrics.mjs counts and compares
+#   aux  — read by a single collector and NOT a dotfiles layer at all
+#
+# ORDER IS LOAD-BEARING for the `os` rows: it is the order collect-metrics.mjs
+# iterates, and therefore the key order of generated.json's objects. Reordering
+# these lines reorders that file, turning a no-op change into a data diff.
+#
+# Every consumer reads a SLICE of this file, not all of it: collect-metrics.mjs
+# takes core + the ten `os` rows, collect-corpus.mjs reads only htpx, and
+# collect-coverage.mjs only dotfiles-Defense. collect-snippets.mjs's six are a
+# strict subset of the metrics eleven — its eight curated files span all three
+# layers (Core, four OS-native overlays, the Offense role) because that spread IS
+# what /config exists to show. The workflows clone the union, which is every line.
+#
+# All twelve are public, so the clones are anonymous: no PAT, no token in a URL.
+# deploy.yml passes one only because its pinned-release build already holds it.
+#
+# dotfiles-Offense, NEVER dotfiles-Kali. The repo was renamed and github.com
+# still serves the old name transparently — `git clone` of dotfiles-Kali
+# SUCCEEDS, with no warning, into a directory called dotfiles-Kali that no
+# collector ever joins. It used to surface two steps later as a complaint about
+# a curated file that is perfectly fine. Now that this file feeds the clone AND
+# the collector, both would agree on the wrong name and the build would go green
+# with a mislabeled repo — so clone-fleet probes each name for a redirect and
+# fails on one. A redirect that works is exactly what makes this worth writing
+# down.
+# ──────────────────────────────────────────────────────────────────────────────
+dotfiles-core     core
+dotfiles-MacBook  os
+dotfiles-Windows  os
+dotfiles-Offense  os
+dotfiles-Defense  os
+dotfiles-Fedora   os
+dotfiles-Arch     os
+dotfiles-Debian   os
+dotfiles-openSUSE os
+dotfiles-Alpine   os
+dotfiles-Gentoo   os
+# htpx is not a dotfiles layer and is deliberately NOT an `os` row: it is the
+# source collect-corpus.mjs reads for the /purple red/blue corpus. Leaving it
+# out of the clone lists is why corpus.json drifted for months between hand
+# refreshes; putting it in the collector's OS list would miscount the fleet.
+htpx              aux

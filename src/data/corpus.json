@@ -3,16 +3,16 @@
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "5cd81e15f38357ecb625042ddc18fbb5ad84cb86"
+    "commit": "bacba86ee5243d2457315dc0889946446d5c866a"
   },
-  "totalPairs": 90,
+  "totalPairs": 99,
   "groupCount": 16,
-  "techniqueCount": 59,
-  "tacticCount": 12,
+  "techniqueCount": 69,
+  "tacticCount": 13,
   "groups": [
     {
       "label": "On-prem AD / Windows",
-      "count": 37
+      "count": 46
     },
     {
       "label": "Cloud IAM (Entra · AWS · GCP)",
@@ -77,6 +77,17 @@
   ],
   "pairs": [
     {
+      "id": "shadow-dump-credaccess",
+      "attack": "/etc/shadow dump (offline hash cracking)",
+      "detection": "Detect /etc/shadow read (auditd read watch, non-auth reader)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1003.008"
+      ]
+    },
+    {
       "id": "account-lockout-defenders",
       "attack": "Account access removal (lock out admins & responders)",
       "detection": "Detect account access removal (admin disable/delete/reset + group removal)",
@@ -110,6 +121,19 @@
       ]
     },
     {
+      "id": "bloodhound-collect",
+      "attack": "BloodHound collection (SharpHound / bloodhound-python)",
+      "detection": "Detect BloodHound collection (4662 directory-read burst; 1644 LDAP)",
+      "group": "On-prem AD / Windows",
+      "phase": "Discovery",
+      "tactic": "TA0007",
+      "techniques": [
+        "T1087.002",
+        "T1069.002",
+        "T1482"
+      ]
+    },
+    {
       "id": "web-service-c2-telegram",
       "attack": "C2 over a legitimate web service (Telegram / Slack / Gist)",
       "detection": "Detect web-service C2 (non-browser process to SaaS API)",
@@ -129,6 +153,17 @@
       "tactic": "TA0006",
       "techniques": [
         "T1187"
+      ]
+    },
+    {
+      "id": "cron-persist",
+      "attack": "Cron persistence (crontab / cron.d callback)",
+      "detection": "Detect cron persistence (auditd watches on cron paths)",
+      "group": "On-prem AD / Windows",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1053.003"
       ]
     },
     {
@@ -286,6 +321,18 @@
       ]
     },
     {
+      "id": "ldap-recon",
+      "attack": "LDAP reconnaissance (raw directory queries)",
+      "detection": "Detect LDAP reconnaissance (4662 targeted reads; 1644 broad filters)",
+      "group": "On-prem AD / Windows",
+      "phase": "Discovery",
+      "tactic": "TA0007",
+      "techniques": [
+        "T1087.002",
+        "T1069.002"
+      ]
+    },
+    {
       "id": "mtls-c2-sliver",
       "attack": "Mutual-TLS C2 session (Sliver mTLS implant)",
       "detection": "Detect mTLS C2 — outbound client certificate + TLS fingerprint (JA4 / JA3)",
@@ -440,6 +487,28 @@
       ]
     },
     {
+      "id": "ssh-authkeys-persist",
+      "attack": "SSH authorized_keys persistence (append attacker key)",
+      "detection": "Detect SSH authorized_keys persistence (auditd watch on key files)",
+      "group": "On-prem AD / Windows",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1098.004"
+      ]
+    },
+    {
+      "id": "ssh-key-theft-credaccess",
+      "attack": "SSH private-key theft (harvest keys for lateral movement)",
+      "detection": "Detect SSH private-key theft (auditd read watch, cross-user sweep)",
+      "group": "On-prem AD / Windows",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1552.004"
+      ]
+    },
+    {
       "id": "service-stop-preransom",
       "attack": "Stop business services before impact (unlock files for encryption)",
       "detection": "Detect pre-encryption service kills (7036 stop burst)",
@@ -448,6 +517,39 @@
       "tactic": "TA0040",
       "techniques": [
         "T1489"
+      ]
+    },
+    {
+      "id": "sudo-abuse-privesc",
+      "attack": "Sudo misconfiguration → root (allowed-binary escape)",
+      "detection": "Detect sudo privilege escalation (root shell under a real loginuid)",
+      "group": "On-prem AD / Windows",
+      "phase": "Privilege Escalation",
+      "tactic": "TA0004",
+      "techniques": [
+        "T1548.003"
+      ]
+    },
+    {
+      "id": "suid-abuse-privesc",
+      "attack": "SUID binary abuse → root (setuid escape / planted SUID bit)",
+      "detection": "Detect SUID abuse (setuid-bit change + root shell under a real loginuid)",
+      "group": "On-prem AD / Windows",
+      "phase": "Privilege Escalation",
+      "tactic": "TA0004",
+      "techniques": [
+        "T1548.001"
+      ]
+    },
+    {
+      "id": "systemd-persist",
+      "attack": "Systemd service/timer persistence",
+      "detection": "Detect systemd unit persistence (auditd watches on unit dirs)",
+      "group": "On-prem AD / Windows",
+      "phase": "Persistence",
+      "tactic": "TA0003",
+      "techniques": [
+        "T1543.002"
       ]
     },
     {

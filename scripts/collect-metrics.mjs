@@ -35,10 +35,16 @@ import { execFileSync } from 'node:child_process';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveFleetRoot } from './lib/fleet-root.mjs';
+import { readFleetRepos } from './lib/fleet-repos.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webRepo = resolve(__dirname, '..');
-const core = 'dotfiles-core';
+// The fleet, from scripts/fleet-repos.txt — the same file .github/actions/clone-fleet
+// clones from. That shared list is the point: the repos CI checks out and the repos
+// this script REQUIRES below can no longer drift apart and disagree about whether a
+// build should be red. `os` preserves manifest order, which is this file's iteration
+// order and therefore generated.json's key order.
+const { core, os: osRepos } = readFleetRepos();
 
 
 const { root, via: rootVia } = resolveFleetRoot(webRepo);
@@ -75,19 +81,6 @@ function packageCount(name) {
   }
   return null;
 }
-
-const osRepos = [
-  'dotfiles-MacBook',
-  'dotfiles-Windows',
-  'dotfiles-Offense',
-  'dotfiles-Defense',
-  'dotfiles-Fedora',
-  'dotfiles-Arch',
-  'dotfiles-Debian',
-  'dotfiles-openSUSE',
-  'dotfiles-Alpine',
-  'dotfiles-Gentoo',
-];
 
 // Bail (without overwriting the committed snapshot) unless the WHOLE fleet is
 // present. A partial checkout would silently commit under-counted metrics — the
