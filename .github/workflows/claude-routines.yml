@@ -23,7 +23,7 @@ name: claude-routines
 on:
   schedule:
     # Sat 08:00 UTC — deliberately off the rest of the fleet's routine crons (core Tue,
-    # Defense Wed, htpx Thu, Kali Fri, Windows monthly) so the fleet never draws on the
+    # Defense Wed, htpx Thu, Offense Fri, Windows monthly) so the fleet never draws on the
     # Claude subscription at the same time.
     - cron: "0 8 * * 6"
   workflow_dispatch:
