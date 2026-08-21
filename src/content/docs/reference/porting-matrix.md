@@ -15,18 +15,23 @@ order: 3
   lagging main while matching the newest release is CORRECT, not drift. Mirroring
   main's content here turns a green check red until that work is released.
 
-  To update: fix it in Core, wait for the release that carries the fix, then
-  replace everything below this comment with the file at that tag, keeping the
-  frontmatter and this note:
+  To update: fix it in Core and wait for the release that carries the fix. The
+  fleet-sync bot re-mirrors this page on the same sweep that refreshes the four
+  generated data files, so it normally lands without anyone touching it. To do it
+  by hand — or to check first — run:
 
-    gh api repos/dotgibson/dotfiles-core/contents/PORTING-MATRIX.md \
-      --jq .content --raw-field ref="$(gh api repos/dotgibson/dotfiles-core/releases/latest --jq .tag_name)" \
-      | base64 -d
+    npm run mirror              # rewrite the body from the latest release
+    node scripts/mirror-porting-matrix.mjs --check   # what CI asks
+
+  Both are the same script, which is also what data-freshness.yml's
+  porting-matrix-mirror job runs, so a local run and CI cannot disagree.
 
   This page had silently rotted to a pre-v4.x snapshot once (it named packages
   that don't exist), and was once "fixed" by mirroring main, which broke the
-  check the other way — hence the emphasis on the ref. dotfiles-core's
-  /doc-audit routine cross-checks the two weekly, against the tag.
+  check the other way — hence the emphasis on the ref. It rotted a second time
+  the moment Core cut v4.14.1, which is what prompted automating the copy rather
+  than only checking it. dotfiles-core's /doc-audit routine cross-checks the two
+  weekly, against the tag.
 -->
 
 # Distro Porting Matrix
