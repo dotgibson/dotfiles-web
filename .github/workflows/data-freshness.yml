@@ -12,8 +12,9 @@ name: Data freshness
 # Note the narrow scope of that first job: it compares TWO VERSION STRINGS. Everything
 # else in generated.json — package counts, CI flags, the changelog, fleet.publicRepos,
 # every core.* metric and all nine per-repo drift entries — is unvalidated by it. The
-# derived-data job below covers the other two generated files (corpus.json,
-# coverage.json), which until it existed were checked by nothing at all.
+# derived-data job below covers the other three generated files (corpus.json,
+# coverage.json, snippets.json), each of which was checked by nothing at all until that
+# job reached it.
 on:
   schedule:
     - cron: "17 6 * * 1" # Mondays 06:17 UTC — weekly drift sweep
@@ -23,9 +24,16 @@ on:
       - "src/data/generated.json"
       - "src/data/corpus.json"
       - "src/data/coverage.json"
+      - "src/data/snippets.json"
       - "scripts/collect-metrics.mjs"
       - "scripts/collect-corpus.mjs"
       - "scripts/collect-coverage.mjs"
+      - "scripts/collect-snippets.mjs"
+      # Shared by all four collectors: it alone decides WHERE the fleet is. A change here
+      # can repoint every one of them at once, or make them resolve nothing and take their
+      # lenient no-op path — which is the same silent staleness this workflow exists to
+      # catch, arriving through the one file that names none of the data.
+      - "scripts/lib/fleet-root.mjs"
       - "src/content/docs/reference/porting-matrix.md"
       - ".github/workflows/data-freshness.yml"
 
@@ -166,21 +174,32 @@ jobs:
           diff -u /tmp/core-matrix.md /tmp/web-matrix.md | head -100 || true
           exit 1
 
-  # corpus.json and coverage.json are the OTHER two generated files, and until this job
-  # existed nothing validated them — not the version guard above (it only opens
-  # generated.json), not fleet-sync (it ran neither collector and didn't clone htpx), not
-  # deploy (it runs them but commits nothing back, and its clone list omitted htpx so the
-  # corpus collector silently no-opped every time). They also carried no stamp, so their
-  # staleness was undetectable even in principle. The result was predictable: by 2026-08-08
-  # the committed corpus.json was 5 pairs behind htpx and coverage.json was 24 Sigma rules
-  # behind dotfiles-Defense, while /showcase-accuracy's own instructions told every run to
-  # treat both as CI-verified ground truth.
+  # corpus.json, coverage.json and snippets.json are the OTHER three generated files, and
+  # until this job existed nothing validated them — not the version guard above (it only
+  # opens generated.json), not fleet-sync (it ran neither collector and didn't clone htpx),
+  # not deploy (it runs them but commits nothing back, and its clone list omitted htpx so
+  # the corpus collector silently no-opped every time). They also carried no stamp, so
+  # their staleness was undetectable even in principle. The result was predictable: by
+  # 2026-08-08 the committed corpus.json was 5 pairs behind htpx and coverage.json was 24
+  # Sigma rules behind dotfiles-Defense, while /showcase-accuracy's own instructions told
+  # every run to treat both as CI-verified ground truth.
   #
-  # Unlike the jobs above this one needs the sources, so it clones the two repos those
-  # collectors read and REGENERATES the files, then fails if the result differs from what
-  # is committed. Content-diffing rather than comparing source SHAs is deliberate: an
-  # unrelated commit to htpx must not turn this red, only one that actually moves the
-  # numbers the site publishes.
+  # snippets.json was the last file outside this gate, and it is the one where being
+  # outside it costs most. corpus.json and coverage.json publish NUMBERS; snippets.json
+  # publishes CONTENT — /config renders the baked text as a repo's real configuration,
+  # under its real path, beside a link to that file on GitHub. A stale copy therefore does
+  # not misreport a count, it shows a reader a config that no longer exists and then
+  # invites them to click through to the one that does. It went stale exactly that way
+  # between 2026-08-14 and #129, five of its eight sources drifted and nothing anywhere
+  # said so. It sat outside the gate only because it was unstamped and so uncomparable;
+  # the per-repo generatedFrom stamp it now carries is what makes it gateable, and this
+  # is the gate.
+  #
+  # Unlike the jobs above this one needs the sources, so it clones the eight repos those
+  # three collectors read and REGENERATES the files, then fails if the result differs from
+  # what is committed. Content-diffing rather than comparing source SHAs is deliberate: an
+  # unrelated commit to htpx must not turn this red, only one that actually moves what the
+  # site publishes.
   #
   # On the weekly cron this is an ALARM, not a defect: it runs Monday and fleet-sync runs
   # Tuesday, so a genuine drift shows up here a day before the bot PRs the refresh. On a
@@ -194,7 +213,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Clone the corpus + coverage sources (read-only, shallow)
+      - name: Clone the corpus + coverage + snippets sources (read-only, shallow)
         id: fleet
         env:
           OWNER: ${{ github.repository_owner }}
@@ -202,49 +221,138 @@ jobs:
           set -euo pipefail
           root="${RUNNER_TEMP}/fleet"
           mkdir -p "$root"
-          # Both required. The collectors exit 0 when a source is missing (leaving the
+          # All required. The collectors exit 0 when a source is missing (leaving the
           # committed file untouched), which would make an unrefreshed snapshot look
           # green — so a failed clone has to fail the job here, and --strict below is the
           # second line of defence if one ever gets past this.
-          for r in htpx dotfiles-Defense; do
+          #
+          # Two groups with nothing in common: htpx and dotfiles-Defense are the corpus and
+          # coverage sources, and the six on the second line are the repos
+          # collect-snippets.mjs reads its eight curated files from. Six repos for one file
+          # looks disproportionate until you notice the curated set deliberately spans all
+          # three layers — Core, four OS-native overlays and the Offense role — because that
+          # spread IS what /config exists to show. All eight are public, so these are
+          # anonymous clones: no PAT, no token in a URL.
+          #
+          # The whole set measures ~5s and 53 MB, which is why the snippets sources were
+          # added to this job rather than given one of their own. The clone sets are
+          # disjoint, so a second job would parallelise five seconds at the cost of a second
+          # copy of the checkout, the strip expression and the compare loop below — and two
+          # red X's to read instead of one.
+          #
+          # dotfiles-Offense, NOT dotfiles-Kali. The repo was renamed and github.com still
+          # redirects the old name, so cloning dotfiles-Kali would SUCCEED — into a directory
+          # called dotfiles-Kali, which is not the path collect-snippets.mjs joins. The
+          # failure would surface two steps later as a --strict complaint about a missing
+          # offensive/offensive.zsh, blaming a curated file that is perfectly fine. A
+          # redirect that works is exactly what makes this worth writing down.
+          #
+          # --depth 1 does still write refs/remotes/origin/HEAD, which this job leans on
+          # harder than the corpus/coverage half did: collect-snippets.mjs resolves
+          # defaultBranch from that ref, and the comparison below deliberately does NOT
+          # strip it. A shallow clone that stopped setting it would stamp defaultBranch null
+          # here against "main" in the committed file, turning this job red over clone
+          # mechanics rather than drift.
+          for r in htpx dotfiles-Defense \
+                   dotfiles-core dotfiles-Fedora dotfiles-Arch dotfiles-MacBook \
+                   dotfiles-Alpine dotfiles-Offense; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$root/$r"
           done
           echo "root=$root" >> "$GITHUB_OUTPUT"
 
-      - name: Regenerate the corpus + coverage snapshots
+      - name: Regenerate the corpus + coverage + snippets snapshots
         env:
           DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
         run: |
           set -euo pipefail
+          # Three explicit invocations rather than `npm run data`: that script also runs
+          # collect-metrics.mjs, which needs repos this job deliberately does not clone and
+          # produces a file this job deliberately does not compare — generated.json is the
+          # `check` job's business. There is also no setup-node and no npm ci here, on
+          # purpose: all three collectors import only node: builtins plus
+          # scripts/lib/fleet-root.mjs, so the runner's preinstalled node runs them as they
+          # are, and an install step would cost more than all eight clones and buy nothing.
           node scripts/collect-corpus.mjs --strict
           node scripts/collect-coverage.mjs --strict
+          node scripts/collect-snippets.mjs --strict
 
       - name: Compare the regenerated snapshots against what is committed
         run: |
           set -euo pipefail
 
-          # generatedAt is day-granular and generatedFrom.commit tracks the source repo's
-          # HEAD; both move without the published numbers changing, so neither may turn
-          # the build red on its own. Same trick fleet-sync.yml uses for generated.json's
-          # generatedAt. Only those two are stripped, NOT generatedFrom wholesale:
-          # .repo and .path are hardcoded in the collectors, so they change only when
-          # someone repoints a collector at a different source — a change that must be
-          # committed, and which would otherwise slip through whenever the new source
-          # happened to yield identical numbers.
+          # generatedAt is day-granular and the commit fields track each source repo's HEAD;
+          # both move without the published content changing, so neither may turn the build
+          # red on its own. This is the SAME expression fleet-sync.yml strips with, character
+          # for character, and that is the point rather than a coincidence: the bot deciding
+          # to open a refresh PR and this job deciding to fail the build must never disagree
+          # about what counts as a change, or a green build sits beside an open "the data
+          # drifted" PR — or worse, this stays green on drift the bot will not PR.
+          #
+          # Its type guard and its `?` are what let ONE filter cover both stamp shapes.
+          # corpus/coverage carry a single generatedFrom.{repo,path,commit}, where .repos[]?
+          # matches nothing and the whole thing reduces exactly to the
+          # del(.generatedAt, .generatedFrom.commit) this used to say. snippets.json carries
+          # generatedFrom.{clean,repos{}} instead, because its curated set spans six repos —
+          # six SHAs, each moving on every unrelated commit to its own repo. The old flat
+          # form does not reach them, so leaving it would have failed this job on days when
+          # nothing the site publishes had changed at all.
+          #
+          # Only the commit fields are stripped, NOT generatedFrom wholesale:
+          #   • .repo / .path are hardcoded in the corpus/coverage collectors, so they change
+          #     only when someone repoints a collector at a different source — a change that
+          #     must be committed, and which would otherwise slip through whenever the new
+          #     source happened to yield identical numbers.
+          #   • .clean, .unclean, .branch, .defaultBranch and .dirty are KEPT, for the reason
+          #     fleet-sync keeps them: in a fresh shallow clone they are always true / absent
+          #     / the default branch / false, so they can only differ when the COMMITTED file
+          #     was generated from a feature branch or a dirty working tree. That is the
+          #     local-publish accident of 2026-08-16 in file form — real signal, not noise.
+          strip='del(.generatedAt) | if (.generatedFrom|type)=="object" then del(.generatedFrom.commit, .generatedFrom.repos[]?.commit) else . end'
+
+          # How a diff gets PRINTED, per file. corpus/coverage pretty-print fine — neither
+          # has a line over 100 columns. snippets.json does not: it bakes whole config files
+          # as single JSON strings, so it is 158 lines whose longest runs 8743 columns, and a
+          # one-line drift appears as a "-"/"+" pair that is byte-identical for its first
+          # several hundred columns because the difference sits thousands of columns off the
+          # right edge. A reader sees a diff that looks like a no-op — the gate would fail
+          # while appearing to report nothing. Unfolding each snippet back into real lines
+          # first makes it an ordinary line-oriented diff (8743 columns down to 140), so
+          # head -60 shows the actual changed line in context. The stamp fields are re-emitted
+          # as header lines so a clean / branch / dirty difference stays visible in the output
+          # rather than surviving only in the exit code.
+          snippets_render='
+            "generatedFrom.clean = \(.generatedFrom.clean)",
+            (.generatedFrom.unclean[]? | "generatedFrom.unclean: \(.)"),
+            (.generatedFrom.repos // {} | to_entries[]
+               | "repo \(.key): branch=\(.value.branch) default=\(.value.defaultBranch) dirty=\(.value.dirty)"),
+            (.snippets[]
+               | "=== \(.id)  (\(.shown) of \(.total) lines, truncated=\(.truncated))", .content)
+          '
+
           stale=0
-          for f in corpus coverage; do
-            old="$(git show "HEAD:src/data/${f}.json" | jq 'del(.generatedAt, .generatedFrom.commit)')"
-            new="$(jq 'del(.generatedAt, .generatedFrom.commit)' "src/data/${f}.json")"
+          for f in corpus coverage snippets; do
+            # Where the drift would actually surface, and what it costs a reader. Both are
+            # per-file: /purple publishes the corpus + coverage numbers, /config renders the
+            # baked snippets. Naming the wrong page throws away the only part of this message
+            # that tells someone where to go and look.
+            case "$f" in
+              snippets) page="/config" ; harm="stale config files" ; render="$snippets_render" ;;
+              *)        page="/purple" ; harm="stale counts"       ; render='.' ;;
+            esac
+
+            old="$(git show "HEAD:src/data/${f}.json" | jq "$strip")"
+            new="$(jq "$strip" "src/data/${f}.json")"
             if [ "$old" = "$new" ]; then
               echo "OK — src/data/${f}.json matches its source."
               continue
             fi
             stale=1
             echo "::error::src/data/${f}.json is BEHIND its source repo. The showcase" \
-                 "would publish stale counts on /purple. Check out the fleet as siblings" \
+                 "would publish ${harm} on ${page}. Check out the fleet as siblings" \
                  "and run 'npm run ${f}' (or 'npm run data'), then commit the result."
             echo "--- committed  +++ regenerated (src/data/${f}.json) ---"
-            diff -u <(printf '%s\n' "$old") <(printf '%s\n' "$new") | head -60 || true
+            diff -u <(printf '%s\n' "$old" | jq -r "$render") \
+                    <(printf '%s\n' "$new" | jq -r "$render") | head -60 || true
           done
 
           exit "$stale"
@@ -258,9 +366,10 @@ jobs:
   # refuses such a snapshot.
   #
   # That hook protects exactly ONE machine — it lives in .git/hooks, is untracked, is
-  # skipped when core.hooksPath is set, and is one --no-verify away from irrelevant. This
-  # job is the durable half, and it is the cheap half too: it clones nothing and re-derives
-  # nothing, it just reads the stamp on the file being proposed.
+  # skipped when core.hooksPath is set, and is one --no-verify away from irrelevant. It
+  # also protects exactly ONE FILE: it stages nothing but generated.json. This job is the
+  # durable half on both counts, and it is the cheap half too: it clones nothing and
+  # re-derives nothing, it just reads the stamps on the files being proposed.
   committed-data-provenance:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -273,36 +382,64 @@ jobs:
         run: |
           set -euo pipefail
 
-          # NOT `.generatedFrom.clean // "absent"` — jq's // treats false as empty, so the
-          # single value this job exists to catch would report as "absent" and pass. Ask
-          # whether the key EXISTS, then stringify it.
-          clean="$(jq -r '
-            if (.generatedFrom | type) == "object" and (.generatedFrom | has("clean"))
-            then (.generatedFrom.clean | tostring) else "absent" end
-          ' src/data/generated.json)"
+          # BOTH stamped files, not just generated.json. collect-snippets.mjs stamps the
+          # identical clean/unclean verdict over its own six sources, and snippets.json is
+          # where an absorbed local edit does the most damage: generated.json would publish
+          # a wrong NUMBER, while snippets.json publishes the edited file's CONTENT on
+          # /config as that repo's real configuration.
+          #
+          # It also fails differently, which is why this is symmetry with a point. For
+          # generated.json this job is a backstop — collect-metrics.mjs refuses an unclean
+          # fleet outright and the pre-commit hook refuses the commit. collect-snippets.mjs
+          # only WARNS and writes the file anyway, and the hook does not stage snippets.json
+          # at all, so for that file this job is the ONLY thing that refuses.
+          #
+          # Nor is it redundant with derived-data above, which does also go red on such a
+          # file, since clean/unclean sit inside the payload it compares. That job reports it
+          # as STALENESS and tells you to re-run the collector — advice that, for snippets,
+          # re-absorbs the same dirty tree and changes nothing. Naming the offending repos
+          # and saying settle them is the difference between a diagnosis and a fix.
+          #
+          # Accumulate rather than exiting on the first offender: when the fleet was dirty at
+          # generation time BOTH files are usually contaminated, and reporting one at a time
+          # turns one fix into two round trips through CI.
+          bad=0
+          for f in generated snippets; do
+            # NOT `.generatedFrom.clean // "absent"` — jq's // treats false as empty, so the
+            # single value this job exists to catch would report as "absent" and pass. Ask
+            # whether the key EXISTS, then stringify it.
+            clean="$(jq -r '
+              if (.generatedFrom | type) == "object" and (.generatedFrom | has("clean"))
+              then (.generatedFrom.clean | tostring) else "absent" end
+            ' "src/data/${f}.json")"
 
-          case "$clean" in
-            true)
-              echo "OK — src/data/generated.json was derived from a clean fleet."
-              ;;
-            false)
-              echo "::error::src/data/generated.json was derived from an UNCLEAN fleet, so it" \
-                   "publishes unmerged work as fact. Offending repos:"
-              jq -r '.generatedFrom.unclean[]? | "  • " + .' src/data/generated.json
-              echo "::error::Settle those sibling repos (commit, stash, or return them to their" \
-                   "default branch), re-run 'npm run data' — which now fails rather than" \
-                   "absorbing — and commit the regenerated file."
-              exit 1
-              ;;
-            null)
-              echo "::warning::src/data/generated.json could not fully verify its sources" \
-                   "(a sibling was not a git checkout), so its provenance is incomplete."
-              ;;
-            absent)
-              # A file committed before the stamp existed, or hand-edited. Not worth failing
-              # a build over on its own — the freshness jobs above already catch staleness —
-              # but it means this guard has nothing to check.
-              echo "::warning::src/data/generated.json carries no generatedFrom.clean stamp," \
-                   "so its provenance is unverifiable. Regenerate it with 'npm run data'."
-              ;;
-          esac
+            case "$clean" in
+              true)
+                echo "OK — src/data/${f}.json was derived from a clean fleet."
+                ;;
+              false)
+                bad=1
+                echo "::error::src/data/${f}.json was derived from an UNCLEAN fleet, so it" \
+                     "publishes unmerged work as fact. Offending repos:"
+                jq -r '.generatedFrom.unclean[]? | "  • " + .' "src/data/${f}.json"
+                echo "::error::Settle those sibling repos (commit, stash, or return them to" \
+                     "their default branch), then re-run 'npm run data' and commit the" \
+                     "regenerated file. Settling them is the whole fix: collect-metrics" \
+                     "fails rather than absorbing, but collect-snippets only warns and" \
+                     "writes, so re-running against a still-dirty tree reproduces this."
+                ;;
+              null)
+                echo "::warning::src/data/${f}.json could not fully verify its sources" \
+                     "(a sibling was not a git checkout), so its provenance is incomplete."
+                ;;
+              absent)
+                # A file committed before the stamp existed, or hand-edited. Not worth failing
+                # a build over on its own — the freshness jobs above already catch staleness —
+                # but it means this guard has nothing to check.
+                echo "::warning::src/data/${f}.json carries no generatedFrom.clean stamp," \
+                     "so its provenance is unverifiable. Regenerate it with 'npm run data'."
+                ;;
+            esac
+          done
+
+          exit "$bad"

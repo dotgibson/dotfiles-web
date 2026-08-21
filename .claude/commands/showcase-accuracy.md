@@ -26,7 +26,7 @@ guarantees:
 | `generated.json` | the ten dotfiles repos | **only the Core version string** |
 | `corpus.json` | `htpx/entries/{red,blue}/*.md` | full content, regenerated and diffed |
 | `coverage.json` | `dotfiles-Defense/detections/sigma/**/*.yml` | full content, regenerated and diffed |
-| `snippets.json` | the OS repos' config files | nothing |
+| `snippets.json` | six repos' config files (Core, four OS, Offense) | full content, regenerated and diffed |
 
 - **`generated.json` is the weakly-checked one.** `data-freshness`'s `check` job compares
   `.releases.current` / `.drift.coreVersion` against the latest `dotfiles-core` release
@@ -34,11 +34,18 @@ guarantees:
   `core.*` metric and all nine per-repo `drift` entries are unvalidated — that is exactly
   how a bogus `dotfiles-Windows` drift entry once sat in a file CI called fresh. A
   surprising value here is a **lead to check against the source repo**, not a fact.
-- **`corpus.json` / `coverage.json` are content-gated** by `data-freshness`'s
-  `derived-data` job (it clones `htpx` + `dotfiles-Defense`, re-runs the collectors, and
-  fails on any difference) and refreshed weekly by `fleet-sync`. Both carry a
-  `generatedAt` date and a `generatedFrom.commit` — **read the stamp**; if it predates
-  recent activity in the source repo, say so rather than certifying the numbers.
+- **`corpus.json` / `coverage.json` / `snippets.json` are content-gated** by
+  `data-freshness`'s `derived-data` job (it clones all eight source repos, re-runs the
+  three collectors, and fails on any difference) and refreshed weekly by `fleet-sync`.
+  All three carry a `generatedAt` date — **read the stamp**; if it predates recent
+  activity in the source repo, say so rather than certifying the numbers.
+  - The stamp shapes differ. `corpus.json` / `coverage.json` carry a flat
+    `generatedFrom.commit` for their single source. `snippets.json` spans six repos, so
+    its SHAs are per-repo under `generatedFrom.repos.<name>.commit`, alongside a
+    `generatedFrom.clean` verdict — looking for a top-level `.commit` there finds
+    nothing and proves nothing.
+  - `snippets.json` was outside this gate until #149, and went stale that way once
+    already. Treat a `generatedAt` predating that as unverified regardless of the gate.
 - **Re-derive when a number looks wrong.** The sources are named in the table above and
   are checked out as siblings, so a count can always be confirmed rather than assumed.
 - The drift this routine catches is in the **hand-written prose / components**

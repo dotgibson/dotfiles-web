@@ -170,17 +170,23 @@ of them is harmless:
 
 So the lenient path is fine for looking, and is not a publish path. `fleet-sync.yml` runs all four weekly and opens a PR when the
 output drifts; `data-freshness.yml` fails CI when the committed `corpus.json` /
-`coverage.json` no longer match their sources, or when `generated.json`'s Core version
-is behind the latest `dotfiles-core` release.
+`coverage.json` / `snippets.json` no longer match their sources, or when
+`generated.json`'s Core version is behind the latest `dotfiles-core` release.
 
 Because the lenient path still *writes* (with a warning), the thing that actually
 publishes — the commit — is guarded in two places, both reading the
-`generatedFrom.clean` verdict that `collect-metrics.mjs` stamps into the file:
+`generatedFrom.clean` verdict that `collect-metrics.mjs` and `collect-snippets.mjs`
+stamp into their files. The two guards do **not** cover the same ground:
 
-| guard | scope | installed by |
-| --- | --- | --- |
-| `pre-commit` hook | one machine | `npm install` (or `npm run hooks:install`) |
-| `committed-data-provenance` | every PR, every machine | `data-freshness.yml` |
+| guard | scope | files | installed by |
+| --- | --- | --- | --- |
+| `pre-commit` hook | one machine | `generated.json` only | `npm install` (or `npm run hooks:install`) |
+| `committed-data-provenance` | every PR, every machine | `generated.json` + `snippets.json` | `data-freshness.yml` |
+
+That gap matters most for `snippets.json`, because `collect-snippets.mjs` only *warns*
+on an unclean fleet and writes anyway — unlike `collect-metrics.mjs`, which refuses. So
+CI is the only thing that stops an absorbed local edit from being published on `/config`
+as a repo's real configuration.
 
 The hook follows the same rules as `dotfiles-core`'s core guard: it never clobbers an
 existing `pre-commit`, and it *skips* — loudly — when `core.hooksPath` is set, since
