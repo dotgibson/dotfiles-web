@@ -8,8 +8,10 @@ name: fleet-sync
 # fresh clones of the fleet and opens a PR when the numbers/changelog have drifted;
 # merging it triggers deploy.yml to rebuild the site. workflow_dispatch refreshes on demand,
 # a `core-release` repository_dispatch from dotfiles-core runs it the moment a new Core
-# release ships, and an hourly poll catches a release whose dispatch never arrived — so the
-# committed generated.json tracks the tag without a week's cron lag.
+# release ships, and an hourly poll catches anything neither of those covers — a release
+# whose dispatch never arrived, and any other movement in the fleet the four collectors
+# read — so the committed data tracks the fleet without a week's cron lag. What that poll
+# does and does not notice is the whole subject of the `precheck` job's note below.
 #
 # AUTH — why not the built-in GITHUB_TOKEN: a branch pushed / PR opened with the default
 # GITHUB_TOKEN does NOT trigger `pull_request` (or `push`) workflows — GitHub's recursion
@@ -26,8 +28,8 @@ name: fleet-sync
 on:
   schedule:
     - cron: "0 8 * * 2" # Tuesdays 08:00 UTC — full sweep of the whole fleet
-    # Hourly backstop. Costs one API call unless Core has actually moved past the
-    # committed data — see the `precheck` job, which gates the expensive half.
+    # Hourly backstop. Costs thirteen API calls and no clones unless the fleet has actually
+    # moved past the committed data — see the `precheck` job, which gates the expensive half.
     - cron: "41 * * * *"
   workflow_dispatch:
   # dotfiles-core POSTs this the instant it publishes a release, so the COMMITTED
@@ -50,9 +52,53 @@ permissions:
   contents: read
 
 jobs:
-  # Cheap gate in front of the ten-repo clone below. Every trigger EXCEPT the hourly
-  # cron is a deliberate "go and look" and passes straight through; the poll alone has
-  # to justify itself, with one API call and no checkout of the fleet.
+  # Cheap gate in front of the twelve-repo clone below. Every trigger EXCEPT the hourly
+  # cron is a deliberate "go and look" and passes straight through; the poll alone has to
+  # justify itself, with thirteen API calls and no checkout of the fleet.
+  #
+  # WHAT THE POLL ASKS, and why it changed (#168). It used to ask ONE question — is the
+  # committed Core version behind the latest dotfiles-core release? — so it fired only when
+  # Core cut a release. Everything else the four collectors read was invisible to it: an
+  # Unreleased entry in Core's changelog, any OS repo's CHANGELOG.md / packages.txt /
+  # Brewfile / core.lock, new htpx corpus entries, new Sigma rules in dotfiles-Defense, an
+  # edited curated snippet file. That was a minor inefficiency until #165 gated
+  # generated.json on CONTENT rather than on a version string; after it, this gate decides
+  # how long `main` stays red. Observed the hour #165 merged: Core gained an Unreleased
+  # entry and htpx gained corpus entries while both version strings stayed v4.14.0, so every
+  # poll until Tuesday would have said "level" while Monday's data-freshness cron ran red on
+  # drift no bot would PR — corrected by hand in #167, which is precisely the manual step
+  # this bot exists to remove. The asymmetry was the actual defect: data-freshness
+  # regenerates against the fleet and fails on ANY content difference, while this gate
+  # decided whether to even look from ONE version string. The job that fails the build and
+  # the bot that fixes it were asking different questions.
+  #
+  # So it now asks TWO, and refreshes if EITHER fires:
+  #   1. is the committed Core version behind the latest release?   (one API call)
+  #   2. has any repo in scripts/fleet-repos.txt moved past the SHA the committed data was
+  #      generated from?                                            (twelve API calls)
+  #
+  # Neither subsumes the other, which is why both are kept. releases.current is derived from
+  # Core's CHANGELOG.md headings rather than from the releases API (deriveReleases() in
+  # collect-metrics.mjs), so a release cut on an already-committed commit moves no head SHA
+  # and only (1) sees it; everything in the list above moves a head SHA without touching a
+  # version string and only (2) sees it. The same reasoning keeps data-freshness.yml's
+  # `check` job beside its `derived-data` job.
+  #
+  # (2) reads the per-repo `generatedFrom` stamps that #148 put in the committed files, so
+  # it needs no new data — the SHA each snapshot was built from is already there.
+  #
+  # AND A MARKER, without which (2) would be worse than the bug it fixes. Those stamps only
+  # advance when a refresh PR MERGES: on the no-drift path the metrics job runs
+  # `git checkout --` and reverts all four files, and scripts/data-strip.jq deliberately
+  # strips .commit so a SHA-only move is not drift. So a fleet commit that changes nothing
+  # this site publishes — a README typo in dotfiles-Arch — leaves live != committed
+  # PERMANENTLY, and (2) on its own would clone twelve repos (~11s, 95 MB) every hour
+  # forever. The metrics job therefore records a tiny Actions-cache entry keyed on the
+  # fingerprint of a fleet state it swept and found in step, and this gate stands down on a
+  # state that already has one: a content-neutral fleet commit costs exactly ONE sweep
+  # instead of one an hour. The latest Core tag is folded into the fingerprint so a newly
+  # cut release re-arms the sweep even when no head moved. An unused cache entry is evicted
+  # after 7 days, which costs at most one extra sweep a week — and a hit resets that clock.
   precheck:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -61,10 +107,125 @@ jobs:
       pull-requests: read # read the open-PR guard below
     outputs:
       run: ${{ steps.gate.outputs.run }}
+      # Handed to the metrics job, which records the marker described above. Empty when the
+      # fleet could not be fingerprinted, which is how that job knows not to record one.
+      fingerprint: ${{ steps.fingerprint.outputs.fingerprint }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false # this job never pushes
+
+      # Computed on EVERY trigger, not just the poll, so the weekly sweep and the
+      # core-release dispatch also leave a marker behind. The poll that follows one of them
+      # is then a lookup rather than a re-clone of a fleet that was just swept.
+      - name: Fingerprint the fleet
+        id: fingerprint
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+
+          # The repo list comes from scripts/fleet-repos.txt through the same parser
+          # collect-metrics.mjs uses — NOT an inline list, which
+          # scripts/verify-fleet-manifest.mjs bans and should keep banning. No setup-node and
+          # no npm ci, for the reason data-freshness.yml gives for the collectors: the module
+          # imports only node: builtins, so the runner's preinstalled node runs it as it is.
+          mapfile -t repos < <(node -e \
+            "import('./scripts/lib/fleet-repos.mjs').then(m => console.log(m.readFleetRepos().all.join('\n')))")
+          # `mapfile` cannot fail on a process substitution that did, so a broken import
+          # would leave an EMPTY fleet here — and an empty fleet has nothing that moved, so
+          # this gate would report "level" every hour forever and the poll would be silently
+          # dead in exactly the way #168 describes. Fail loudly instead.
+          if [ "${#repos[@]}" -eq 0 ]; then
+            echo "::error::could not read the fleet from scripts/fleet-repos.txt"
+            exit 1
+          fi
+
+          latest="$(gh api "repos/${OWNER}/dotfiles-core/releases/latest" \
+            --jq '.tag_name' 2>/dev/null || true)"
+          if [ -z "${latest:-}" ] || [ "${latest}" = "null" ]; then
+            # No longer fatal to the poll, as it was when the release tag was the ONLY
+            # question: condition (2) below stands on its own, so an unreachable releases
+            # endpoint costs this run condition (1) rather than the whole gate.
+            echo "::warning::could not resolve the latest dotfiles-core release tag —" \
+                 "polling on fleet movement alone this run"
+            latest=""
+          fi
+
+          # The default-branch head of each repo, one call each, no clones. `commits?per_page=1`
+          # rather than a branch lookup because it needs no second call to learn what the
+          # default branch is called.
+          : >"$RUNNER_TEMP/heads"
+          resolved=yes
+          for r in "${repos[@]}"; do
+            sha="$(gh api "repos/${OWNER}/${r}/commits?per_page=1" --jq '.[0].sha' 2>/dev/null || true)"
+            if [ -z "${sha:-}" ] || [ "${sha}" = "null" ]; then
+              echo "::warning::could not resolve the head of ${OWNER}/${r}"
+              resolved=no
+              continue
+            fi
+            printf '%s=%s\n' "$r" "$sha" >>"$RUNNER_TEMP/heads"
+          done
+
+          # What the committed data was generated FROM. One expression over all four files,
+          # tolerating every stamp shape the way scripts/data-strip.jq has to: generated.json
+          # and snippets.json carry generatedFrom.repos{} (eleven and six), corpus.json and
+          # coverage.json a single generatedFrom.{repo,commit}, and snippets.json's has also
+          # been the bare STRING "sibling repos" — against which an unguarded field access is
+          # a hard jq error (exit 5), which under `set -e` would break this gate outright.
+          # generated.json is read LAST so its eleven win a duplicate key; corpus.json is the
+          # only source of htpx's. Eleven plus htpx is exactly the manifest's twelve.
+          jq -s '
+            map(if (.generatedFrom | type) == "object" then .generatedFrom else {} end)
+            | map(((.repos // {}) | to_entries | map({key: .key, value: (.value.commit // "")}))
+                  + (if .repo then [{key: .repo, value: (.commit // "")}] else [] end))
+            | add | from_entries
+          ' src/data/snippets.json src/data/coverage.json \
+            src/data/corpus.json src/data/generated.json >"$RUNNER_TEMP/stamps.json"
+
+          moved=""
+          while IFS='=' read -r r sha; do
+            [ -n "$r" ] || continue
+            was="$(jq -r --arg r "$r" '.[$r] // ""' "$RUNNER_TEMP/stamps.json")"
+            # A repo with no committed stamp at all counts as moved — the same fail-open call
+            # the version comparison makes for a snapshot that cannot say what it documents.
+            [ "$sha" = "$was" ] || moved="${moved:+$moved }$r"
+          done <"$RUNNER_TEMP/heads"
+
+          # The fingerprint is over the fleet's STATE, not over what this run concluded about
+          # it: the twelve heads plus the release tag. Sorted, so reordering
+          # scripts/fleet-repos.txt cannot invalidate every marker. Left empty when any head
+          # is unknown — a partial fingerprint would mark a state that was never fully seen.
+          fp=""
+          if [ "$resolved" = yes ]; then
+            fp="$( { printf 'release=%s\n' "${latest:-<none>}"; sort "$RUNNER_TEMP/heads"; } \
+                   | sha256sum | cut -d' ' -f1 )"
+          fi
+
+          echo "latest dotfiles-core release : ${latest:-<unresolved>}"
+          echo "fleet repos that have moved  : ${moved:-<none>}"
+          echo "fingerprint                  : ${fp:-<unresolved>}"
+
+          {
+            echo "latest=${latest}"
+            echo "moved=${moved}"
+            echo "resolved=${resolved}"
+            echo "fingerprint=${fp}"
+          } >>"$GITHUB_OUTPUT"
+
+      # lookup-only: nothing is downloaded and nothing is written, this only asks whether an
+      # entry exists. `path` is required by the action even so — the file itself is written
+      # by the metrics job, at the end of a sweep that found the data in step.
+      - name: Has this exact fleet state already been swept?
+        id: marker
+        if: steps.fingerprint.outputs.fingerprint != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .fleet-swept
+          key: fleet-swept-${{ steps.fingerprint.outputs.fingerprint }}
+          lookup-only: true
+
       - name: Decide whether a full refresh is warranted
         id: gate
         env:
@@ -76,6 +237,12 @@ jobs:
           # github.event.schedule carries the cron line that fired, which is how the
           # hourly poll is told apart from the weekly sweep. Keep in step with `on:`.
           IS_POLL: ${{ github.event_name == 'schedule' && github.event.schedule == '41 * * * *' }}
+          LATEST: ${{ steps.fingerprint.outputs.latest }}
+          MOVED: ${{ steps.fingerprint.outputs.moved }}
+          RESOLVED: ${{ steps.fingerprint.outputs.resolved }}
+          # Empty rather than false when the step above was skipped, which is the
+          # unresolvable case the gate returns on before ever reading this.
+          SWEPT: ${{ steps.marker.outputs.cache-hit }}
         run: |
           set -euo pipefail
 
@@ -85,41 +252,67 @@ jobs:
             exit 0
           fi
 
-          # Same question data-freshness.yml asks, asked hourly instead of weekly: is the
-          # committed snapshot behind the latest Core release? Normalize identically (strip
-          # a leading v) so the two guards can never disagree about what "level" means.
-          latest="$(gh api "repos/${OWNER}/dotfiles-core/releases/latest" \
-            --jq '.tag_name' 2>/dev/null || true)"
-          if [ -z "${latest:-}" ] || [ "${latest}" = "null" ]; then
-            echo "::warning::could not resolve the latest dotfiles-core release tag — skipping this poll"
+          # A fleet this run could not fully fingerprint is one it cannot say anything about,
+          # so the poll stands down and the Tuesday sweep stays the backstop — the same call
+          # this gate has always made when it could not resolve what it needed.
+          if [ "${RESOLVED}" != "yes" ]; then
             echo "run=false" >>"$GITHUB_OUTPUT"
+            echo "⚠️ could not fingerprint the whole fleet — skipping this poll" >>"$GITHUB_STEP_SUMMARY"
             exit 0
           fi
+
+          # (1) Is the committed snapshot behind the latest Core release? The same question
+          # data-freshness.yml's `check` job asks, asked hourly instead of weekly. Normalize
+          # identically (strip a leading v) so the two guards can never disagree about what
+          # "level" means. An absent stamp normalizes to empty, never matches a real tag, and
+          # so refreshes — the right call for a snapshot that can't say what it documents.
           committed="$(jq -r '.releases.current // .drift.coreVersion // empty' src/data/generated.json)"
           norm() { printf '%s' "${1#v}"; }
+          behind=no
+          if [ -n "${LATEST}" ] && [ "$(norm "$LATEST")" != "$(norm "${committed:-}")" ]; then
+            behind=yes
+          fi
 
-          echo "latest dotfiles-core release : ${latest}"
+          echo "latest dotfiles-core release : ${LATEST:-<unresolved>}"
           echo "committed snapshot           : ${committed:-<none>}"
+          echo "fleet repos that have moved  : ${MOVED:-<none>}"
 
-          # An absent stamp normalizes to empty, never matches a real tag, and so refreshes
-          # — the right call for a snapshot that can't say what it documents.
-          if [ "$(norm "$latest")" = "$(norm "${committed:-}")" ]; then
+          if [ "$behind" = no ] && [ -z "${MOVED}" ]; then
             echo "run=false" >>"$GITHUB_OUTPUT"
-            echo "✅ site data is level with \`${latest}\`" >>"$GITHUB_STEP_SUMMARY"
+            echo "✅ site data is level with \`${LATEST}\`, and no fleet repo has moved past" \
+                 "the commits it was generated from" >>"$GITHUB_STEP_SUMMARY"
             exit 0
           fi
 
-          # The fix may already be sitting in review. Re-cloning ten repos every hour to
+          # Already looked, at this exact fleet state, and found the data in step. This
+          # covers the version condition as well as the moved-repo one, deliberately:
+          # re-cloning an unchanged fleet cannot fix a version mismatch either, and without
+          # this that corner has the same fire-every-hour behaviour — a release whose
+          # changelog entry never landed would poll forever and PR nothing.
+          if [ "${SWEPT}" = "true" ]; then
+            echo "run=false" >>"$GITHUB_OUTPUT"
+            echo "🗂️ this fleet state was already swept and found in step" >>"$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # The fix may already be sitting in review. Re-cloning twelve repos every hour to
           # force-push a branch that is already correct helps nobody — the weekly sweep and
           # any manual dispatch still update an open PR, they just skip this guard.
           if [ -n "$(gh pr list --repo "${OWNER}/${REPO}" --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
             echo "run=false" >>"$GITHUB_OUTPUT"
-            echo "⏸️ behind \`${latest}\`, but a refresh PR is already open on \`${BRANCH}\`" >>"$GITHUB_STEP_SUMMARY"
+            echo "⏸️ a refresh is warranted, but one is already open on \`${BRANCH}\`" >>"$GITHUB_STEP_SUMMARY"
             exit 0
           fi
 
           echo "run=true" >>"$GITHUB_OUTPUT"
-          echo "🔄 site data is behind \`${latest}\` — refreshing" >>"$GITHUB_STEP_SUMMARY"
+          # Both reasons are reported when both hold: a Core release usually moves heads too,
+          # and a summary naming only one of them reads as though the other did not apply.
+          if [ "$behind" = yes ]; then
+            echo "🔄 site data is behind \`${LATEST}\` — refreshing" >>"$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -n "${MOVED}" ]; then
+            echo "🔄 moved past the committed snapshot: \`${MOVED}\` — refreshing" >>"$GITHUB_STEP_SUMMARY"
+          fi
 
   metrics:
     needs: precheck
@@ -187,6 +380,7 @@ jobs:
         working-directory: dotfiles-web
         run: npm run data
       - name: Open a PR if the derived data drifted
+        id: refresh
         working-directory: dotfiles-web
         env:
           # Prefer the App token, then the legacy PAT, then the built-in token. The first two
@@ -221,6 +415,11 @@ jobs:
             new="$(jq -f scripts/data-strip.jq "src/data/${f}.json")"
             [ "$old" = "$new" ] || content_changed=yes
           done
+          # Reported as a step output, not just a summary line, because the marker step below
+          # keys on it: a fleet state is only worth remembering as swept if the sweep actually
+          # found the data in step. Set on BOTH paths so the step's absence and a `yes` can
+          # never be confused.
+          echo "drift=${content_changed}" >>"$GITHUB_OUTPUT"
           if [ "$content_changed" = no ]; then
             git checkout -- src/data/generated.json src/data/snippets.json \
                             src/data/corpus.json src/data/coverage.json
@@ -244,3 +443,29 @@ jobs:
               --body "Automated by the fleet-sync bot. The derived site data (\`generated.json\` — changelog + by-the-numbers; \`snippets.json\` — the Config explorer's baked source files; \`corpus.json\` — the red/blue corpus from htpx; \`coverage.json\` — Sigma detection coverage from dotfiles-Defense) was behind the fleet; this regenerates all four via \`npm run data\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
           fi
           echo "📊 opened/updated PR on \`$BRANCH\`" >> "$GITHUB_STEP_SUMMARY"
+
+      # Remember that THIS fleet state has been swept and the data was in step, so the
+      # hourly poll stops re-cloning it. See the long note on the precheck job for why this
+      # is load-bearing rather than an optimisation: the committed generatedFrom stamps only
+      # advance when a refresh PR merges, so without a marker a fleet commit that moved no
+      # published content would leave the poll's comparison unequal forever and it would
+      # clone twelve repos every hour to rediscover the same nothing.
+      #
+      # Deliberately NOT written when drift WAS found: that window is covered by the
+      # precheck's open-PR guard, and a refresh PR someone closes unmerged should let the
+      # next poll open it again rather than be silenced by a marker.
+      #
+      # The file goes at the workspace root, not in the checkout — this job checks the site
+      # out into dotfiles-web/ so the fleet can sit beside it, and the cache action resolves
+      # `path` against the workspace. Its contents are irrelevant; the KEY is the record.
+      - name: Record this fleet state as swept
+        if: steps.refresh.outputs.drift == 'no' && needs.precheck.outputs.fingerprint != ''
+        env:
+          FINGERPRINT: ${{ needs.precheck.outputs.fingerprint }}
+        run: printf '%s\n' "$FINGERPRINT" > "$GITHUB_WORKSPACE/.fleet-swept"
+      - name: Save the swept marker
+        if: steps.refresh.outputs.drift == 'no' && needs.precheck.outputs.fingerprint != ''
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .fleet-swept
+          key: fleet-swept-${{ needs.precheck.outputs.fingerprint }}
