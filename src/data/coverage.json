@@ -3,12 +3,12 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "1e251ae756f09cf01b93f5b72eaaca2b97bbd2b4"
+    "commit": "72e36760429678e5bb77ef590dfe9e19357d2621"
   },
   "ruleCount": 94,
   "documentCount": 111,
   "techniqueCount": 70,
-  "tacticCount": 10,
+  "tacticCount": 6,
   "logsourceCount": 24,
   "tactics": [
     {
@@ -24,34 +24,10 @@
       "rules": 34
     },
     {
-      "id": "TA0004",
-      "name": "Privilege Escalation",
-      "techniques": 7,
-      "rules": 9
-    },
-    {
-      "id": "TA0005",
-      "name": "Defense Evasion",
-      "techniques": 7,
-      "rules": 11
-    },
-    {
-      "id": "TA0006",
-      "name": "Credential Access",
-      "techniques": 15,
-      "rules": 17
-    },
-    {
       "id": "TA0007",
       "name": "Discovery",
       "techniques": 13,
       "rules": 5
-    },
-    {
-      "id": "TA0008",
-      "name": "Lateral Movement",
-      "techniques": 9,
-      "rules": 7
     },
     {
       "id": "TA0009",
@@ -519,32 +495,6 @@
       ]
     },
     {
-      "id": "T1562.001",
-      "rules": 6,
-      "ruleNames": [
-        "cloudflare_waf_rule_disabled",
-        "github_branch_protection_tamper",
-        "gitlab_protected_branch_tamper",
-        "npm_publish_2fa_disabled",
-        "slack_2fa_enforcement_disabled",
-        "vault_audit_device_disabled"
-      ]
-    },
-    {
-      "id": "T1562.007",
-      "rules": 1,
-      "ruleNames": [
-        "snowflake_network_policy_change"
-      ]
-    },
-    {
-      "id": "T1562.008",
-      "rules": 1,
-      "ruleNames": [
-        "gcp_audit_log_sink_deleted"
-      ]
-    },
-    {
       "id": "T1563.002",
       "rules": 1,
       "ruleNames": [
@@ -606,6 +556,32 @@
       "ruleNames": [
         "adcs_esc1_san_mismatch_4886"
       ]
+    },
+    {
+      "id": "T1685",
+      "rules": 5,
+      "ruleNames": [
+        "github_branch_protection_tamper",
+        "gitlab_protected_branch_tamper",
+        "npm_publish_2fa_disabled",
+        "slack_2fa_enforcement_disabled",
+        "vault_audit_device_disabled"
+      ]
+    },
+    {
+      "id": "T1685.002",
+      "rules": 1,
+      "ruleNames": [
+        "gcp_audit_log_sink_deleted"
+      ]
+    },
+    {
+      "id": "T1686.001",
+      "rules": 2,
+      "ruleNames": [
+        "cloudflare_waf_rule_disabled",
+        "snowflake_network_policy_change"
+      ]
     }
   ],
   "logsources": [
@@ -640,7 +616,7 @@
       "rules": 10
     },
     {
-      "dir": "defense_evasion",
+      "dir": "defense_impairment",
       "products": [
         "windows"
       ],
