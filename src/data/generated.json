@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "f7adbc4bf9b4a6d8f3ffab0d524543c04706bae2",
+        "commit": "0fe706ba855ddb720c694543728948ab20d8b5d7",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "ca1a7a15c901c48b964a1225c814de20d5725fcb",
+        "commit": "cc8bef42671e05cea9ee6a1a3ac27ee99747c419",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -28,7 +28,7 @@
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "72e36760429678e5bb77ef590dfe9e19357d2621",
+        "commit": "f7ec606582067ac381a70f514aa80ca4747800fd",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,21 +76,21 @@
     "layers": 3
   },
   "releases": {
-    "current": "v4.14.0",
+    "current": "v4.14.1",
     "channels": [
+      "v4.14.1",
       "v4.14.0",
       "v4.13.2",
-      "v4.13.1",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "4.14.0",
+    "coreVersion": "4.14.1",
     "repos": {
       "dotfiles-MacBook": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -101,49 +101,49 @@
       "dotfiles-Offense": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Defense": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Fedora": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Arch": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Debian": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-openSUSE": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Alpine": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Gentoo": {
         "ref": "v4.14.0",
         "carried": "4.14.0",
-        "status": "current"
+        "status": "behind"
       }
     }
   },
   "core": {
-    "version": "4.14.0",
+    "version": "4.14.1",
     "sourcedModules": 13,
-    "zshLoc": 4521,
+    "zshLoc": 4643,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 28
@@ -174,8 +174,18 @@
   "changelog": [
     {
       "repo": "dotfiles-core",
-      "version": "Unreleased",
+      "version": "v4.14.1",
+      "date": "2026-08-21",
       "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "CI can now run provision() for real, with the network stubbed. (#575) --links-only returns before provision() is entered, so package installation, retries, upstream installers, repo/key setup and every failure path around them were executed by no CI job anywhere in the fleet. That is how a leaked RETURN trap shipped green through review in two repos: it aborted every fresh-box run after installing everything and before wire_links, and the one job that looks at bootstrap.sh never reached the function it was in (dotgibson/dotfiles-Debian#2). Adds scripts/provision-shim.sh — a new file every OS repo receives in core/scripts/ on its next sync — which builds a PATH shim of logging no-ops for the package managers, downloaders and privilege tools a provision() reaches for, plus an opt-in provision-stub job that runs the real bootstrap behind it. Most of that bug class is control flow rather than I/O, so it executes without installing a package or touching the network. sudo/doas are not swallowed — they drop the escalation and re-exec the tail, so sudo apt-get install x still reaches the apt-get stub and is still logged. git is deliberately not stubbed, since bootstraps clone real things the caller pre-seeds and stubbing it would mask wiring bugs this job should catch. The job asserts more than a zero exit: the bug it exists for aborted after provision() did its work, so it also checks the symlink graph survived on the far side, and prints the intercepted command log. Opt-in, so nothing changes for a repo that does not enable the job.",
+              "kind": "fix"
+            }
+          ]
+        },
         {
           "category": "Fixed",
           "items": [
@@ -194,6 +204,10 @@
             {
               "text": "Footnote ²¹ claimed Kali installs ast-grep, and the ast-grep row's ³ rested on that claim. (#569) The note carved out an explicit exception — \"Kali does install ast-grep (bootstrap.sh, cargo best-effort), which is why that one cell keeps its ³ while its Gentoo neighbour does not\" — which is why the Kali column kept a cargo³ there after ouch, jujutsu and lazygit lost theirs in the same pass. There is no such install. dotfiles-Offense's bootstrap.sh contains no ast-grep at all, and its only two cargo mentions are the comment and export that put ~/.cargo/bin on PATH for tools an operator added by hand — which is precisely the ²¹ contract, not a ³ one. This mattered beyond the prose because ³ means \"bootstrap.sh installs it best-effort\", so a ³ with no installer behind it reads as \"you will get this\" and delivers nothing — the exact overclaim ²¹ was written to correct, surviving inside ²¹ itself for one tool. The ast-grep Kali cell is now cargo²¹, matching ouch and jujutsu in that column, and the list of cells that previously overclaimed a ³ gains ast-grep on Kali alongside Gentoo.",
               "kind": "fix"
+            },
+            {
+              "text": "bootstrap-test and lint disagreed about the same bootstrap.sh, and only one of them applied the fleet's shellcheck exclusions. (#517) lint-call.yml set SHELLCHECK_OPTS with Core's curated SC1090,SC1091,SC2015,SC2088 exclusions; bootstrap-test.yml lints the same file and set nothing. So the four codes Core has explicitly decided are not defects still blocked — just in the other gate, and the same commit could be green in lint and red in bootstrap. The failure mode is nastier than the disagreement itself, because the two gates run on different triggers: lint on every push and PR, bootstrap only when bootstrap.sh or core/ changes. A repo stays green for weeks, then a bootstrap-touching PR reds with an error naming a rule the fleet documented as excluded. The natural reading is \"the exclusion list is wrong\" and the natural fix is to weaken the shell script to satisfy it — which is what happened in dotfiles-Gentoo before anyone noticed the gates simply disagreed. The workaround had already spread by the time this was found: dotfiles-Arch, -Debian and -Fedora each carry an independent copy of Core's exclusion list in their own .shellcheckrc, none aware of the others, while -Offense and -openSUSE have a .shellcheckrc without it and -MacBook, -Alpine, -Defense and -Gentoo have none at all. Setting it in the workflow fixes all nine at once, including the six no per-repo workaround ever reached. Nothing changes colour on merge — all nine bootstrap.sh files pass both invocations today, so this closes a latent trap rather than a live break. GitHub cannot import an env value from one workflow into another, so the literal is necessarily authored twice; scripts/test-core.sh now asserts the two copies are equal, the same shape as the os-repos.txt fallback-array check and for the same reason. Deliberately not done: adding a disable= line to Core's own .shellcheckrc — Core's tree is green without those exclusions, and adding them would weaken its own gate to match a rule written for consumers. The per-repo .shellcheckrc fragmentation is tracked separately in #564.",
+              "kind": "fix"
             }
           ]
         }
@@ -208,6 +222,10 @@
           "category": "Changed",
           "items": [
             {
+              "text": "Seven OS repos stop hand-maintaining the same shell-hook block; Core owns it. (#449) direnv hook zsh, gh completion -s zsh, uv generate-shell-completion zsh and ty generate-shell-completion zsh were duplicated across every os/*.zsh in the fleet — portable zsh with nothing OS-specific in it, maintained once per repo, and already drifted into three variants of one block: Alpine and Gentoo carried only two of the four tools, and one copy suppressed the generator's stderr in its fallback arm where the others did not. So whether your shell completed uv depended on which OS you booted. They now live in Core, and Alpine, Gentoo and the Debian family gain uv/ty completions for free. Split by kind rather than kept together, because the two halves have different constraints. direnv goes to zsh/00-tools.zsh alongside the zoxide/mise/atuin inits: it registers a hook, needs no compinit, and band 00 loads under every CORE_PROFILE — filed under band 45 it would silently stop .envrc files loading on minimal hosts, which is a broken feature rather than a missing convenience. gh/uv/ty go to zsh/45-plugins.zsh immediately after the carapace block: they call compdef, so they must follow compinit, and they must follow carapace so a tool's own completion keeps overriding carapace's bridged one — the order they already ran in at band 80, so this preserves behaviour rather than changing it. All four move, ty included: _cache_eval bails on an absent binary, so a host without the tool pays nothing. One ordering that is easy to lose and now has a test behind it: direnv prepends its hook to precmd_functions/chpwd_functions, and so does mise — whichever is sourced last runs first. The direnv line therefore sits after the mise line, reproducing exactly the order these hooks had while direnv was hooked from band 80. Measured startup cost, because one of these four is not free. Sourcing the cached inits in a compinit-ready shell, 100+ runs each (hyperfine): direnv (14 lines) and gh (212) are together +0.6 ms over a 12.9 ms baseline — noise. uv ships a 6,976-line completion and ty 325, and the pair costs +37 ms. The five repos that already hooked all four have been paying that all along and see no change; Alpine, Gentoo and the Debian family newly pay it, but only on a host that actually has uv installed. That is the price of the fleet agreeing on one answer, and it is worth knowing rather than discovering. Sourcing 7k lines on every shell to serve one <TAB> is the wrong shape long-term — the fix is an fpath autoload rather than a source, filed separately. Note the bench job cannot see any of this: it runs a hermetic sandbox with none of these binaries, so every call is a two-token no-op there. For OS-repo maintainers: nothing to do until you vendor this. After the sync, delete your local copy (VENDORING.md has the list). Running both is harmless in the meantime — direnv's hook guards its own registration, a repeated compdef re-points the same binding, and Core reuses the same cache files, so the transitional window behaves exactly as today.",
+              "kind": "perf"
+            },
+            {
               "text": "nvim plugin pins move forward for five plugins. nui.nvim, nvim-lint, nvim-lspconfig, package-info.nvim and schemastore.nvim advance to the commits lazy.nvim had already resolved on a live box, 2–7 days ahead of the pins Core carried. Every new SHA was verified to exist upstream and to be newer than the one it replaces, and each range was read before promotion: nui.nvim one additive commit (borderless tables, set_data, cell navigation); nvim-lint two (zlint source name, relative artifactLocation.uri in sarif output); nvim-lspconfig twelve, all per-server fixes or additions plus generated docs (vhdl_ls, tsc, symfony_lsp, slang-server, php_lsp, oxc); package-info.nvim one notification fix; schemastore.nvim two catalog refreshes. Nothing renames or removes an API Core calls. Provenance worth recording, because it is the failure mode this repo warns about: these bumps were found as an uncommitted edit to dotfiles-Fedora's vendored core/nvim/ lazy-lock.json. That tree is a copy — the next make sync overwrites it — so the bumps were days from being silently reverted, and would have come back on the next lazy sync to be lost again. They belong here, once, and reach every machine by fan-out.",
               "kind": "perf"
             }
@@ -216,6 +234,14 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "_core_is_wsl — one WSL predicate for the whole fleet, and a gate against the copies coming back. (#449) Six OS repos carried a byte-identical _IS_WSL=0; … probe to gate their Windows-interop niceties. Core had the same fact twice more and neither was reachable from zsh: blib_is_wsl (bash, forks grep, no test seam) and a private copy inside bin/clip. Eight implementations of one predicate, in two languages, drifting independently. zsh/00-tools.zsh now exports _core_is_wsl as a second Core→OS API alongside _cache_eval — fork-free ($(<file), no cat, no grep, because unlike the bootstrap sibling this runs on every interactive shell), lazily memoised into _CORE_IS_WSL so a shell that never asks never pays, and carrying a $CORE_PROC_VERSION test seam. The seam is not decoration: without it the \"this box is not WSL\" case cannot be asserted on a WSL development host and \"this box is WSL\" cannot be asserted on a CI runner, so half the predicate would go untested on every machine. PORTABILITY.md gains the shim row and documents the narrow env-fact exception to its own command -v rule.",
+              "kind": "feature"
+            },
+            {
+              "text": "A gate against portable logic stranded outside Core. (#449) audit-core.sh §5c catches OS-specifics leaking into Core; nothing caught the reverse, which is why the block above went unnoticed long enough to drift three ways — it could only be found by reading two layers side by side. scripts/lib/common.sh gains _core_owned_block_hits, the single definition of \"this repo re-implements something Core owns\", and .github/workflows/lint-call.yml gains a leg that runs it over each caller's repo-owned *.zsh. It flags exact generator invocations rather than tool names, so hooking a tool that exists on one OS and nowhere else — the OS layer's actual job — is never a finding. Unlike the RETURN-trap gate it has no audit-core.sh counterpart, on purpose: Core's own tree contains every pattern it scans for, which is the point. The Core-side guard is the inverse assertion in scripts/test-core.sh — if Core ever loses a block, the gate would be making nine repos delete a feature nobody provides. And it warns in this release and blocks in the next, because unlike that gate it is red-on-arrival by construction: no OS repo can delete its copy until it has vendored the Core that replaces it.",
+              "kind": "fix"
+            },
             {
               "text": "A gate against leaked RETURN traps, for the fleet and for Core's own tree. (#552, #555, #558; refs #512, #461) A bash RETURN trap is a global slot, not a function-scoped one: armed inside a function it survives into the caller's frame and fires a second time on that frame's return, where the local it cleans up is out of scope and set -u makes it fatal. In dotfiles-Debian that aborted provision() after every package had installed but before wire_links ran — a box carrying the whole stack and not one symlink, wearing the costume of a near-complete run (dotgibson/dotfiles-Debian#2). Nothing could see it, and nothing was wrong with the gates that missed it. The broken line is valid bash, so lint-call.yml's shellcheck and bash -n legs both pass it; and bootstrap-test.yml only ever runs --links-only, so no job anywhere in the fleet executes provision() at all. A textual scan is the only thing that catches this class, which is why it is its own leg rather than another SHELLCHECK_OPTS entry. scripts/lib/common.sh gains _core_return_trap_hits, the single definition of the rule. audit-core.sh §5e runs it over Core's own tree (which lint-call.yml never checks out), and lint-call.yml sources it to gate its callers — so a caller repo now fails its required lint check on a leaked trap. Every repo in the fleet was verified green against the rule before release, so nothing reds on arrival. That is eight repos, not nine. dotfiles-MacBook does not call lint-call.yml at all — it carries its own shell lint job in ci.yml — so the leg reaches Alpine, Arch, Debian, Defense, Fedora, Gentoo, Offense and openSUSE, and MacBook is ungated. Its tree is clean today (checked directly, not inferred), and its vendored core/ and SHA-pinned Core workflow refs do advance with the fan-out, so this is a coverage gap rather than drift. Whether MacBook should adopt the reusable gate or grow the leg in its own ci.yml is open. Two notes for anyone writing one of these. The correct form is trap 'trap - RETURN; …' RETURN — disarm first, and keep it first, so an early return inside the body cannot skip it. And when this bug does surface at runtime the reported line number is a decoy: bash attributes a RETURN trap to the last nested function definition in the frame, so Debian's abort blamed _add_vendor_repo, which had nothing to do with it. Grep for the trap, not the line. The pattern is deliberately looser than the one dotfiles-Debian shipped. trap is matched as a word anywhere on the line, because anchoring to line-start misses f() { trap … RETURN; } — the one-line body, and the likeliest shape; against a fixture carrying four broken forms the anchored version catches one. The signal is matched as a token rather than as the last word, so a trailing comment and a two-signal RETURN EXIT are caught too. Whole-line comments are filtered, because Debian's own fix carries three comment lines naming the signal directly above its corrected traps — an unfiltered scanner would red the repo that fixed the bug. Ten fixtures in scripts/test-core.sh pin both halves, plus two assertions that keep lint-call.yml calling the helper instead of growing a second copy of the expression. zsh is out of scope, permanently: it has no RETURN signal at all (trap 'x' RETURN → undefined signal), so the bug cannot exist there.",
               "kind": "fix"
@@ -296,22 +322,6 @@
           "items": [
             {
               "text": "blib_link_role_layer's migration note described a migration that has since happened. It read, in the present tense, that \"the offensive repo hand-rolls <config>/kali/templates\" and instructed a consumer to relocate them and update two shipped docs \"in the same change that adopts the helper\". dotfiles-Offense adopted the helper and did exactly that, so the instruction now describes work that is done — misleading anyone reading the helper to decide what a consumer still owes it. Rewritten as the record of a completed move, keeping the reasoning that matters (why the destination is named for the ROLE rather than the distro, and why neither a compat symlink nor a namespace parameter was the answer). Comment only — no behaviour changes, but it is vendored into all nine consuming repos, so the stale text was live fleet-wide.",
-              "kind": "config"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.1",
-      "date": "2026-08-18",
-      "groups": [
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "The reusable bootstrap-test no longer assumes every caller has an OS-native layer. It asserted ~/.config/zsh/80-os.zsh unconditionally, which is right for the nine OS repos and wrong for a ROLE repo: dotfiles-Offense and dotfiles-Defense wire Core plus a band-85 role stage and deliberately link nothing at band 80, so the shared test red a repo doing exactly the right thing. The check now arms itself on whether the caller ships an os/*.zsh — self-derived, the same way the atuin check is, rather than a new input every role repo would have to remember to pass. Found by dotfiles-Offense as it dropped its OS layer to dotfiles-Debian.",
               "kind": "config"
             }
           ]
@@ -992,38 +1002,6 @@
     }
   ],
   "feed": [
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "PORTING-MATRIX.md: the Gentoo column told two lies, and a third that was bigger than both. Reported by the /os-package-availability routine as dotgibson/dotfiles-Gentoo#85; the OS-layer halves already landed there in dotfiles-Gentoo#98 (gum) and #103 (jj), and this is the matrix catching up. - gum on Gentoo is not app-misc/gum — that atom exists in neither ::gentoo nor GURU, in any category. The cell now reads mise³⁰, gum is struck from ¹²'s GURU list, and ¹² records why an entry there can only ever emerge as a skipped: line — which reads like a keyword mask and invites an accept_keywords \"fix\" that unmasks nothing. That is how it survived in guru_install for months. ³⁰ gains the caveat that gentoo/mise-tools.toml is the --user path only, so a privileged Gentoo bootstrap installs no gum at all. - jujutsu on Gentoo is packaged, as dev-vcs/jj (~amd64, added 2025-12-04, EAPI 8). The cell moves from cargo²¹ to ` dev-vcs/jj²¹ and ⁸ names the trap: the atom is jj; dev-vcs/jujutsu has never existed. Kali's cargo²¹ is unchanged — jj really is still absent from stable Debian/Kali apt. ⁸ also stops reading Gentoo's packages.txt omission as a decline: it is a deliberate placement, because that file is the unconditional emerge and jj must stay skippable by --no-extras. - The ²¹ \"available, not installed\" family was verified against install/packages.txt alone — and Gentoo is the repo that installs most from bootstrap.sh instead, precisely because everything opt-in has to live in the script. So four of the eight Gentoo cells in ²¹'s table read — for tools bootstrap installs: shfmt (go, unconditional), ouch and watchexec (cargo, opt-in extras) and gping (emerged from GURU). Corrected here, along with ⁷, ¹⁹ and ²⁵, which each carried the same claim in prose. ²¹ now says two repos' bootstraps install from this family (Alpine and Gentoo), not one, and records the single-file verification as the root cause so the row does not go stale the same way again. watchexec's Gentoo cell also moves GURU²⁵ → cargo²⁵: GURU carries 2.5.0, but the bootstrap routes around it and builds watchexec-cli` for upstream-latest.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "direnv is installed by six of the fleet's seven package lists and had no row in the matrix at all. (dotgibson/dotfiles-openSUSE#89) The /os-package-availability audit of dotfiles-openSUSE reported it as its one coverage gap rather than drift: direnv appeared in PORTING-MATRIX.md only inside footnote ¹², as one of the Gentoo GURU atoms. So a reader asking \"what is direnv called on Alpine\" found nothing, and the next audit comparing a package list against the table found a name the table did not know. It has a row now, and it sits next to mise rather than in alphabetical order — this table has never been alphabetical, and the two are the same mechanism: both are _cache_eval'd hook generators emitted from os/<distro>.zsh at band 80, and Core's own examples/mise.project.toml calls mise's [env] block \"the direnv replacement\" and its [hooks] block \"the other half of direnv\". Six of the seven cells are a bare direnv, verified 2026-08-21 against each distro's own index: Arch extra 2.37.1-1, Alpine community 2.37.1-r7 (v3.24 — a Go binary, so a native musl build), openSUSE Tumbleweed 2.37.1 with Leap 16.0 and 16.1 both at 2.34.0 through Backports (bp160.1.13 / bp161.1.9, both arches), kali-rolling 2.37.1-1, Ubuntu 24.04 universe 2.32.1-2ubuntu0.24.04.3 and Debian trixie 2.32.1-2+b16. Gentoo is the exception and is GURU-only — app-shells/direnv at 2.37.1, no ::gentoo atom, and dev-util/direnv does not exist — so that cell reads ` app-shells/direnv ¹², where the warning already lived and which therefore needed no edit. New footnote ³² records what makes the row unlike its neighbours, because no existing footnote shape fits it. It is not ²¹'s \"available, not installed\" — six repos install it — and not ¹⁷/¹⁹'s detect-only, because Core does not detect it at all: there is no HAVE_DIRENV, no alias and no core-doctor row. It is the only row in the table wired by the OS layer instead of by Core; the direnv hook zsh that makes it work is emitted by each OS repo's os/<distro>.zsh at band 80. Core's one stake is starship/starship.toml's [direnv] module, which Core switches on (disabled = false — starship ships it off by default) so .envrc state is visible rather than a directory silently waiting on direnv allow. dotfiles-Offense (Kali) is the single fleet gap, and it is structural rather than a judgment about direnv — that repo carries no install/packages.txt and, since band 80 moved to the OS repo underneath it, no os/ layer, so nothing there installs the package or evaluates the hook. One version floor is recorded because it is the only point where a frozen archive touches Core: starship runs direnv status --json, and the --json flag is silently ignored below direnv 2.33.0 — src/modules/direnv.rs says so and parses the text output instead. Every target above clears that floor except dotfiles-Debian's two lanes, both on 2.32.1. It degrades rather than breaks, which is why that repo's install/packages.txt declares no # min:` floor for it.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "feature",
-      "text": "Footnote ¹⁹ said both that Gentoo's bootstrap.sh emerges gping and that it does not. (#568) #565 rewrote the footnote's opening to record that dotfiles-Gentoo really does emerge net-analyzer/gping from GURU in its guru_install pass — and that naming the atom only in a packages.txt comment is a pointer to that call rather than a decline. Its closing sentence was left behind still saying the opposite: \"unlike the ¹² atoms bootstrap.sh does not emerge it, so enable GURU per ¹² and emerge net-analyzer/gping by hand.\" A reader who got to the end of the footnote was told to do by hand what the bootstrap had already done, and the \"unlike the ¹² atoms\" framing inverted the actual relationship — the same rewrite had just added gping to ¹²'s GURU list, so it is one of them. The tail now agrees with the head: GURU-only, no main-tree atom, emerged like the ¹² atoms in the same guru_install pass, nothing left to do by hand. Verified against dotfiles-Gentoo/bootstrap.sh, where net-analyzer/gping is the last atom in that call.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "Footnote ²¹ claimed Kali installs ast-grep, and the ast-grep row's ³ rested on that claim. (#569) The note carved out an explicit exception — \"Kali does install ast-grep (bootstrap.sh, cargo best-effort), which is why that one cell keeps its ³ while its Gentoo neighbour does not\" — which is why the Kali column kept a cargo³ there after ouch, jujutsu and lazygit lost theirs in the same pass. There is no such install. dotfiles-Offense's bootstrap.sh contains no ast-grep at all, and its only two cargo mentions are the comment and export that put ~/.cargo/bin on PATH for tools an operator added by hand — which is precisely the ²¹ contract, not a ³ one. This mattered beyond the prose because ³ means \"bootstrap.sh installs it best-effort\", so a ³ with no installer behind it reads as \"you will get this\" and delivers nothing — the exact overclaim ²¹ was written to correct, surviving inside ²¹ itself for one tool. The ast-grep Kali cell is now cargo²¹, matching ouch and jujutsu in that column, and the list of cells that previously overclaimed a ³ gains ast-grep on Kali alongside Gentoo.",
-      "core": true
-    },
     {
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
@@ -1770,11 +1748,92 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v4.14.1",
+      "date": "2026-08-21",
+      "category": "Added",
+      "kind": "fix",
+      "text": "CI can now run provision() for real, with the network stubbed. (#575) --links-only returns before provision() is entered, so package installation, retries, upstream installers, repo/key setup and every failure path around them were executed by no CI job anywhere in the fleet. That is how a leaked RETURN trap shipped green through review in two repos: it aborted every fresh-box run after installing everything and before wire_links, and the one job that looks at bootstrap.sh never reached the function it was in (dotgibson/dotfiles-Debian#2). Adds scripts/provision-shim.sh — a new file every OS repo receives in core/scripts/ on its next sync — which builds a PATH shim of logging no-ops for the package managers, downloaders and privilege tools a provision() reaches for, plus an opt-in provision-stub job that runs the real bootstrap behind it. Most of that bug class is control flow rather than I/O, so it executes without installing a package or touching the network. sudo/doas are not swallowed — they drop the escalation and re-exec the tail, so sudo apt-get install x still reaches the apt-get stub and is still logged. git is deliberately not stubbed, since bootstraps clone real things the caller pre-seeds and stubbing it would mask wiring bugs this job should catch. The job asserts more than a zero exit: the bug it exists for aborted after provision() did its work, so it also checks the symlink graph survived on the far side, and prints the intercepted command log. Opt-in, so nothing changes for a repo that does not enable the job.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.1",
+      "date": "2026-08-21",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "PORTING-MATRIX.md: the Gentoo column told two lies, and a third that was bigger than both. Reported by the /os-package-availability routine as dotgibson/dotfiles-Gentoo#85; the OS-layer halves already landed there in dotfiles-Gentoo#98 (gum) and #103 (jj), and this is the matrix catching up. - gum on Gentoo is not app-misc/gum — that atom exists in neither ::gentoo nor GURU, in any category. The cell now reads mise³⁰, gum is struck from ¹²'s GURU list, and ¹² records why an entry there can only ever emerge as a skipped: line — which reads like a keyword mask and invites an accept_keywords \"fix\" that unmasks nothing. That is how it survived in guru_install for months. ³⁰ gains the caveat that gentoo/mise-tools.toml is the --user path only, so a privileged Gentoo bootstrap installs no gum at all. - jujutsu on Gentoo is packaged, as dev-vcs/jj (~amd64, added 2025-12-04, EAPI 8). The cell moves from cargo²¹ to ` dev-vcs/jj²¹ and ⁸ names the trap: the atom is jj; dev-vcs/jujutsu has never existed. Kali's cargo²¹ is unchanged — jj really is still absent from stable Debian/Kali apt. ⁸ also stops reading Gentoo's packages.txt omission as a decline: it is a deliberate placement, because that file is the unconditional emerge and jj must stay skippable by --no-extras. - The ²¹ \"available, not installed\" family was verified against install/packages.txt alone — and Gentoo is the repo that installs most from bootstrap.sh instead, precisely because everything opt-in has to live in the script. So four of the eight Gentoo cells in ²¹'s table read — for tools bootstrap installs: shfmt (go, unconditional), ouch and watchexec (cargo, opt-in extras) and gping (emerged from GURU). Corrected here, along with ⁷, ¹⁹ and ²⁵, which each carried the same claim in prose. ²¹ now says two repos' bootstraps install from this family (Alpine and Gentoo), not one, and records the single-file verification as the root cause so the row does not go stale the same way again. watchexec's Gentoo cell also moves GURU²⁵ → cargo²⁵: GURU carries 2.5.0, but the bootstrap routes around it and builds watchexec-cli` for upstream-latest.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.1",
+      "date": "2026-08-21",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "direnv is installed by six of the fleet's seven package lists and had no row in the matrix at all. (dotgibson/dotfiles-openSUSE#89) The /os-package-availability audit of dotfiles-openSUSE reported it as its one coverage gap rather than drift: direnv appeared in PORTING-MATRIX.md only inside footnote ¹², as one of the Gentoo GURU atoms. So a reader asking \"what is direnv called on Alpine\" found nothing, and the next audit comparing a package list against the table found a name the table did not know. It has a row now, and it sits next to mise rather than in alphabetical order — this table has never been alphabetical, and the two are the same mechanism: both are _cache_eval'd hook generators emitted from os/<distro>.zsh at band 80, and Core's own examples/mise.project.toml calls mise's [env] block \"the direnv replacement\" and its [hooks] block \"the other half of direnv\". Six of the seven cells are a bare direnv, verified 2026-08-21 against each distro's own index: Arch extra 2.37.1-1, Alpine community 2.37.1-r7 (v3.24 — a Go binary, so a native musl build), openSUSE Tumbleweed 2.37.1 with Leap 16.0 and 16.1 both at 2.34.0 through Backports (bp160.1.13 / bp161.1.9, both arches), kali-rolling 2.37.1-1, Ubuntu 24.04 universe 2.32.1-2ubuntu0.24.04.3 and Debian trixie 2.32.1-2+b16. Gentoo is the exception and is GURU-only — app-shells/direnv at 2.37.1, no ::gentoo atom, and dev-util/direnv does not exist — so that cell reads ` app-shells/direnv ¹², where the warning already lived and which therefore needed no edit. New footnote ³² records what makes the row unlike its neighbours, because no existing footnote shape fits it. It is not ²¹'s \"available, not installed\" — six repos install it — and not ¹⁷/¹⁹'s detect-only, because Core does not detect it at all: there is no HAVE_DIRENV, no alias and no core-doctor row. It is the only row in the table wired by the OS layer instead of by Core; the direnv hook zsh that makes it work is emitted by each OS repo's os/<distro>.zsh at band 80. Core's one stake is starship/starship.toml's [direnv] module, which Core switches on (disabled = false — starship ships it off by default) so .envrc state is visible rather than a directory silently waiting on direnv allow. dotfiles-Offense (Kali) is the single fleet gap, and it is structural rather than a judgment about direnv — that repo carries no install/packages.txt and, since band 80 moved to the OS repo underneath it, no os/ layer, so nothing there installs the package or evaluates the hook. One version floor is recorded because it is the only point where a frozen archive touches Core: starship runs direnv status --json, and the --json flag is silently ignored below direnv 2.33.0 — src/modules/direnv.rs says so and parses the text output instead. Every target above clears that floor except dotfiles-Debian's two lanes, both on 2.32.1. It degrades rather than breaks, which is why that repo's install/packages.txt declares no # min:` floor for it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.1",
+      "date": "2026-08-21",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "Footnote ¹⁹ said both that Gentoo's bootstrap.sh emerges gping and that it does not. (#568) #565 rewrote the footnote's opening to record that dotfiles-Gentoo really does emerge net-analyzer/gping from GURU in its guru_install pass — and that naming the atom only in a packages.txt comment is a pointer to that call rather than a decline. Its closing sentence was left behind still saying the opposite: \"unlike the ¹² atoms bootstrap.sh does not emerge it, so enable GURU per ¹² and emerge net-analyzer/gping by hand.\" A reader who got to the end of the footnote was told to do by hand what the bootstrap had already done, and the \"unlike the ¹² atoms\" framing inverted the actual relationship — the same rewrite had just added gping to ¹²'s GURU list, so it is one of them. The tail now agrees with the head: GURU-only, no main-tree atom, emerged like the ¹² atoms in the same guru_install pass, nothing left to do by hand. Verified against dotfiles-Gentoo/bootstrap.sh, where net-analyzer/gping is the last atom in that call.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.1",
+      "date": "2026-08-21",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Footnote ²¹ claimed Kali installs ast-grep, and the ast-grep row's ³ rested on that claim. (#569) The note carved out an explicit exception — \"Kali does install ast-grep (bootstrap.sh, cargo best-effort), which is why that one cell keeps its ³ while its Gentoo neighbour does not\" — which is why the Kali column kept a cargo³ there after ouch, jujutsu and lazygit lost theirs in the same pass. There is no such install. dotfiles-Offense's bootstrap.sh contains no ast-grep at all, and its only two cargo mentions are the comment and export that put ~/.cargo/bin on PATH for tools an operator added by hand — which is precisely the ²¹ contract, not a ³ one. This mattered beyond the prose because ³ means \"bootstrap.sh installs it best-effort\", so a ³ with no installer behind it reads as \"you will get this\" and delivers nothing — the exact overclaim ²¹ was written to correct, surviving inside ²¹ itself for one tool. The ast-grep Kali cell is now cargo²¹, matching ouch and jujutsu in that column, and the list of cells that previously overclaimed a ³ gains ast-grep on Kali alongside Gentoo.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.1",
+      "date": "2026-08-21",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "bootstrap-test and lint disagreed about the same bootstrap.sh, and only one of them applied the fleet's shellcheck exclusions. (#517) lint-call.yml set SHELLCHECK_OPTS with Core's curated SC1090,SC1091,SC2015,SC2088 exclusions; bootstrap-test.yml lints the same file and set nothing. So the four codes Core has explicitly decided are not defects still blocked — just in the other gate, and the same commit could be green in lint and red in bootstrap. The failure mode is nastier than the disagreement itself, because the two gates run on different triggers: lint on every push and PR, bootstrap only when bootstrap.sh or core/ changes. A repo stays green for weeks, then a bootstrap-touching PR reds with an error naming a rule the fleet documented as excluded. The natural reading is \"the exclusion list is wrong\" and the natural fix is to weaken the shell script to satisfy it — which is what happened in dotfiles-Gentoo before anyone noticed the gates simply disagreed. The workaround had already spread by the time this was found: dotfiles-Arch, -Debian and -Fedora each carry an independent copy of Core's exclusion list in their own .shellcheckrc, none aware of the others, while -Offense and -openSUSE have a .shellcheckrc without it and -MacBook, -Alpine, -Defense and -Gentoo have none at all. Setting it in the workflow fixes all nine at once, including the six no per-repo workaround ever reached. Nothing changes colour on merge — all nine bootstrap.sh files pass both invocations today, so this closes a latent trap rather than a live break. GitHub cannot import an env value from one workflow into another, so the literal is necessarily authored twice; scripts/test-core.sh now asserts the two copies are equal, the same shape as the os-repos.txt fallback-array check and for the same reason. Deliberately not done: adding a disable= line to Core's own .shellcheckrc — Core's tree is green without those exclusions, and adding them would weaken its own gate to match a rule written for consumers. The per-repo .shellcheckrc fragmentation is tracked separately in #564.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.0",
+      "date": "2026-08-21",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "Seven OS repos stop hand-maintaining the same shell-hook block; Core owns it. (#449) direnv hook zsh, gh completion -s zsh, uv generate-shell-completion zsh and ty generate-shell-completion zsh were duplicated across every os/*.zsh in the fleet — portable zsh with nothing OS-specific in it, maintained once per repo, and already drifted into three variants of one block: Alpine and Gentoo carried only two of the four tools, and one copy suppressed the generator's stderr in its fallback arm where the others did not. So whether your shell completed uv depended on which OS you booted. They now live in Core, and Alpine, Gentoo and the Debian family gain uv/ty completions for free. Split by kind rather than kept together, because the two halves have different constraints. direnv goes to zsh/00-tools.zsh alongside the zoxide/mise/atuin inits: it registers a hook, needs no compinit, and band 00 loads under every CORE_PROFILE — filed under band 45 it would silently stop .envrc files loading on minimal hosts, which is a broken feature rather than a missing convenience. gh/uv/ty go to zsh/45-plugins.zsh immediately after the carapace block: they call compdef, so they must follow compinit, and they must follow carapace so a tool's own completion keeps overriding carapace's bridged one — the order they already ran in at band 80, so this preserves behaviour rather than changing it. All four move, ty included: _cache_eval bails on an absent binary, so a host without the tool pays nothing. One ordering that is easy to lose and now has a test behind it: direnv prepends its hook to precmd_functions/chpwd_functions, and so does mise — whichever is sourced last runs first. The direnv line therefore sits after the mise line, reproducing exactly the order these hooks had while direnv was hooked from band 80. Measured startup cost, because one of these four is not free. Sourcing the cached inits in a compinit-ready shell, 100+ runs each (hyperfine): direnv (14 lines) and gh (212) are together +0.6 ms over a 12.9 ms baseline — noise. uv ships a 6,976-line completion and ty 325, and the pair costs +37 ms. The five repos that already hooked all four have been paying that all along and see no change; Alpine, Gentoo and the Debian family newly pay it, but only on a host that actually has uv installed. That is the price of the fleet agreeing on one answer, and it is worth knowing rather than discovering. Sourcing 7k lines on every shell to serve one <TAB> is the wrong shape long-term — the fix is an fpath autoload rather than a source, filed separately. Note the bench job cannot see any of this: it runs a hermetic sandbox with none of these binaries, so every call is a two-token no-op there. For OS-repo maintainers: nothing to do until you vendor this. After the sync, delete your local copy (VENDORING.md has the list). Running both is harmless in the meantime — direnv's hook guards its own registration, a repeated compdef re-points the same binding, and Core reuses the same cache files, so the transitional window behaves exactly as today.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v4.14.0",
       "date": "2026-08-21",
       "category": "Changed",
       "kind": "perf",
       "text": "nvim plugin pins move forward for five plugins. nui.nvim, nvim-lint, nvim-lspconfig, package-info.nvim and schemastore.nvim advance to the commits lazy.nvim had already resolved on a live box, 2–7 days ahead of the pins Core carried. Every new SHA was verified to exist upstream and to be newer than the one it replaces, and each range was read before promotion: nui.nvim one additive commit (borderless tables, set_data, cell navigation); nvim-lint two (zlint source name, relative artifactLocation.uri in sarif output); nvim-lspconfig twelve, all per-server fixes or additions plus generated docs (vhdl_ls, tsc, symfony_lsp, slang-server, php_lsp, oxc); package-info.nvim one notification fix; schemastore.nvim two catalog refreshes. Nothing renames or removes an API Core calls. Provenance worth recording, because it is the failure mode this repo warns about: these bumps were found as an uncommitted edit to dotfiles-Fedora's vendored core/nvim/ lazy-lock.json. That tree is a copy — the next make sync overwrites it — so the bumps were days from being silently reverted, and would have come back on the next lazy sync to be lost again. They belong here, once, and reach every machine by fan-out.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.0",
+      "date": "2026-08-21",
+      "category": "Added",
+      "kind": "feature",
+      "text": "_core_is_wsl — one WSL predicate for the whole fleet, and a gate against the copies coming back. (#449) Six OS repos carried a byte-identical _IS_WSL=0; … probe to gate their Windows-interop niceties. Core had the same fact twice more and neither was reachable from zsh: blib_is_wsl (bash, forks grep, no test seam) and a private copy inside bin/clip. Eight implementations of one predicate, in two languages, drifting independently. zsh/00-tools.zsh now exports _core_is_wsl as a second Core→OS API alongside _cache_eval — fork-free ($(<file), no cat, no grep, because unlike the bootstrap sibling this runs on every interactive shell), lazily memoised into _CORE_IS_WSL so a shell that never asks never pays, and carrying a $CORE_PROC_VERSION test seam. The seam is not decoration: without it the \"this box is not WSL\" case cannot be asserted on a WSL development host and \"this box is WSL\" cannot be asserted on a CI runner, so half the predicate would go untested on every machine. PORTABILITY.md gains the shim row and documents the narrow env-fact exception to its own command -v rule.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.0",
+      "date": "2026-08-21",
+      "category": "Added",
+      "kind": "fix",
+      "text": "A gate against portable logic stranded outside Core. (#449) audit-core.sh §5c catches OS-specifics leaking into Core; nothing caught the reverse, which is why the block above went unnoticed long enough to drift three ways — it could only be found by reading two layers side by side. scripts/lib/common.sh gains _core_owned_block_hits, the single definition of \"this repo re-implements something Core owns\", and .github/workflows/lint-call.yml gains a leg that runs it over each caller's repo-owned *.zsh. It flags exact generator invocations rather than tool names, so hooking a tool that exists on one OS and nowhere else — the OS layer's actual job — is never a finding. Unlike the RETURN-trap gate it has no audit-core.sh counterpart, on purpose: Core's own tree contains every pattern it scans for, which is the point. The Core-side guard is the inverse assertion in scripts/test-core.sh — if Core ever loses a block, the gate would be making nine repos delete a feature nobody provides. And it warns in this release and blocks in the next, because unlike that gate it is red-on-arrival by construction: no OS repo can delete its copy until it has vendored the Core that replaces it.",
       "core": true
     },
     {
@@ -1910,15 +1969,6 @@
       "category": "Documentation",
       "kind": "config",
       "text": "blib_link_role_layer's migration note described a migration that has since happened. It read, in the present tense, that \"the offensive repo hand-rolls <config>/kali/templates\" and instructed a consumer to relocate them and update two shipped docs \"in the same change that adopts the helper\". dotfiles-Offense adopted the helper and did exactly that, so the instruction now describes work that is done — misleading anyone reading the helper to decide what a consumer still owes it. Rewritten as the record of a completed move, keeping the reasoning that matters (why the destination is named for the ROLE rather than the distro, and why neither a compat symlink nor a namespace parameter was the answer). Comment only — no behaviour changes, but it is vendored into all nine consuming repos, so the stale text was live fleet-wide.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.1",
-      "date": "2026-08-18",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "The reusable bootstrap-test no longer assumes every caller has an OS-native layer. It asserted ~/.config/zsh/80-os.zsh unconditionally, which is right for the nine OS repos and wrong for a ROLE repo: dotfiles-Offense and dotfiles-Defense wire Core plus a band-85 role stage and deliberately link nothing at band 80, so the shared test red a repo doing exactly the right thing. The check now arms itself on whether the caller ships an os/*.zsh — self-derived, the same way the atuin check is, rather than a new input every role repo would have to remember to pass. Found by dotfiles-Offense as it dropped its OS layer to dotfiles-Debian.",
       "core": true
     },
     {

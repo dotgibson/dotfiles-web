@@ -3,10 +3,10 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "72e36760429678e5bb77ef590dfe9e19357d2621"
+    "commit": "f7ec606582067ac381a70f514aa80ca4747800fd"
   },
-  "ruleCount": 94,
-  "documentCount": 111,
+  "ruleCount": 95,
+  "documentCount": 113,
   "techniqueCount": 70,
   "tacticCount": 6,
   "logsourceCount": 24,
@@ -27,7 +27,7 @@
       "id": "TA0007",
       "name": "Discovery",
       "techniques": 13,
-      "rules": 5
+      "rules": 6
     },
     {
       "id": "TA0009",
@@ -79,23 +79,26 @@
     },
     {
       "id": "T1007",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
       "id": "T1016",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
       "id": "T1018",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
@@ -107,10 +110,11 @@
     },
     {
       "id": "T1033",
-      "rules": 2,
+      "rules": 3,
       "ruleNames": [
         "host_enum_srvsvc_wkssvc_5145",
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
@@ -129,10 +133,11 @@
     },
     {
       "id": "T1049",
-      "rules": 2,
+      "rules": 3,
       "ruleNames": [
         "host_enum_srvsvc_wkssvc_5145",
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
@@ -144,9 +149,10 @@
     },
     {
       "id": "T1057",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
@@ -194,16 +200,18 @@
     },
     {
       "id": "T1082",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
       "id": "T1087.001",
-      "rules": 2,
+      "rules": 3,
       "ruleNames": [
         "host_recon_command_burst",
+        "host_recon_powershell_4104",
         "local_group_enum_sweep_4798_4799"
       ]
     },
@@ -279,10 +287,11 @@
     },
     {
       "id": "T1135",
-      "rules": 2,
+      "rules": 3,
       "ruleNames": [
         "host_enum_srvsvc_wkssvc_5145",
-        "host_recon_command_burst"
+        "host_recon_command_burst",
+        "host_recon_powershell_4104"
       ]
     },
     {
@@ -627,7 +636,7 @@
       "products": [
         "windows"
       ],
-      "rules": 5
+      "rules": 6
     },
     {
       "dir": "github",
