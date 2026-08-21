@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-19",
+  "generatedAt": "2026-08-21",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "6d60cbc924d0e1fb235e8432a866dead4e4cca6f"
+    "commit": "c687ba3ed0388b422158a81655f79c49b1f54ba5"
   },
   "ruleCount": 94,
   "documentCount": 111,
