@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "c50645a9f600644b93dd26d57ecb59a4122ba26d",
+        "commit": "95efa3892a970d9179fe11f3a2bbbf4d9f9509e9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "737988a88318cba8ed94a60625f37cd7d85ee233",
+        "commit": "11f2a93b4a052ffa743998b542c7ed7ea6619d91",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -28,7 +28,7 @@
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "7d6d6b9f4be43a6942ef7ee384481b3f1de0a4a5",
+        "commit": "864ed154f49332d318eae0e5c8f0182ab36d6d43",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,21 +76,21 @@
     "layers": 3
   },
   "releases": {
-    "current": "v4.14.1",
+    "current": "v4.14.2",
     "channels": [
+      "v4.14.2",
       "v4.14.1",
       "v4.14.0",
-      "v4.13.2",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "4.14.1",
+    "coreVersion": "4.14.2",
     "repos": {
       "dotfiles-MacBook": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -101,47 +101,47 @@
       "dotfiles-Offense": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Defense": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Fedora": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Arch": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Debian": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-openSUSE": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Alpine": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Gentoo": {
         "ref": "v4",
         "carried": "4.14.1",
-        "status": "current"
+        "status": "behind"
       }
     }
   },
   "core": {
-    "version": "4.14.1",
+    "version": "4.14.2",
     "sourcedModules": 13,
     "zshLoc": 4643,
     "gitAliases": 57,
@@ -174,11 +174,16 @@
   "changelog": [
     {
       "repo": "dotfiles-core",
-      "version": "Unreleased",
+      "version": "v4.14.2",
+      "date": "2026-08-21",
       "groups": [
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "The provision-stub job shipped in v4.14.1 could not run. It read its shim from the CALLER's vendored core/scripts/, which is a different distribution channel from the workflow that uses it: the workflow reaches a caller the moment the v4 alias moves, while core/scripts/ only arrives when that repo merges its core.lock fan-out PR. Every repo in that window got the job without the script and hard-failed with core/scripts/provision-shim.sh missing — vendored Core predates it. Harmless in practice — provision_stub defaults false and no repo had opted in — but the first one to try (dotgibson/dotfiles-Debian#12) reded immediately. The stubs are now built inline in the job, so there is exactly one artifact distributed at exactly one ref. An intermediate attempt using a second Core checkout pinned at github.job_workflow_sha was abandoned: it silently ran an older revision of the script than the run reported using, which is a worse failure than the one it replaced. Deletes scripts/provision-shim.sh and .github/actionlint.yaml (whose only suppression existed for job_workflow_sha). Verified end-to-end before release this time, on ubuntu:24.04 and kalilinux/kali-rolling both: the full stubbed bootstrap walks apt, the 32-package base stack, fourteen SHA-pinned installs, both vendor apt repos, carapace and unattended-upgrades, then crosses into wire_links and finishes at 32 linked · 2 seeded · 0 backed up.",
+              "kind": "config"
+            },
             {
               "text": "Footnote ³² said the OS layer wires direnv; v4.14.1 moved that into Core, in the same release. (#449) The direnv row's footnote was written days before #578 landed and described the arrangement it replaced — \"what makes it work is each OS repo's os/<distro>.zsh at band 80\". v4.14.1 ships both that sentence and the commit that made it false, which is precisely the defect class #568 and #569 were filed for, reintroduced by the footnote that was added alongside them. Rewritten to what the code now does: Core wires direnv at zsh/00-tools.zsh band 00, and the footnote records why that band rather than 45 (it registers a hook, not a compdef, and band 00 loads under every CORE_PROFILE while 45 is ceilinged out of minimal) and why it is sourced last of the four inits (direnv prepends to precmd_functions/chpwd_functions, so sourcing after mise reproduces the resolution order an .envrc pinning tool versions expects). The thesis changes with it: direnv is no longer \"the one row Core neither installs nor detects\" — Core now wires it while still neither installing nor detecting it. The Kali paragraph needed the same correction and for the same reason. It argued dotfiles-Offense misses the hook because it has no os/ layer — true at band 80, false at band 00, where the hook reaches it from Core like everywhere else. It is live there now and simply finds no binary, since that repo still installs none.",
               "kind": "fix"
@@ -301,43 +306,6 @@
             {
               "text": "PORTING-MATRIX.md footnote ⁸ no longer tells the reader dnf install jujutsu works. It listed Fedora among the distros that package jj. Fedora does not: there is no jujutsu, jj or jj-cli on F43, F44 or rawhide, and — unlike sd and gron, which were dropped — no retired build to point back at. Fedora now sits with Debian/Kali and Gentoo in the cargo install --locked jj-cli group. Documentation-only: jj is opt-in and carried in no OS repo's packages.txt, so nothing installs differently — but the footnote is the one place a reader looks for the install path, and it named a package manager that would have answered \"No match\".",
               "kind": "fix"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.2",
-      "date": "2026-08-19",
-      "groups": [
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "make audit no longer reds blib_user_bindirs_on_path for anyone with CARGO_HOME set. The helper resolves the cargo bindir through ${CARGO_HOME:-$HOME/.cargo}/bin deliberately — hard-coding ~/.cargo/bin would break a box that relocates it, which is the bug it exists to prevent. Its fixture asserts the $HOME-relative defaults, and those are reached only when the vars are absent; but the subshell pinned just HOME and PATH, so an exported CARGO_HOME retargeted the lookup and the fixture's own .cargo/bin never landed. A developer with Rust configured — most operators, and exactly who make audit runs for — saw a failure on a healthy tree, while no CI runner exports it and all four lanes stayed green. The fixture now unsets CARGO_HOME, GOBIN and GOPATH. Worth noting where the leak actually lived: the relocation block further down the same file sets these vars explicitly and was always immune — it was the default-path cases that inherited. A gap between two blocks rather than a coverage hole, and the same shape as the GHOSTTY_SHELL_FEATURES leak fixed one release earlier.",
-              "kind": "fix"
-            },
-            {
-              "text": "A stalled Ubuntu security index no longer reds CI lanes that never needed it. The Linux setup step gated on apt-get update succeeding, and under set -euxo pipefail a second failed refresh killed the step before apt-get install zsh was ever attempted. On both 2026-08-18 and 2026-08-19 archive.ubuntu.com's noble-security index stalled mid-fetch (with the Azure regional mirror dark, every index Ign:), and the job died at timeout(1)'s exit 124 with no test executed — while the same logs showed Hit: … noble InRelease succeeding. Only the security pocket wedged; zsh lives in noble/main. The archive was reachable for everything the job actually needed, and it failed anyway. The refresh is now best-effort and the install is the gate — a stale index nothing reads is not this job's problem, whereas not having zsh still fails it. The install carries its own timeout(1) bound so it cannot hang in the refresh's place. The block was duplicated verbatim across five workflows (ci.yml twice, plus lint-call.yml, sync-fanout.yml, atuin-guard-verify.yml); all five are fixed, since fixing one would have left the same stall live on four other lanes.",
-              "kind": "security"
-            },
-            {
-              "text": "make audit no longer reds 7 OSC 133 assertions when it is run from inside Ghostty. 00-tools.zsh deliberately stands the marks down when GHOSTTY_SHELL_FEATURES is set and $TMUX is empty — Ghostty injects its own prompt marking outside tmux, so Core must not double-mark. Every mark-ON case in scripts/test-core.sh's OSC 133 section pins TERM and TMUX explicitly for exactly that reason, but ucheck ran a bare env, which inherits the caller's environment. Auditing from the terminal this repo ships a config for therefore cleared _CORE_OSC133, left _core_osc133_prompt undefined, and failed 7 assertions about the shell layer while proving nothing about it. ucheck now runs env -u GHOSTTY_SHELL_FEATURES; the per-case assignments come after the option, so the two cases that set it deliberately still win. CI could not have caught this — no runner is hosted in Ghostty, so all four audit lanes were green on the identical tree — which is why the regression gate added alongside drives a mark-ON case with the variable genuinely exported rather than passed as an argument.",
-              "kind": "fix"
-            },
-            {
-              "text": "A repo renamed upstream is no longer skipped by the whole fleet toolchain because its clone directory still carries the old name. scripts/os-repos.txt names the fleet by repo NAME, and sync-core.sh, fleet-drift.sh and core-integrity.sh each turned that name into a path by string-joining it onto the fleet root. Git follows a GitHub rename on its own; a directory name does not. So a machine that cloned dotfiles-Kali before it became dotfiles-Offense had a correct remote, a correct core/ subtree and a correct core.lock — and the fan-out skipped it as \"not cloned\", drift reported \"not checked out\", and the integrity sweep could not have seen a tampered core/ there at all. Two of those three are false-CLEAN results on gates whose entire job is to notice, and the only remedy on offer was \"go mv the directory\", on every machine, for every future rename. All three now resolve through one shared resolve_repo_dir (scripts/lib/common.sh): the directory-name lookup stays the fast path and keeps precedence, and only when no such directory exists does it ask each sibling clone what it actually is, matching on the repo slug in origin's URL. Both URL shapes parse (https://host/owner/repo and git@host:owner/repo, with or without .git) and matching is case-insensitive, as GitHub itself is. A clone whose origin names a different repo is not adopted, one with no origin is stepped over rather than aborting the sweep, and a genuinely absent repo still reports against the conventional path so the advice names where it looked. sync-core.sh prints the resolved path when it isn't the conventional one, so a fan-out into a pre-rename directory is visible in the log instead of a surprise underneath the git output.",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Documentation",
-          "items": [
-            {
-              "text": "blib_link_role_layer's migration note described a migration that has since happened. It read, in the present tense, that \"the offensive repo hand-rolls <config>/kali/templates\" and instructed a consumer to relocate them and update two shipped docs \"in the same change that adopts the helper\". dotfiles-Offense adopted the helper and did exactly that, so the instruction now describes work that is done — misleading anyone reading the helper to decide what a consumer still owes it. Rewritten as the record of a completed move, keeping the reasoning that matters (why the destination is named for the ROLE rather than the distro, and why neither a compat symlink nor a namespace parameter was the answer). Comment only — no behaviour changes, but it is vendored into all nine consuming repos, so the stale text was live fleet-wide.",
-              "kind": "config"
             }
           ]
         }
@@ -1017,14 +985,6 @@
     }
   ],
   "feed": [
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "Footnote ³² said the OS layer wires direnv; v4.14.1 moved that into Core, in the same release. (#449) The direnv row's footnote was written days before #578 landed and described the arrangement it replaced — \"what makes it work is each OS repo's os/<distro>.zsh at band 80\". v4.14.1 ships both that sentence and the commit that made it false, which is precisely the defect class #568 and #569 were filed for, reintroduced by the footnote that was added alongside them. Rewritten to what the code now does: Core wires direnv at zsh/00-tools.zsh band 00, and the footnote records why that band rather than 45 (it registers a hook, not a compdef, and band 00 loads under every CORE_PROFILE while 45 is ceilinged out of minimal) and why it is sourced last of the four inits (direnv prepends to precmd_functions/chpwd_functions, so sourcing after mise reproduces the resolution order an .envrc pinning tool versions expects). The thesis changes with it: direnv is no longer \"the one row Core neither installs nor detects\" — Core now wires it while still neither installing nor detecting it. The Kali paragraph needed the same correction and for the same reason. It argued dotfiles-Offense misses the hook because it has no os/ layer — true at band 80, false at band 00, where the hook reaches it from Core like everywhere else. It is live there now and simply finds no binary, since that repo still installs none.",
-      "core": true
-    },
     {
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
@@ -1771,6 +1731,24 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v4.14.2",
+      "date": "2026-08-21",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "The provision-stub job shipped in v4.14.1 could not run. It read its shim from the CALLER's vendored core/scripts/, which is a different distribution channel from the workflow that uses it: the workflow reaches a caller the moment the v4 alias moves, while core/scripts/ only arrives when that repo merges its core.lock fan-out PR. Every repo in that window got the job without the script and hard-failed with core/scripts/provision-shim.sh missing — vendored Core predates it. Harmless in practice — provision_stub defaults false and no repo had opted in — but the first one to try (dotgibson/dotfiles-Debian#12) reded immediately. The stubs are now built inline in the job, so there is exactly one artifact distributed at exactly one ref. An intermediate attempt using a second Core checkout pinned at github.job_workflow_sha was abandoned: it silently ran an older revision of the script than the run reported using, which is a worse failure than the one it replaced. Deletes scripts/provision-shim.sh and .github/actionlint.yaml (whose only suppression existed for job_workflow_sha). Verified end-to-end before release this time, on ubuntu:24.04 and kalilinux/kali-rolling both: the full stubbed bootstrap walks apt, the 32-package base stack, fourteen SHA-pinned installs, both vendor apt repos, carapace and unattended-upgrades, then crosses into wire_links and finishes at 32 linked · 2 seeded · 0 backed up.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v4.14.2",
+      "date": "2026-08-21",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Footnote ³² said the OS layer wires direnv; v4.14.1 moved that into Core, in the same release. (#449) The direnv row's footnote was written days before #578 landed and described the arrangement it replaced — \"what makes it work is each OS repo's os/<distro>.zsh at band 80\". v4.14.1 ships both that sentence and the commit that made it false, which is precisely the defect class #568 and #569 were filed for, reintroduced by the footnote that was added alongside them. Rewritten to what the code now does: Core wires direnv at zsh/00-tools.zsh band 00, and the footnote records why that band rather than 45 (it registers a hook, not a compdef, and band 00 loads under every CORE_PROFILE while 45 is ceilinged out of minimal) and why it is sourced last of the four inits (direnv prepends to precmd_functions/chpwd_functions, so sourcing after mise reproduces the resolution order an .envrc pinning tool versions expects). The thesis changes with it: direnv is no longer \"the one row Core neither installs nor detects\" — Core now wires it while still neither installing nor detecting it. The Kali paragraph needed the same correction and for the same reason. It argued dotfiles-Offense misses the hook because it has no os/ layer — true at band 80, false at band 00, where the hook reaches it from Core like everywhere else. It is live there now and simply finds no binary, since that repo still installs none.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v4.14.1",
       "date": "2026-08-21",
       "category": "Added",
@@ -1947,51 +1925,6 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "PORTING-MATRIX.md footnote ⁸ no longer tells the reader dnf install jujutsu works. It listed Fedora among the distros that package jj. Fedora does not: there is no jujutsu, jj or jj-cli on F43, F44 or rawhide, and — unlike sd and gron, which were dropped — no retired build to point back at. Fedora now sits with Debian/Kali and Gentoo in the cargo install --locked jj-cli group. Documentation-only: jj is opt-in and carried in no OS repo's packages.txt, so nothing installs differently — but the footnote is the one place a reader looks for the install path, and it named a package manager that would have answered \"No match\".",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.2",
-      "date": "2026-08-19",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "make audit no longer reds blib_user_bindirs_on_path for anyone with CARGO_HOME set. The helper resolves the cargo bindir through ${CARGO_HOME:-$HOME/.cargo}/bin deliberately — hard-coding ~/.cargo/bin would break a box that relocates it, which is the bug it exists to prevent. Its fixture asserts the $HOME-relative defaults, and those are reached only when the vars are absent; but the subshell pinned just HOME and PATH, so an exported CARGO_HOME retargeted the lookup and the fixture's own .cargo/bin never landed. A developer with Rust configured — most operators, and exactly who make audit runs for — saw a failure on a healthy tree, while no CI runner exports it and all four lanes stayed green. The fixture now unsets CARGO_HOME, GOBIN and GOPATH. Worth noting where the leak actually lived: the relocation block further down the same file sets these vars explicitly and was always immune — it was the default-path cases that inherited. A gap between two blocks rather than a coverage hole, and the same shape as the GHOSTTY_SHELL_FEATURES leak fixed one release earlier.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.2",
-      "date": "2026-08-19",
-      "category": "Fixed",
-      "kind": "security",
-      "text": "A stalled Ubuntu security index no longer reds CI lanes that never needed it. The Linux setup step gated on apt-get update succeeding, and under set -euxo pipefail a second failed refresh killed the step before apt-get install zsh was ever attempted. On both 2026-08-18 and 2026-08-19 archive.ubuntu.com's noble-security index stalled mid-fetch (with the Azure regional mirror dark, every index Ign:), and the job died at timeout(1)'s exit 124 with no test executed — while the same logs showed Hit: … noble InRelease succeeding. Only the security pocket wedged; zsh lives in noble/main. The archive was reachable for everything the job actually needed, and it failed anyway. The refresh is now best-effort and the install is the gate — a stale index nothing reads is not this job's problem, whereas not having zsh still fails it. The install carries its own timeout(1) bound so it cannot hang in the refresh's place. The block was duplicated verbatim across five workflows (ci.yml twice, plus lint-call.yml, sync-fanout.yml, atuin-guard-verify.yml); all five are fixed, since fixing one would have left the same stall live on four other lanes.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.2",
-      "date": "2026-08-19",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "make audit no longer reds 7 OSC 133 assertions when it is run from inside Ghostty. 00-tools.zsh deliberately stands the marks down when GHOSTTY_SHELL_FEATURES is set and $TMUX is empty — Ghostty injects its own prompt marking outside tmux, so Core must not double-mark. Every mark-ON case in scripts/test-core.sh's OSC 133 section pins TERM and TMUX explicitly for exactly that reason, but ucheck ran a bare env, which inherits the caller's environment. Auditing from the terminal this repo ships a config for therefore cleared _CORE_OSC133, left _core_osc133_prompt undefined, and failed 7 assertions about the shell layer while proving nothing about it. ucheck now runs env -u GHOSTTY_SHELL_FEATURES; the per-case assignments come after the option, so the two cases that set it deliberately still win. CI could not have caught this — no runner is hosted in Ghostty, so all four audit lanes were green on the identical tree — which is why the regression gate added alongside drives a mark-ON case with the variable genuinely exported rather than passed as an argument.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.2",
-      "date": "2026-08-19",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "A repo renamed upstream is no longer skipped by the whole fleet toolchain because its clone directory still carries the old name. scripts/os-repos.txt names the fleet by repo NAME, and sync-core.sh, fleet-drift.sh and core-integrity.sh each turned that name into a path by string-joining it onto the fleet root. Git follows a GitHub rename on its own; a directory name does not. So a machine that cloned dotfiles-Kali before it became dotfiles-Offense had a correct remote, a correct core/ subtree and a correct core.lock — and the fan-out skipped it as \"not cloned\", drift reported \"not checked out\", and the integrity sweep could not have seen a tampered core/ there at all. Two of those three are false-CLEAN results on gates whose entire job is to notice, and the only remedy on offer was \"go mv the directory\", on every machine, for every future rename. All three now resolve through one shared resolve_repo_dir (scripts/lib/common.sh): the directory-name lookup stays the fast path and keeps precedence, and only when no such directory exists does it ask each sibling clone what it actually is, matching on the repo slug in origin's URL. Both URL shapes parse (https://host/owner/repo and git@host:owner/repo, with or without .git) and matching is case-insensitive, as GitHub itself is. A clone whose origin names a different repo is not adopted, one with no origin is stepped over rather than aborting the sweep, and a genuinely absent repo still reports against the conventional path so the advice names where it looked. sync-core.sh prints the resolved path when it isn't the conventional one, so a fan-out into a pre-rename directory is visible in the log instead of a surprise underneath the git output.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.13.2",
-      "date": "2026-08-19",
-      "category": "Documentation",
-      "kind": "config",
-      "text": "blib_link_role_layer's migration note described a migration that has since happened. It read, in the present tense, that \"the offensive repo hand-rolls <config>/kali/templates\" and instructed a consumer to relocate them and update two shipped docs \"in the same change that adopts the helper\". dotfiles-Offense adopted the helper and did exactly that, so the instruction now describes work that is done — misleading anyone reading the helper to decide what a consumer still owes it. Rewritten as the record of a completed move, keeping the reasoning that matters (why the destination is named for the ROLE rather than the distro, and why neither a compat symlink nor a namespace parameter was the answer). Comment only — no behaviour changes, but it is vendored into all nine consuming repos, so the stale text was live fleet-wide.",
       "core": true
     },
     {
