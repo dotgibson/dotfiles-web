@@ -22,8 +22,8 @@ description: >-
 #
 # Cost, measured at 12 clones: ~11s and 95 MB (up from ~5s and 53 MB at eight),
 # plus one HEAD request per repo for the rename probe below — ~0.3s each, so a
-# few seconds on top.
-# That is why data-freshness.yml regenerates all four snapshots in ONE job rather
+# few seconds on top. That cost is why data-freshness.yml regenerates all four
+# snapshots in ONE job rather
 # than splitting them — a second job would re-clone the same repos rather than
 # parallelise anything, and leave two red X's to read instead of one.
 #
@@ -45,7 +45,7 @@ inputs:
   dest:
     description: >-
       Parent directory; each repo lands at <dest>/<name>. Defaults to
-      $RUNNER_TEMP/fleet. Pass ${{ github.workspace }} for the sibling layout
+      $RUNNER_TEMP/fleet. Pass the github.workspace context for the sibling layout
       resolveFleetRoot() expects when dotfiles-web is checked out into a subdir.
     required: false
     default: ""
