@@ -10,7 +10,7 @@
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "11f2a93b4a052ffa743998b542c7ed7ea6619d91",
+        "commit": "3fcc41f6b6ffffcb0cc23a72590af6983057c525",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -46,7 +46,7 @@
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "5105fb81b67d9435a48c3da28db3bb87f773183f",
+        "commit": "11e53a59a9e33274e154cc4f321f4c44b92ab3b9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -89,8 +89,8 @@
     "repos": {
       "dotfiles-MacBook": {
         "ref": "v4",
-        "carried": "4.14.1",
-        "status": "behind"
+        "carried": "4.14.2",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
