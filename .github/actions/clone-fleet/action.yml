@@ -1,0 +1,181 @@
+name: Clone the fleet
+description: >-
+  Shallow-clone every repo in scripts/fleet-repos.txt, the one list this site's
+  workflows and collectors share.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# WHY THIS EXISTS
+#
+# Four workflows used to hand-maintain this loop, and collect-metrics.mjs
+# hand-maintained the list those clones had to satisfy — five copies in three
+# different orders, one of which (claude-routines.yml) had already lost
+# dotfiles-Debian without anyone noticing. The lists are load-bearing in opposite
+# directions and must agree: fleet-sync.yml decides whether to open a refresh PR,
+# data-freshness.yml decides whether to fail the build. Drift makes the failure
+# silent in the worst direction.
+#
+# The names live in scripts/fleet-repos.txt (read below, and by
+# scripts/lib/fleet-repos.mjs). This file owns only the MECHANICS, which is the
+# part the four call sites genuinely differ on — destination shape, whether the
+# URL carries a token, whether a missing tag falls back, and whether a failed
+# clone stops the job. Hence four inputs rather than an opinionated zero.
+#
+# Cost, measured at 12 clones: ~11s and 95 MB (up from ~5s and 53 MB at eight),
+# plus one HEAD request per repo for the rename probe below — ~0.3s each, so a
+# few seconds on top.
+# That is why data-freshness.yml regenerates all four snapshots in ONE job rather
+# than splitting them — a second job would re-clone the same repos rather than
+# parallelise anything, and leave two red X's to read instead of one.
+#
+# --depth 1 does still write refs/remotes/origin/HEAD, which the collectors lean
+# on: collect-snippets.mjs and collect-metrics.mjs both resolve defaultBranch
+# from that ref, and data-freshness.yml's comparison deliberately does NOT strip
+# it. A shallow clone that stopped setting it would stamp defaultBranch null
+# against "main" in the committed files, turning that job red over clone
+# mechanics rather than drift. The default-branch clone does set it — verified
+# across all twelve, and fleet-sync has been proving the same thing weekly.
+#
+# A `ref`-PINNED clone does NOT: `git clone --branch <tag>` leaves origin/HEAD
+# unset, so defaultBranch stamps null. That is fine and long-standing, because
+# the only caller passing a ref is deploy.yml, which BUILDS from the result and
+# commits nothing — nothing compares its stamps against a committed file.
+# ──────────────────────────────────────────────────────────────────────────────
+
+inputs:
+  dest:
+    description: >-
+      Parent directory; each repo lands at <dest>/<name>. Defaults to
+      $RUNNER_TEMP/fleet. Pass ${{ github.workspace }} for the sibling layout
+      resolveFleetRoot() expects when dotfiles-web is checked out into a subdir.
+    required: false
+    default: ""
+  ref:
+    description: >-
+      Optional tag/branch to pin to. Tried first with --branch; a repo without it
+      falls back to its default branch, because the OS repos version
+      independently (see core.lock) so a fleet-wide tag rarely exists everywhere.
+    required: false
+    default: ""
+  token:
+    description: >-
+      Optional token. When set, clones via x-access-token. All twelve repos are
+      public, so this is never required — deploy.yml passes github.token only
+      because its pinned-release build already holds one.
+    required: false
+    default: ""
+  on-error:
+    description: >-
+      'fail' (default) stops the job on a clone that cannot be completed.
+      'warn' logs and continues — for best-effort consumers like the
+      showcase-accuracy sweep, which reads whatever it got.
+    required: false
+    default: "fail"
+  owner:
+    description: "GitHub owner. Defaults to this repository's owner."
+    required: false
+    default: ""
+
+outputs:
+  root:
+    description: "The resolved destination directory — pass as DOTFILES_ROOT."
+    value: ${{ steps.clone.outputs.root }}
+
+runs:
+  using: composite
+  steps:
+    - id: clone
+      shell: bash
+      env:
+        DEST: ${{ inputs.dest }}
+        REF: ${{ inputs.ref }}
+        TOKEN: ${{ inputs.token }}
+        ON_ERROR: ${{ inputs.on-error }}
+        OWNER_IN: ${{ inputs.owner }}
+      run: |
+        # No `set -e`: failures are handled per repo so `on-error: warn` can
+        # continue, and so every offender is named in one run rather than one
+        # round trip through CI per repo. No `set -x` either — it would echo a
+        # tokenised URL into the log.
+        set -uo pipefail
+
+        # $GITHUB_ACTION_PATH is this directory whatever path actions/checkout
+        # used, which matters: fleet-sync.yml and claude-routines.yml check the
+        # site out into a subdir, so a workspace-relative path would miss.
+        manifest="${GITHUB_ACTION_PATH}/../../../scripts/fleet-repos.txt"
+        if [ ! -f "$manifest" ]; then
+          echo "::error::clone-fleet: no manifest at scripts/fleet-repos.txt"
+          exit 1
+        fi
+
+        owner="${OWNER_IN:-$GITHUB_REPOSITORY_OWNER}"
+        root="${DEST:-${RUNNER_TEMP}/fleet}"
+        mkdir -p "$root"
+        echo "root=$root" >> "$GITHUB_OUTPUT"
+
+        case "$ON_ERROR" in
+          fail|warn) ;;
+          *) echo "::error::clone-fleet: on-error must be 'fail' or 'warn', got '$ON_ERROR'"; exit 1 ;;
+        esac
+
+        failed=0
+        report() { # <message>
+          if [ "$ON_ERROR" = warn ]; then
+            echo "::warning::$1"
+          else
+            echo "::error::$1"
+            failed=1
+          fi
+        }
+
+        while read -r r; do
+          # The rename trap, guarded. dotfiles-Kali was renamed to
+          # dotfiles-Offense and github.com still serves the old name over git
+          # TRANSPARENTLY — `git clone` succeeds with no warning at all
+          # (verified), landing content in a directory no collector joins. Now
+          # that one manifest feeds both the clone and the collector, both would
+          # agree on the wrong name and the build would go green with a
+          # mislabeled repo. The web endpoint, unlike the git one, answers 301
+          # and names the canonical repo, so ask it.
+          #
+          # ONLY 301 is an offence. A 404 or a network hiccup is not: these repos
+          # are public but the clone below is the authority on whether one can be
+          # read, and failing here on a flaky probe would be a false red.
+          probe="$(curl -sS -o /dev/null -w '%{http_code} %{redirect_url}' \
+                     "https://github.com/${owner}/${r}" 2>/dev/null || true)"
+          if [ "${probe%% *}" = "301" ]; then
+            report "clone-fleet: '${r}' has been RENAMED to '$(basename "${probe#* }")'.
+        Cloning it would SUCCEED into a directory of the old name that no collector
+        reads. Update scripts/fleet-repos.txt — that one line is the whole fix."
+            continue
+          fi
+
+          if [ -n "$TOKEN" ]; then
+            url="https://x-access-token:${TOKEN}@github.com/${owner}/${r}.git"
+          else
+            url="https://github.com/${owner}/${r}.git"
+          fi
+
+          # stderr is captured rather than discarded so a real failure can be
+          # SHOWN. A missing tag on the first attempt is expected and its noise
+          # is what used to justify 2>/dev/null; keeping the text and printing it
+          # only on the path that actually fails gets both.
+          err="$(mktemp)"
+          if [ -n "$REF" ] && git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>"$err"; then
+            echo "cloned $r @ $REF"
+          else
+            # A failed --branch attempt can leave a partial directory behind,
+            # which would make the fallback clone fail on a non-empty target.
+            [ -n "$REF" ] && rm -rf "${root:?}/$r"
+            if git clone --depth 1 "$url" "$root/$r" 2>"$err"; then
+              echo "cloned $r @ default branch${REF:+ ($REF not found)}"
+            else
+              # Redact before printing: github.token is masked automatically, a
+              # PAT passed here might not be.
+              report "clone-fleet: could not clone ${r} at ${REF:-default branch}
+        $(sed 's#x-access-token:[^@]*@#x-access-token:***@#g' "$err")"
+            fi
+          fi
+          rm -f "$err"
+        done < <(awk '$1 !~ /^#/ && NF { print $1 }' "$manifest")
+
+        exit "$failed"

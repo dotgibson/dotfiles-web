@@ -42,6 +42,15 @@ on:
       # lenient no-op path — which is the same silent staleness this workflow exists to
       # catch, arriving through the one file that names none of the data.
       - "scripts/lib/fleet-root.mjs"
+      # WHICH repos a run demands, and the loop that fetches them. One list, read by the
+      # workflows and by collect-metrics.mjs — a change here changes what every job below
+      # clones and what the collector requires, so it has to reach the job that proves it.
+      - "scripts/fleet-repos.txt"
+      - "scripts/lib/fleet-repos.mjs"
+      - ".github/actions/clone-fleet/action.yml"
+      # The shared definition of what does NOT count as drift. Editing it moves the line
+      # between "green" and "the data is stale" for every file compared below.
+      - "scripts/data-strip.jq"
       - "src/content/docs/reference/porting-matrix.md"
       - ".github/workflows/data-freshness.yml"
 
@@ -244,66 +253,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      # scripts/fleet-repos.txt is the list; .github/actions/clone-fleet is the loop.
+      # Both used to be inline here, and this step's list was kept byte-for-byte
+      # identical to fleet-sync.yml's by hand — a mitigation, not a fix. The two are
+      # load-bearing in opposite directions (that job opens the refresh PR, this one
+      # fails the build), so they must agree; now they cannot disagree.
+      #
+      # Every repo is required. The collectors exit 0 when a source is missing, leaving
+      # the committed file untouched, which would make an unrefreshed snapshot look
+      # green — so a failed clone has to fail the job here (the action's default), and
+      # --strict below is the second line of defence if one ever gets past it.
       - name: Clone the fleet the four collectors read (read-only, shallow)
         id: fleet
-        env:
-          OWNER: ${{ github.repository_owner }}
-        run: |
-          set -euo pipefail
-          root="${RUNNER_TEMP}/fleet"
-          mkdir -p "$root"
-          # All required. The collectors exit 0 when a source is missing (leaving the
-          # committed file untouched), which would make an unrefreshed snapshot look
-          # green — so a failed clone has to fail the job here, and --strict below is the
-          # second line of defence if one ever gets past this.
-          #
-          # This is the whole fleet, because collect-metrics.mjs reads the whole fleet:
-          # dotfiles-core plus the ten machine/role repos. htpx is the odd one out — not a
-          # dotfiles layer at all, but the source of the red/blue corpus /purple publishes.
-          # collect-snippets.mjs's six are a strict SUBSET of the metrics eleven, its eight
-          # curated files spanning all three layers (Core, four OS-native overlays, the
-          # Offense role) because that spread IS what /config exists to show. All twelve are
-          # public, so these are anonymous clones: no PAT, no token in a URL.
-          #
-          # The list is byte-for-byte fleet-sync.yml's loop, same order and same line
-          # breaks. That is deliberate: two workflows hand-maintaining the same set is a
-          # standing hazard, and identical text at least makes a divergence show up as a
-          # diff rather than requiring someone to compare them as sets. (Three, counting
-          # deploy.yml. A composite action is the real fix — see the follow-up issue.)
-          #
-          # Measured at 12 clones: ~11s and 95 MB, up from ~5s and 53 MB at eight. That
-          # cost is why generated.json is handled HERE rather than in a job of its own.
-          # The clone sets used to be disjoint, which made a second job look like free
-          # parallelism; they now overlap almost entirely, so a second job would re-clone
-          # the same eleven repos rather than parallelise anything — and leave two red X's
-          # to read instead of one. The overlap argues for one job far more strongly than
-          # the disjoint case ever argued against it.
-          #
-          # dotfiles-Offense, NOT dotfiles-Kali. The repo was renamed and github.com still
-          # redirects the old name, so cloning dotfiles-Kali would SUCCEED — into a directory
-          # called dotfiles-Kali, which is not the path collect-snippets.mjs joins. The
-          # failure would surface two steps later as a --strict complaint about a missing
-          # offensive/offensive.zsh, blaming a curated file that is perfectly fine. A
-          # redirect that works is exactly what makes this worth writing down. It now bites
-          # twice over: collect-metrics.mjs joins that same directory name for its own repo
-          # list, so a dotfiles-Kali directory would fail its missing-repo check too, with
-          # the equally misdirecting "missing repos: dotfiles-Offense".
-          #
-          # --depth 1 does still write refs/remotes/origin/HEAD, which this job leans on
-          # harder than the corpus/coverage half did: collect-snippets.mjs resolves
-          # defaultBranch from that ref and collect-metrics.mjs does the same, and the
-          # comparison below deliberately does NOT strip it. A shallow clone that stopped
-          # setting it would stamp defaultBranch null here against "main" in both committed
-          # files, turning this job red over clone mechanics rather than drift. It does set
-          # it — verified across all twelve of these repos, and fleet-sync has been proving
-          # the same thing weekly, since its bot commits stamp defaultBranch "main" for
-          # every one of the eleven.
-          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Debian \
-                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Offense \
-                   dotfiles-openSUSE dotfiles-Windows htpx; do
-            git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$root/$r"
-          done
-          echo "root=$root" >> "$GITHUB_OUTPUT"
+        uses: ./.github/actions/clone-fleet
 
       - name: Regenerate all four derived snapshots
         env:
@@ -343,35 +305,12 @@ jobs:
         run: |
           set -euo pipefail
 
-          # generatedAt is day-granular and the commit fields track each source repo's HEAD;
-          # both move without the published content changing, so neither may turn the build
-          # red on its own. This is the SAME expression fleet-sync.yml strips with, character
-          # for character, and that is the point rather than a coincidence: the bot deciding
-          # to open a refresh PR and this job deciding to fail the build must never disagree
-          # about what counts as a change, or a green build sits beside an open "the data
-          # drifted" PR — or worse, this stays green on drift the bot will not PR.
-          #
-          # Its type guard and its `?` are what let ONE filter cover all THREE stamp shapes.
-          # corpus/coverage carry a single generatedFrom.{repo,path,commit}, where .repos[]?
-          # matches nothing and the whole thing reduces exactly to the
-          # del(.generatedAt, .generatedFrom.commit) this used to say. snippets.json carries
-          # generatedFrom.{clean,repos{}} instead, because its curated set spans six repos —
-          # six SHAs, each moving on every unrelated commit to its own repo — and
-          # generated.json carries that same shape over ELEVEN. The old flat form does not
-          # reach any of them, so leaving it would have failed this job on days when nothing
-          # the site publishes had changed at all.
-          #
-          # Only the commit fields are stripped, NOT generatedFrom wholesale:
-          #   • .repo / .path are hardcoded in the corpus/coverage collectors, so they change
-          #     only when someone repoints a collector at a different source — a change that
-          #     must be committed, and which would otherwise slip through whenever the new
-          #     source happened to yield identical numbers.
-          #   • .clean, .unclean, .branch, .defaultBranch and .dirty are KEPT, for the reason
-          #     fleet-sync keeps them: in a fresh shallow clone they are always true / absent
-          #     / the default branch / false, so they can only differ when the COMMITTED file
-          #     was generated from a feature branch or a dirty working tree. That is the
-          #     local-publish accident of 2026-08-16 in file form — real signal, not noise.
-          strip='del(.generatedAt) | if (.generatedFrom|type)=="object" then del(.generatedFrom.commit, .generatedFrom.repos[]?.commit) else . end'
+          # What does NOT count as a change lives in scripts/data-strip.jq, read here and
+          # by fleet-sync.yml. That sharing is the point rather than tidiness: the bot
+          # deciding to open a refresh PR and this job deciding to fail the build must
+          # never disagree about what a change IS. The file carries the reasoning for
+          # every field it keeps and drops.
+          strip=scripts/data-strip.jq
 
           # How a diff gets PRINTED, per file. corpus/coverage pretty-print fine — neither
           # has a line over 100 columns. snippets.json does not: it bakes whole config files
@@ -492,8 +431,8 @@ jobs:
                 cmd="$f"       ; render='.'                ; lines=60 ;;
             esac
 
-            old="$(git show "HEAD:src/data/${f}.json" | jq "$strip")"
-            new="$(jq "$strip" "src/data/${f}.json")"
+            old="$(git show "HEAD:src/data/${f}.json" | jq -f "$strip")"
+            new="$(jq -f "$strip" "src/data/${f}.json")"
             if [ "$old" = "$new" ]; then
               echo "OK — src/data/${f}.json matches its source."
               continue
@@ -514,6 +453,25 @@ jobs:
           done
 
           exit "$stale"
+
+  # The fleet is named once, in scripts/fleet-repos.txt. This asserts nothing has grown a
+  # second copy — no workflow re-inlining the clone loop or the strip filter, and
+  # src/data/repos.ts naming the same repos the manifest does. It exists because the
+  # duplication it forbids is exactly what this repo had: four hand-maintained clone
+  # loops, one of which had silently lost dotfiles-Debian. Removing the copies was the
+  # fix; this closes the way back.
+  #
+  # Cheap, like committed-data-provenance below: it clones nothing and re-derives nothing.
+  fleet-manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.repository_owner == 'dotgibson'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Assert the fleet is named in exactly one place
+        run: node scripts/verify-fleet-manifest.mjs
 
   # generated.json is derived from the sibling repos' WORKING TREES, so a sibling parked
   # on a feature branch or holding uncommitted edits gets that unmerged work absorbed and

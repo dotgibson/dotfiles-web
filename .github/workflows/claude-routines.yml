@@ -73,7 +73,6 @@ jobs:
       issues: write
     env:
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-      OWNER: ${{ github.repository_owner }}
       ISSUE_TITLE: "showcase-accuracy: weekly site-vs-fleet consistency sweep"
     steps:
       # Check dotfiles-web into a subdir so the rest of the fleet can sit beside it as
@@ -81,14 +80,21 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           path: dotfiles-web
+      # on-error: warn keeps this sweep best-effort — it reports on whatever it got, and
+      # one unreachable repo should not cost the whole weekly run. That leniency is also
+      # why the list had to stop living here: this loop had silently lost dotfiles-Debian,
+      # and a warn-only clone is exactly where a missing repo goes unnoticed. It now reads
+      # scripts/fleet-repos.txt like every other caller, so it cannot drift again.
+      #
+      # dest is the WORKSPACE so the fleet lands beside the dotfiles-web/ checkout — the
+      # layout /showcase-accuracy reads via --add-dir. The `./dotfiles-web/` prefix is
+      # required, not a typo: local actions resolve against $GITHUB_WORKSPACE, and the
+      # checkout above put this repo in a subdirectory of it.
       - name: Clone the source-of-truth fleet (read-only, shallow)
-        run: |
-          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch \
-                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Offense \
-                   dotfiles-openSUSE dotfiles-Windows htpx; do
-            git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r" 2>/dev/null \
-              || echo "::warning::could not clone $r (skipping it in the sweep)"
-          done
+        uses: ./dotfiles-web/.github/actions/clone-fleet
+        with:
+          dest: ${{ github.workspace }}
+          on-error: warn
       - name: Install Claude Code CLI (pinned)
         # Fail fast if the pin is empty — never silently fall back to a floating `latest`.
         run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION:?not set}"

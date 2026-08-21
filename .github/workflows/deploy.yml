@@ -65,14 +65,15 @@ jobs:
       # all, so a release build can never silently ship the committed snapshot; a
       # missing TAG (OS repos version independently — see core.lock) falls back to
       # the default branch. Normal pushes skip this entirely.
-      - name: Check out the fleet at a pinned ref
-        id: fleet
+      #
+      # Split into two steps below because a composite action cannot carry this gate: it
+      # is deploy-specific, and it must run BEFORE anything is fetched.
+      - name: Require a ref for a pinned build
+        id: pinned
         if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.dotfiles_ref != '') || github.event_name == 'repository_dispatch' }}
         env:
           REF: ${{ github.event.inputs.dotfiles_ref || github.event.client_payload.ref }}
           EVENT_ACTION: ${{ github.event.action }}
-          GH_TOKEN: ${{ github.token }}
-          OWNER: ${{ github.repository_owner }}
         run: |
           set -euo pipefail
           # A `release` dispatch (or a manual pinned build) MUST carry a ref so the
@@ -83,27 +84,20 @@ jobs:
             echo "::error::pinned build triggered without a ref (set dotfiles_ref / client_payload.ref)"
             exit 1
           fi
-          root="${RUNNER_TEMP}/fleet"
-          mkdir -p "$root"
-          # htpx is not a dotfiles layer — it is the source collect-corpus.mjs reads for
-          # the /purple page. Without it in this list that collector took its defensive
-          # no-op path on every pinned build, so the deployed corpus was whatever happened
-          # to be committed rather than the pinned ref's.
-          repos="dotfiles-core dotfiles-MacBook dotfiles-Windows dotfiles-Offense dotfiles-Defense \
-                 dotfiles-Fedora dotfiles-Arch dotfiles-Debian dotfiles-openSUSE dotfiles-Alpine \
-                 dotfiles-Gentoo htpx"
-          for r in $repos; do
-            url="https://x-access-token:${GH_TOKEN}@github.com/${OWNER}/${r}.git"
-            if [ -n "${REF:-}" ] && git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>/dev/null; then
-              echo "cloned $r @ $REF"
-            elif git clone --depth 1 "$url" "$root/$r" 2>/dev/null; then
-              echo "cloned $r @ default branch${REF:+ ($REF not found)}"
-            else
-              echo "::error::could not clone $r at ${REF:-default branch}"
-              exit 1
-            fi
-          done
-          echo "root=$root" >> "$GITHUB_OUTPUT"
+      # The clone itself: scripts/fleet-repos.txt is the list (shared with the collectors,
+      # so a pinned build demands exactly the repos collect-metrics.mjs requires) and
+      # .github/actions/clone-fleet is the loop. A repo without the tag falls back to its
+      # default branch, since the OS repos version independently — see core.lock.
+      - name: Check out the fleet at a pinned ref
+        id: fleet
+        # 'skipped' on a normal push, so this rides the gate above rather than
+        # restating its condition. Neither step sets continue-on-error, so outcome
+        # and conclusion agree.
+        if: ${{ steps.pinned.outcome == 'success' }}
+        uses: ./.github/actions/clone-fleet
+        with:
+          ref: ${{ github.event.inputs.dotfiles_ref || github.event.client_payload.ref }}
+          token: ${{ github.token }}
 
       - name: Regenerate the derived data from the pinned fleet
         if: ${{ steps.fleet.outputs.root != '' }}

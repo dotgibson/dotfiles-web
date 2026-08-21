@@ -20,6 +20,7 @@
     "data:strict": "npm run data",
     "data:lenient": "npm run metrics && npm run snippets && npm run corpus && npm run coverage",
     "verify:flags": "node scripts/verify-bootstrap-flags.mjs",
+    "verify:fleet": "node scripts/verify-fleet-manifest.mjs",
     "hooks:install": "node scripts/install-hooks.mjs",
     "prepare": "node scripts/install-hooks.mjs",
     "check": "astro check",

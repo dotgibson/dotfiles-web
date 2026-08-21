@@ -168,20 +168,21 @@ jobs:
           private-key: ${{ secrets.FLEET_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
+      # All required: collect-metrics.mjs exits 0 (leaving generated.json untouched) if a
+      # repo is missing, which would masquerade as "in step" — so a failed clone must fail
+      # the job instead, which is the action's default.
+      #
+      # dest is the WORKSPACE, not the action's $RUNNER_TEMP default: the fleet has to
+      # land as siblings of the dotfiles-web/ checkout above, the layout resolveFleetRoot()
+      # finds without DOTFILES_ROOT.
+      #
+      # The `./dotfiles-web/` prefix is not a typo and must not be "fixed" to
+      # `./.github/...`: local actions resolve against $GITHUB_WORKSPACE, and the checkout
+      # above put this repo in a subdirectory of it.
       - name: Clone the fleet as siblings (read-only, shallow)
-        run: |
-          set -euo pipefail
-          # All required: collect-metrics.mjs exits 0 (leaving generated.json untouched)
-          # if a repo is missing, which would masquerade as "in step" — so a failed clone
-          # must fail the job instead.
-          # htpx is here for collect-corpus.mjs: it is not a dotfiles layer, it is the
-          # source of the red/blue corpus the /purple page publishes, and leaving it out
-          # is why corpus.json used to drift for months between hand refreshes.
-          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Debian \
-                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Offense \
-                   dotfiles-openSUSE dotfiles-Windows htpx; do
-            git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$r"
-          done
+        uses: ./dotfiles-web/.github/actions/clone-fleet
+        with:
+          dest: ${{ github.workspace }}
       - name: Regenerate the derived data (all four collectors)
         working-directory: dotfiles-web
         run: npm run data
@@ -195,47 +196,29 @@ jobs:
           REPO: ${{ github.event.repository.name }}
         run: |
           set -euo pipefail
-          # generatedAt is a day-granular stamp that changes on every run; judge drift on
-          # the real content only, and discard a stamp-only change so we don't PR noise.
-          # corpus.json and coverage.json carry the same stamp plus generatedFrom.commit,
-          # which moves whenever htpx / dotfiles-Defense get ANY commit, related or not —
-          # so they need the same treatment. generatedFrom.repo / .path are deliberately
-          # NOT stripped: they are hardcoded in the collectors, so a change there means a
-          # collector was repointed at a different source and must land — otherwise the
-          # revert below would discard the corrected provenance and the committed file
-          # would keep advertising the old one.
+          # WHAT COUNTS AS DRIFT lives in scripts/data-strip.jq, which data-freshness.yml
+          # reads too. Sharing one file is the point rather than tidiness: this step decides
+          # whether to OPEN A REFRESH PR and that job decides whether to FAIL THE BUILD, so
+          # the two disagreeing would leave a green build beside an open "the data drifted"
+          # PR — or leave the build green on drift this bot will not PR. The filter carries
+          # the reasoning for every field it keeps and drops; the short version is that
+          # generatedAt and the per-repo commit SHAs move on every unrelated commit to any
+          # sibling, which would otherwise PR every hour, while .branch / .dirty / .clean
+          # are KEPT because in CI they can only differ when the COMMITTED file was built
+          # from a feature branch or a dirty tree — the local-publish accident, not noise.
           #
-          # generated.json now carries a PER-REPO stamp (generatedFrom.repos[].commit /
-          # .branch / .dirty) recording which sibling commit each figure came from, so its
-          # .commit values need the same strip for the same reason — ten repos means ten
-          # SHAs moving on every unrelated commit, which would otherwise PR every hour.
-          # .branch and .dirty are deliberately KEPT in the comparison: in CI they are
-          # always the default branch and false, so they can only differ when the COMMITTED
-          # snapshot was generated from a feature branch or a dirty tree. That is precisely
-          # the local-publish accident the collector's preflight warns about, and this bot
-          # replacing it with a clean regeneration is the right outcome, not noise.
-          #
-          # ALL FOUR files go through the same strip, snippets.json included — even though
-          # it is the one file carrying no stamp today, so the strip is a no-op on it. That
-          # is the point. It used to be compared with a plain `git diff`, which was correct
-          # only for as long as it stayed unstamped, and a PR to stamp it is open now. The
-          # moment a generatedAt appeared there, the plain diff would have reported drift
-          # EVERY DAY with no content change, and the bot would have opened a refresh PR
-          # every day — the failure this strip exists to prevent, reintroduced through the
-          # one file that had been exempted from it. Handling it here removes the ordering
-          # hazard instead of documenting it.
-          #
-          # The type guard is load-bearing, not defensive habit: snippets.json's
-          # generatedFrom is currently the STRING "sibling repos", and `del(.x.commit)`
-          # against a string is a hard jq error (exit 5), which under `set -e` would fail
-          # this step and break the bot outright. Guarding on the type keeps one strip
-          # correct across all four shapes — string, {repo,path,commit}, {clean,repos{}},
-          # and absent entirely.
+          # ALL FOUR files go through it, snippets.json included — even though it is the one
+          # file carrying no stamp today, so the filter is a no-op on it. That is deliberate.
+          # It used to be compared with a plain `git diff`, correct only for as long as it
+          # stayed unstamped: the moment a generatedAt appeared there, the plain diff would
+          # report drift EVERY DAY with no content change and the bot would open a refresh PR
+          # every day — the exact failure the filter prevents, reintroduced through the one
+          # file that had been exempted from it. Handling it here removes the ordering hazard
+          # instead of documenting it.
           content_changed=no
           for f in generated corpus coverage snippets; do
-            strip='del(.generatedAt) | if (.generatedFrom|type)=="object" then del(.generatedFrom.commit, .generatedFrom.repos[]?.commit) else . end'
-            old="$(git show "HEAD:src/data/${f}.json" | jq "$strip")"
-            new="$(jq "$strip" "src/data/${f}.json")"
+            old="$(git show "HEAD:src/data/${f}.json" | jq -f scripts/data-strip.jq)"
+            new="$(jq -f scripts/data-strip.jq "src/data/${f}.json")"
             [ "$old" = "$new" ] || content_changed=yes
           done
           if [ "$content_changed" = no ]; then
