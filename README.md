@@ -169,24 +169,34 @@ of them is harmless:
   two guards below key on, but the contaminated file is on disk either way.
 
 So the lenient path is fine for looking, and is not a publish path. `fleet-sync.yml` runs all four weekly and opens a PR when the
-output drifts; `data-freshness.yml` fails CI when the committed `corpus.json` /
-`coverage.json` / `snippets.json` no longer match their sources, or when
-`generated.json`'s Core version is behind the latest `dotfiles-core` release.
+output drifts; `data-freshness.yml` fails CI when **any** of the four committed files no
+longer matches its source — it clones the fleet, re-runs all four collectors and diffs the
+result — and additionally when `generated.json`'s Core version is behind the latest
+`dotfiles-core` release. The second check is not redundant: it asks whether the data names
+the latest *release*, while the regeneration asks whether it matches the fleet's *current*
+state, and it keeps working when the clones fail.
 
 Because the lenient path still *writes* (with a warning), the thing that actually
 publishes — the commit — is guarded in two places, both reading the
 `generatedFrom.clean` verdict that `collect-metrics.mjs` and `collect-snippets.mjs`
-stamp into their files. The two guards do **not** cover the same ground:
+stamp into their files. They cover the same two files, but not the same ground:
 
 | guard | scope | files | installed by |
 | --- | --- | --- | --- |
-| `pre-commit` hook | one machine | `generated.json` only | `npm install` (or `npm run hooks:install`) |
+| `pre-commit` hook | one machine | `generated.json` + `snippets.json` | `npm install` (or `npm run hooks:install`) |
 | `committed-data-provenance` | every PR, every machine | `generated.json` + `snippets.json` | `data-freshness.yml` |
 
-That gap matters most for `snippets.json`, because `collect-snippets.mjs` only *warns*
-on an unclean fleet and writes anyway — unlike `collect-metrics.mjs`, which refuses. So
-CI is the only thing that stops an absorbed local edit from being published on `/config`
-as a repo's real configuration.
+The difference is *scope*, and it is the whole point: the hook lives in `.git/hooks`, is
+untracked, is skipped when `core.hooksPath` is set, and is one `--no-verify` away from
+irrelevant, so it protects exactly one machine. The CI job is the durable half.
+
+Both matter most for `snippets.json`, because `collect-snippets.mjs` only *warns* on an
+unclean fleet and writes anyway — unlike `collect-metrics.mjs`, which refuses outright.
+That asymmetry also changes the advice: for `generated.json`, re-running the collector
+fixes things; for `snippets.json`, re-running against a still-dirty tree just reproduces
+the problem, so the repos have to be settled first. Until #160 the hook did not stage
+`snippets.json` at all, and CI was the only thing standing between an absorbed local edit
+and its publication on `/config` as a repo's real configuration.
 
 The hook follows the same rules as `dotfiles-core`'s core guard: it never clobbers an
 existing `pre-commit`, and it *skips* — loudly — when `core.hooksPath` is set, since
