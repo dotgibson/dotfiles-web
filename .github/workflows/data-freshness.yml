@@ -366,9 +366,10 @@ jobs:
   # refuses such a snapshot.
   #
   # That hook protects exactly ONE machine — it lives in .git/hooks, is untracked, is
-  # skipped when core.hooksPath is set, and is one --no-verify away from irrelevant. This
-  # job is the durable half, and it is the cheap half too: it clones nothing and re-derives
-  # nothing, it just reads the stamp on the file being proposed.
+  # skipped when core.hooksPath is set, and is one --no-verify away from irrelevant. It
+  # also protects exactly ONE FILE: it stages nothing but generated.json. This job is the
+  # durable half on both counts, and it is the cheap half too: it clones nothing and
+  # re-derives nothing, it just reads the stamps on the files being proposed.
   committed-data-provenance:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -381,36 +382,64 @@ jobs:
         run: |
           set -euo pipefail
 
-          # NOT `.generatedFrom.clean // "absent"` — jq's // treats false as empty, so the
-          # single value this job exists to catch would report as "absent" and pass. Ask
-          # whether the key EXISTS, then stringify it.
-          clean="$(jq -r '
-            if (.generatedFrom | type) == "object" and (.generatedFrom | has("clean"))
-            then (.generatedFrom.clean | tostring) else "absent" end
-          ' src/data/generated.json)"
+          # BOTH stamped files, not just generated.json. collect-snippets.mjs stamps the
+          # identical clean/unclean verdict over its own six sources, and snippets.json is
+          # where an absorbed local edit does the most damage: generated.json would publish
+          # a wrong NUMBER, while snippets.json publishes the edited file's CONTENT on
+          # /config as that repo's real configuration.
+          #
+          # It also fails differently, which is why this is symmetry with a point. For
+          # generated.json this job is a backstop — collect-metrics.mjs refuses an unclean
+          # fleet outright and the pre-commit hook refuses the commit. collect-snippets.mjs
+          # only WARNS and writes the file anyway, and the hook does not stage snippets.json
+          # at all, so for that file this job is the ONLY thing that refuses.
+          #
+          # Nor is it redundant with derived-data above, which does also go red on such a
+          # file, since clean/unclean sit inside the payload it compares. That job reports it
+          # as STALENESS and tells you to re-run the collector — advice that, for snippets,
+          # re-absorbs the same dirty tree and changes nothing. Naming the offending repos
+          # and saying settle them is the difference between a diagnosis and a fix.
+          #
+          # Accumulate rather than exiting on the first offender: when the fleet was dirty at
+          # generation time BOTH files are usually contaminated, and reporting one at a time
+          # turns one fix into two round trips through CI.
+          bad=0
+          for f in generated snippets; do
+            # NOT `.generatedFrom.clean // "absent"` — jq's // treats false as empty, so the
+            # single value this job exists to catch would report as "absent" and pass. Ask
+            # whether the key EXISTS, then stringify it.
+            clean="$(jq -r '
+              if (.generatedFrom | type) == "object" and (.generatedFrom | has("clean"))
+              then (.generatedFrom.clean | tostring) else "absent" end
+            ' "src/data/${f}.json")"
 
-          case "$clean" in
-            true)
-              echo "OK — src/data/generated.json was derived from a clean fleet."
-              ;;
-            false)
-              echo "::error::src/data/generated.json was derived from an UNCLEAN fleet, so it" \
-                   "publishes unmerged work as fact. Offending repos:"
-              jq -r '.generatedFrom.unclean[]? | "  • " + .' src/data/generated.json
-              echo "::error::Settle those sibling repos (commit, stash, or return them to their" \
-                   "default branch), re-run 'npm run data' — which now fails rather than" \
-                   "absorbing — and commit the regenerated file."
-              exit 1
-              ;;
-            null)
-              echo "::warning::src/data/generated.json could not fully verify its sources" \
-                   "(a sibling was not a git checkout), so its provenance is incomplete."
-              ;;
-            absent)
-              # A file committed before the stamp existed, or hand-edited. Not worth failing
-              # a build over on its own — the freshness jobs above already catch staleness —
-              # but it means this guard has nothing to check.
-              echo "::warning::src/data/generated.json carries no generatedFrom.clean stamp," \
-                   "so its provenance is unverifiable. Regenerate it with 'npm run data'."
-              ;;
-          esac
+            case "$clean" in
+              true)
+                echo "OK — src/data/${f}.json was derived from a clean fleet."
+                ;;
+              false)
+                bad=1
+                echo "::error::src/data/${f}.json was derived from an UNCLEAN fleet, so it" \
+                     "publishes unmerged work as fact. Offending repos:"
+                jq -r '.generatedFrom.unclean[]? | "  • " + .' "src/data/${f}.json"
+                echo "::error::Settle those sibling repos (commit, stash, or return them to" \
+                     "their default branch), then re-run 'npm run data' and commit the" \
+                     "regenerated file. Settling them is the whole fix: collect-metrics" \
+                     "fails rather than absorbing, but collect-snippets only warns and" \
+                     "writes, so re-running against a still-dirty tree reproduces this."
+                ;;
+              null)
+                echo "::warning::src/data/${f}.json could not fully verify its sources" \
+                     "(a sibling was not a git checkout), so its provenance is incomplete."
+                ;;
+              absent)
+                # A file committed before the stamp existed, or hand-edited. Not worth failing
+                # a build over on its own — the freshness jobs above already catch staleness —
+                # but it means this guard has nothing to check.
+                echo "::warning::src/data/${f}.json carries no generatedFrom.clean stamp," \
+                     "so its provenance is unverifiable. Regenerate it with 'npm run data'."
+                ;;
+            esac
+          done
+
+          exit "$bad"
