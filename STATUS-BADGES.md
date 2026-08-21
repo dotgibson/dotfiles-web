@@ -81,7 +81,7 @@ component.
         src="https://github.com/dotgibson/dotfiles-Windows/actions/workflows/ci.yml/badge.svg" />
     </a>
 
-    <!-- Kali -->
+    <!-- Offense -->
     <a class="ci-card" href="https://github.com/dotgibson/dotfiles-Offense/actions/workflows/lint.yml" target="_blank" rel="noopener">
       <div class="ci-card__head">
         <span class="ci-card__name">⚔ dotfiles-Offense</span>

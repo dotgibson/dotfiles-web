@@ -52,12 +52,20 @@ For each of `dotfiles-core`, `dotfiles-MacBook`, `dotfiles-Windows`,
 
 ### Or do all eleven from the terminal with `gh`
 
+Run from a `dotfiles-web` checkout: the repo names come from
+`scripts/fleet-repos.txt`, the same list CI clones from, so this loop cannot fall
+behind a rename the way a hand-typed one did — it used to say `Kali`, and because
+github.com still redirects that name to `dotfiles-Offense`, the loop *succeeded*
+while telling you it had set the secret on a repo that no longer exists under that
+name. `htpx` is skipped: it is tagged `aux` in the manifest and is a corpus source,
+not one of the eleven that trigger a refresh.
+
 ```bash
 read -rs TOKEN   # paste github_pat_..., press Enter — kept off-screen & out of history
 
-for r in core MacBook Windows Kali Defense Fedora Arch Debian openSUSE Alpine Gentoo; do
-  printf '%s' "$TOKEN" | gh secret set WEBHOOK_SECRET --repo "dotgibson/dotfiles-$r" --body -
-  echo "set on dotfiles-$r"
+for r in $(awk '$1 !~ /^#/ && ($2 == "core" || $2 == "os") { print $1 }' scripts/fleet-repos.txt); do
+  printf '%s' "$TOKEN" | gh secret set WEBHOOK_SECRET --repo "dotgibson/$r" --body -
+  echo "set on $r"
 done
 unset TOKEN
 ```

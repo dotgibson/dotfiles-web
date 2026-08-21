@@ -15,9 +15,15 @@
 #
 # Format: `<repo-name> <role>`, one per line. Blank lines and `#` comments
 # ignored. Roles:
-#   core — dotfiles-core, the shared layer every Core metric is read from
-#   os   — the ten machine/role repos collect-metrics.mjs counts and compares
-#   aux  — read by a single collector and NOT a dotfiles layer at all
+#   "core" — dotfiles-core, the shared layer every Core metric is read from
+#   "os"   — the ten machine/role repos collect-metrics.mjs counts and compares
+#   "aux"  — read by a single collector and NOT a dotfiles layer at all
+#
+# The role names are QUOTED above on purpose. A reader that selects rows with
+# `awk '$2 == "os"'` and forgets to skip comments would otherwise match these
+# legend lines too, since their second field is the bare role name — it silently
+# returned 13 repos instead of 11 the first time this file was read from a shell.
+# Quoting them means the naive filter is merely incomplete, not wrong.
 #
 # ORDER IS LOAD-BEARING for the `os` rows: it is the order collect-metrics.mjs
 # iterates, and therefore the key order of generated.json's objects. Reordering

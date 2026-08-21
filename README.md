@@ -138,8 +138,8 @@ repos into `src/data/`:
 
 | file | collector | source repo |
 | --- | --- | --- |
-| `generated.json` | `collect-metrics.mjs` | the ten dotfiles repos |
-| `snippets.json` | `collect-snippets.mjs` | the OS repos' config files |
+| `generated.json` | `collect-metrics.mjs` | the eleven dotfiles repos |
+| `snippets.json` | `collect-snippets.mjs` | eight curated files across six of them |
 | `corpus.json` | `collect-corpus.mjs` | `htpx` |
 | `coverage.json` | `collect-coverage.mjs` | `dotfiles-Defense` |
 

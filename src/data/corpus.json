@@ -3,11 +3,11 @@
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "bacba86ee5243d2457315dc0889946446d5c866a"
+    "commit": "9004c3fb8fb48883cbe03f78db695d12e377f7cc"
   },
-  "totalPairs": 99,
+  "totalPairs": 101,
   "groupCount": 16,
-  "techniqueCount": 69,
+  "techniqueCount": 71,
   "tacticCount": 13,
   "groups": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "label": "Cloud IAM (Entra · AWS · GCP)",
-      "count": 11
+      "count": 13
     },
     {
       "label": "Okta",
@@ -586,6 +586,17 @@
       ]
     },
     {
+      "id": "aitm-phish",
+      "attack": "AiTM phishing (Evilginx reverse-proxy, steal the session)",
+      "detection": "Detect AiTM phishing (Entra sign-in token replay across ASNs)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Initial Access",
+      "tactic": "TA0001",
+      "techniques": [
+        "T1566.002"
+      ]
+    },
+    {
       "id": "aws-console-login-profile",
       "attack": "AWS console takeover (Create/UpdateLoginProfile)",
       "detection": "Detect console takeover (CloudTrail Create/UpdateLoginProfile)",
@@ -704,6 +715,17 @@
       "tactic": "TA0003",
       "techniques": [
         "T1098.001"
+      ]
+    },
+    {
+      "id": "valid-accounts-cloud",
+      "attack": "Valid cloud accounts (credential stuffing → tenant sign-in)",
+      "detection": "Detect valid-account abuse (Entra sign-in, stuffing hit from a new ASN)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Initial Access",
+      "tactic": "TA0001",
+      "techniques": [
+        "T1078.004"
       ]
     },
     {
