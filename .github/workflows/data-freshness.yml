@@ -9,12 +9,20 @@ name: Data freshness
 # the Core version baked into the committed src/data/generated.json. If the data is
 # behind the latest Core release, it FAILS with a nudge to regenerate and commit.
 #
-# Note the narrow scope of that first job: it compares TWO VERSION STRINGS. Everything
-# else in generated.json — package counts, CI flags, the changelog, fleet.publicRepos,
-# every core.* metric and all nine per-repo drift entries — is unvalidated by it. The
-# derived-data job below covers the other three generated files (corpus.json,
-# coverage.json, snippets.json), each of which was checked by nothing at all until that
+# Note the narrow scope of that first job: it compares TWO VERSION STRINGS, and it is the
+# only job here that needs no sibling repos at all. Package counts, CI flags, the
+# changelog, fleet.publicRepos, every core.* metric and all ten per-repo drift entries are
+# invisible to it. The derived-data job below now regenerates and diffs ALL FOUR generated
+# files — generated.json included — against fresh clones of the fleet, which is what closes
+# that gap (#150, #160). Each of the other three was checked by nothing at all until that
 # job reached it.
+#
+# The two are not redundant, and the difference is the point. `check` asks "does the
+# committed file name the latest RELEASE?"; derived-data asks "is the committed file what
+# regenerating against the fleet's current state would produce?". A Core release nobody has
+# refreshed the site for fails the first and passes the second; a hand-edited package count
+# fails the second and passes the first. Keeping `check` also keeps one guard that still
+# runs when the clones fail or the fleet is unreachable.
 on:
   schedule:
     - cron: "17 6 * * 1" # Mondays 06:17 UTC — weekly drift sweep
@@ -174,9 +182,13 @@ jobs:
           diff -u /tmp/core-matrix.md /tmp/web-matrix.md | head -100 || true
           exit 1
 
-  # corpus.json, coverage.json and snippets.json are the OTHER three generated files, and
-  # until this job existed nothing validated them — not the version guard above (it only
-  # opens generated.json), not fleet-sync (it ran neither collector and didn't clone htpx),
+  # This job regenerates ALL FOUR generated files against fresh clones and fails on any
+  # difference. It grew in three steps, and the history is worth keeping because each step
+  # was prompted by a file that had already gone stale unnoticed.
+  #
+  # corpus.json and coverage.json came first. Until this job existed nothing validated
+  # them — not the version guard above (it only opens generated.json), not fleet-sync (it
+  # ran neither collector and didn't clone htpx),
   # not deploy (it runs them but commits nothing back, and its clone list omitted htpx so
   # the corpus collector silently no-opped every time). They also carried no stamp, so
   # their staleness was undetectable even in principle. The result was predictable: by
@@ -184,27 +196,46 @@ jobs:
   # Sigma rules behind dotfiles-Defense, while /showcase-accuracy's own instructions told
   # every run to treat both as CI-verified ground truth.
   #
-  # snippets.json was the last file outside this gate, and it is the one where being
-  # outside it costs most. corpus.json and coverage.json publish NUMBERS; snippets.json
+  # snippets.json came second, and it is the one where being outside the gate cost most.
+  # corpus.json and coverage.json publish NUMBERS; snippets.json
   # publishes CONTENT — /config renders the baked text as a repo's real configuration,
   # under its real path, beside a link to that file on GitHub. A stale copy therefore does
   # not misreport a count, it shows a reader a config that no longer exists and then
   # invites them to click through to the one that does. It went stale exactly that way
   # between 2026-08-14 and #129, five of its eight sources drifted and nothing anywhere
   # said so. It sat outside the gate only because it was unstamped and so uncomparable;
-  # the per-repo generatedFrom stamp it now carries is what makes it gateable, and this
-  # is the gate.
+  # the per-repo generatedFrom stamp it now carries is what makes it gateable.
   #
-  # Unlike the jobs above this one needs the sources, so it clones the eight repos those
-  # three collectors read and REGENERATES the files, then fails if the result differs from
+  # generated.json came third, and closes #150/#160. It was never OUTSIDE a gate — the
+  # check job above has always opened it — but that gate compares one version string out of
+  # ~2200 lines, so package counts, CI flags, fleet.publicRepos, every core.* metric, all
+  # ten drift entries and the whole changelog were as unchecked as corpus.json used to be.
+  # Not hypothetical: a bogus dotfiles-Windows drift entry once sat in a file CI called
+  # fresh, which is why /showcase-accuracy told auditors to treat a surprising value here
+  # as a lead rather than a fact. It also has the widest blast radius of the four, feeding
+  # the landing page's metrics strip and repo cards, the architecture diagram, /changelog
+  # and the version switcher in every page's header.
+  #
+  # Adding it made the clone list EXACTLY fleet-sync.yml's twelve, which is the right end
+  # state rather than a coincidence: the bot that PRs the refresh and the job that fails
+  # the build now read the same repos, run the same four collectors and diff with the same
+  # expression, so they cannot disagree about what "in step" means.
+  #
+  # Unlike the jobs above this one needs the sources, so it clones the twelve repos those
+  # four collectors read and REGENERATES the files, then fails if the result differs from
   # what is committed. Content-diffing rather than comparing source SHAs is deliberate: an
   # unrelated commit to htpx must not turn this red, only one that actually moves what the
   # site publishes.
   #
   # On the weekly cron this is an ALARM, not a defect: it runs Monday and fleet-sync runs
-  # Tuesday, so a genuine drift shows up here a day before the bot PRs the refresh. On a
-  # pull request it is a gate — the paths filter above scopes it to PRs that touch the
-  # data or its collectors.
+  # Tuesday, so a genuine drift shows up here a day before the bot PRs the refresh —
+  # though for generated.json the core-release dispatch usually gets there first, so for
+  # that file this is more often the PR gate than the alarm. On a pull request it is a
+  # gate — the paths filter above scopes it to PRs that touch the data or its collectors,
+  # and note that src/data/generated.json and scripts/collect-metrics.mjs have been in
+  # that filter all along, for the check job. They now serve two jobs with different
+  # failure modes: pruning either as "already covered" would silently remove this gate's
+  # trigger while check still looked fine.
   derived-data:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -213,7 +244,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Clone the corpus + coverage + snippets sources (read-only, shallow)
+      - name: Clone the fleet the four collectors read (read-only, shallow)
         id: fleet
         env:
           OWNER: ${{ github.repository_owner }}
@@ -226,55 +257,87 @@ jobs:
           # green — so a failed clone has to fail the job here, and --strict below is the
           # second line of defence if one ever gets past this.
           #
-          # Two groups with nothing in common: htpx and dotfiles-Defense are the corpus and
-          # coverage sources, and the six on the second line are the repos
-          # collect-snippets.mjs reads its eight curated files from. Six repos for one file
-          # looks disproportionate until you notice the curated set deliberately spans all
-          # three layers — Core, four OS-native overlays and the Offense role — because that
-          # spread IS what /config exists to show. All eight are public, so these are
-          # anonymous clones: no PAT, no token in a URL.
+          # This is the whole fleet, because collect-metrics.mjs reads the whole fleet:
+          # dotfiles-core plus the ten machine/role repos. htpx is the odd one out — not a
+          # dotfiles layer at all, but the source of the red/blue corpus /purple publishes.
+          # collect-snippets.mjs's six are a strict SUBSET of the metrics eleven, its eight
+          # curated files spanning all three layers (Core, four OS-native overlays, the
+          # Offense role) because that spread IS what /config exists to show. All twelve are
+          # public, so these are anonymous clones: no PAT, no token in a URL.
           #
-          # The whole set measures ~5s and 53 MB, which is why the snippets sources were
-          # added to this job rather than given one of their own. The clone sets are
-          # disjoint, so a second job would parallelise five seconds at the cost of a second
-          # copy of the checkout, the strip expression and the compare loop below — and two
-          # red X's to read instead of one.
+          # The list is byte-for-byte fleet-sync.yml's loop, same order and same line
+          # breaks. That is deliberate: two workflows hand-maintaining the same set is a
+          # standing hazard, and identical text at least makes a divergence show up as a
+          # diff rather than requiring someone to compare them as sets. (Three, counting
+          # deploy.yml. A composite action is the real fix — see the follow-up issue.)
+          #
+          # Measured at 12 clones: ~11s and 95 MB, up from ~5s and 53 MB at eight. That
+          # cost is why generated.json is handled HERE rather than in a job of its own.
+          # The clone sets used to be disjoint, which made a second job look like free
+          # parallelism; they now overlap almost entirely, so a second job would re-clone
+          # the same eleven repos rather than parallelise anything — and leave two red X's
+          # to read instead of one. The overlap argues for one job far more strongly than
+          # the disjoint case ever argued against it.
           #
           # dotfiles-Offense, NOT dotfiles-Kali. The repo was renamed and github.com still
           # redirects the old name, so cloning dotfiles-Kali would SUCCEED — into a directory
           # called dotfiles-Kali, which is not the path collect-snippets.mjs joins. The
           # failure would surface two steps later as a --strict complaint about a missing
           # offensive/offensive.zsh, blaming a curated file that is perfectly fine. A
-          # redirect that works is exactly what makes this worth writing down.
+          # redirect that works is exactly what makes this worth writing down. It now bites
+          # twice over: collect-metrics.mjs joins that same directory name for its own repo
+          # list, so a dotfiles-Kali directory would fail its missing-repo check too, with
+          # the equally misdirecting "missing repos: dotfiles-Offense".
           #
           # --depth 1 does still write refs/remotes/origin/HEAD, which this job leans on
           # harder than the corpus/coverage half did: collect-snippets.mjs resolves
-          # defaultBranch from that ref, and the comparison below deliberately does NOT
-          # strip it. A shallow clone that stopped setting it would stamp defaultBranch null
-          # here against "main" in the committed file, turning this job red over clone
-          # mechanics rather than drift.
-          for r in htpx dotfiles-Defense \
-                   dotfiles-core dotfiles-Fedora dotfiles-Arch dotfiles-MacBook \
-                   dotfiles-Alpine dotfiles-Offense; do
+          # defaultBranch from that ref and collect-metrics.mjs does the same, and the
+          # comparison below deliberately does NOT strip it. A shallow clone that stopped
+          # setting it would stamp defaultBranch null here against "main" in both committed
+          # files, turning this job red over clone mechanics rather than drift. It does set
+          # it — verified across all twelve of these repos, and fleet-sync has been proving
+          # the same thing weekly, since its bot commits stamp defaultBranch "main" for
+          # every one of the eleven.
+          for r in dotfiles-core dotfiles-MacBook dotfiles-Alpine dotfiles-Arch dotfiles-Debian \
+                   dotfiles-Defense dotfiles-Fedora dotfiles-Gentoo dotfiles-Offense \
+                   dotfiles-openSUSE dotfiles-Windows htpx; do
             git clone --depth 1 "https://github.com/${OWNER}/${r}.git" "$root/$r"
           done
           echo "root=$root" >> "$GITHUB_OUTPUT"
 
-      - name: Regenerate the corpus + coverage + snippets snapshots
+      - name: Regenerate all four derived snapshots
         env:
           DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
         run: |
           set -euo pipefail
-          # Three explicit invocations rather than `npm run data`: that script also runs
-          # collect-metrics.mjs, which needs repos this job deliberately does not clone and
-          # produces a file this job deliberately does not compare — generated.json is the
-          # `check` job's business. There is also no setup-node and no npm ci here, on
-          # purpose: all three collectors import only node: builtins plus
-          # scripts/lib/fleet-root.mjs, so the runner's preinstalled node runs them as they
-          # are, and an install step would cost more than all eight clones and buy nothing.
+          # Four explicit invocations rather than `npm run data`, even though that script is
+          # now exactly these four in exactly this order. Keeping them explicit means this
+          # job's behaviour is readable HERE rather than in package.json, and an edit that
+          # quietly drops a --strict from the npm script cannot change what CI does without
+          # a diff in this file. The order is deliberately npm's, so a CI log and a local
+          # `npm run data` can be read side by side.
+          #
+          # There is no setup-node and no npm ci here, on purpose: all four collectors
+          # import only node: builtins (collect-metrics adds node:child_process for its
+          # provenance stamps) plus scripts/lib/fleet-root.mjs, so the runner's preinstalled
+          # node runs them as they are, and an install step would cost more than all twelve
+          # clones and buy nothing.
+          #
+          # --strict on all four. For the three file-based collectors it turns a missing
+          # source into a hard error instead of the silent exit 0 that would make an
+          # unrefreshed snapshot look green. For collect-metrics it ALSO gates the
+          # fleet-cleanliness preflight, which passes here structurally — twelve fresh
+          # clones are on their default branch with an empty `git status` — and which
+          # fleet-sync has been proving weekly against these same repos and the same
+          # shallow clones.
+          #
+          # stdout is discarded for metrics alone: it dumps its whole payload minus the
+          # changelog, feed included, which is ~1400 lines of log sitting directly above
+          # the diff a reader actually came for. Errors go to stderr and still surface.
+          node scripts/collect-metrics.mjs --strict > /dev/null
+          node scripts/collect-snippets.mjs --strict
           node scripts/collect-corpus.mjs --strict
           node scripts/collect-coverage.mjs --strict
-          node scripts/collect-snippets.mjs --strict
 
       - name: Compare the regenerated snapshots against what is committed
         run: |
@@ -288,14 +351,15 @@ jobs:
           # about what counts as a change, or a green build sits beside an open "the data
           # drifted" PR — or worse, this stays green on drift the bot will not PR.
           #
-          # Its type guard and its `?` are what let ONE filter cover both stamp shapes.
+          # Its type guard and its `?` are what let ONE filter cover all THREE stamp shapes.
           # corpus/coverage carry a single generatedFrom.{repo,path,commit}, where .repos[]?
           # matches nothing and the whole thing reduces exactly to the
           # del(.generatedAt, .generatedFrom.commit) this used to say. snippets.json carries
           # generatedFrom.{clean,repos{}} instead, because its curated set spans six repos —
-          # six SHAs, each moving on every unrelated commit to its own repo. The old flat
-          # form does not reach them, so leaving it would have failed this job on days when
-          # nothing the site publishes had changed at all.
+          # six SHAs, each moving on every unrelated commit to its own repo — and
+          # generated.json carries that same shape over ELEVEN. The old flat form does not
+          # reach any of them, so leaving it would have failed this job on days when nothing
+          # the site publishes had changed at all.
           #
           # Only the commit fields are stripped, NOT generatedFrom wholesale:
           #   • .repo / .path are hardcoded in the corpus/coverage collectors, so they change
@@ -329,15 +393,103 @@ jobs:
                | "=== \(.id)  (\(.shown) of \(.total) lines, truncated=\(.truncated))", .content)
           '
 
+          # generated.json has snippets.json's problem wearing a different disguise, and the
+          # distinction matters enough to keep two renderers rather than one. It pretty-prints
+          # to 2181 lines whose longest runs 4042 columns — but where snippets.json's .content
+          # strings carry real newlines that jq -r unfolds for free, these are changelog and
+          # feed entries whose whitespace the collector has already collapsed to single
+          # spaces. There is nothing to unfold: each is ONE unbroken 4000-column line. A
+          # one-word drift in a release note therefore shows as a "-"/"+" pair identical for
+          # its first several hundred columns, and the gate fails while appearing to report
+          # nothing. So this renderer word-WRAPS where the other one unfolds. Measured: 4042
+          # columns down to 101.
+          #
+          # Everything else is a flat, sorted projection of the fields the site actually
+          # publishes — stamp, then scalars, then the per-repo maps, then the prose. That
+          # order is deliberate: a Core release moves all of it, and the first hunk of a
+          # truncated diff should be the version bump, the package counts and the ten drift
+          # rows rather than the middle of a changelog entry.
+          #
+          # sort_by(.key) on every to_entries is load-bearing, not tidiness. jq preserves an
+          # object's input key order, and collect-metrics.mjs builds packages / ci /
+          # drift.repos by iterating [core, ...osRepos] — deterministic today and silently
+          # reorderable by anyone who edits that array. Sorting makes this projection depend
+          # on the DATA rather than on the collector's loop order, so a reordering cannot
+          # fabricate a thousand-line diff out of a file that has not changed.
+          #
+          # .date and .summary are optional: JSON.stringify drops date on an Unreleased block
+          # and summary when it is empty, so // "undated" and // empty keep those lines from
+          # rendering a bare null. .drift.repos is heterogeneous too — dotfiles-Windows
+          # carries mirroredFrom and no carried/ref, the other nine the reverse — and all four
+          # keys are printed unconditionally on purpose: a conditional projection would change
+          # a row's SHAPE when a repo's status flipped, turning a one-field change into a
+          # structural diff.
+          #
+          # $word inside the single quotes reaches jq verbatim: bash does not re-scan the
+          # result of expanding "$render" for further expansion. That is the same reason
+          # snippets_render can be written single-quoted here and used double-quoted below.
+          generated_render='
+            def wrap: split(" ")
+              | reduce .[] as $word ([];
+                  if (length == 0) or ((.[-1] | length) + 1 + ($word | length)) > 88
+                  then . + [$word] else .[0:-1] + [.[-1] + " " + $word] end)
+              | .[];
+            "generatedFrom.clean = \(.generatedFrom.clean)",
+            (.generatedFrom.unclean[]? | "generatedFrom.unclean: \(.)"),
+            (.generatedFrom.repos // {} | to_entries | sort_by(.key)[]
+               | "repo \(.key): branch=\(.value.branch) default=\(.value.defaultBranch) dirty=\(.value.dirty)"),
+            "fleet.publicRepos = \(.fleet.publicRepos)",
+            "fleet.layers = \(.fleet.layers)",
+            "releases.current = \(.releases.current)",
+            "releases.channels = \(.releases.channels | join(", "))",
+            "drift.coreVersion = \(.drift.coreVersion)",
+            (.core // {} | to_entries | sort_by(.key)[] | "core.\(.key) = \(.value)"),
+            (.packages // {} | to_entries | sort_by(.key)[] | "packages.\(.key) = \(.value)"),
+            (.ci // {} | to_entries | sort_by(.key)[] | "ci.\(.key) = \(.value)"),
+            (.drift.repos // {} | to_entries | sort_by(.key)[]
+               | "drift \(.key): status=\(.value.status) carried=\(.value.carried) ref=\(.value.ref) mirroredFrom=\(.value.mirroredFrom)"),
+            (.changelog[]?
+               | "=== changelog \(.repo) @ \(.version) (\(.date // "undated"))",
+                 (.summary // empty | wrap | "    summary: \(.)"),
+                 (.groups[]? | "  --- \(.category)",
+                    (.items[]? | "    * [\(.kind)]", (.text | wrap | "      \(.)")))),
+            (.feed[]?
+               | "--- feed \(.repo) @ \(.version) \(.date // "undated") \(.category)/\(.kind) core=\(.core)",
+                 (.text | wrap | "    \(.)"))
+          '
+
           stale=0
-          for f in corpus coverage snippets; do
-            # Where the drift would actually surface, and what it costs a reader. Both are
-            # per-file: /purple publishes the corpus + coverage numbers, /config renders the
-            # baked snippets. Naming the wrong page throws away the only part of this message
-            # that tells someone where to go and look.
+          for f in generated corpus coverage snippets; do
+            # Where the drift would actually surface, and what it costs a reader — all
+            # per-file, because naming the wrong page throws away the only part of this
+            # message that tells someone where to go and look. /purple publishes the corpus
+            # and coverage numbers, /config renders the baked snippets, and generated.json is
+            # the widest of the four: the landing page's metrics strip and repo cards, the
+            # architecture page's drift diagram, /changelog, and the version switcher in
+            # every page's header.
+            #
+            # `cmd` is not `$f`. Three of these file names double as npm script names, but
+            # generated.json's collector is `npm run metrics` — telling a reader to run
+            # `npm run generated` would send them at a script that does not exist, in the one
+            # message whose entire job is to say what to do next.
+            #
+            # `lines` is per-file too. diff -u already elides unchanged regions, so this caps
+            # HUNKS rather than file length, and 60 is plenty for the other three. It is not
+            # for this one: a real week-over-week drift here (a Core release plus the fleet
+            # re-vendoring it) runs to several hundred diff lines, and the projection is
+            # ordered so the numbers come first precisely so that a truncated diff truncates
+            # the prose instead of the metrics.
             case "$f" in
-              snippets) page="/config" ; harm="stale config files" ; render="$snippets_render" ;;
-              *)        page="/purple" ; harm="stale counts"       ; render='.' ;;
+              generated)
+                page="/, /architecture and /changelog"
+                harm="stale metrics, vendoring drift and changelog"
+                cmd="metrics" ; render="$generated_render" ; lines=200 ;;
+              snippets)
+                page="/config" ; harm="stale config files"
+                cmd="snippets" ; render="$snippets_render" ; lines=60 ;;
+              *)
+                page="/purple" ; harm="stale counts"
+                cmd="$f"       ; render='.'                ; lines=60 ;;
             esac
 
             old="$(git show "HEAD:src/data/${f}.json" | jq "$strip")"
@@ -347,12 +499,18 @@ jobs:
               continue
             fi
             stale=1
-            echo "::error::src/data/${f}.json is BEHIND its source repo. The showcase" \
+            echo "::error::src/data/${f}.json is BEHIND its source. The showcase" \
                  "would publish ${harm} on ${page}. Check out the fleet as siblings" \
-                 "and run 'npm run ${f}' (or 'npm run data'), then commit the result."
+                 "and run 'npm run ${cmd}' (or 'npm run data'), then commit the result."
             echo "--- committed  +++ regenerated (src/data/${f}.json) ---"
+            # awk rather than `head -n`, because it reads the diff to EOF and can therefore
+            # say how much it is NOT showing. A truncation that does not admit it is
+            # truncating is how a reader concludes an 800-line drift was a 60-line one.
             diff -u <(printf '%s\n' "$old" | jq -r "$render") \
-                    <(printf '%s\n' "$new" | jq -r "$render") | head -60 || true
+                    <(printf '%s\n' "$new" | jq -r "$render") \
+              | awk -v max="$lines" 'NR<=max; END {
+                  if (NR>max) printf "… %d more diff line(s) suppressed (showing the first %d of %d).\n", NR-max, max, NR
+                }' || true
           done
 
           exit "$stale"

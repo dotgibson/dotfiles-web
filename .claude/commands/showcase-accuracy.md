@@ -17,35 +17,44 @@ Scope for this run: **$ARGUMENTS** (empty = the whole site).
 ## Baseline first — know how far the generated data is actually verified
 
 Four files under `src/data/` are machine-generated from the fleet by
-`scripts/collect-*.mjs`. **They are not equally verified.** Treating them as uniformly
-certified is how a run ends up certifying a value nothing ever checked. What CI actually
-guarantees:
+`scripts/collect-*.mjs`. Since #150/#160 all four are verified the same way — which is a
+change from what this routine used to say, so check the stamp before trusting an older
+snapshot. What CI actually guarantees:
 
 | file | source | what CI verifies |
 | --- | --- | --- |
-| `generated.json` | the ten dotfiles repos | **only the Core version string** |
+| `generated.json` | the eleven dotfiles repos | full content, regenerated and diffed (+ the Core version string) |
 | `corpus.json` | `htpx/entries/{red,blue}/*.md` | full content, regenerated and diffed |
 | `coverage.json` | `dotfiles-Defense/detections/sigma/**/*.yml` | full content, regenerated and diffed |
 | `snippets.json` | six repos' config files (Core, four OS, Offense) | full content, regenerated and diffed |
 
-- **`generated.json` is the weakly-checked one.** `data-freshness`'s `check` job compares
-  `.releases.current` / `.drift.coreVersion` against the latest `dotfiles-core` release
-  and *nothing else*. Package counts, CI flags, the changelog, `fleet.publicRepos`, every
-  `core.*` metric and all nine per-repo `drift` entries are unvalidated — that is exactly
-  how a bogus `dotfiles-Windows` drift entry once sat in a file CI called fresh. A
-  surprising value here is a **lead to check against the source repo**, not a fact.
-- **`corpus.json` / `coverage.json` / `snippets.json` are content-gated** by
-  `data-freshness`'s `derived-data` job (it clones all eight source repos, re-runs the
-  three collectors, and fails on any difference) and refreshed weekly by `fleet-sync`.
-  All three carry a `generatedAt` date — **read the stamp**; if it predates recent
-  activity in the source repo, say so rather than certifying the numbers.
-  - The stamp shapes differ. `corpus.json` / `coverage.json` carry a flat
-    `generatedFrom.commit` for their single source. `snippets.json` spans six repos, so
-    its SHAs are per-repo under `generatedFrom.repos.<name>.commit`, alongside a
-    `generatedFrom.clean` verdict — looking for a top-level `.commit` there finds
-    nothing and proves nothing.
-  - `snippets.json` was outside this gate until #149, and went stale that way once
-    already. Treat a `generatedAt` predating that as unverified regardless of the gate.
+- **All four are content-gated** by `data-freshness`'s `derived-data` job — it clones the
+  twelve source repos, re-runs all four collectors, and fails on any difference — and are
+  refreshed by `fleet-sync`. All four carry a `generatedAt` date; **read the stamp**, and
+  if it predates recent activity in the source repo say so rather than certifying the
+  numbers.
+- **`generated.json` used to be the weakly-checked one, and that is what changed.** It was
+  never outside a gate — `check` has always compared `.releases.current` /
+  `.drift.coreVersion` against the latest `dotfiles-core` release — but that is one string
+  out of ~2200 lines, so package counts, CI flags, the changelog, `fleet.publicRepos`,
+  every `core.*` metric and all ten per-repo `drift` entries went unvalidated. That is
+  exactly how a bogus `dotfiles-Windows` drift entry once sat in a file CI called fresh.
+  Those fields are now gated, so a value here is a fact rather than a lead — **but only in
+  a snapshot generated after #150/#160**. In anything older, treat every non-version field
+  as unverified.
+- **The two `generated.json` guards ask different questions**, and knowing which one a
+  value satisfies matters. `check` asks "does this name the latest *release*?";
+  `derived-data` asks "is this what regenerating against the fleet's *current* state would
+  produce?". So a figure can be CI-verified and still describe an unreleased Core.
+- The stamp shapes differ. `corpus.json` / `coverage.json` carry a flat
+  `generatedFrom.commit` for their single source. `snippets.json` spans six repos and
+  `generated.json` eleven, so both put their SHAs per-repo under
+  `generatedFrom.repos.<name>.commit` alongside a `generatedFrom.clean` verdict (the two
+  stamps were deliberately unified in #148) — looking for a top-level `.commit` in either
+  finds nothing and proves nothing.
+- `snippets.json` was outside the content gate until #149 and `generated.json` until
+  #150/#160, and both went stale that way. Treat a `generatedAt` predating those as
+  unverified regardless of the gate.
 - **Re-derive when a number looks wrong.** The sources are named in the table above and
   are checked out as siblings, so a count can always be confirmed rather than assumed.
 - The drift this routine catches is in the **hand-written prose / components**
