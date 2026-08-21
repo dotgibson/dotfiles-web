@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "adfa6a4a5135c6c159a4d764157cd90803a04a8a",
+        "commit": "f7adbc4bf9b4a6d8f3ffab0d524543c04706bae2",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "f32521127218292f29074842b7b45c07d0432e6e",
+        "commit": "ca1a7a15c901c48b964a1225c814de20d5725fcb",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "7803386c80e624f3497507bd66a187c33198f1f0",
+        "commit": "dacfadae14076d2c4c3cf46fee2fbadffac4d8bf",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "1e251ae756f09cf01b93f5b72eaaca2b97bbd2b4",
+        "commit": "72e36760429678e5bb77ef590dfe9e19357d2621",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "c1f65d73d2dba5f14d1fdbbcc2b4a29a988fded7",
+        "commit": "785b7cf13891c15e8e7d03f850a0c883ae884523",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "bac1612375766d922cb2b7d362d1a07a4db2898f",
+        "commit": "e72dcddb31c311089d79d401cd76672285f43a2d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "35c0118cf3152a5eeac2b6b51421fb6113b28c70",
+        "commit": "833be5d2ae41256b93dfd2c94c4ae8bf70e4d766",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "9e651c76d9ed8ebd2798e742af0231f416a313c5",
+        "commit": "5d7561233b5d8c0d660e804379c694786b244985",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "ec288c74482dd3f5ea0a3c5438630a2bf6fd4fa1",
+        "commit": "98a24c2083947b69352ea2862c7962e00176613d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "fced78560396368c39e915de5b05ea10ebf66804",
+        "commit": "27b811177f6048dba44aa954fd805d1aced26269",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,7 +88,7 @@
     "coreVersion": "4.14.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
@@ -99,37 +99,37 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v4",
+        "ref": "v4.14.0",
         "carried": "4.14.0",
         "status": "current"
       },
@@ -153,7 +153,7 @@
     "dotfiles-Fedora": 38,
     "dotfiles-Arch": 45,
     "dotfiles-Debian": 46,
-    "dotfiles-openSUSE": 42,
+    "dotfiles-openSUSE": 43,
     "dotfiles-Alpine": 60,
     "dotfiles-Gentoo": 39,
     "dotfiles-Offense-offensive": 78
