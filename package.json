@@ -19,6 +19,7 @@
     "data": "node scripts/collect-metrics.mjs --strict && node scripts/collect-snippets.mjs --strict && node scripts/collect-corpus.mjs --strict && node scripts/collect-coverage.mjs --strict",
     "data:strict": "npm run data",
     "data:lenient": "npm run metrics && npm run snippets && npm run corpus && npm run coverage",
+    "mirror": "node scripts/mirror-porting-matrix.mjs",
     "verify:flags": "node scripts/verify-bootstrap-flags.mjs",
     "verify:fleet": "node scripts/verify-fleet-manifest.mjs",
     "hooks:install": "node scripts/install-hooks.mjs",

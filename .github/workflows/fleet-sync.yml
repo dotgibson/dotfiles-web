@@ -5,7 +5,10 @@ name: fleet-sync
 # scripts/collect-metrics.mjs builds from each sibling repo's CHANGELOG.md + package
 # manifests. That only refreshes when someone runs `npm run metrics` locally with the
 # siblings checked out — so it silently rots. This bot re-derives it weekly against
-# fresh clones of the fleet and opens a PR when the numbers/changelog have drifted;
+# fresh clones of the fleet and opens a PR when the numbers/changelog have drifted.
+# It also re-mirrors reference/porting-matrix.md from Core's latest RELEASE, which was
+# the last cross-repo fact here still copied by hand — and which rotted twice for
+# exactly that reason;
 # merging it triggers deploy.yml to rebuild the site. workflow_dispatch refreshes on demand,
 # a `core-release` repository_dispatch from dotfiles-core runs it the moment a new Core
 # release ships, and an hourly poll catches anything neither of those covers — a release
@@ -379,6 +382,19 @@ jobs:
       - name: Regenerate the derived data (all four collectors)
         working-directory: dotfiles-web
         run: npm run data
+      # Separate from `npm run data` on purpose, and it is not an oversight that this reads
+      # the API rather than the fleet checked out one step above. The four collectors are
+      # pure local file reads and stay runnable offline; this one mirrors Core's
+      # PORTING-MATRIX.md AT ITS LATEST RELEASE TAG, and the clone beside us is on Core's
+      # DEFAULT BRANCH. Mirroring main is the trap this page has already fallen into once —
+      # it turns data-freshness.yml's check red until that work ships. Same script that
+      # check runs, so the two cannot disagree about what the mirror is.
+      - name: Re-mirror the porting matrix from Core's latest release
+        working-directory: dotfiles-web
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: npm run mirror
       - name: Open a PR if the derived data drifted
         id: refresh
         working-directory: dotfiles-web
@@ -388,6 +404,7 @@ jobs:
           FLEET_TOKEN: ${{ steps.app.outputs.token || secrets.FLEET_SYNC_TOKEN || github.token }}
           GH_TOKEN: ${{ steps.app.outputs.token || secrets.FLEET_SYNC_TOKEN || github.token }}
           REPO: ${{ github.event.repository.name }}
+          MIRROR: src/content/docs/reference/porting-matrix.md
         run: |
           set -euo pipefail
           # WHAT COUNTS AS DRIFT lives in scripts/data-strip.jq, which data-freshness.yml
@@ -415,6 +432,12 @@ jobs:
             new="$(jq -f scripts/data-strip.jq "src/data/${f}.json")"
             [ "$old" = "$new" ] || content_changed=yes
           done
+          # The porting matrix is markdown, not a stamped JSON payload, so it gets a plain
+          # `git diff` rather than the filter — there is no generatedAt or commit SHA in it
+          # to strip, and every byte below the marker is Core's. It is checked alongside the
+          # four rather than in its own step because a release moves BOTH, and splitting
+          # them would open two PRs for one event.
+          git diff --quiet -- "$MIRROR" || content_changed=yes
           # Reported as a step output, not just a summary line, because the marker step below
           # keys on it: a fleet state is only worth remembering as swept if the sweep actually
           # found the data in step. Set on BOTH paths so the step's absence and a `yes` can
@@ -422,7 +445,7 @@ jobs:
           echo "drift=${content_changed}" >>"$GITHUB_OUTPUT"
           if [ "$content_changed" = no ]; then
             git checkout -- src/data/generated.json src/data/snippets.json \
-                            src/data/corpus.json src/data/coverage.json
+                            src/data/corpus.json src/data/coverage.json "$MIRROR"
             echo "✅ site data already in step with the fleet" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -433,14 +456,14 @@ jobs:
           git remote set-url origin "https://x-access-token:${FLEET_TOKEN}@github.com/${OWNER}/${REPO}.git"
           git switch -C "$BRANCH"
           git add src/data/generated.json src/data/snippets.json \
-                  src/data/corpus.json src/data/coverage.json
-          git commit -m "chore(data): refresh fleet metrics, config snippets, corpus + coverage (fleet-sync bot)"
+                  src/data/corpus.json src/data/coverage.json "$MIRROR"
+          git commit -m "chore(data): refresh fleet metrics, config snippets, corpus, coverage + porting matrix (fleet-sync bot)"
           git push -f -u origin "$BRANCH"
           # Idempotent: update the existing PR if one is already open for this branch.
           if [ -z "$(gh pr list --repo "${OWNER}/${REPO}" --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
             gh pr create --repo "${OWNER}/${REPO}" --head "$BRANCH" --base "$DEFAULT_BRANCH" \
-              --title "chore(data): refresh fleet metrics, config snippets, corpus + coverage" \
-              --body "Automated by the fleet-sync bot. The derived site data (\`generated.json\` — changelog + by-the-numbers; \`snippets.json\` — the Config explorer's baked source files; \`corpus.json\` — the red/blue corpus from htpx; \`coverage.json\` — Sigma detection coverage from dotfiles-Defense) was behind the fleet; this regenerates all four via \`npm run data\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
+              --title "chore(data): refresh fleet metrics, config snippets, corpus, coverage + porting matrix" \
+              --body "Automated by the fleet-sync bot. The derived site data (\`generated.json\` — changelog + by-the-numbers; \`snippets.json\` — the Config explorer's baked source files; \`corpus.json\` — the red/blue corpus from htpx; \`coverage.json\` — Sigma detection coverage from dotfiles-Defense) was behind the fleet, or the mirrored porting matrix was behind Core's latest release. This regenerates the four via \`npm run data\` and re-mirrors \`reference/porting-matrix.md\` via \`npm run mirror\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
           fi
           echo "📊 opened/updated PR on \`$BRANCH\`" >> "$GITHUB_STEP_SUMMARY"
 
