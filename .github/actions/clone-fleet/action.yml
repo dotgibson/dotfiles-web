@@ -23,9 +23,9 @@ description: >-
 # Cost, measured at 12 clones: ~11s and 95 MB (up from ~5s and 53 MB at eight),
 # plus one HEAD request per repo for the rename probe below — ~0.3s each, so a
 # few seconds on top. That cost is why data-freshness.yml regenerates all four
-# snapshots in ONE job rather
-# than splitting them — a second job would re-clone the same repos rather than
-# parallelise anything, and leave two red X's to read instead of one.
+# snapshots in ONE job rather than splitting them — a second job would re-clone
+# the same repos rather than parallelise anything, and leave two red X's to read
+# instead of one.
 #
 # --depth 1 does still write refs/remotes/origin/HEAD, which the collectors lean
 # on: collect-snippets.mjs and collect-metrics.mjs both resolve defaultBranch
