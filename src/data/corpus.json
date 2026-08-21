@@ -3,7 +3,7 @@
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "143d6ccf4bffb2620ef68147991e698a872d84f3"
+    "commit": "5cd81e15f38357ecb625042ddc18fbb5ad84cb86"
   },
   "totalPairs": 90,
   "groupCount": 16,
@@ -101,7 +101,7 @@
     {
       "id": "asreproast-getnpusers",
       "attack": "AS-REP roast (no-preauth accounts)",
-      "detection": "Detect AS-REP roast (4768 no-preauth) + Kerbrute probing (4771)",
+      "detection": "Detect AS-REP roast (4768 no-preauth)",
       "group": "On-prem AD / Windows",
       "phase": "Credential Access",
       "tactic": "TA0006",
@@ -200,7 +200,7 @@
     {
       "id": "domain-fronting-cdn",
       "attack": "Domain-fronted C2 (high-reputation CDN edge)",
-      "detection": "Detect domain fronting (TLS SNI vs HTTP Host mismatch)",
+      "detection": "Detect domain fronting (CDN edge from a non-browser process; SNI vs Host mismatch)",
       "group": "On-prem AD / Windows",
       "phase": "Command & Control",
       "tactic": "TA0011",
@@ -288,7 +288,7 @@
     {
       "id": "mtls-c2-sliver",
       "attack": "Mutual-TLS C2 session (Sliver mTLS implant)",
-      "detection": "Detect encrypted C2 by TLS fingerprint (JA3 / JA3S)",
+      "detection": "Detect mTLS C2 — outbound client certificate + TLS fingerprint (JA4 / JA3)",
       "group": "On-prem AD / Windows",
       "phase": "Command & Control",
       "tactic": "TA0011",
@@ -321,7 +321,7 @@
     {
       "id": "pth-lateral-nxc",
       "attack": "Pass-the-hash lateral movement (SMB / WinRM / psexec)",
-      "detection": "Detect lateral movement (4624 type-3 fan-out)",
+      "detection": "Detect pass-the-hash lateral movement (4624 type-3 NTLM fan-out)",
       "group": "On-prem AD / Windows",
       "phase": "Lateral Movement",
       "tactic": "TA0008",
@@ -607,7 +607,7 @@
     {
       "id": "okta-api-token",
       "attack": "Okta API token (long-lived tenant persistence)",
-      "detection": "Detect API token creation (Okta System Log)",
+      "detection": "Detect tenant credential persistence — API token + OAuth service app (Okta System Log)",
       "group": "Okta",
       "phase": "Persistence",
       "tactic": "TA0003",
