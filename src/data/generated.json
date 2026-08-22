@@ -22,7 +22,7 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "b61fc69ab177435ea4a9b30291b55bef51b33eb5",
+        "commit": "fd6085017391173bd48d9892fed01d96705a0c84",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -156,7 +156,7 @@
     "dotfiles-openSUSE": 43,
     "dotfiles-Alpine": 60,
     "dotfiles-Gentoo": 39,
-    "dotfiles-Offense-offensive": 78
+    "dotfiles-Offense-offensive": 83
   },
   "ci": {
     "dotfiles-core": true,
@@ -496,7 +496,43 @@
           "category": "Fixed",
           "items": [
             {
-              "text": "Two hacktheplanet commands could not run as written (#187). rusthound-ce was invoked with --dc <ip_address>; RustHound-CE has no such flag — that is the impacket/certipy idiom — and takes -i/--ldapip for the DC IP or -f/--ldapfqdn for its FQDN. And two pivot lines invoked bare proxychains, which is not a binary on this layer's own box: the manifest ships proxychains4, that package installs only /usr/bin/proxychains4, and its Provides: proxychains is a virtual-package relation, so apt-file search '/usr/bin/proxychains$' matches nothing. The audit that filed this guessed the second one was \"probably fine … one command -v settles it\"; it was run, and it isn't. Both lines now carry the reasoning inline, since --dc is right for kerbrute two folds up and the next reader will otherwise \"fix\" it back.",
+              "text": "The corpus-coverage counts were stale in three files (found while verifying #212, which had reported them as correct). hacktheplanet and PURPLE-TEAM.md claimed 92 red / 90 blue entries; the htpx v2.10.0 sync added 11 of each and the headers were never updated — actual is 103 red / 101 blue. The decomposition went stale with them: the cloud/SaaS/CI-CD bucket is 56 (not ~55), C2-egress/Impact is 13 (not ~12), and 7 Linux persistence/privesc/credential-access entries had no bucket at all.",
+              "kind": "security"
+            },
+            {
+              "text": "Two red entries and their blue pairs are projected nowhere and belong to no category. bloodhound-collect and ldap-recon are both Active Directory — discovery, squarely inside the \"richer prose here\" subject area but absent from its list; their pairs bloodhound-collect-4662 / ldap-recon-4662 key off event 4662, which is PURPLE-TEAM.md's own criterion for projecting. hacktheplanet's claim that an unprojected entry is \"not a gap in the generator\" was therefore false. Both files now name the gap instead of implying it cannot exist.",
+              "kind": "fix"
+            },
+            {
+              "text": "**rdp-hijack-tscon was listed as \"covered better below\"; it is covered *equally*.** Its two commands are byte-identical to the prose ones. Noted rather than silently kept.",
+              "kind": "fix"
+            },
+            {
+              "text": "OFFENSIVE-METHODOLOGY.md's \"roughly two-thirds of the corpus\" replaced with the measured figure — 69/103 red (67%) and 76/101 blue (75%). All three files now carry the same caveat: these counts are hand-maintained, they go stale on every companion-sync, and the corpus is authoritative when they disagree.",
+              "kind": "fix"
+            },
+            {
+              "text": "kwp was attributed to the wrong project (#213). The manifest filed it under PACK (kwp, statsgen, maskgen) → github.com/iphelix/pack. PACK ships statsgen/maskgen/policygen/rulegen and no kwp — kwp is hashcat's kwprocessor, and hacktheplanet's invocation is verbatim kwprocessor. Following the old pointer landed you in a repo that does not contain the tool. Split onto its own UPSTREAM line.",
+              "kind": "config"
+            },
+            {
+              "text": "exploitdev's Linux toolchain was unmanifested (#212, #213). gdb, nasm and objdump are invoked by that reference and appeared nowhere in the package list. Resolved by checking a real kali-rolling box rather than guessing: nasm (via metasploit-framework) and binutils are already pulled transitively, so they go in the accounting block, while gdb is genuinely absent — gcc only *suggests* it — so it joins the \"Kali does NOT ship by default\" block, whose stated test it meets exactly.",
+              "kind": "config"
+            },
+            {
+              "text": "nc was named only inside another package's comment (#212). netcat is the primary command of the reverse-shell fold and was listed nowhere. Added as netcat-traditional, not netcat-openbsd as the audit suggested: Kali installs traditional and points the nc alternative at it, and the documented nc -lvnp form is a traditional idiom — OpenBSD's nc rejects -p alongside -l, so that variant could have flipped the alternative and broken the very line it was meant to support.",
+              "kind": "fix"
+            },
+            {
+              "text": "Four field-reference commands could not run as written (#213, #212). hacktheplanet invoked nmap --script=msrpc-dcom-interface-activation, which is not a script nmap ships — verified against nmap 7.99 on kali-rolling, where the only msrpc NSE is msrpc-enum (already the line directly above). Dropped rather than replaced: there is nothing to replace it with. exploitdev invoked !mona egghunter, which is not a mona command — egg is, and -c (NtAccessCheckAndAuditAlarm) is one of *its* options; the two lines collapse into one. hacktheplanet also credited --dc to impacket/certipy when it is kerbrute's idiom — impacket and certipy use -dc-ip, as every impacket line in that file already does. The same misattribution in this file's #187 entry is corrected with it.",
+              "kind": "fix"
+            },
+            {
+              "text": "exploitdev presented hexyl as installed when no fleet layer ships it. The note claimed it was \"Kali-only in this stack (not in Core)\"; it is in Core, Kali apt (no such package exists) and install/offensive-packages.txt alike — nowhere. offensive.zsh probes HAVE_HEXYL but nothing installs it, so the bad-char *verification* step silently needed a tool the operator did not have. Now says so, with an xxd fallback, and points at the dotfiles-core#395 deferral.",
+              "kind": "perf"
+            },
+            {
+              "text": "Two hacktheplanet commands could not run as written (#187). rusthound-ce was invoked with --dc <ip_address>; RustHound-CE has no such flag — that is kerbrute's idiom (impacket/certipy use -dc-ip) — and takes -i/--ldapip for the DC IP or -f/--ldapfqdn for its FQDN. And two pivot lines invoked bare proxychains, which is not a binary on this layer's own box: the manifest ships proxychains4, that package installs only /usr/bin/proxychains4, and its Provides: proxychains is a virtual-package relation, so apt-file search '/usr/bin/proxychains$' matches nothing. The audit that filed this guessed the second one was \"probably fine … one command -v settles it\"; it was run, and it isn't. Both lines now carry the reasoning inline, since --dc is right for kerbrute two folds up and the next reader will otherwise \"fix\" it back.",
               "kind": "fix"
             },
             {
@@ -577,6 +613,14 @@
           "category": "Added",
           "items": [
             {
+              "text": "corpus commands resolve — a gate for the question nothing asked (#208). Two entries in coerce-petitpotam once invoked impacket-petitpotam and dfscoerce. Neither is a real command, both shipped in a released corpus, and a human reading the file found them — because every existing gate looks somewhere else: gen-views.sh --check byte-compares the 18 *projected* red blocks (85 of 103 are unprojected), check-packages.sh reads the manifest and never the corpus, companion-integrity checks provenance rather than content, and htpx's own CI checks pairing and slots rather than existence. test/check-corpus-commands.sh resolves the first token of every command line in every red entry against the manifest, an impacket-binaries.lst roster, and the classifications in install/corpus-commands.lst. Offline and deterministic, so unlike packages-check it can be required; wired into make test and its own workflow. - Its --self-test rebuilds the pre-v2.8.0 coerce-petitpotam at run time and asserts the gate still reddens on it — a regression guard for the gate itself, since one that quietly stopped catching its own motivating bug would pass forever. - install/corpus-commands.lst requires a line of prose on every classification, so \"whatever the allowlist excuses, it says so\" is enforced rather than hoped for. It also fails on a classification no entry uses any more, so a companion-sync that drops an entry surfaces its dead excuse. - The roster spans two packages: impacket-scripts (57 wrappers) and python3-impacket (5 more, including impacket-secretsdump and impacket-wmiexec). A roster built from impacket-scripts alone would have failed the two most-used commands in the corpus. packages.yml gained an advisory step that re-derives it from kali-rolling and diffs, so the checked-in copy cannot rot unnoticed.",
+              "kind": "fix"
+            },
+            {
+              "text": "Five tools the corpus invokes and nothing accounted for, all surfaced by the new gate on its first run: ldap-utils (ldapsearch, a real apt package, now installed), plus UPSTREAM entries for evilginx2, MSOLSpray and tfc-agent in a new \"Corpus-only operator tooling\" block. tfc-agent also corrects this file's older claim that the Terraform Cloud entries are pure REST. The legacy bloodhound-python binary is now named in the BloodHound block, with the warning that the entry invoking it is wrong for a CE stack — that fix routes upstream to htpx.",
+              "kind": "fix"
+            },
+            {
               "text": "A gate against leaked RETURN traps (#198) — test/check-return-traps.sh, wired into make lint as make trap-guard and into CI as the return-traps job in checks.yml. A bash RETURN trap is a global slot, not a function-scoped one: armed inside a function it survives into the *caller's* frame and fires a second time when the caller returns, where the local it cleans up is out of scope and set -u makes that fatal. In dotfiles-Debian that aborted provision() after every package had installed but before wire_links ran — the whole stack on the box, and not one symlink. Nothing else can see it: the broken line is valid bash, so shellcheck and bash -n both pass it, and no CI job in this fleet exercises a real install path (every bootstrap run is --links-only). Hence a grep. The correct form is trap 'trap - RETURN; rm -rf \"$tmp\"' RETURN. This is prevention, not a fix. #198 reported the bug in this repo's verified_install(), but that function — and the entire SHA-pinned out-of-band install block around it — left in the layer split (6d641d2), which moved it to dotfiles-Debian; the trap went with it. No repo-owned shell here arms a RETURN trap today. The guard exists so none ever does again. zsh is out of scope: it has no RETURN signal at all.",
               "kind": "fix"
             },
@@ -617,6 +661,26 @@
         {
           "category": "Changed",
           "items": [
+            {
+              "text": "Five currency annotations corrected (#211). adaptixc2's said upstream publishes zero releases so there is \"no tag to judge staleness by\" and that it rolls on main — both false: v1.0/v1.1/v1.2 are tagged, main last moved 2026-03-04, and work is on version branches. That premise was load-bearing for the fingerprinted-default-profiles warning above it. sliver's apt lag is two patches, not \"~a patch\". caldera entered the Apache Incubator 2025-12-19, not May 2026. rusthound-ce's \"collectors aren't daily-churn\" reasoning is dead (v2.4.91 → v2.5.2 in seven weeks) — the conclusion survives for a mechanical reason instead: cargo, no self-updater, and redup's loop is go-only. And mitm6 finally gets the FROZEN note that kerbrute and havoc already carried.",
+              "kind": "fix"
+            },
+            {
+              "text": "hexyl's absence from the manifest is now recorded there. It is not a Kali package at all, so listing it would hand check-packages.sh an unresolvable name; the deferral to dotgibson/dotfiles-core#395 is written down instead, so the packages list and install/tools.lst agree.",
+              "kind": "perf"
+            },
+            {
+              "text": "Three of the four field references now point at the corpus. exploitdev, ippsec and evasion listed their sibling references but omitted ~/companion (htpx), which hacktheplanet has always carried. evasion was the sharpest case: its \"Network-filter & egress bypass (C2 channels)\" fold is prose-only by design, and the six entries holding the actual commands (dns-tunnel-c2, icmp-tunnel-c2, domain-fronting-cdn, https-beacon-sliver, mtls-c2-sliver, web-service-c2-telegram) live only in the corpus — with no route to them from the doc that needed them most. Its footer is also restyled to match the other three (~/name + alias, not offensive/name).",
+              "kind": "config"
+            },
+            {
+              "text": "evasion opened with bare vim. It told you to run vim ~/evasion, bypassing the read-only opener that exists so an errant :w cannot publish engagement data — the one reference of the four that did. Now leads with evade, matching exploitdev.",
+              "kind": "config"
+            },
+            {
+              "text": "hacktheplanet gained the two commands the corpus had and it did not (#212). The coercion fold described \"many vectors\" but never showed the MS-DFSNM one, and the pivot fold described ligolo-ng in prose with no command line at all. Both are now present, so the header's claim that these entries are \"covered better below\" holds again.",
+              "kind": "config"
+            },
             {
               "text": "The last OS-layer file is gone, and the role wiring is Core's now. os/kali.conf carried the prefix + e engagement popup as *role* config living in an *OS* overlay ($CONFIG/tmux/os.conf), because Core had exactly one tmux overlay hook when it was written. Vendoring Core v4.13.1 brings the second hook, so the binding moves to offensive/offensive.conf → $CONFIG/tmux/role.conf, and os/ is deleted outright. Two consequences worth stating plainly: - role.conf is sourced last by Core's tmux.conf, after Core's own bindings. os.conf is sourced before them, so a future Core bind e could have silently taken the key back. That ordering is the actual reason the hook exists. - dotfiles-Debian and this repo no longer race for $CONFIG/tmux/os.conf. Until now whichever bootstrap ran last won it; the OS repo owns band 80 alone again. The battery and net-speed status probes did not move here — they are OS-native and dotfiles-Debian's os/debian.conf already carries them.",
               "kind": "perf"
@@ -983,8 +1047,80 @@
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Fixed",
+      "kind": "security",
+      "text": "The corpus-coverage counts were stale in three files (found while verifying #212, which had reported them as correct). hacktheplanet and PURPLE-TEAM.md claimed 92 red / 90 blue entries; the htpx v2.10.0 sync added 11 of each and the headers were never updated — actual is 103 red / 101 blue. The decomposition went stale with them: the cloud/SaaS/CI-CD bucket is 56 (not ~55), C2-egress/Impact is 13 (not ~12), and 7 Linux persistence/privesc/credential-access entries had no bucket at all.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "fix",
-      "text": "Two hacktheplanet commands could not run as written (#187). rusthound-ce was invoked with --dc <ip_address>; RustHound-CE has no such flag — that is the impacket/certipy idiom — and takes -i/--ldapip for the DC IP or -f/--ldapfqdn for its FQDN. And two pivot lines invoked bare proxychains, which is not a binary on this layer's own box: the manifest ships proxychains4, that package installs only /usr/bin/proxychains4, and its Provides: proxychains is a virtual-package relation, so apt-file search '/usr/bin/proxychains$' matches nothing. The audit that filed this guessed the second one was \"probably fine … one command -v settles it\"; it was run, and it isn't. Both lines now carry the reasoning inline, since --dc is right for kerbrute two folds up and the next reader will otherwise \"fix\" it back.",
+      "text": "Two red entries and their blue pairs are projected nowhere and belong to no category. bloodhound-collect and ldap-recon are both Active Directory — discovery, squarely inside the \"richer prose here\" subject area but absent from its list; their pairs bloodhound-collect-4662 / ldap-recon-4662 key off event 4662, which is PURPLE-TEAM.md's own criterion for projecting. hacktheplanet's claim that an unprojected entry is \"not a gap in the generator\" was therefore false. Both files now name the gap instead of implying it cannot exist.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "**rdp-hijack-tscon was listed as \"covered better below\"; it is covered *equally*.** Its two commands are byte-identical to the prose ones. Noted rather than silently kept.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "OFFENSIVE-METHODOLOGY.md's \"roughly two-thirds of the corpus\" replaced with the measured figure — 69/103 red (67%) and 76/101 blue (75%). All three files now carry the same caveat: these counts are hand-maintained, they go stale on every companion-sync, and the corpus is authoritative when they disagree.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "kwp was attributed to the wrong project (#213). The manifest filed it under PACK (kwp, statsgen, maskgen) → github.com/iphelix/pack. PACK ships statsgen/maskgen/policygen/rulegen and no kwp — kwp is hashcat's kwprocessor, and hacktheplanet's invocation is verbatim kwprocessor. Following the old pointer landed you in a repo that does not contain the tool. Split onto its own UPSTREAM line.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "exploitdev's Linux toolchain was unmanifested (#212, #213). gdb, nasm and objdump are invoked by that reference and appeared nowhere in the package list. Resolved by checking a real kali-rolling box rather than guessing: nasm (via metasploit-framework) and binutils are already pulled transitively, so they go in the accounting block, while gdb is genuinely absent — gcc only *suggests* it — so it joins the \"Kali does NOT ship by default\" block, whose stated test it meets exactly.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "nc was named only inside another package's comment (#212). netcat is the primary command of the reverse-shell fold and was listed nowhere. Added as netcat-traditional, not netcat-openbsd as the audit suggested: Kali installs traditional and points the nc alternative at it, and the documented nc -lvnp form is a traditional idiom — OpenBSD's nc rejects -p alongside -l, so that variant could have flipped the alternative and broken the very line it was meant to support.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Four field-reference commands could not run as written (#213, #212). hacktheplanet invoked nmap --script=msrpc-dcom-interface-activation, which is not a script nmap ships — verified against nmap 7.99 on kali-rolling, where the only msrpc NSE is msrpc-enum (already the line directly above). Dropped rather than replaced: there is nothing to replace it with. exploitdev invoked !mona egghunter, which is not a mona command — egg is, and -c (NtAccessCheckAndAuditAlarm) is one of *its* options; the two lines collapse into one. hacktheplanet also credited --dc to impacket/certipy when it is kerbrute's idiom — impacket and certipy use -dc-ip, as every impacket line in that file already does. The same misattribution in this file's #187 entry is corrected with it.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "exploitdev presented hexyl as installed when no fleet layer ships it. The note claimed it was \"Kali-only in this stack (not in Core)\"; it is in Core, Kali apt (no such package exists) and install/offensive-packages.txt alike — nowhere. offensive.zsh probes HAVE_HEXYL but nothing installs it, so the bad-char *verification* step silently needed a tool the operator did not have. Now says so, with an xxd fallback, and points at the dotfiles-core#395 deferral.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Two hacktheplanet commands could not run as written (#187). rusthound-ce was invoked with --dc <ip_address>; RustHound-CE has no such flag — that is kerbrute's idiom (impacket/certipy use -dc-ip) — and takes -i/--ldapip for the DC IP or -f/--ldapfqdn for its FQDN. And two pivot lines invoked bare proxychains, which is not a binary on this layer's own box: the manifest ships proxychains4, that package installs only /usr/bin/proxychains4, and its Provides: proxychains is a virtual-package relation, so apt-file search '/usr/bin/proxychains$' matches nothing. The audit that filed this guessed the second one was \"probably fine … one command -v settles it\"; it was run, and it isn't. Both lines now carry the reasoning inline, since --dc is right for kerbrute two folds up and the next reader will otherwise \"fix\" it back.",
       "core": false
     },
     {
@@ -1136,6 +1272,22 @@
       "version": "Unreleased",
       "category": "Added",
       "kind": "fix",
+      "text": "corpus commands resolve — a gate for the question nothing asked (#208). Two entries in coerce-petitpotam once invoked impacket-petitpotam and dfscoerce. Neither is a real command, both shipped in a released corpus, and a human reading the file found them — because every existing gate looks somewhere else: gen-views.sh --check byte-compares the 18 *projected* red blocks (85 of 103 are unprojected), check-packages.sh reads the manifest and never the corpus, companion-integrity checks provenance rather than content, and htpx's own CI checks pairing and slots rather than existence. test/check-corpus-commands.sh resolves the first token of every command line in every red entry against the manifest, an impacket-binaries.lst roster, and the classifications in install/corpus-commands.lst. Offline and deterministic, so unlike packages-check it can be required; wired into make test and its own workflow. - Its --self-test rebuilds the pre-v2.8.0 coerce-petitpotam at run time and asserts the gate still reddens on it — a regression guard for the gate itself, since one that quietly stopped catching its own motivating bug would pass forever. - install/corpus-commands.lst requires a line of prose on every classification, so \"whatever the allowlist excuses, it says so\" is enforced rather than hoped for. It also fails on a classification no entry uses any more, so a companion-sync that drops an entry surfaces its dead excuse. - The roster spans two packages: impacket-scripts (57 wrappers) and python3-impacket (5 more, including impacket-secretsdump and impacket-wmiexec). A roster built from impacket-scripts alone would have failed the two most-used commands in the corpus. packages.yml gained an advisory step that re-derives it from kali-rolling and diffs, so the checked-in copy cannot rot unnoticed.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "Five tools the corpus invokes and nothing accounted for, all surfaced by the new gate on its first run: ldap-utils (ldapsearch, a real apt package, now installed), plus UPSTREAM entries for evilginx2, MSOLSpray and tfc-agent in a new \"Corpus-only operator tooling\" block. tfc-agent also corrects this file's older claim that the Terraform Cloud entries are pure REST. The legacy bloodhound-python binary is now named in the BloodHound block, with the warning that the entry invoking it is wrong for a CE stack — that fix routes upstream to htpx.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
       "text": "A gate against leaked RETURN traps (#198) — test/check-return-traps.sh, wired into make lint as make trap-guard and into CI as the return-traps job in checks.yml. A bash RETURN trap is a global slot, not a function-scoped one: armed inside a function it survives into the *caller's* frame and fires a second time when the caller returns, where the local it cleans up is out of scope and set -u makes that fatal. In dotfiles-Debian that aborted provision() after every package had installed but before wire_links ran — the whole stack on the box, and not one symlink. Nothing else can see it: the broken line is valid bash, so shellcheck and bash -n both pass it, and no CI job in this fleet exercises a real install path (every bootstrap run is --links-only). Hence a grep. The correct form is trap 'trap - RETURN; rm -rf \"$tmp\"' RETURN. This is prevention, not a fix. #198 reported the bug in this repo's verified_install(), but that function — and the entire SHA-pinned out-of-band install block around it — left in the layer split (6d641d2), which moved it to dotfiles-Debian; the trap went with it. No repo-owned shell here arms a RETURN trap today. The guard exists so none ever does again. zsh is out of scope: it has no RETURN signal at all.",
       "core": false
     },
@@ -1201,6 +1353,46 @@
       "category": "Added",
       "kind": "feature",
       "text": "companion_version / companion_tag in companion.lock, for symmetry with core.lock.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "Five currency annotations corrected (#211). adaptixc2's said upstream publishes zero releases so there is \"no tag to judge staleness by\" and that it rolls on main — both false: v1.0/v1.1/v1.2 are tagged, main last moved 2026-03-04, and work is on version branches. That premise was load-bearing for the fingerprinted-default-profiles warning above it. sliver's apt lag is two patches, not \"~a patch\". caldera entered the Apache Incubator 2025-12-19, not May 2026. rusthound-ce's \"collectors aren't daily-churn\" reasoning is dead (v2.4.91 → v2.5.2 in seven weeks) — the conclusion survives for a mechanical reason instead: cargo, no self-updater, and redup's loop is go-only. And mitm6 finally gets the FROZEN note that kerbrute and havoc already carried.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "hexyl's absence from the manifest is now recorded there. It is not a Kali package at all, so listing it would hand check-packages.sh an unresolvable name; the deferral to dotgibson/dotfiles-core#395 is written down instead, so the packages list and install/tools.lst agree.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Three of the four field references now point at the corpus. exploitdev, ippsec and evasion listed their sibling references but omitted ~/companion (htpx), which hacktheplanet has always carried. evasion was the sharpest case: its \"Network-filter & egress bypass (C2 channels)\" fold is prose-only by design, and the six entries holding the actual commands (dns-tunnel-c2, icmp-tunnel-c2, domain-fronting-cdn, https-beacon-sliver, mtls-c2-sliver, web-service-c2-telegram) live only in the corpus — with no route to them from the doc that needed them most. Its footer is also restyled to match the other three (~/name + alias, not offensive/name).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "evasion opened with bare vim. It told you to run vim ~/evasion, bypassing the read-only opener that exists so an errant :w cannot publish engagement data — the one reference of the four that did. Now leads with evade, matching exploitdev.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "hacktheplanet gained the two commands the corpus had and it did not (#212). The coercion fold described \"many vectors\" but never showed the MS-DFSNM one, and the pivot fold described ligolo-ng in prose with no command line at all. Both are now present, so the header's claim that these entries are \"covered better below\" holds again.",
       "core": false
     },
     {
