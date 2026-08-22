@@ -243,8 +243,9 @@ jobs:
           LATEST: ${{ steps.fingerprint.outputs.latest }}
           MOVED: ${{ steps.fingerprint.outputs.moved }}
           RESOLVED: ${{ steps.fingerprint.outputs.resolved }}
-          # Empty rather than false when the step above was skipped, which is the
-          # unresolvable case the gate returns on before ever reading this.
+          # Empty on a cache miss, and empty again when the step above was skipped —
+          # the unresolvable case the gate returns on before ever reading this. Never
+          # the `false` a bare boolean would suggest, so do not compare it to one.
           SWEPT: ${{ steps.marker.outputs.cache-hit }}
         run: |
           set -euo pipefail
@@ -292,7 +293,24 @@ jobs:
           # re-cloning an unchanged fleet cannot fix a version mismatch either, and without
           # this that corner has the same fire-every-hour behaviour — a release whose
           # changelog entry never landed would poll forever and PR nothing.
-          if [ "${SWEPT}" = "true" ]; then
+          #
+          # cache-hit is `true` on an exact hit and empty on a miss; the lookup carries no
+          # restore-keys, so the `false` a partial hit would emit cannot reach us — it is
+          # accepted anyway rather than tripping the warning. Read it through a case instead
+          # of comparing to the literal, so an action version that words its answer
+          # differently warns and sweeps rather than silently making the marker inert. That
+          # failure restores the fire-every-hour behaviour this branch removed, with nothing
+          # in the log to say it happened, which is why it is worth six lines to refuse it.
+          case "${SWEPT}" in
+            true)     already_swept=yes ;;
+            false|'') already_swept=no ;;
+            *)
+              already_swept=no
+              echo "::warning::actions/cache/restore reported cache-hit='${SWEPT}', which is" \
+                   "neither true nor false — treating this fleet state as unswept" ;;
+          esac
+
+          if [ "$already_swept" = yes ]; then
             echo "run=false" >>"$GITHUB_OUTPUT"
             echo "🗂️ this fleet state was already swept and found in step" >>"$GITHUB_STEP_SUMMARY"
             exit 0
