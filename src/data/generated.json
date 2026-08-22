@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "0d9223d91805cbd666c6a7ff07bf400e3d20e716",
+        "commit": "3847f3747400bf428e87ff2726e1cb4178c60a88",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,7 +22,7 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "7bc2af656c75b3eb26b906cd3caf5796f73de3b1",
+        "commit": "1d3c11ab33663f2457e7b6f1d766fbf2357885e1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -34,13 +34,13 @@
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "c146213f9f13cfa9703f5f95ce5b06aad84b6bcf",
+        "commit": "b4e8055cfb89250eb50cc8a599b17ccaaa960967",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "11101f7688e3290e71f4b22088a09c0be7ff6989",
+        "commit": "5a36f4e515ce7e1a22435f0541845ff8060b6854",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -52,7 +52,7 @@
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "4b39bbf4fb03cac0e12b59ca99502968f3aa9b1c",
+        "commit": "8bf28be1a8b4457c1ded9b58690fb3d6335a9a49",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -153,7 +153,7 @@
     "dotfiles-Fedora": 38,
     "dotfiles-Arch": 45,
     "dotfiles-Debian": 46,
-    "dotfiles-openSUSE": 43,
+    "dotfiles-openSUSE": 47,
     "dotfiles-Alpine": 60,
     "dotfiles-Gentoo": 39,
     "dotfiles-Offense-offensive": 83
@@ -622,6 +622,14 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "ROADtools is now installed by --install, on every route (#231). Entra/M365 tooling in this layer was entirely Windows-side (AADInternals, TeamFiltration, MSOLSpray); the corpus even cited dirkjanm's ROADtools as device-code-phish's source: while handing you Windows-only PowerShell. bootstrap.sh grew an _install_apt_absent step — a THIRD install category for tools no route can apt-install — that pipx-installs roadrecon and roadtx on the Kali path too, not just the portable subset, so the Entra corpus entries finally run from the attacker box. hacktheplanet's M365 fold documents the Linux commands and install/offensive-packages.txt carries the annotation. The corpus entry's own platform:/source: fix lands upstream in dotgibson/htpx.",
+              "kind": "fix"
+            },
+            {
+              "text": "SCCM/MECM is now covered — it was a total blank (#230). grep -ri sccm over the repo used to return nothing, despite site-server takeover and Network Access Account extraction being mainstream AD attack surface. Added a SCCM / MECM fold to hacktheplanet (discovery -> NAA over the network or from a compromised client -> site takeover -> PXE boot-media creds), a Cred access row in the methodology map, and sccmhunter + pxethiefy UPSTREAM annotations in install/offensive-packages.txt (whose corpus-only block widened to admit doc-named operator tooling). sccmhunter is documented, not wired into --install: it is not on PyPI, its git install carries a Python 3.13 floor and an ldap3 fork pin pip drops silently, so a documented manual step beats a best-effort loop that fails quietly. Every command verified against upstream.",
+              "kind": "feature"
+            },
             {
               "text": "corpus commands resolve — a gate for the question nothing asked (#208). Two entries in coerce-petitpotam once invoked impacket-petitpotam and dfscoerce. Neither is a real command, both shipped in a released corpus, and a human reading the file found them — because every existing gate looks somewhere else: gen-views.sh --check byte-compares the 18 *projected* red blocks (85 of 103 are unprojected), check-packages.sh reads the manifest and never the corpus, companion-integrity checks provenance rather than content, and htpx's own CI checks pairing and slots rather than existence. test/check-corpus-commands.sh resolves the first token of every command line in every red entry against the manifest, an impacket-binaries.lst roster, and the classifications in install/corpus-commands.lst. Offline and deterministic, so unlike packages-check it can be required; wired into make test and its own workflow. - Its --self-test rebuilds the pre-v2.8.0 coerce-petitpotam at run time and asserts the gate still reddens on it — a regression guard for the gate itself, since one that quietly stopped catching its own motivating bug would pass forever. - install/corpus-commands.lst requires a line of prose on every classification, so \"whatever the allowlist excuses, it says so\" is enforced rather than hoped for. It also fails on a classification no entry uses any more, so a companion-sync that drops an entry surfaces its dead excuse. - The roster spans two packages: impacket-scripts (57 wrappers) and python3-impacket (5 more, including impacket-secretsdump and impacket-wmiexec). A roster built from impacket-scripts alone would have failed the two most-used commands in the corpus. packages.yml gained an advisory step that re-derives it from kali-rolling and diffs, so the checked-in copy cannot rot unnoticed.",
               "kind": "fix"
@@ -1279,6 +1287,22 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "redup printed \"go not installed\" for an intentionally empty tool list, and ran searchsploit -u without the privilege its root-owned checkout needs.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "ROADtools is now installed by --install, on every route (#231). Entra/M365 tooling in this layer was entirely Windows-side (AADInternals, TeamFiltration, MSOLSpray); the corpus even cited dirkjanm's ROADtools as device-code-phish's source: while handing you Windows-only PowerShell. bootstrap.sh grew an _install_apt_absent step — a THIRD install category for tools no route can apt-install — that pipx-installs roadrecon and roadtx on the Kali path too, not just the portable subset, so the Entra corpus entries finally run from the attacker box. hacktheplanet's M365 fold documents the Linux commands and install/offensive-packages.txt carries the annotation. The corpus entry's own platform:/source: fix lands upstream in dotgibson/htpx.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "SCCM/MECM is now covered — it was a total blank (#230). grep -ri sccm over the repo used to return nothing, despite site-server takeover and Network Access Account extraction being mainstream AD attack surface. Added a SCCM / MECM fold to hacktheplanet (discovery -> NAA over the network or from a compromised client -> site takeover -> PXE boot-media creds), a Cred access row in the methodology map, and sccmhunter + pxethiefy UPSTREAM annotations in install/offensive-packages.txt (whose corpus-only block widened to admit doc-named operator tooling). sccmhunter is documented, not wired into --install: it is not on PyPI, its git install carries a Python 3.13 floor and an ldap3 fork pin pip drops silently, so a documented manual step beats a best-effort loop that fails quietly. Every command verified against upstream.",
       "core": false
     },
     {
