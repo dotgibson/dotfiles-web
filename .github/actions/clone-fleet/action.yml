@@ -39,6 +39,11 @@ description: >-
 # unset, so defaultBranch stamps null. That is fine and long-standing, because
 # the only caller passing a ref is deploy.yml, which BUILDS from the result and
 # commits nothing — nothing compares its stamps against a committed file.
+#
+# `pins` is the third mode and the one that cannot afford either shortcut, since
+# its whole caller is a job that DOES compare stamps against a committed file. It
+# therefore rebuilds the refs a default-branch clone would have written, and the
+# reasoning for each command is at clone_pinned() below.
 # ──────────────────────────────────────────────────────────────────────────────
 
 inputs:
@@ -54,6 +59,19 @@ inputs:
       Optional tag/branch to pin to. Tried first with --branch; a repo without it
       falls back to its default branch, because the OS repos version
       independently (see core.lock) so a fleet-wide tag rarely exists everywhere.
+    required: false
+    default: ""
+  pins:
+    description: >-
+      Optional JSON object of {repo: commit-sha} — clone those repos AT THOSE
+      COMMITS instead of at their default branch, so a caller can reproduce the
+      exact fleet state some artifact was generated from. A repo absent from the
+      map, or mapped to an empty string, falls back to the normal default-branch
+      clone. A pin that cannot be fetched is an ERROR rather than a silent
+      fallback: quietly cloning HEAD instead would hand the caller a different
+      fleet than the one it asked for, which is the failure pinning exists to
+      prevent. Mutually exclusive with `ref`, which pins the whole fleet to one
+      tag rather than each repo to its own commit.
     required: false
     default: ""
   token:
@@ -88,6 +106,7 @@ runs:
       env:
         DEST: ${{ inputs.dest }}
         REF: ${{ inputs.ref }}
+        PINS: ${{ inputs.pins }}
         TOKEN: ${{ inputs.token }}
         ON_ERROR: ${{ inputs.on-error }}
         OWNER_IN: ${{ inputs.owner }}
@@ -116,6 +135,50 @@ runs:
           fail|warn) ;;
           *) echo "::error::clone-fleet: on-error must be 'fail' or 'warn', got '$ON_ERROR'"; exit 1 ;;
         esac
+
+        # `ref` and `pins` express contradictory intents — one tag across the whole
+        # fleet versus one commit per repo — so refuse both rather than silently
+        # letting one win.
+        if [ -n "$REF" ] && [ -n "$PINS" ] && [ "$PINS" != "{}" ]; then
+          echo "::error::clone-fleet: pass either 'ref' or 'pins', not both."
+          exit 1
+        fi
+        if [ -n "$PINS" ] && ! printf '%s' "$PINS" | jq -e 'type == "object"' >/dev/null 2>&1; then
+          echo "::error::clone-fleet: 'pins' must be a JSON object of {repo: sha}."
+          exit 1
+        fi
+
+        # A pinned clone, assembled by hand because `git clone` cannot take a commit
+        # id — --branch accepts only a branch or tag name. `git fetch --depth 1 origin
+        # <sha>` can, GitHub serving any reachable commit by id, and costs the same one
+        # shallow round trip.
+        #
+        # The three ref commands after the checkout are not tidiness. They are what
+        # makes a pinned tree INDISTINGUISHABLE from `git clone --depth 1` in the four
+        # things the collectors read: rev-parse HEAD, rev-parse --abbrev-ref HEAD,
+        # symbolic-ref refs/remotes/origin/HEAD, and status --porcelain. A bare
+        # fetch-by-sha leaves a detached HEAD and no remote-tracking ref at all, which
+        # stamps branch null and defaultBranch null against the "main"/"main" every
+        # committed file carries — reddening the comparing job over clone mechanics
+        # rather than drift, which is the exact failure mode pinning was added to
+        # remove. See the origin/HEAD note in the header.
+        #
+        # The branch NAME is asked of the REMOTE, never taken from the caller's map.
+        # data-freshness.yml pins from the very files it is about to check, so letting
+        # the branch name come from there too would let a file under test describe the
+        # world it is measured against.
+        clone_pinned() { # <name> <url> <sha> — git chatter goes to stderr as usual
+          local dir="$root/$1" url="$2" sha="$3" def
+          def="$(git ls-remote --symref "$url" HEAD |
+                   sed -n 's#^ref: refs/heads/\(.*\)[[:space:]]HEAD$#\1#p')"
+          [ -n "$def" ] || { echo "could not resolve the default branch of $1" >&2; return 1; }
+          git init -q "$dir" &&
+          git -C "$dir" remote add origin "$url" &&
+          git -C "$dir" fetch --depth 1 -q origin "$sha" &&
+          git -C "$dir" checkout -q -B "$def" FETCH_HEAD &&
+          git -C "$dir" update-ref "refs/remotes/origin/$def" "$sha" &&
+          git -C "$dir" symbolic-ref refs/remotes/origin/HEAD "refs/remotes/origin/$def"
+        }
 
         failed=0
         report() { # <message>
@@ -155,18 +218,40 @@ runs:
             url="https://github.com/${owner}/${r}.git"
           fi
 
+          # An absent key and an empty value mean the same thing here — clone this
+          # repo the ordinary way — so one `// ""` covers both.
+          pin=""
+          if [ -n "$PINS" ]; then
+            pin="$(printf '%s' "$PINS" | jq -r --arg r "$r" '.[$r] // ""')"
+          fi
+
           # stderr is captured rather than discarded so a real failure can be
           # SHOWN. A missing tag on the first attempt is expected and its noise
           # is what used to justify 2>/dev/null; keeping the text and printing it
           # only on the path that actually fails gets both.
           err="$(mktemp)"
-          if [ -n "$REF" ] && git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>"$err"; then
+          if [ -n "$pin" ]; then
+            if clone_pinned "$r" "$url" "$pin" 2>"$err"; then
+              echo "cloned $r @ $pin (pinned)"
+            else
+              # A half-built pinned directory would fail any retry on a non-empty
+              # target, and leaving it would hand a collector an empty repo.
+              rm -rf "${root:?}/$r"
+              report "clone-fleet: could not clone ${r} at the pinned commit ${pin}.
+        The commit is unreachable — history rewritten, or the pin names a commit that
+        was never pushed. Regenerate the data that carries this stamp rather than
+        editing the pin by hand.
+        $(sed 's#x-access-token:[^@]*@#x-access-token:***@#g' "$err")"
+            fi
+          elif [ -n "$REF" ] && git clone --depth 1 --branch "$REF" "$url" "$root/$r" 2>"$err"; then
             echo "cloned $r @ $REF"
           else
             # A failed --branch attempt can leave a partial directory behind,
             # which would make the fallback clone fail on a non-empty target.
             [ -n "$REF" ] && rm -rf "${root:?}/$r"
             if git clone --depth 1 "$url" "$root/$r" 2>"$err"; then
+              # Reached only when this repo had NO pin — the pinned branch above
+              # reports and continues rather than falling through to here.
               echo "cloned $r @ default branch${REF:+ ($REF not found)}"
             else
               # Redact before printing: github.token is masked automatically, a

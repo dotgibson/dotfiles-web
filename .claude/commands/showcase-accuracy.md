@@ -30,7 +30,8 @@ snapshot. What CI actually guarantees:
 
 - **All four are content-gated** by `data-freshness`'s `derived-data` job — it clones the
   twelve source repos, re-runs all four collectors, and fails on any difference — and are
-  refreshed by `fleet-sync`. All four carry a `generatedAt` date; **read the stamp**, and
+  refreshed by `fleet-sync`. Which commit of each repo it clones depends on the event; see
+  the bullet on that below before leaning on a green tick. All four carry a `generatedAt` date; **read the stamp**, and
   if it predates recent activity in the source repo say so rather than certifying the
   numbers.
 - **`generated.json` used to be the weakly-checked one, and that is what changed.** It was
@@ -44,8 +45,19 @@ snapshot. What CI actually guarantees:
   as unverified.
 - **The two `generated.json` guards ask different questions**, and knowing which one a
   value satisfies matters. `check` asks "does this name the latest *release*?";
-  `derived-data` asks "is this what regenerating against the fleet's *current* state would
-  produce?". So a figure can be CI-verified and still describe an unreleased Core.
+  `derived-data` asks whether regenerating reproduces the committed file. So a figure can
+  be CI-verified and still describe an unreleased Core.
+- **`derived-data` regenerates against a different fleet state depending on how it ran**,
+  and this decides how much a green tick is worth to an audit. On a **pull request** it
+  clones each repo at the commit the file's own `generatedFrom` stamps name, so green means
+  "these bytes are what those commits produce" — provenance, not freshness. On the
+  **Monday cron and `workflow_dispatch`** it clones at HEAD, so green there means "the
+  fleet has not moved past this file" — the drift alarm. Green on a PR alone therefore does
+  NOT certify a figure as current; **read `generatedAt` and the stamped SHAs** and check
+  them against the source repo before treating a number as up to date. (The split exists
+  because cloning HEAD on a PR made every `fleet-sync` refresh a race it lost by standing
+  still — the fleet moved while the PR waited for review, and the bot's faithful snapshot
+  was reported as stale.)
 - The stamp shapes differ. `corpus.json` / `coverage.json` carry a flat
   `generatedFrom.commit` for their single source. `snippets.json` spans six repos and
   `generated.json` eleven, so both put their SHAs per-repo under

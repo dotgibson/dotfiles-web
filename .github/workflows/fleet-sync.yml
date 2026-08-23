@@ -171,20 +171,18 @@ jobs:
             printf '%s=%s\n' "$r" "$sha" >>"$RUNNER_TEMP/heads"
           done
 
-          # What the committed data was generated FROM. One expression over all four files,
-          # tolerating every stamp shape the way scripts/data-strip.jq has to: generated.json
-          # and snippets.json carry generatedFrom.repos{} (eleven and six), corpus.json and
-          # coverage.json a single generatedFrom.{repo,commit}, and snippets.json's has also
-          # been the bare STRING "sibling repos" — against which an unguarded field access is
-          # a hard jq error (exit 5), which under `set -e` would break this gate outright.
-          # generated.json is read LAST so its eleven win a duplicate key; corpus.json is the
-          # only source of htpx's. Eleven plus htpx is exactly the manifest's twelve.
-          jq -s '
-            map(if (.generatedFrom | type) == "object" then .generatedFrom else {} end)
-            | map(((.repos // {}) | to_entries | map({key: .key, value: (.value.commit // "")}))
-                  + (if .repo then [{key: .repo, value: (.commit // "")}] else [] end))
-            | add | from_entries
-          ' src/data/snippets.json src/data/coverage.json \
+          # What the committed data was generated FROM — the counterpart of data-strip.jq,
+          # and shared with data-freshness.yml for the same reason: that job now CLONES THE
+          # FLEET at whatever this returns before deciding whether to fail a PR, so the two
+          # reading the same map is what keeps "the fleet has moved" and "the data is stale"
+          # the same statement. The file carries the stamp shapes it tolerates and why.
+          #
+          # Argument ORDER is load-bearing and must match data-freshness.yml's:
+          # from_entries lets the LAST occurrence of a duplicate key win, so generated.json's
+          # eleven repos are read last and win. corpus.json is the only source of htpx's.
+          # Eleven plus htpx is exactly the manifest's twelve.
+          jq -s -f scripts/data-stamps.jq \
+            src/data/snippets.json src/data/coverage.json \
             src/data/corpus.json src/data/generated.json >"$RUNNER_TEMP/stamps.json"
 
           moved=""

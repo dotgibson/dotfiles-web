@@ -51,6 +51,10 @@ on:
       # The shared definition of what does NOT count as drift. Editing it moves the line
       # between "green" and "the data is stale" for every file compared below.
       - "scripts/data-strip.jq"
+      # Its counterpart: the one that reads WHICH fleet commit each file claims. On a pull
+      # request this job clones exactly what it returns, so a change here changes the fleet
+      # state every comparison below is made against.
+      - "scripts/data-stamps.jq"
       # The shared mirror, for the same reason: it decides both this job's verdict and
       # what fleet-sync.yml WRITES, so a change here moves the line between green and
       # stale for the porting matrix in both directions at once.
@@ -207,6 +211,38 @@ jobs:
   # unrelated commit to htpx must not turn this red, only one that actually moves what the
   # site publishes.
   #
+  # WHICH fleet state it regenerates against depends on the event, and the split is the
+  # point rather than a special case — the two callers are asking different questions.
+  #
+  #   • pull_request — clone each repo AT THE COMMIT the committed data names in its own
+  #     generatedFrom stamps (scripts/data-stamps.jq). The question is "is this file what
+  #     its own claimed sources produce?", which is a property of the diff under review
+  #     and so has one answer whenever it is asked.
+  #   • schedule / workflow_dispatch — clone at HEAD, unchanged. The question is "has the
+  #     fleet moved past the committed data?", which is the weekly drift alarm below and
+  #     is meaningless against a pin.
+  #
+  # Cloning at HEAD for BOTH is what this used to do, and it made every bot PR a race it
+  # could lose by standing still. fleet-sync snapshots the fleet at some instant and stamps
+  # those SHAs; this job re-derived from whatever the fleet had become by the time a human
+  # got round to the PR. dotfiles-core lands commits ~10-20 minutes apart in an active
+  # stretch, so a refresh PR left open for an afternoon went red over five Core commits
+  # that had nothing to do with it — reported as "the data is stale" against data that was
+  # a faithful snapshot, and fixable only by regenerating and racing again. #193 is the
+  # worked example: opened 15:28, red by 20:36, green only after a re-dispatch.
+  #
+  # The freshness question that pinning drops here is not lost, it is answered where it
+  # belongs and where it already was: fleet-sync's hourly poll compares the SAME stamps
+  # against the fleet's live heads and opens the refresh PR, the `check` job above fails on
+  # a Core RELEASE the site has not caught up to, and the cron below still runs unpinned.
+  # What a PR can no longer do is fail for drift that arrived after the diff was written.
+  #
+  # Nothing is forgeable this way, which is the other reason the pinned question is the
+  # right one for a PR. A hand-edited data file still fails: it is diffed against what its
+  # own stamps regenerate to, so the only way to pass is to be genuinely derived from the
+  # commits it names. Editing the stamps too just moves which sources it is checked against
+  # — and a stamp naming a commit that was never pushed fails the clone outright.
+  #
   # On the weekly cron this is an ALARM, not a defect: it runs Monday and fleet-sync runs
   # Tuesday, so a genuine drift shows up here a day before the bot PRs the refresh —
   # though for generated.json the core-release dispatch usually gets there first, so for
@@ -224,6 +260,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      # Empty on schedule/workflow_dispatch, which is what leaves those runs cloning HEAD
+      # and asking the freshness question. See the mode split in the job header.
+      #
+      # All four files, slurped: no single one names the whole fleet. generated.json covers
+      # the eleven dotfiles repos and snippets.json six of them, but htpx reaches the map
+      # ONLY through corpus.json's flat stamp — drop it from this list and htpx silently
+      # falls back to a HEAD clone, putting the race back for the one repo whose absence
+      # from the pin map would be hardest to notice.
+      #
+      # Same four files in the same ORDER as fleet-sync.yml's precheck, which reads the same
+      # filter: from_entries lets the last duplicate key win, so generated.json is read last
+      # and its eleven win. The two must agree about which commit a repo is at, or the bot
+      # polls one fleet state while this job clones another.
+      - name: Resolve the commits the committed data claims it came from
+        id: pins
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT" != "pull_request" ]; then
+            echo "pins=" >>"$GITHUB_OUTPUT"
+            echo "${EVENT} run — cloning the fleet at HEAD, so the comparison below asks" \
+                 "whether the committed data is still LEVEL with the fleet."
+            exit 0
+          fi
+
+          # -c because $GITHUB_OUTPUT is line-oriented; the map is ~12 short pairs, far
+          # inside any limit worth a heredoc delimiter.
+          pins="$(jq -s -c -f scripts/data-stamps.jq \
+                    src/data/snippets.json src/data/coverage.json \
+                    src/data/corpus.json src/data/generated.json)"
+          echo "pins=${pins}" >>"$GITHUB_OUTPUT"
+
+          echo "pull_request run — pinning the fleet to the commits the committed data names:"
+          printf '%s' "$pins" | jq -r 'to_entries[] | "  \(.key) @ \(if .value == "" then "<unstamped — will clone HEAD>" else .value end)"'
+
       # scripts/fleet-repos.txt is the list; .github/actions/clone-fleet is the loop.
       # Both used to be inline here, and this step's list was kept byte-for-byte
       # identical to fleet-sync.yml's by hand — a mitigation, not a fix. The two are
@@ -237,6 +310,8 @@ jobs:
       - name: Clone the fleet the four collectors read (read-only, shallow)
         id: fleet
         uses: ./.github/actions/clone-fleet
+        with:
+          pins: ${{ steps.pins.outputs.pins }}
 
       - name: Regenerate all four derived snapshots
         env:
@@ -273,6 +348,10 @@ jobs:
           node scripts/collect-coverage.mjs --strict
 
       - name: Compare the regenerated snapshots against what is committed
+        env:
+          # Non-empty exactly when the clone above was pinned, which is what decides
+          # WHICH defect a difference below is reported as.
+          PINNED: ${{ steps.pins.outputs.pins }}
         run: |
           set -euo pipefail
 
@@ -409,9 +488,25 @@ jobs:
               continue
             fi
             stale=1
-            echo "::error::src/data/${f}.json is BEHIND its source. The showcase" \
-                 "would publish ${harm} on ${page}. Check out the fleet as siblings" \
-                 "and run 'npm run ${cmd}' (or 'npm run data'), then commit the result."
+            # Two modes, two different defects, so two different messages — the fix for one
+            # is not the fix for the other. Unpinned (cron), the file is a fine snapshot of
+            # a fleet that has moved on, and regenerating is the whole answer. Pinned (PR),
+            # the file is NOT what its own stamps produce, and "run npm run data" is bad
+            # advice: that regenerates against today's fleet and papers over whatever made
+            # the committed bytes disagree with the commits they name.
+            if [ -n "${PINNED}" ]; then
+              echo "::error::src/data/${f}.json is NOT what regenerating at the commits it" \
+                   "CLAIMS produces, so the showcase would publish ${harm} on ${page}. The" \
+                   "fleet was cloned at this file's own generatedFrom stamps, so this is not" \
+                   "drift — the committed bytes and the committed stamps disagree. Usual" \
+                   "causes: the file was hand-edited, or a collector changed without the" \
+                   "data being refreshed alongside it. Re-run 'npm run ${cmd}' against a" \
+                   "clean fleet and commit BOTH the data and its stamps together."
+            else
+              echo "::error::src/data/${f}.json is BEHIND its source. The showcase" \
+                   "would publish ${harm} on ${page}. Check out the fleet as siblings" \
+                   "and run 'npm run ${cmd}' (or 'npm run data'), then commit the result."
+            fi
             echo "--- committed  +++ regenerated (src/data/${f}.json) ---"
             # awk rather than `head -n`, because it reads the diff to EOF and can therefore
             # say how much it is NOT showing. A truncation that does not admit it is
