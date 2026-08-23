@@ -442,7 +442,15 @@ jobs:
       #
       # Direct node invocation with no setup-node, matching the collectors above: the
       # script imports only node: builtins (fs, path, url, vm).
+      #
+      # Runs even when the comparison above failed, because the two answer independent
+      # questions: "is the committed snapshot stale?" and "would these install commands
+      # actually run?". A snapshot that has merely fallen behind its source is routine —
+      # fleet-sync opens a refresh PR for it weekly — and it must not hide a builder
+      # emitting a flag some repo rejects. `!cancelled()` rather than `always()` so a
+      # cancelled run still stops here.
       - name: Verify both command builders against the fleet's real flag surface
+        if: ${{ !cancelled() }}
         env:
           DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
         run: node scripts/verify-bootstrap-flags.mjs
