@@ -30,8 +30,22 @@ const platforms = [
     flags: [
       // A ROLE layer: it installs nothing unless --install is passed, and it stacks on an
       // OS-native layer (dotfiles-Debian covers Kali) rather than replacing one.
+      { flag: '--dry-run', label: 'Dry run — preview, change nothing' },
       { flag: '--links-only', label: 'Links only — skip the host-tool report' },
       { flag: '--install', label: 'Also install the offensive tool stack' },
+    ],
+  },
+  {
+    id: 'defense',
+    label: 'Defense · role layer',
+    repo: 'dotfiles-Defense',
+    flags: [
+      // The blue mirror of Offense, and a ROLE layer on the same terms: stacks on an
+      // OS-native layer, installs nothing. It has no --install — the detection stack is
+      // containers (siemup / siemdown), not packages.
+      { flag: '--dry-run', label: 'Dry run — preview, change nothing' },
+      { flag: '--links-only', label: 'Links only — just (re)create the symlinks' },
+      { flag: '--no-check', label: 'Skip the host-tool + Docker probe' },
     ],
   },
   {
@@ -39,14 +53,21 @@ const platforms = [
     label: 'Linux distro',
     distros: [
       { id: 'Fedora', repo: 'dotfiles-Fedora', extra: [{ flag: '--no-flatpak', label: 'Skip Flatpak apps' }] },
+      { id: 'Debian', repo: 'dotfiles-Debian', extra: [
+        { flag: '--no-upgrade', label: 'Skip the apt full-upgrade' },
+        { flag: '--force-os', label: 'Allow a Debian-like derivative (Mint, Pop!_OS)' },
+      ] },
       { id: 'Arch', repo: 'dotfiles-Arch', extra: [] },
       { id: 'openSUSE', repo: 'dotfiles-openSUSE', extra: [{ flag: '--no-flatpak', label: 'Skip Flatpak apps' }] },
       { id: 'Alpine', repo: 'dotfiles-Alpine', extra: [] },
       { id: 'Gentoo', repo: 'dotfiles-Gentoo', extra: [{ flag: '--no-sync', label: 'Skip emerge --sync on re-runs' }] },
     ],
     flags: [
-      // No --dry-run: only dotfiles-MacBook's bootstrap implements it; the Linux
-      // bootstraps reject unknown flags (exit 1). --links-only is the preview-ish option.
+      // Every Linux bootstrap parses --dry-run (most also take -n). An earlier comment here
+      // claimed the opposite and withheld the flag; scripts/verify-bootstrap-flags.mjs
+      // reads each repo's real case-arms, so re-run `npm run verify:flags` before trusting
+      // a claim like that again. On Alpine --dry-run also implies --links-only.
+      { flag: '--dry-run', label: 'Dry run — preview, change nothing' },
       { flag: '--links-only', label: 'Links only — skip package install' },
     ],
   },

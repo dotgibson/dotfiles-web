@@ -1,27 +1,32 @@
 // Data model for the Bootstrap Command Generator (Track A — see
 // docs/interactive-features-design.md §1). The page renders ENTIRELY from this
-// list: a target is a platform/repo with the EXACT set of flags its real
-// bootstrap accepts. Adding a platform or flag is a data edit here, nothing else.
+// list: a target is a platform/repo with a curated set of flags its real bootstrap
+// accepts. Adding a platform or flag is a data edit here, nothing else.
 //
 // THE CONTRACT (design doc §0 verification tier): every `flag` token below must
 // be one the repo's bootstrap actually parses. Unknown flags hard-fail on macOS
 // (its bootstrap validates against a KNOWN_FLAGS allowlist) and are wrong
 // everywhere else, so a target only ever lists flags it genuinely supports.
-// Verified against each repo's bootstrap.sh / install.ps1 case-arms:
-//   Fedora/Arch/openSUSE: --links-only --no-flatpak  + --only/--skip (modules)
-//   Debian:               --links-only --no-upgrade --no-unattended --force-os
-//                          + --only/--skip (modules)  [covers Ubuntu, Debian AND Kali]
-//   Alpine:               --links-only               + --only/--skip (modules)
-//   Gentoo:               --links-only --no-sync      + --only/--skip (modules)
-//   Offense (role):       --links-only --install --no-check --dry-run
-//                          + --only/--skip (modules)
-//   macOS:                --links-only --no-brew --macos-defaults --set-shell --dry-run
-//                          + --only/--skip (modules)
-//   Windows (install.ps1): -SkipPackages -DryRun
-// Every repo that vendors core/lib/bootstrap-lib.sh now accepts --only/--skip module
+//
+// What this file records is the CURATED set each target SURFACES — deliberately NOT the
+// complete set its repo accepts. The generator omits automation and destructive flags
+// (--uninstall, --json, --quiet, --strict, -Yes, …), and several repos take more than is
+// listed here: Fedora's --force-os, openSUSE's --tolerate-failures, Gentoo's --no-extras
+// / --no-portage-config / --user, and the -n alias for --dry-run on all but Gentoo,
+// openSUSE and Defense.
+//
+// So do NOT read a target's `flags` as "everything this bootstrap accepts". This header
+// used to carry a per-repo inventory that was read exactly that way, and it went stale:
+// the Linux targets withheld a --dry-run that every one of them has long supported,
+// behind a comment asserting they would reject it. Ask the repo, not this file —
+// `npm run verify:flags` prints each repo's real accepted set.
+//
+// Every repo that vendors core/lib/bootstrap-lib.sh accepts --only/--skip module
 // selection (Track B); `modules: true` opts a target into the UI. Windows has no
-// vendored Core, so it carries no module groups.
-// Re-verify after any bootstrap change — scripts/verify-bootstrap-flags.mjs guards it.
+// vendored Core, so it carries no module groups, and dotfiles-Defense parses only the
+// `--only=`/`--skip=` equals form — see the note on its target below.
+// Re-verify after any bootstrap change — scripts/verify-bootstrap-flags.mjs guards it,
+// and CI runs it in data-freshness.yml's derived-data job.
 
 export type Dialect = 'sh' | 'ps';
 
@@ -42,15 +47,24 @@ export interface BootstrapTarget {
   entry: string; // './bootstrap.sh' | '.\\install.ps1'
   cloneDir?: string; // sh only; defaults to ~/<repo> when unset
   blurb: string; // one line shown above the options
-  flags: BootstrapFlag[]; // only the flags THIS target really accepts
+  flags: BootstrapFlag[]; // the curated flags THIS target surfaces (all genuinely accepted)
   modules?: boolean; // does this bootstrap accept --only/--skip module selection?
+  // Module groups THIS layer adds on top of Core's shared six. A layer may extend
+  // BLIB_MODULES with groups of its own (macOS does — see below), and those are only
+  // valid for that target, so they hang off the target rather than the global list.
+  extraModuleGroups?: ModuleGroup[];
   notes?: string[]; // post-install reminders rendered below the command
 }
 
 // The Core wiring groups a `modules: true` target can narrow with --only/--skip
 // (the shared core/lib/bootstrap-lib.sh scaffold — see dotfiles-core). All six are
 // linked by default; the generator emits --only/--skip ONLY when a subset is chosen.
-// The keys MUST match BLIB_MODULES in bootstrap-lib.sh exactly.
+//
+// The keys MUST match the target's EFFECTIVE BLIB_MODULES — which is Core's shared six
+// plus anything that target's own bootstrap appends before it validates a selector. This
+// list is only the shared six; a layer's own groups live in its `extraModuleGroups`, and
+// the generator concatenates the two. (Core's BLIB_MODULES is "zsh nvim tmux git prompt
+// tools"; dotfiles-MacBook appends `desktop` at bootstrap.sh:207.)
 export interface ModuleGroup {
   key: string; // the literal group token emitted in --only/--skip (e.g. 'zsh')
   label: string; // plain-language name
@@ -101,6 +115,23 @@ const forceOs: BootstrapFlag = {
   help: 'The bootstrap refuses to run unless /etc/os-release reports ID=ubuntu, ID=debian or ID=kali. Other derivatives (Mint, Pop!_OS, Raspbian) report ID_LIKE=debian and need this to proceed — their package sets are close but not CI-proven.',
   kind: 'provision',
 };
+// Every sh target accepts --dry-run. Alpine is the one exception to this wording — its
+// dry run also forces --links-only — so it carries its own copy rather than sharing this.
+const dryRun: BootstrapFlag = {
+  key: 'dry-run',
+  label: 'Dry run — preview, change nothing',
+  flag: '--dry-run',
+  help: 'Print every planned action and mutate nothing. Re-run without it to apply.',
+  kind: 'safety',
+};
+// Shared by the two role layers, which both probe the host and report rather than install.
+const noCheck: BootstrapFlag = {
+  key: 'no-check',
+  label: 'Skip the host-tool report',
+  flag: '--no-check',
+  help: 'Skip the probe that reports which tools are present, installed but unreachable, or missing. The probe only ever reports — it never installs.',
+  kind: 'provision',
+};
 
 export const targets: BootstrapTarget[] = [
   {
@@ -135,12 +166,16 @@ export const targets: BootstrapTarget[] = [
         help: 'chsh to the Homebrew zsh after install.',
         kind: 'provision',
       },
+      dryRun,
+    ],
+    // macOS is the only layer that extends Core's BLIB_MODULES — bootstrap.sh:207 appends
+    // `desktop` before validating a selector, so --only/--skip accept it there and nowhere
+    // else. Without this the generator silently wired six configs the operator had unticked.
+    extraModuleGroups: [
       {
-        key: 'dry-run',
-        label: 'Dry run — preview, change nothing',
-        flag: '--dry-run',
-        help: 'Print every planned action and mutate nothing. Re-run without it to apply.',
-        kind: 'safety',
+        key: 'desktop',
+        label: 'Desktop apps',
+        help: 'the macOS-only desktop configs: ghostty, fastfetch, aerospace, sketchybar and karabiner',
       },
     ],
     notes: ['Open a fresh shell when it finishes: `exec zsh`.'],
@@ -195,18 +230,41 @@ export const targets: BootstrapTarget[] = [
         help: 'Opt in to the tool install. On Kali that is apt from install/offensive-packages.txt; on any other Debian-family box it is a smaller portable subset via pipx and go.',
         kind: 'provision',
       },
-      {
-        key: 'no-check',
-        label: 'Skip the host-tool report',
-        flag: '--no-check',
-        help: 'Skip the probe that reports which offensive tools are on $PATH, installed but unreachable, or missing. The probe only ever reports — it never installs.',
-        kind: 'provision',
-      },
+      noCheck,
+      dryRun,
     ],
     notes: [
       'Install an OS-native layer FIRST — this repo owns no package manager, clipboard or paths.',
       'Keep engagement data in ~/engagements, outside the repo.',
       'Running Kali under WSL2? Enable mirrored networking on the Windows side (`%UserProfile%\\.wslconfig`) for a LAN-reachable listener, then `wsl.exe --shutdown`. That config lives in dotfiles-Debian.',
+    ],
+  },
+  {
+    // The BLUE mirror of `offense`, and a ROLE layer on the same terms: it stacks on
+    // whatever OS-native layer the box runs and installs nothing. Genuinely
+    // distro-agnostic — the detection stack is containers, so no blue-team distro.
+    //
+    // NO `modules: true`, and that is deliberate. dotfiles-Defense/bootstrap.sh parses
+    // args with `for a in "$@"; do case "$a" in`, so it accepts --only/--skip ONLY in the
+    // `--only=zsh,git` equals form. The generator emits the space-separated form
+    // (generator.astro's moduleClause), which Defense's `*)` arm would reject with
+    // `exit 1` — a broken copy-paste command. Opting out is the honest fix here; making
+    // the generator emit `=` per target would be the alternative if this ever matters.
+    // scripts/verify-bootstrap-flags.mjs asserts --only/--skip acceptance for any
+    // `modules: true` target, so it would catch a regression on this.
+    id: 'defense',
+    label: 'Defense (role layer)',
+    repo: 'dotfiles-Defense',
+    dialect: 'sh',
+    entry: './bootstrap.sh',
+    cloneDir: '~/dotfiles-Defense',
+    blurb:
+      'The defensive role layer — detection engineering and investigation, stacked on an OS-native layer you install first. Distro-agnostic: the heavy stack runs in containers, so no dedicated blue-team distro.',
+    flags: [linksOnly, noCheck, dryRun],
+    notes: [
+      'Install an OS-native layer FIRST — this repo owns no package manager, clipboard or paths.',
+      'The detection lab needs Docker. Bring it up with `siemup` and down with `siemdown`.',
+      'Keep case data in ~/cases, outside the repo — `mkcase` scaffolds it there by design.',
     ],
   },
   {
@@ -218,7 +276,7 @@ export const targets: BootstrapTarget[] = [
     cloneDir: '~/dotfiles-Fedora',
     modules: true,
     blurb: 'The Linux template every other distro repo is stamped from. dnf + RPM Fusion.',
-    flags: [linksOnly, noFlatpak],
+    flags: [linksOnly, noFlatpak, dryRun],
     notes: ['Land in the new shell with `exec zsh`.'],
   },
   {
@@ -231,7 +289,7 @@ export const targets: BootstrapTarget[] = [
     modules: true,
     blurb:
       'apt, covering Ubuntu 24.04 LTS, Debian trixie and Kali rolling. Ubuntu is the only frozen release in the fleet — so on it most of the stack arrives as pinned, checksum-verified upstream assets; Kali has nearly all of it in apt.',
-    flags: [linksOnly, noUpgrade, noUnattended, forceOs],
+    flags: [linksOnly, noUpgrade, noUnattended, forceOs, dryRun],
     notes: [
       'Land in the new shell with `exec zsh`.',
       'Ubuntu 24.04 LTS is the primary target; Debian trixie and Kali rolling are also proven in CI.',
@@ -247,7 +305,7 @@ export const targets: BootstrapTarget[] = [
     cloneDir: '~/dotfiles-Arch',
     modules: true,
     blurb: 'Rolling-release Arch. pacman + AUR. A minimal box needs the stage-0 prep in SETUP.md first.',
-    flags: [linksOnly, noFlatpak],
+    flags: [linksOnly, noFlatpak, dryRun],
     notes: ['Bare-metal / minimal install? Do the stage-0 prep in SETUP.md (git, sudo, a UTF-8 locale) first.'],
   },
   {
@@ -259,7 +317,7 @@ export const targets: BootstrapTarget[] = [
     cloneDir: '~/dotfiles-openSUSE',
     modules: true,
     blurb: 'zypper with the best dependency solver of the bunch. Tumbleweed (dup) + Leap (up) aware.',
-    flags: [linksOnly, noFlatpak],
+    flags: [linksOnly, noFlatpak, dryRun],
     notes: ['Land in the new shell with `exec zsh`.'],
   },
   {
@@ -271,7 +329,16 @@ export const targets: BootstrapTarget[] = [
     cloneDir: '~/dotfiles-Alpine',
     modules: true,
     blurb: 'The lean outlier: musl libc, busybox, doas. Run as root or with doas; enable the community repo.',
-    flags: [linksOnly],
+    flags: [
+      linksOnly,
+      {
+        key: 'dry-run',
+        label: 'Dry run — preview, change nothing',
+        flag: '--dry-run',
+        help: 'Print every planned action and mutate nothing. On Alpine this also implies --links-only, because provisioning installs packages and touches the system.',
+        kind: 'safety',
+      },
+    ],
     notes: ['Run as root or with doas, and make sure the community apk repo is enabled.'],
   },
   {
@@ -292,6 +359,7 @@ export const targets: BootstrapTarget[] = [
         help: 'Skip the slow Portage tree sync when re-running.',
         kind: 'provision',
       },
+      dryRun,
     ],
     notes: ['First build compiles from source — expect it to take a while.'],
   },
