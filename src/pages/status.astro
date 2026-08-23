@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { getFleetStatus } from '../lib/fleet-status';
 import { layerMeta } from '../data/repos';
+import { fleetCounts } from '../data/metrics';
 import { withBase } from '../lib/url';
 
 const fleet = await getFleetStatus();
@@ -41,7 +42,7 @@ const summary =
 
 <Base
   title="Fleet status"
-  description="Live per-repo release and vendored-Core drift across the eleven-repo dotfiles fleet, read from GitHub at build time."
+  description={`Live per-repo release and vendored-Core drift across the ${fleetCounts.total}-repo dotfiles fleet, read from GitHub at build time.`}
 >
   <section class="container status">
     <header class="status__head">

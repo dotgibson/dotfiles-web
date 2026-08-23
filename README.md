@@ -132,7 +132,8 @@ Content is data-driven — edit these and the site updates:
 - `src/content/docs/**/*.md` — the documentation hub pages
 
 The "by the numbers" strip, per-card package counts, the changelog, the Config
-explorer's baked files, and the `/purple` corpus + detection-coverage tables are
+explorer's baked files, and the Purple page's corpus + detection-coverage tables
+(the `/purple` route on this site — not a Claude routine like `/doc-audit`) are
 **not** hand-typed — four collectors under `scripts/` derive them from the sibling
 repos into `src/data/`:
 

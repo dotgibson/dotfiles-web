@@ -309,7 +309,7 @@ const payload = { targets, moduleGroups, channels, current: release.current };
   // command (mirrored here because the build-time module isn't shipped to the client).
   interface Flag { key: string; label: string; flag: string; help: string; kind: 'provision' | 'safety'; default?: boolean }
   interface ModuleGroup { key: string; label: string; help: string }
-  interface Target { id: string; label: string; repo: string; dialect: 'sh' | 'ps'; entry: string; cloneDir?: string; blurb: string; flags: Flag[]; modules?: boolean; notes?: string[] }
+  interface Target { id: string; label: string; repo: string; dialect: 'sh' | 'ps'; entry: string; cloneDir?: string; blurb: string; flags: Flag[]; modules?: boolean; extraModuleGroups?: ModuleGroup[]; notes?: string[] }
 
   const root = document.getElementById('generator');
   const codeEl = document.getElementById('gen-code');
@@ -327,7 +327,12 @@ const payload = { targets, moduleGroups, channels, current: release.current };
   if (root && codeEl && optionsEl) {
     const data = JSON.parse(root.dataset.gen || '{}') as { targets: Target[]; moduleGroups: ModuleGroup[]; current: string };
     const targets = data.targets || [];
-    const allModules = (data.moduleGroups || []).map((g) => g.key);
+    // Module groups are per-target, not global: Core ships six and a layer may append its
+    // own (macOS adds `desktop`), which are only valid selectors on that target. Resolve
+    // against the ACTIVE target everywhere, or the generator would offer a group the
+    // bootstrap rejects — or silently wire one the operator had unticked.
+    const groupsFor = (t: Target): ModuleGroup[] => [...(data.moduleGroups || []), ...(t.extraModuleGroups || [])];
+    const keysFor = (t: Target): string[] => groupsFor(t).map((g) => g.key);
     let active: Target = targets[0];
 
     // Build the command lines for the current selection. Validate the ref FIRST —
@@ -363,6 +368,7 @@ const payload = { targets, moduleGroups, channels, current: release.current };
     // --skip <unpicked> / --only <picked> (compare the actual strings, not token
     // counts — an even split can still differ in length). The shared lib accepts both.
     function moduleClause(t: Target): string {
+      const allModules = keysFor(t);
       if (!t.modules || !allModules.length) return '';
       // intersect with the known group keys — selections only ever come from the
       // rendered checkboxes (data-driven), but never trust the DOM blindly.
@@ -393,14 +399,15 @@ const payload = { targets, moduleGroups, channels, current: release.current };
       modulesEl.hidden = false;
       const h = document.createElement('p');
       h.className = 'gen__group-title';
-      h.textContent = 'Core modules to link';
+      // macOS adds a `desktop` group of its own, so this is not always "Core" alone.
+      h.textContent = active.extraModuleGroups?.length ? 'Modules to link' : 'Core modules to link';
       const hint = document.createElement('p');
       hint.className = 'gen__modules-hint';
       hint.textContent =
-        'All on = full Core. Uncheck any to link only a subset — the command gains --only/--skip.';
+        'All on = everything this layer wires. Uncheck any to link only a subset — the command gains --only/--skip.';
       const grid = document.createElement('div');
       grid.className = 'gen__modules-grid';
-      for (const g of data.moduleGroups || []) {
+      for (const g of groupsFor(active)) {
         const label = document.createElement('label');
         label.className = 'gen__opt gen__mod';
         const input = document.createElement('input');

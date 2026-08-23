@@ -7,8 +7,10 @@
  * that format — replacing the old ad-hoc unicode glyphs (◆ ⧉ ⚡ …) with clean inline
  * Feather-style SVG icons in accent-tinted round badges. Icons are inlined (no icon
  * font, no dependency, CSP-safe) and stroke `currentColor`, so each takes the accent
- * colour from its `tone-*` class. Copy is unchanged — it's accurate to the system.
+ * colour from its `tone-*` class. The copy is the original, bar the fleet count in the
+ * lead, which now reads from the generated data instead of being spelled out.
  */
+import { fleetCounts } from '../data/metrics';
 
 // Feather (MIT) 24×24 stroke icons, inlined as raw <path> markup keyed per feature.
 const icons = {
@@ -69,7 +71,7 @@ const features = [
       <span class="eyebrow">Why it’s built this way</span>
       <h2>A system, not a pile of config</h2>
       <p class="lead">
-        Eleven repositories, one philosophy: if it changes with the operating system it
+        {fleetCounts.total} repositories, one philosophy: if it changes with the operating system it
         isn’t Core; if it changes with you as an operator it isn’t Core. Everything left
         over is Core — and it lives in exactly one place.
       </p>

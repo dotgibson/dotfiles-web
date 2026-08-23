@@ -286,7 +286,7 @@ cd ~/dotfiles-Defense
 ./bootstrap.sh                 # symlinks Core + defense; checks docker
 exec zsh`,
     installNote:
-      'Distro-agnostic: host tools come from your OS-native layer; the heavy detection stack comes up in containers via docker/ (siemup / siemdown).',
+      'Distro-agnostic: host tools come from your OS-native layer; the heavy detection stack comes up in containers via docker/ (siemup / siemdown). Flags: --dry-run (preview, change nothing), --links-only, --no-check (skip the host-tool + Docker probe). Module selection uses the equals form here: --only=zsh,git.',
     specifics: [
       {
         label: 'A defense stage on the loader',

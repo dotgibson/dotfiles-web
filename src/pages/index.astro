@@ -8,6 +8,7 @@ import Palette from '../components/Palette.astro';
 import RepoCard from '../components/RepoCard.astro';
 import InstallBuilder from '../components/InstallBuilder.astro';
 import { repos, layerMeta } from '../data/repos';
+import { fleetCounts } from '../data/metrics';
 import { getRepoLiveMap } from '../lib/github';
 import { withBase } from '../lib/url';
 
@@ -80,10 +81,10 @@ const orderedRepos = [...repos];
         <span class="eyebrow">The fleet</span>
         <h2>Repository map</h2>
         <p class="lead">
-          Eleven repositories are public today — one Core, vendored into nine of the ten
-          machine repos (Windows replicates Core natively in PowerShell). Each card links
-          straight to its repo, with live stars, last-push, and CI status pulled from
-          GitHub at build time.
+          All {fleetCounts.total} repositories are public today — one Core, vendored into{' '}
+          {fleetCounts.vendoring} of the {fleetCounts.machine} machine repos (Windows replicates Core
+          natively in PowerShell). Each card links straight to its repo, with live stars,
+          last-push, and CI status pulled from GitHub at build time.
         </p>
       </div>
 

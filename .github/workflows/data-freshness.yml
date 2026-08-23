@@ -425,6 +425,36 @@ jobs:
 
           exit "$stale"
 
+      # The fleet is already cloned above, so this costs one node invocation. It parses
+      # each repo's REAL bootstrap case-arms and fails if either command builder
+      # (src/data/bootstrap.ts or src/components/InstallBuilder.astro) emits a flag the
+      # repo does not accept — a broken copy-paste command for whoever runs it.
+      #
+      # Until now it only ran locally via `npm run verify:flags`, which is how the Linux
+      # targets came to sit behind a comment claiming those bootstraps reject --dry-run
+      # long after every one of them had implemented it.
+      #
+      # Note the asymmetry, because it bounds what this gate can promise: a surfaced flag
+      # the repo REJECTS is an error, but a repo flag the builders merely omit is an
+      # informational note. That is deliberate — the builders curate, omitting --uninstall,
+      # --json, --quiet and friends on purpose — so this catches the dangerous direction,
+      # not the stale-omission one that filed the issue.
+      #
+      # Direct node invocation with no setup-node, matching the collectors above: the
+      # script imports only node: builtins (fs, path, url, vm).
+      #
+      # Runs even when the comparison above failed, because the two answer independent
+      # questions: "is the committed snapshot stale?" and "would these install commands
+      # actually run?". A snapshot that has merely fallen behind its source is routine —
+      # fleet-sync opens a refresh PR for it weekly — and it must not hide a builder
+      # emitting a flag some repo rejects. `!cancelled()` rather than `always()` so a
+      # cancelled run still stops here.
+      - name: Verify both command builders against the fleet's real flag surface
+        if: ${{ !cancelled() }}
+        env:
+          DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
+        run: node scripts/verify-bootstrap-flags.mjs
+
   # The fleet is named once, in scripts/fleet-repos.txt. This asserts nothing has grown a
   # second copy — no workflow re-inlining the clone loop or the strip filter, and
   # src/data/repos.ts naming the same repos the manifest does. It exists because the

@@ -10,7 +10,7 @@
 // tokens only (matches the interactive-features design constraints).
 import { repos, layerMeta } from '../data/repos';
 import type { Layer } from '../data/repos';
-import { driftFor, metrics } from '../data/metrics';
+import { driftFor, fleetCounts, metrics } from '../data/metrics';
 import type { DriftStatus } from '../data/metrics';
 
 const accentVar: Record<string, string> = {
@@ -100,7 +100,7 @@ const edge = (cx: number) => {
   <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="arch-dg-t arch-dg-d" preserveAspectRatio="xMidYMid meet">
     <title id="arch-dg-t">Core vendoring topology</title>
     <desc id="arch-dg-d">
-      dotfiles-core is vendored into {consumers.filter((c) => c.layer !== 'host').length} machine
+      dotfiles-core is vendored into {fleetCounts.vendoring} machine
       repositories via git subtree (solid edges); dotfiles-Windows mirrors only the Neovim and
       starship configs via sync scripts (dashed edge). Edges are coloured by live vendoring drift — green when the
       repo carries Core's current release, orange when it is behind, cyan when the repo replicates
@@ -208,7 +208,7 @@ const edge = (cx: number) => {
     </g>
   </svg>
   <figcaption>
-    One Core, vendored into {consumers.filter((c) => c.layer !== 'host').length} machine repos via
+    One Core, vendored into {fleetCounts.vendoring} machine repos via
     <code>git subtree</code> — each clone is self-contained (no submodule init).
     <strong>dotfiles-Offense</strong> and <strong>dotfiles-Defense</strong> are Role layers that stack on any OS layer; <strong>dotfiles-Windows</strong>
     carries no <code>core/</code> subtree and mirrors only the Neovim and starship configs.
