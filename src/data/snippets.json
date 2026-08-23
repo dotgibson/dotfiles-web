@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "72cd3372a57100894e7528dbddff35f147d91a75",
+        "commit": "c33e8e39291f4b6668750e725d96d21967862e5b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
