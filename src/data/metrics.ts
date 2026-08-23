@@ -75,6 +75,21 @@ export const driftFor = (
 export const packageCount = (repo: string): number | null =>
   metrics.packages[repo] ?? null;
 
+// Fleet counts for PROSE, so a sentence cannot drift from the fleet the way the
+// hard-typed "Eleven … nine of the ten" once did. `total` comes from the generated
+// snapshot (the same field the by-the-numbers strip reads); the breakdown is derived
+// from repos.ts's layer model rather than by arithmetic on that number, so it stays
+// right when a repo is added to a layer:
+//   machine   — everything that configures a machine, i.e. all but Core itself
+//   vendoring — the machine repos that actually vendor Core; the Windows host does
+//               not (it replicates Core natively in PowerShell)
+// ArchitectureDiagram.astro derived `vendoring` inline in two places before this.
+export const fleetCounts = {
+  total: metrics.fleet.publicRepos,
+  machine: repos.filter((r) => r.layer !== 'core').length,
+  vendoring: repos.filter((r) => r.layer !== 'core' && r.layer !== 'host').length,
+};
+
 // The curated headline stats for the homepage "by the numbers" strip. Each value
 // is pulled from generated.json so it tracks the real repos.
 export const headlineStats: { value: string; label: string; hint: string }[] = [
