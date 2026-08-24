@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "92a1d70bc500c0968023ea06703c1d6d06ab22e4",
+        "commit": "3116ec2cd729e028b66b5f517314b71b42bbdc87",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "f4abde2cab243f71e8fd1fee27667660607f5f14",
+        "commit": "0dcd87f3e135ab028f42d10f0fa75fa6c671aca1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,25 +22,25 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "49d8512e57426a56a38f7c68c69e750a47b3f7bd",
+        "commit": "dc01a06f4e3433c9148f6f4736d3ef7358fafc03",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "9422542268dab03ccb89404c7ec1bd2cd4c7acda",
+        "commit": "1115b5320bc556c7e0a5b1feea9254910ace1168",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "70f84388699689d7fb071aca6ed40c3680742e65",
+        "commit": "39c8d05b8305d21f8c569477949eb86edd52bd53",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "8fa0b8bbff1dcd0358b214e9ebe9256cd6140a55",
+        "commit": "21eebed32dc2a9adb2cb1b3cf4741164b31d783e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -58,13 +58,13 @@
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "8dde3d722b8be7b925c22e22ceb2189d053a8b46",
+        "commit": "0ef04a6887a320dd7d39d08e5bad07b6a5dff19a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "2df7ddb26cadaa81555f5e141848fc80d175fc5d",
+        "commit": "bffa547ab7a737ce3de3c3e4d3606125cdaeb8fe",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -143,7 +143,7 @@
   "core": {
     "version": "4.17.0",
     "sourcedModules": 13,
-    "zshLoc": 4983,
+    "zshLoc": 5124,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 28
@@ -177,8 +177,34 @@
       "version": "Unreleased",
       "groups": [
         {
+          "category": "Added",
+          "items": [
+            {
+              "text": "core-doctor reports the four integrations Core wires itself: direnv, gh, uv and ty. _CORE_DOCTOR_WIRED listed five tools and none of these, so the doctor was silent about integrations Core drives directly — it hooks direnv in zsh/00-tools.zsh and registers the gh/uv/ty completions in zsh/45-plugins.zsh. Before those moved into Core they were the OS layer's at band 80, and arguably not Core's to report on; they are Core's now. All four satisfy the list's own membership rule — a tool belongs there iff its activation defines something observable in this shell that _core_wired can probe: | tool | probe | | --- | --- | | direnv | _direnv_hook — the function, or its precmd_functions entry | | gh / uv / ty | the tool's $_comps entry | The completion three needed a different probe shape, and it is the same scar the starship/carapace arms already carry. Their wiring fact is the compdef registration in $_comps, not a defined function: the completion function is autoloaded lazily, so $+functions[_gh] would report a permanent ○ (idle) for a correctly registered completion. The arms test $_comps for non-emptiness rather than for a specific value, so the row stays honest when carapace legitimately owns the command. No HAVE_DIRENV/HAVE_GH/HAVE_TY flags, and no presence rows — decided rather than overlooked. _cache_eval self-guards on ${commands[…]}, so nothing would consume such a flag; and a _CORE_DOCTOR_GROUPS row for gh or ty would render a permanent ✗, because no Linux repo's packages.txt installs either. Muting that correctly means adding them to _CORE_DOCTOR_OPTIN, which is derived from PORTING-MATRIX.md's footnote ²¹ and asserted against it — a matrix change, not a list edit, and a separate piece of work. (#581)",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "uv's 6,976-line completion is no longer sourced on every shell — it autoloads from fpath. _cache_eval turns a generator into a cached file and then sources that file on every interactive shell. That is the right shape for direnv (14 lines) and gh (212). It is the wrong shape for uv, whose cached completion is 6,976 lines read into every shell to serve a completion most shells never invoke. Measured here with hyperfine, against a compinit-ready baseline of 4.7 ms: | | mean | | --- | --- | | baseline (compinit only) | 4.7 ms ± 0.3 | | shipped: source gh+uv+ty every shell | 40.2 ms ± 2.1 | | this change: fpath autoload | 5.0 ms ± 0.3 | So the per-shell cost of these three drops from +35.5 ms to +0.3 ms. clap_complete's output is already built for this — it opens with #compdef <tool> and closes with the standard autoload shim — so the new _cache_completion helper writes it to $XDG_CACHE_HOME/zsh/completions/_<tool> instead of sourcing it. It keeps _cache_eval's two load-bearing invariants verbatim: ${commands[…]} for a fork-free probe that stays silent on a box without the tool (which is why these callers still need no HAVE_* flag), and the binary-mtime regeneration key. Three things this had to get right, all of them silent if wrong: - fpath must be populated before compinit scans it. Generation therefore moves from band 45 to band 00; compinit is band 10. - The cached compdump hides new files. compinit -C, taken whenever the dump is under 24 h old, skips the scan for new completion functions entirely — so a freshly written _uv would be invisible for up to a day. A regeneration now deletes the dump, which works precisely because band 00 precedes band 10: that shell pays one full compinit, every later shell keeps the fast path. - carapace must not win the command back. carapace bridges gh among hundreds of others, and the last compdef owns the command. Autoloading registers at band 10, i.e. before carapace at band 45 — so a three-line compdef re-assert stays at band 45, after carapace, exactly where the sourced version used to be. compdef only rebinds a name; it does not read the 6,976 lines, so this costs nothing. The negative cache for a generator that cannot succeed is a .<tool>.failed dotfile rather than _cache_eval's comment-only stub: any file named uv in fpath is a completion function, so a stub would register an empty completion and shadow the bridged one that would otherwise have served. compinit only scans names beginning with , so the dotfile converges without being visible to the completion system. A side benefit: band 45 is profile-gated (minimal ceils at 30, standard at 50), so these completions did not exist at all under those profiles. Generated at band 00 and registered at band 10, they now do. The old $XDG_CACHE_HOME/zsh/{gh,uv,ty}.zsh caches are left behind, unused and harmless; delete them to reclaim the space. (#579)",
+              "kind": "perf"
+            },
+            {
+              "text": "bootstrap-test.yml now tells you how to choose packages_check's probe, because the obvious command is wrong on most distros and both ways it is wrong look healthy. The header documented the input as packages_check: apk info and said nothing else. That is Alpine's correct answer and a trap as a template — wiring the same shape into four OS repos surfaced two distinct failure modes, each of which produces a gate a reviewer would sign off on. A name-exact probe raises FALSE ALARMS. bootstrap.sh installs these names with the package manager's install verb, which honours Provides, so the probe has to ask the same question. Fedora retired wget for wget2 with wget2-wget carrying Provides: wget, so dnf install wget works while dnf info wget fails; on Arch sh is a provides of bash, not a package; on openSUSE python3-pip is satisfied by a versioned python3XX-pip. Worse, such a list can pass today and break later: none of Arch's ~45 names sat behind a provides when this was wired, so the name-exact probe was green and would have gone red on some future PR that had nothing to do with it. A probe that never rejects gives FALSE CONFIDENCE. apk policy and zypper info both exit 0 for a name that exists nowhere — a gate that cannot fail, indistinguishable from real coverage. So a green run is not evidence on its own; the header now prescribes the negative control that is (a scratch list holding one real name, one provides-only name, and one bogus name, which must go red naming only the bogus one). The note carries the four probes verified against both rules, and two adjacent traps the same exercise turned up: a path-filtered caller that omits install/** gets a package-list gate that cannot fire on a package-list change, and prep must leave the index readable — Alpine's apk add --no-cache deliberately leaves none. Docs only; no behavioural change to the workflow.",
+              "kind": "perf"
+            }
+          ]
+        },
+        {
           "category": "Fixed",
           "items": [
+            {
+              "text": "make sync vendored onto whatever the local clone happened to be — no staleness guard. sync-core.sh had a dirty-tree guard (\"uncommitted work?\") and nothing that asked \"current with the remote?\". So a sync materialized core/ onto a stale base, reported updated 9 / failed 0, and the operator found out at git push — nine repos already committed to, every push rejected as non-fast-forward. Observed on the 2026-08-23 sync with all nine between 1 and 5 commits behind. There is now a pre-flight check: each target's remote is fetched and its behind-count read before the fan-out loop mutates anything. Ahead is fine (unpushed local work); only behind refuses. A repo with no @{upstream} has no counterpart to be behind and is passed over in silence, and an unreachable remote is reported but does not refuse — this guard exists to catch a stale clone, and a network blip is a different failure. The refusal names the correct recovery, which is the non-obvious part. Rebasing the sync commit is not it: materializing core/ replays safely because it is fully determined by the Core SHA, but _sync_pin_workflows is a sed over the target's own existing workflow files, so a replay computed against a tree that no longer exists can apply cleanly and still be wrong. The correct fix is to bring each repo up to date and re-run the sync, which is idempotent by design. Applied to --dry-run too, and placed before the audit gate, for the same reason as the existing unknown-commit refusal: a rehearsal that would refuse should say so, and it should not cost a full audit first. Escape hatch: SYNC_SKIP_STALE=1. (#622)",
+              "kind": "fix"
+            },
             {
               "text": "The hand-vendoring instructions said main; the fan-out deliberately pins the released commit. Three docs and the scaffolder told a human to git subtree add --prefix=core <core-remote> main --squash, while sync-fanout.yml states the opposite in as many words: each PR vendors the exact commit the tag points at (CORE_BRANCH=<sha>), so core.lock records that commit and git describe stamps the named tag. That contradiction bites. core-integrity validates core/ against the commit core.lock records, so a tree vendored from whatever main happened to be is not that commit — a freshly hand-vendored repo could fail its own tamper check before it had done anything wrong. dotfiles-MacBook hit exactly this and corrected its own copies, two of which were live error paths printed by bootstrap.sh; the copies inside the vendored subtree could not be fixed downstream, because the next sync overwrites them. ARCHITECTURE.md, PORTING-MATRIX.md and VENDORING.md now point at refs/tags/v4 and name the core.lock step that subtree add does not perform. new-os-repo.sh defaults CORE_BRANCH to refs/tags/v4, and the README it generates no longer suggests a raw git subtree pull — the stale-lock path VENDORING.md warns about, and a model #587 abandoned outright. sync-core.sh's own CORE_BRANCH default stays main on purpose: the fan-out always overrides it, and main is the right default for a maintainer's ad-hoc make sync. It is now documented as such, with the first-time-vendoring case called out. (#588)",
               "kind": "perf"
@@ -1185,6 +1211,38 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "core-doctor reports the four integrations Core wires itself: direnv, gh, uv and ty. _CORE_DOCTOR_WIRED listed five tools and none of these, so the doctor was silent about integrations Core drives directly — it hooks direnv in zsh/00-tools.zsh and registers the gh/uv/ty completions in zsh/45-plugins.zsh. Before those moved into Core they were the OS layer's at band 80, and arguably not Core's to report on; they are Core's now. All four satisfy the list's own membership rule — a tool belongs there iff its activation defines something observable in this shell that _core_wired can probe: | tool | probe | | --- | --- | | direnv | _direnv_hook — the function, or its precmd_functions entry | | gh / uv / ty | the tool's $_comps entry | The completion three needed a different probe shape, and it is the same scar the starship/carapace arms already carry. Their wiring fact is the compdef registration in $_comps, not a defined function: the completion function is autoloaded lazily, so $+functions[_gh] would report a permanent ○ (idle) for a correctly registered completion. The arms test $_comps for non-emptiness rather than for a specific value, so the row stays honest when carapace legitimately owns the command. No HAVE_DIRENV/HAVE_GH/HAVE_TY flags, and no presence rows — decided rather than overlooked. _cache_eval self-guards on ${commands[…]}, so nothing would consume such a flag; and a _CORE_DOCTOR_GROUPS row for gh or ty would render a permanent ✗, because no Linux repo's packages.txt installs either. Muting that correctly means adding them to _CORE_DOCTOR_OPTIN, which is derived from PORTING-MATRIX.md's footnote ²¹ and asserted against it — a matrix change, not a list edit, and a separate piece of work. (#581)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "uv's 6,976-line completion is no longer sourced on every shell — it autoloads from fpath. _cache_eval turns a generator into a cached file and then sources that file on every interactive shell. That is the right shape for direnv (14 lines) and gh (212). It is the wrong shape for uv, whose cached completion is 6,976 lines read into every shell to serve a completion most shells never invoke. Measured here with hyperfine, against a compinit-ready baseline of 4.7 ms: | | mean | | --- | --- | | baseline (compinit only) | 4.7 ms ± 0.3 | | shipped: source gh+uv+ty every shell | 40.2 ms ± 2.1 | | this change: fpath autoload | 5.0 ms ± 0.3 | So the per-shell cost of these three drops from +35.5 ms to +0.3 ms. clap_complete's output is already built for this — it opens with #compdef <tool> and closes with the standard autoload shim — so the new _cache_completion helper writes it to $XDG_CACHE_HOME/zsh/completions/_<tool> instead of sourcing it. It keeps _cache_eval's two load-bearing invariants verbatim: ${commands[…]} for a fork-free probe that stays silent on a box without the tool (which is why these callers still need no HAVE_* flag), and the binary-mtime regeneration key. Three things this had to get right, all of them silent if wrong: - fpath must be populated before compinit scans it. Generation therefore moves from band 45 to band 00; compinit is band 10. - The cached compdump hides new files. compinit -C, taken whenever the dump is under 24 h old, skips the scan for new completion functions entirely — so a freshly written _uv would be invisible for up to a day. A regeneration now deletes the dump, which works precisely because band 00 precedes band 10: that shell pays one full compinit, every later shell keeps the fast path. - carapace must not win the command back. carapace bridges gh among hundreds of others, and the last compdef owns the command. Autoloading registers at band 10, i.e. before carapace at band 45 — so a three-line compdef re-assert stays at band 45, after carapace, exactly where the sourced version used to be. compdef only rebinds a name; it does not read the 6,976 lines, so this costs nothing. The negative cache for a generator that cannot succeed is a .<tool>.failed dotfile rather than _cache_eval's comment-only stub: any file named uv in fpath is a completion function, so a stub would register an empty completion and shadow the bridged one that would otherwise have served. compinit only scans names beginning with , so the dotfile converges without being visible to the completion system. A side benefit: band 45 is profile-gated (minimal ceils at 30, standard at 50), so these completions did not exist at all under those profiles. Generated at band 00 and registered at band 10, they now do. The old $XDG_CACHE_HOME/zsh/{gh,uv,ty}.zsh caches are left behind, unused and harmless; delete them to reclaim the space. (#579)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "bootstrap-test.yml now tells you how to choose packages_check's probe, because the obvious command is wrong on most distros and both ways it is wrong look healthy. The header documented the input as packages_check: apk info and said nothing else. That is Alpine's correct answer and a trap as a template — wiring the same shape into four OS repos surfaced two distinct failure modes, each of which produces a gate a reviewer would sign off on. A name-exact probe raises FALSE ALARMS. bootstrap.sh installs these names with the package manager's install verb, which honours Provides, so the probe has to ask the same question. Fedora retired wget for wget2 with wget2-wget carrying Provides: wget, so dnf install wget works while dnf info wget fails; on Arch sh is a provides of bash, not a package; on openSUSE python3-pip is satisfied by a versioned python3XX-pip. Worse, such a list can pass today and break later: none of Arch's ~45 names sat behind a provides when this was wired, so the name-exact probe was green and would have gone red on some future PR that had nothing to do with it. A probe that never rejects gives FALSE CONFIDENCE. apk policy and zypper info both exit 0 for a name that exists nowhere — a gate that cannot fail, indistinguishable from real coverage. So a green run is not evidence on its own; the header now prescribes the negative control that is (a scratch list holding one real name, one provides-only name, and one bogus name, which must go red naming only the bogus one). The note carries the four probes verified against both rules, and two adjacent traps the same exercise turned up: a path-filtered caller that omits install/** gets a package-list gate that cannot fire on a package-list change, and prep must leave the index readable — Alpine's apk add --no-cache deliberately leaves none. Docs only; no behavioural change to the workflow.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make sync vendored onto whatever the local clone happened to be — no staleness guard. sync-core.sh had a dirty-tree guard (\"uncommitted work?\") and nothing that asked \"current with the remote?\". So a sync materialized core/ onto a stale base, reported updated 9 / failed 0, and the operator found out at git push — nine repos already committed to, every push rejected as non-fast-forward. Observed on the 2026-08-23 sync with all nine between 1 and 5 commits behind. There is now a pre-flight check: each target's remote is fetched and its behind-count read before the fan-out loop mutates anything. Ahead is fine (unpushed local work); only behind refuses. A repo with no @{upstream} has no counterpart to be behind and is passed over in silence, and an unreachable remote is reported but does not refuse — this guard exists to catch a stale clone, and a network blip is a different failure. The refusal names the correct recovery, which is the non-obvious part. Rebasing the sync commit is not it: materializing core/ replays safely because it is fully determined by the Core SHA, but _sync_pin_workflows is a sed over the target's own existing workflow files, so a replay computed against a tree that no longer exists can apply cleanly and still be wrong. The correct fix is to bring each repo up to date and re-run the sync, which is idempotent by design. Applied to --dry-run too, and placed before the audit gate, for the same reason as the existing unknown-commit refusal: a rehearsal that would refuse should say so, and it should not cost a full audit first. Escape hatch: SYNC_SKIP_STALE=1. (#622)",
+      "core": true
+    },
     {
       "repo": "dotfiles-core",
       "version": "Unreleased",
