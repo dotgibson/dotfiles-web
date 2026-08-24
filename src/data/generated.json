@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "b4d2e162867996509bf0c993e27e3a85e40f5623",
+        "commit": "92a1d70bc500c0968023ea06703c1d6d06ab22e4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -16,7 +16,7 @@
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "47576b0f61a25453fe43534205975f740b22e5b1",
+        "commit": "0f0e0f29d950f71399816654fc638aa51bc39848",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -34,13 +34,13 @@
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "2ea0c331ca9d6acc4b3a80c8a25eb0ecab2bac83",
+        "commit": "70f84388699689d7fb071aca6ed40c3680742e65",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "263ee8b12a76391acd947d89d9055b0ebbc7c8df",
+        "commit": "8fa0b8bbff1dcd0358b214e9ebe9256cd6140a55",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -52,13 +52,13 @@
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "547fa75c54cfe2f414644d024425280ca2dde4a0",
+        "commit": "73f62abec2754252ddf6e89787cb4977d9da2d3d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "962f4f139e9eb7edf99c102c54087b12cbd937c6",
+        "commit": "8dde3d722b8be7b925c22e22ceb2189d053a8b46",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -95,7 +95,7 @@
       "dotfiles-Windows": {
         "ref": null,
         "carried": null,
-        "mirroredFrom": "v4",
+        "mirroredFrom": "v4.17.0",
         "status": "replicated"
       },
       "dotfiles-Offense": {
@@ -154,7 +154,7 @@
     "dotfiles-Arch": 45,
     "dotfiles-Debian": 46,
     "dotfiles-openSUSE": 47,
-    "dotfiles-Alpine": 60,
+    "dotfiles-Alpine": 72,
     "dotfiles-Gentoo": 40,
     "dotfiles-Offense-offensive": 83
   },
@@ -172,6 +172,33 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "The hand-vendoring instructions said main; the fan-out deliberately pins the released commit. Three docs and the scaffolder told a human to git subtree add --prefix=core <core-remote> main --squash, while sync-fanout.yml states the opposite in as many words: each PR vendors the exact commit the tag points at (CORE_BRANCH=<sha>), so core.lock records that commit and git describe stamps the named tag. That contradiction bites. core-integrity validates core/ against the commit core.lock records, so a tree vendored from whatever main happened to be is not that commit — a freshly hand-vendored repo could fail its own tamper check before it had done anything wrong. dotfiles-MacBook hit exactly this and corrected its own copies, two of which were live error paths printed by bootstrap.sh; the copies inside the vendored subtree could not be fixed downstream, because the next sync overwrites them. ARCHITECTURE.md, PORTING-MATRIX.md and VENDORING.md now point at refs/tags/v4 and name the core.lock step that subtree add does not perform. new-os-repo.sh defaults CORE_BRANCH to refs/tags/v4, and the README it generates no longer suggests a raw git subtree pull — the stale-lock path VENDORING.md warns about, and a model #587 abandoned outright. sync-core.sh's own CORE_BRANCH default stays main on purpose: the fan-out always overrides it, and main is the right default for a maintainer's ad-hoc make sync. It is now documented as such, with the first-time-vendoring case called out. (#588)",
+              "kind": "perf"
+            },
+            {
+              "text": "The mise steps in the daily maint runner are no longer unbounded. brew, nvim and rustup each run under _to; the three mise calls did not, so a hung one had nothing to cut it short and the whole unattended run stopped there. The new MAINT_MISE_TIMEOUT (default 2700, applied per step like MAINT_BREW_TIMEOUT) closes that. It is deliberately the largest knob in the file, because a mise step is the only one that compiles. On musl, mise flips all_compile to true by default — every precompiled runtime it would otherwise fetch (nodejs.org's tarballs, python-build-standalone, the jdx/ruby prebuilts) is glibc-linked and cannot run there — so on Alpine node/python/ruby are built from source on every version bump, and node alone is tens of minutes. 2700s is sized for that build, not for a download — a cold node 24 build on a 32-core musl box was still in V8 past 21 minutes, so a lower ceiling would trip on the healthy path and turn every LTS bump into a logged failure. On a glibc box the same steps unpack a binary and never come near the ceiling, so the value costs those boxes nothing. mise outdated --bump is now bounded too, and needed the _pkgcount treatment to go with it: that probe hits the network, and a registry that accepts the connection and then stalls yields empty output. The old bare [[ -n \"$bump\" ]] read that emptiness as the happy path and logged \"all runtimes current within their pins\" — asserting a fact nothing had measured, the exact failure the _pkgcount comment block was written about. The rc is now captured and any non-zero reports as bump check UNAVAILABLE instead of masquerading as good news, with the rc included so the log can distinguish the causes after the fact. That gate is stricter than _pkgcount's, deliberately — the two are not meant to converge. _pkgcount can only test how the probe died (124, or >=128 for a signal, which is how busybox timeout reports its own SIGTERM as 143) because the managers it wraps overload exit status to mean things: dnf check-update exits 100 when updates exist, pacman -Qu exits non-zero when there are none. A general non-zero gate would report \"unknown\" on their healthy path. mise outdated overloads nothing — 0 whether or not bumps exist, non-zero only on a real failure — so a fast hard failure (a 500 from the registry, a mise that died on a broken config) is just as much \"we got no answer\" as a stall, and is now reported that way rather than falling through as good news. (#641)",
+              "kind": "fix"
+            },
+            {
+              "text": "Three INSTALL: lines claimed a mise pin without saying which fleet they meant. (#642) \"mise pins ruby\" / \"mise pins temurin-21\" are all true here — mise/config.toml pins ruby = \"3.4\" and java = \"temurin-21\". These were never stale comments; they were unqualified ones, silently assuming a mise-managed Unix box. That is exactly the assumption an INSTALL: line exists to make explicit, and nvim/ is the one Core tree dotfiles-Windows vendors — a host with neither pin. ruby_lsp.lua is where it had teeth. On Windows ruby is winget-owned and ships no MSYS2 DevKit, so every C-extension gem fails to build and ruby-lsp (with rubocop) dies on prism with an error naming neither ruby nor the missing toolchain: ``text make: * No rule to make target '/C/Ruby40-x64/include/ruby-4.0.0/ruby.h' ... ` A reader following that line went hunting for a mise pin that will never exist there, while the one thing that unblocks them — an elevated ridk install 1 3 — went unmentioned. jdtls.lua and kotlin_language_server.lua misled without breaking: Windows gets a JDK either way, just scoop-owned openjdk25** rather than mise's temurin-21 — a different owner and a different major, both of which satisfy the servers. Their qualifiers are one clause each, proportional to the stakes; ruby's earns the longer note. All three now name the fleet they describe. intelephense.lua already modelled this by stating its negative case outright (\"mise does NOT pin\"). Comment-only; no behaviour change, and nothing here reads the text. (nvim/lua/gerrrt/servers/ruby_lsp.lua, nvim/lua/gerrrt/servers/jdtls.lua, nvim/lua/gerrrt/servers/kotlin_language_server.lua`)",
+              "kind": "config"
+            },
+            {
+              "text": "rubocop linting and formatting were silent no-ops on Windows — every signal said healthy. (#646) nvim-lint and conform both pass --server to rubocop, and RuboCop's server mode needs fork/UNIX sockets. A native-Windows ruby prints RuboCop server is not supported by this Ruby., writes nothing to stdout, and exits 0: ``text $ rubocop --format json --force-exclusion --server --stdin main.rb RuboCop server is not supported by this Ruby. $ echo $? 0 ` The zero exit is what made this invisible. nvim-lint parsed an empty payload, found no offenses, and had no non-zero status to complain about — nothing in :messages, nothing through vim.notify, and :ConformInfo still reported rubocop available because the binary really is installed. Ruby buffers simply went unlinted and unformatted. ruby_lsp masked it further: its own Prism diagnostics still appear, so a Ruby buffer shows a diagnostic, just never a rubocop one. Both specs now strip --server behind a vim.fn.has(\"win32\") guard — the idiom health.lua, nvim-dap.lua and blink-cmp.lua already use. The Unix fleet keeps it, where it is a genuine speedup rather than a no-op. Both overrides filter the upstream arg list instead of restating it, so an upstream change cannot silently drift past them; conform's resolves lazily at format time so the builtin module is not required during lazy-spec evaluation. Verified on the host that has the problem (Ruby 4.0.6 x64-mingw-ucrt, rubocop 1.89.0 from Mason) by vendoring the patched files into dotfiles-Windows and running headless: rubocop diagnostics went 0 → 4, matching the CLI exactly, and conform's format went from leaving the buffer untouched to actually rewriting it. Windows receives this on its next nvim-sync.ps1. (nvim/lua/gerrrt/plugins/nvim-lint.lua, nvim/lua/gerrrt/plugins/conform.lua`)",
+              "kind": "perf"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.17.0",
@@ -378,6 +405,30 @@
           "items": [
             {
               "text": "The fan-out no longer depends on a commit trailer that squash-merge destroys. (#587) make sync used git subtree pull --squash, which locates its base by grepping history for the previous sync commit's git-subtree-split: trailer. Every fleet repo squash-merges its fan-out PR, and a squash keeps the original body only if it happens to be carried over — so the trailer died intermittently. The damage was never a missing marker; it was a wrong base. Subtree silently fell back to the newest surviving trailer and replayed every change since onto a tree that already contained them. Seven of nine repos lost the marker in the v4.14.3 round, and the v4.15.0 fan-out then failed in all nine at once, conflicting on core/CHANGELOG.md and core/core.version — the two files every release rewrites, so the two guaranteed to overlap. Merging was the wrong operation to begin with. core/ is a pure vendored copy, never edited downstream (blib_install_core_guard rejects it, core-integrity.sh proves it byte-for-byte). \"Make core/ identical to Core@core_sha\" has exactly one correct answer and no merge base, so the sync now materializes the tree with read-tree --prefix — the same plumbing git subtree add uses, so file modes come from the tree object rather than being reconstructed. It cannot conflict, needs no trailer, and is immune to whatever the merge policy does to commit bodies. It is also self-healing: a core/ that drifted for any reason is corrected by the next sync instead of conflicting against its own drift. Two consequences worth knowing. The sync is now one atomic commit per repo rather than two — core/, core.lock and the workflow pins land together, closing the window where core/ had moved but core.lock had not (the state core-integrity reports as TAMPERED). And the subtree trailer is still emitted, accurately, purely so consumer tooling that reads it as a fallback keeps working; nothing depends on it any more, so a squash eating it is now harmless rather than the thing that breaks the next release. Pinned by a fixture that strips the trailer from every commit and then syncs to a newer Core. It fails against the old subtree pull implementation and passes against this one — the earlier draft of it did not, because a subtree pull round produced two commits and amending HEAD rewrote the wrong one.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Docs",
+          "items": [
+            {
+              "text": "Why Mason can't install ruby-lsp on this host, written down where package decisions live. The winget package the box runs, RubyInstallerTeam.Ruby.4.0, ships no MSYS2 DevKit, so every gem with a C extension fails to build — ruby-lsp and rubocop both die on prism. The error names neither ruby nor the DevKit (No rule to make target '/C/Ruby40-x64/include/ruby-4.0.0/ruby.h'): with no msys64, gem falls back to scoop's mingw make, which has no rm and mangles the drive-letter path into an MSYS-style one. docs/PACKAGE-OWNERSHIP.md now carries the symptom, the mechanism, and the one-line elevated fix (ridk install 1 3), next to the existing ruby-ownership reasoning. Confirmed fixed on the reference host on 2026-08-24: ridk install 1 3 (elevated) populated C:\\Ruby40-x64\\msys64, and gem install ruby-lsp now builds both native extensions clean. That is host state, not repo state — a rebuilt box gets plain Ruby.4.0 again and needs the same command. It also records why ruby stays out of winget.json rather than being declared like node was: the lock-drift gate only accepts ids Update-PackageLock.ps1 can resolve to an installed version, so declaring RubyWithDevKit.4.0 on a box running plain Ruby.4.0 would sit permanently unlockable and red. (docs/PACKAGE-OWNERSHIP.md)",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": ".core-ref recorded tag = v4-19-g10ad221 — the moving major alias, not the release it describes. (#202) Every Core cut writes the specific vX.Y.Z and then force-repoints the major alias v4 onto the same commit (tag-release.sh, git tag -fa, alias second). Both tags are annotated and both sit on the release commit, so git describe breaks the tie by tagger time and picks the alias. That is a provenance field naming a target that is deliberately moved on the next release: the recorded string silently reinterprets itself, and re-running the same command against the same commit today returns v4.15.1-19-g10ad221. commit was always authoritative — only tag lied, and it lied in the direction that looks fine until you check. Both sync scripts now filter describe to the vX.Y.Z shape (--match 'v[0-9]*.[0-9]*.[0-9]*'), which excludes bare-major aliases by construction — the identical fix Core shipped for core.lock in dotgibson/dotfiles-core#515, so the Windows row and the Unix repos' core_tag agree on what a release name means. When only an alias exists, describe finds nothing and the tag line is omitted: an absent tag is honest where v4 was not, and the SHA stays the source of truth either way. nvim/.core-ref is corrected in place; starship/.core-ref already read v4.9.0 because its last sync was a pinned -Ref landing exactly on a release commit — the same latent bug, just not yet visible. The filter also immunizes -CoreLocal runs against a locally stale alias, since a plain git fetch never force-updates an existing tag (this box's own Core clone has v4 frozen at v4.7.0's commit). The describe call also moved above each script's *_LIBONLY hook as Get-CoreDescribeTag, which is the part that keeps it fixed: the old inline call sat below the hook and was structurally unreachable from Pester, which is exactly why a wrong value shipped unnoticed. The new fixture (New-DotCoreTagFixture in tests/_TestHelpers.ps1) tags one commit v9.9.9 then v9 in release order, and a companion assertion proves a bare describe --tags still gets that fixture *wrong* — so if the reproduction ever stops reproducing, the suite says so instead of going quietly green. (nvim-sync.ps1, starship-sync.ps1, nvim/.core-ref, tests/_TestHelpers.ps1, tests/NvimSync.Tests.ps1, tests/StarshipSync.Tests.ps1)",
               "kind": "fix"
             }
           ]
@@ -1134,6 +1185,54 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "The hand-vendoring instructions said main; the fan-out deliberately pins the released commit. Three docs and the scaffolder told a human to git subtree add --prefix=core <core-remote> main --squash, while sync-fanout.yml states the opposite in as many words: each PR vendors the exact commit the tag points at (CORE_BRANCH=<sha>), so core.lock records that commit and git describe stamps the named tag. That contradiction bites. core-integrity validates core/ against the commit core.lock records, so a tree vendored from whatever main happened to be is not that commit — a freshly hand-vendored repo could fail its own tamper check before it had done anything wrong. dotfiles-MacBook hit exactly this and corrected its own copies, two of which were live error paths printed by bootstrap.sh; the copies inside the vendored subtree could not be fixed downstream, because the next sync overwrites them. ARCHITECTURE.md, PORTING-MATRIX.md and VENDORING.md now point at refs/tags/v4 and name the core.lock step that subtree add does not perform. new-os-repo.sh defaults CORE_BRANCH to refs/tags/v4, and the README it generates no longer suggests a raw git subtree pull — the stale-lock path VENDORING.md warns about, and a model #587 abandoned outright. sync-core.sh's own CORE_BRANCH default stays main on purpose: the fan-out always overrides it, and main is the right default for a maintainer's ad-hoc make sync. It is now documented as such, with the first-time-vendoring case called out. (#588)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The mise steps in the daily maint runner are no longer unbounded. brew, nvim and rustup each run under _to; the three mise calls did not, so a hung one had nothing to cut it short and the whole unattended run stopped there. The new MAINT_MISE_TIMEOUT (default 2700, applied per step like MAINT_BREW_TIMEOUT) closes that. It is deliberately the largest knob in the file, because a mise step is the only one that compiles. On musl, mise flips all_compile to true by default — every precompiled runtime it would otherwise fetch (nodejs.org's tarballs, python-build-standalone, the jdx/ruby prebuilts) is glibc-linked and cannot run there — so on Alpine node/python/ruby are built from source on every version bump, and node alone is tens of minutes. 2700s is sized for that build, not for a download — a cold node 24 build on a 32-core musl box was still in V8 past 21 minutes, so a lower ceiling would trip on the healthy path and turn every LTS bump into a logged failure. On a glibc box the same steps unpack a binary and never come near the ceiling, so the value costs those boxes nothing. mise outdated --bump is now bounded too, and needed the _pkgcount treatment to go with it: that probe hits the network, and a registry that accepts the connection and then stalls yields empty output. The old bare [[ -n \"$bump\" ]] read that emptiness as the happy path and logged \"all runtimes current within their pins\" — asserting a fact nothing had measured, the exact failure the _pkgcount comment block was written about. The rc is now captured and any non-zero reports as bump check UNAVAILABLE instead of masquerading as good news, with the rc included so the log can distinguish the causes after the fact. That gate is stricter than _pkgcount's, deliberately — the two are not meant to converge. _pkgcount can only test how the probe died (124, or >=128 for a signal, which is how busybox timeout reports its own SIGTERM as 143) because the managers it wraps overload exit status to mean things: dnf check-update exits 100 when updates exist, pacman -Qu exits non-zero when there are none. A general non-zero gate would report \"unknown\" on their healthy path. mise outdated overloads nothing — 0 whether or not bumps exist, non-zero only on a real failure — so a fast hard failure (a 500 from the registry, a mise that died on a broken config) is just as much \"we got no answer\" as a stall, and is now reported that way rather than falling through as good news. (#641)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "Three INSTALL: lines claimed a mise pin without saying which fleet they meant. (#642) \"mise pins ruby\" / \"mise pins temurin-21\" are all true here — mise/config.toml pins ruby = \"3.4\" and java = \"temurin-21\". These were never stale comments; they were unqualified ones, silently assuming a mise-managed Unix box. That is exactly the assumption an INSTALL: line exists to make explicit, and nvim/ is the one Core tree dotfiles-Windows vendors — a host with neither pin. ruby_lsp.lua is where it had teeth. On Windows ruby is winget-owned and ships no MSYS2 DevKit, so every C-extension gem fails to build and ruby-lsp (with rubocop) dies on prism with an error naming neither ruby nor the missing toolchain: ``text make: * No rule to make target '/C/Ruby40-x64/include/ruby-4.0.0/ruby.h' ... ` A reader following that line went hunting for a mise pin that will never exist there, while the one thing that unblocks them — an elevated ridk install 1 3 — went unmentioned. jdtls.lua and kotlin_language_server.lua misled without breaking: Windows gets a JDK either way, just scoop-owned openjdk25** rather than mise's temurin-21 — a different owner and a different major, both of which satisfy the servers. Their qualifiers are one clause each, proportional to the stakes; ruby's earns the longer note. All three now name the fleet they describe. intelephense.lua already modelled this by stating its negative case outright (\"mise does NOT pin\"). Comment-only; no behaviour change, and nothing here reads the text. (nvim/lua/gerrrt/servers/ruby_lsp.lua, nvim/lua/gerrrt/servers/jdtls.lua, nvim/lua/gerrrt/servers/kotlin_language_server.lua`)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "rubocop linting and formatting were silent no-ops on Windows — every signal said healthy. (#646) nvim-lint and conform both pass --server to rubocop, and RuboCop's server mode needs fork/UNIX sockets. A native-Windows ruby prints RuboCop server is not supported by this Ruby., writes nothing to stdout, and exits 0: ``text $ rubocop --format json --force-exclusion --server --stdin main.rb RuboCop server is not supported by this Ruby. $ echo $? 0 ` The zero exit is what made this invisible. nvim-lint parsed an empty payload, found no offenses, and had no non-zero status to complain about — nothing in :messages, nothing through vim.notify, and :ConformInfo still reported rubocop available because the binary really is installed. Ruby buffers simply went unlinted and unformatted. ruby_lsp masked it further: its own Prism diagnostics still appear, so a Ruby buffer shows a diagnostic, just never a rubocop one. Both specs now strip --server behind a vim.fn.has(\"win32\") guard — the idiom health.lua, nvim-dap.lua and blink-cmp.lua already use. The Unix fleet keeps it, where it is a genuine speedup rather than a no-op. Both overrides filter the upstream arg list instead of restating it, so an upstream change cannot silently drift past them; conform's resolves lazily at format time so the builtin module is not required during lazy-spec evaluation. Verified on the host that has the problem (Ruby 4.0.6 x64-mingw-ucrt, rubocop 1.89.0 from Mason) by vendoring the patched files into dotfiles-Windows and running headless: rubocop diagnostics went 0 → 4, matching the CLI exactly, and conform's format went from leaving the buffer untouched to actually rewriting it. Windows receives this on its next nvim-sync.ps1. (nvim/lua/gerrrt/plugins/nvim-lint.lua, nvim/lua/gerrrt/plugins/conform.lua`)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Docs",
+      "kind": "fix",
+      "text": "Why Mason can't install ruby-lsp on this host, written down where package decisions live. The winget package the box runs, RubyInstallerTeam.Ruby.4.0, ships no MSYS2 DevKit, so every gem with a C extension fails to build — ruby-lsp and rubocop both die on prism. The error names neither ruby nor the DevKit (No rule to make target '/C/Ruby40-x64/include/ruby-4.0.0/ruby.h'): with no msys64, gem falls back to scoop's mingw make, which has no rm and mangles the drive-letter path into an MSYS-style one. docs/PACKAGE-OWNERSHIP.md now carries the symptom, the mechanism, and the one-line elevated fix (ridk install 1 3), next to the existing ruby-ownership reasoning. Confirmed fixed on the reference host on 2026-08-24: ridk install 1 3 (elevated) populated C:\\Ruby40-x64\\msys64, and gem install ruby-lsp now builds both native extensions clean. That is host state, not repo state — a rebuilt box gets plain Ruby.4.0 again and needs the same command. It also records why ruby stays out of winget.json rather than being declared like node was: the lock-drift gate only accepts ids Update-PackageLock.ps1 can resolve to an installed version, so declaring RubyWithDevKit.4.0 on a box running plain Ruby.4.0 would sit permanently unlockable and red. (docs/PACKAGE-OWNERSHIP.md)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": ".core-ref recorded tag = v4-19-g10ad221 — the moving major alias, not the release it describes. (#202) Every Core cut writes the specific vX.Y.Z and then force-repoints the major alias v4 onto the same commit (tag-release.sh, git tag -fa, alias second). Both tags are annotated and both sit on the release commit, so git describe breaks the tie by tagger time and picks the alias. That is a provenance field naming a target that is deliberately moved on the next release: the recorded string silently reinterprets itself, and re-running the same command against the same commit today returns v4.15.1-19-g10ad221. commit was always authoritative — only tag lied, and it lied in the direction that looks fine until you check. Both sync scripts now filter describe to the vX.Y.Z shape (--match 'v[0-9]*.[0-9]*.[0-9]*'), which excludes bare-major aliases by construction — the identical fix Core shipped for core.lock in dotgibson/dotfiles-core#515, so the Windows row and the Unix repos' core_tag agree on what a release name means. When only an alias exists, describe finds nothing and the tag line is omitted: an absent tag is honest where v4 was not, and the SHA stays the source of truth either way. nvim/.core-ref is corrected in place; starship/.core-ref already read v4.9.0 because its last sync was a pinned -Ref landing exactly on a release commit — the same latent bug, just not yet visible. The filter also immunizes -CoreLocal runs against a locally stale alias, since a plain git fetch never force-updates an existing tag (this box's own Core clone has v4 frozen at v4.7.0's commit). The describe call also moved above each script's *_LIBONLY hook as Get-CoreDescribeTag, which is the part that keeps it fixed: the old inline call sat below the hook and was structurally unreachable from Pester, which is exactly why a wrong value shipped unnoticed. The new fixture (New-DotCoreTagFixture in tests/_TestHelpers.ps1) tags one commit v9.9.9 then v9 in release order, and a companion assertion proves a bare describe --tags still gets that fixture *wrong* — so if the reproduction ever stops reproducing, the suite says so instead of going quietly green. (nvim-sync.ps1, starship-sync.ps1, nvim/.core-ref, tests/_TestHelpers.ps1, tests/NvimSync.Tests.ps1, tests/StarshipSync.Tests.ps1)",
+      "core": false
+    },
     {
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
