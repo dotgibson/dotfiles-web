@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "3040dadd107b7e6da5c5f8c3e639039a45bd39db",
+        "commit": "531ef6df4466dd01b734a5e1eb2a5732e26623ed",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "702ea67b1f13829c10804850db5cc9c58a664828",
+        "commit": "3b777a1c9b1bccc7589b39a4739871a4627209e1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "dc01a06f4e3433c9148f6f4736d3ef7358fafc03",
+        "commit": "947bcd76ea211e2bc523f45fd7ee34cfb827a777",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "1115b5320bc556c7e0a5b1feea9254910ace1168",
+        "commit": "211f707a60c45f9eddff88db59a07c847cd843d6",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "39c8d05b8305d21f8c569477949eb86edd52bd53",
+        "commit": "cde7fecad150a3edac1feefcce9c31c575641d3a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "21eebed32dc2a9adb2cb1b3cf4741164b31d783e",
+        "commit": "e0d34eab14dad07727ffe00dbfb664ff1dcf29db",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "837bd49157786e9044df7f5b16ffe2e507df36a4",
+        "commit": "1ccb87f5bf8da4910f9f2758b44b5e3762b227e0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "eb8fc62c0ce836c5998b9556f664e73c2d414075",
+        "commit": "d20abd05be80e9b5a1e3df7601d927dfa7799f29",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "0ef04a6887a320dd7d39d08e5bad07b6a5dff19a",
+        "commit": "1886fdc4b223d1d80b098dc0bce2c72ab1812ffd",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "bffa547ab7a737ce3de3c3e4d3606125cdaeb8fe",
+        "commit": "aed208a20979f392fa233314481a0af638fc5fad",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,9 +88,9 @@
     "coreVersion": "4.18.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -99,51 +99,51 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v4.17.0",
-        "carried": "4.17.0",
-        "status": "behind"
+        "ref": "v4.18.0",
+        "carried": "4.18.0",
+        "status": "current"
       }
     }
   },
   "core": {
     "version": "4.18.0",
     "sourcedModules": 13,
-    "zshLoc": 5124,
+    "zshLoc": 5207,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 28
@@ -172,6 +172,55 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "/freshness-triage can see the two bump classes it was blind to, and a guard that keeps the routine rails honest. Both gaps were structural — they recurred on every run, not just the one that reported them. The Renovate dashboard. Renovate parks bumps on a per-repo Dependency Dashboard issue without opening a PR — rate-limited, awaiting approval, or grouped-and-pending. Reading it needs gh issue list, which was outside the command's allowed-tools, so the routine derived its Renovate verdict from PR absence alone. PR absence is equally consistent with nothing to bump and several bumps parked on the dashboard. The report said \"not assessed\" — honest, and it said it every week. Bot liveness. Zero open PRs is likewise consistent with the bot never having run. A healthy freshness.yml with nothing to do and one that has not fired in a month produced the identical report. That is the failure a freshness routine most needs to catch, since a silently dead bot degrades exactly like a current tree. gh run list --workflow=freshness.yml is now allowed, and a run that has not completed successfully within 10 days — one missed weekly run plus slack — is a finding in its own right, reported above the per-PR verdicts, because a dead updater invalidates the \"nothing to triage\" reading underneath it. Neither is covered by the #636 dashboard, which counts open Renovate PRs and links the dashboard issue without reading it, and has no liveness signal at all. release-readiness already carries both capabilities, so this is no new security posture; the nvim build-hook restriction is untouched. The guard. claude-routines.yml states the invariant — each job's --allowedTools mirrors the routine's own frontmatter and is never broader — and nothing enforced it. The two live ~200 lines apart, in different files, in different spellings. test-core.sh now checks every mirror in both rails against the frontmatter of the routine its claude -p \"/<name>\" names, comparing as sets so ordering and whitespace are not findings. Drift broader hands a scheduled, token-bearing job a capability its definition never granted; drift narrower fails at runtime, weekly, in a job nobody watches. Verified in both directions; 9 mirrors currently match.",
+              "kind": "security"
+            },
+            {
+              "text": "**core-doctor reports the mirror of #545: a HAVE_* flag set for a binary that is now gone. #545 shipped the silent half — present at report time, never wired. This is the other state: detected at band 00, flag set, 20-aliases.zsh's guard passed and defined the alias — and the binary is no longer on PATH. #631 filed this as low-priority and argued against taking it, on the grounds that the failure is loud and self-explanatory and would need a fifth glyph. Both halves turn out not to hold, and that is why this landed. It is loud only for tools that shadow nothing. Six aliases shadow classic commands — ps, top/htop, watch, df, ping, help — and there a stale flag does not fail to give you procs, it breaks ps, with a message naming a binary the user never typed. core-doctor is what you reach for at that point, and ✗ procs does not connect to \"your ps is broken\". So the block names the dangling aliases, not the tools, read from the live aliases table so it cannot drift from 20-aliases.zsh. And it needs no fifth glyph**. The row keeps its honest ✗ — which is already correct about presence — and the remedy lives in a stale block, exactly as not wired does. The legend keeps its three states, the alarm-fatigue budget #620 was careful with is not spent, and the render⇄json parity regex is untouched (the block sits past the opt-in trim, structurally invisible to it). That comparison is re-run with this axis actively firing, since unlike #545's ⚠ it fires on the branch the parity test stubs. PATH shrinking mid-session is not exotic here: mise activate zsh registers a chpwd hook that rewrites PATH on every cd, so a toolchain two directories away can take a binary with it. --json gains detection.stale beside missed — its own key, not a widened one, and disjoint from missed by construction. Both ledger gates from _core_doctor_unwired apply unchanged; only the comparison flips.",
+              "kind": "fix"
+            },
+            {
+              "text": "A decided-and-rejected ledger for /tool-scout — .claude/tool-decisions.md. The routine's baseline is five files (PORTING-MATRIX.md, zsh/00-tools.zsh, zsh/20-aliases.zsh, mise/config.toml, zsh/45-plugins.zsh + nvim/lazy-lock.json) that all describe what Core has. Nothing recorded what Core considered and declined, so a rejected tool was indistinguishable from one never evaluated. hexyl came back ranked #3 \"adopt\" on 2026-08-18, six days after #395 closed it NOT_PLANNED and refiled it as dotfiles-Kali#182. #395's own body anticipated it — \"filed so the decision is recorded rather than silently re-proposed by next week's scan\" — and recording it was not enough, because nothing in the routine read it. The cost is not a wasted ranking slot. A re-proposal arrives with a fresh case-for and no counter-argument attached, so the decision gets re-made on half the evidence; hexyl would have been adopted on that pass if the report had been actioned without someone happening to remember. fastgron is the near-miss in the same report — correctly skipped, with reasoning the report itself noted should be written down, caught by luck rather than by process. Seeded with both. The load-bearing half is that the routine is made to read it: the instruction lands in .claude/commands/tool-scout.md and .claude/agents/tool-scout.md, since the subagent does the actual ranking and would otherwise get it second-hand. A listed tool may be re-proposed only against the recorded reasoning, naming what changed, and the report states the prior decision per candidate — explicitly \"none\" when there is none, since an omitted line reads the same as an unchecked one. /os-package-availability and /modernize share the shape but are deliberately left alone: both already carry a working in-band equivalent (the \"intentionally excluded\" comments in packages.txt, and the machine-readable floor in scripts/modern-baseline.yml). That reasoning is recorded in the ledger itself so it is not re-proposed either.",
+              "kind": "perf"
+            },
+            {
+              "text": "V5-PROPOSAL.md — the design record for the next major. Core is at 4.18.0 with the whole fleet synced to it and an empty backlog; nothing in the repo proposed a v5, and the only v5 strings anywhere were RELEASE-RUNBOOK.md using v4→v5 as the worked example for the moving-alias procedure. So the machinery for cutting a major was documented and rehearsed while the content of one was not written down anywhere. The proposal follows V4-PROPOSAL.md's structure and states one thesis: the OS layer becomes a contract instead of a convention. v4 made the load order declarative — modules stopped being a hand-listed array and became NN- fragments the loader globs — and v5 does the same to capability, payload and surface. Four bundled changes, chosen because they touch the same three contracts (the bootstrap.sh symlink set, the load chain, and what a vendored core/ contains), so the fleet re-bootstraps once rather than four times: 1. os.capabilities — each OS repo declares its package-manager verbs, clipboard backend, scheduler and opt-in tool split, and Core dispatches through the declaration. Core currently carries 154 package-manager references — 88 in zsh/60-update.zsh, 49 in maint/dotfiles-maint.sh, 17 in zsh/30-functions.zsh — in the layer whose own test is \"if it changes when the OS changes, it's not Core\". CHANGELOG.md:927-931 already recorded that fixing core-doctor's opt-in classification \"needs a per-repo manifest\"; this is it. 2. Vendor only what is Core — the core.manifest payload is 1.4 MB and a vendored core/ is 5.9 MB, so 76% of what ships to every machine is not Core. The largest single item is assets/demo.gif at 1.8 MB, larger than the entire Core payload, replicated into nine trees where no README displays it. 3. Retire what nothing uses, declare what things do — delete CORE_PROFILE (nothing writes the $ZSH_CFG/profile it reads, no OS repo mentions it, and bootstrap-test.yml asserts ~/.zshrc must not set it), which also closes the unenforceable band-squatting footgun VENDORING.md:185-192 documents; and turn HAVE_* from 43 accidental exports into a stated API, since five are consumed downstream and none are declared anywhere. 4. clip learns what a secret is — optoken pipes a live TOTP through clip, which on a headless box reaches OSC 52 and, under the set-clipboard on that tmux/tmux.conf:45 itself sets, leaves the code in a tmux show-buffer-readable paste buffer. §11 records the non-goals with their reasons — renumbering the bands (~470 references across 62 files, and V4-PROPOSAL.md §9 already resolved against it), retiring the bare verb names, consolidating bootstrap.sh, and an nvim overhaul — plus four open questions the implementation must answer rather than assume. It is report-first: nothing here is implemented, and an issue the proposal rejects should be closed not_planned with a reason rather than left open. V5-PROPOSAL.md joins the META_ALLOWLIST in scripts/audit-core.sh beside V4-PROPOSAL.md, so §1's manifest-drift check accounts for it.",
+              "kind": "security"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "The secret-scan policy gate (audit-core.sh §5g) now BLOCKS. It shipped advisory in #623, on the principle §5f states: repos are short on arrival, and a gate that is red from its first run is a gate someone turns off. That reason has expired — the fleet is clean. dotfiles-Alpine and dotfiles-Gentoo each carried a root .gitleaks.toml. gitleaks auto-discovers a config at the scan root, so those files silently governed every local scan in their repos, including invocations that pass no -c and look, from the command line, like stock scans. Both rule sets were simultaneously narrower than Core's (gitleaks' stock defaults, with Core's variable-reference allowlist dropped) and wider (whole-path exemptions for core/, and in Gentoo's case README.md). Being green under them was not evidence of being clean; it was evidence of being measured differently. CI was never affected: the reusable lint-call.yml secrets leg passes -c explicitly and an explicit config beats auto-discovery. The entire divergence lived in the author-time path — which is where it is least likely to be noticed, and where a hook greener than CI does the most damage. Both are now deleted (dotfiles-Alpine#133, dotfiles-Gentoo#125), and both repos verified clean under core/gitleaks.toml — working tree, plus all 271 commits of Gentoo's history, which is what proved its README.md exemption stale. No Core sync was needed: Core's variable-reference allowlist already covers the core/CHANGELOG.md line the stock curl-auth-user rule flags. All nine OS repos now measure by the same policy. Blocking is the right posture here specifically because this failure is quiet. A repo running its own rule set is green, and stays green as that rule set drifts, because nothing compares it to Core's — so the next person to look sees a passing gate, which is worse than a red one. Advisory suits a finding people can see; not one whose whole hazard is that it looks fine. Still skipped when siblings are not checked out, exactly like §5f, so it is inert in CI (which clones only Core) and bites locally and in fleet sweeps.",
+              "kind": "security"
+            },
+            {
+              "text": "V5-PROPOSAL.md §11 records the bare-verb-name decision instead of deferring it. The section listed retiring up / serve / gsync / maint-* as an open question tracked in #692, ending \"it must be decided before the tag, not left open for a whole major cycle.\" #692 is now closed not_planned — the names stay — so the paragraph asserted an open decision that had already been made. It now records the outcome and the grounds for revisiting: the additive dispatcher in #684 already buys the coherence, while deletion buys namespace purity at the cost of daily friction on the most-typed verbs plus churn across 28 completions, core-help's rows, _core_suggest, aliases.md and PARITY.md (a two-repo change). Reopening needs evidence of a real collision — up and serve are genuinely collision-prone and a shadowing up fails silently — not a fresh aesthetic objection. The point of #692 was that an unrecorded decision gets silently re-proposed, so leaving the RFC saying \"must be decided\" while the answer sat only in a closed issue was the same failure one level up. (#692)",
+              "kind": "perf"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "Opening a file linted it only about half the time — nvim-lint's on-open replay raced mason.nvim's PATH prepend. plugins/nvim-lint.lua loads on User FilePost and replays the triggering buffer at the end of its config(), because that buffer's real BufReadPost has already fired by then. The replay spawns Mason-installed linters, which resolve only once mason.setup() has prepended <data>/mason/bin to vim.env.PATH — and nvim-lint declared no dependencies at all. nvim-lspconfig loads on the same event and pulls mason in as its own dependency, but lazy.nvim orders a plugin against its declared dependencies only, never against another plugin on the same event. Which of the two ran first was therefore undefined, and losing the race meant vim.uv.spawn got ENOENT on a bare rubocop. Measured over six opens each: ruby/rubocop linted 4/6 on macOS and 3/6 on native Windows, markdown/markdownlint-cli2 2/6. The controls are what pin it — sh/shellcheck, which lives on the PATH nvim inherits rather than under Mason, was 6/6 and never failed, and rubocop itself went 6/6 when Mason's bin directory was pre-seeded onto PATH before nvim started. Nothing about the linters, the filetypes or the config gates was involved. It read as flakiness for two issues rather than as a missing binary because :w always worked: by the first save mason has long since fixed PATH. On Windows the failure was also fully silent — no error, no notification, no :messages entry — so an unlinted file was indistinguishable from a clean one (macOS at least printed Error running rubocop: ENOENT). Both rows in the original Windows report were Mason binaries, so it had no base-PATH linter acting as a control, which is why the scope sat at \"Windows-only\" until it was measured elsewhere. The fix is one declaration: nvim-lint now names mason-org/mason.nvim in its dependencies, so lazy loads mason — setup() and all — before the replay runs. It costs no startup time, because mason was already being loaded at that event; the edge simply was not written down. Verified on macOS by A/B on one box: 3/6 before, 6/6 after, with every ENOENT gone. scripts/test-core.sh §D gains a spec-level assertion as the regression net. The ordering being guarded is a lazy.nvim guarantee, so re-deriving it at runtime would test lazy rather than this config, and the race cannot be reproduced hermetically anyway (it needs lazy, nvim-lint and mason really installed) — whereas dropping the dependency is luacheck-clean, load-clean and regresses only intermittently on a real machine, which is exactly the profile that needs a static gate. Two comments that had gone stale against the replay are corrected in the same change: config/autocmds.lua's \"nvim-lint is driven by BufWritePost/InsertLeave only — nothing to replay\", and nvim-lint.lua's own header. (#652, dotgibson/dotfiles-MacBook#191)",
+              "kind": "perf"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.18.0",
@@ -1228,6 +1277,62 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "security",
+      "text": "/freshness-triage can see the two bump classes it was blind to, and a guard that keeps the routine rails honest. Both gaps were structural — they recurred on every run, not just the one that reported them. The Renovate dashboard. Renovate parks bumps on a per-repo Dependency Dashboard issue without opening a PR — rate-limited, awaiting approval, or grouped-and-pending. Reading it needs gh issue list, which was outside the command's allowed-tools, so the routine derived its Renovate verdict from PR absence alone. PR absence is equally consistent with nothing to bump and several bumps parked on the dashboard. The report said \"not assessed\" — honest, and it said it every week. Bot liveness. Zero open PRs is likewise consistent with the bot never having run. A healthy freshness.yml with nothing to do and one that has not fired in a month produced the identical report. That is the failure a freshness routine most needs to catch, since a silently dead bot degrades exactly like a current tree. gh run list --workflow=freshness.yml is now allowed, and a run that has not completed successfully within 10 days — one missed weekly run plus slack — is a finding in its own right, reported above the per-PR verdicts, because a dead updater invalidates the \"nothing to triage\" reading underneath it. Neither is covered by the #636 dashboard, which counts open Renovate PRs and links the dashboard issue without reading it, and has no liveness signal at all. release-readiness already carries both capabilities, so this is no new security posture; the nvim build-hook restriction is untouched. The guard. claude-routines.yml states the invariant — each job's --allowedTools mirrors the routine's own frontmatter and is never broader — and nothing enforced it. The two live ~200 lines apart, in different files, in different spellings. test-core.sh now checks every mirror in both rails against the frontmatter of the routine its claude -p \"/<name>\" names, comparing as sets so ordering and whitespace are not findings. Drift broader hands a scheduled, token-bearing job a capability its definition never granted; drift narrower fails at runtime, weekly, in a job nobody watches. Verified in both directions; 9 mirrors currently match.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "**core-doctor reports the mirror of #545: a HAVE_* flag set for a binary that is now gone. #545 shipped the silent half — present at report time, never wired. This is the other state: detected at band 00, flag set, 20-aliases.zsh's guard passed and defined the alias — and the binary is no longer on PATH. #631 filed this as low-priority and argued against taking it, on the grounds that the failure is loud and self-explanatory and would need a fifth glyph. Both halves turn out not to hold, and that is why this landed. It is loud only for tools that shadow nothing. Six aliases shadow classic commands — ps, top/htop, watch, df, ping, help — and there a stale flag does not fail to give you procs, it breaks ps, with a message naming a binary the user never typed. core-doctor is what you reach for at that point, and ✗ procs does not connect to \"your ps is broken\". So the block names the dangling aliases, not the tools, read from the live aliases table so it cannot drift from 20-aliases.zsh. And it needs no fifth glyph**. The row keeps its honest ✗ — which is already correct about presence — and the remedy lives in a stale block, exactly as not wired does. The legend keeps its three states, the alarm-fatigue budget #620 was careful with is not spent, and the render⇄json parity regex is untouched (the block sits past the opt-in trim, structurally invisible to it). That comparison is re-run with this axis actively firing, since unlike #545's ⚠ it fires on the branch the parity test stubs. PATH shrinking mid-session is not exotic here: mise activate zsh registers a chpwd hook that rewrites PATH on every cd, so a toolchain two directories away can take a binary with it. --json gains detection.stale beside missed — its own key, not a widened one, and disjoint from missed by construction. Both ledger gates from _core_doctor_unwired apply unchanged; only the comparison flips.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "A decided-and-rejected ledger for /tool-scout — .claude/tool-decisions.md. The routine's baseline is five files (PORTING-MATRIX.md, zsh/00-tools.zsh, zsh/20-aliases.zsh, mise/config.toml, zsh/45-plugins.zsh + nvim/lazy-lock.json) that all describe what Core has. Nothing recorded what Core considered and declined, so a rejected tool was indistinguishable from one never evaluated. hexyl came back ranked #3 \"adopt\" on 2026-08-18, six days after #395 closed it NOT_PLANNED and refiled it as dotfiles-Kali#182. #395's own body anticipated it — \"filed so the decision is recorded rather than silently re-proposed by next week's scan\" — and recording it was not enough, because nothing in the routine read it. The cost is not a wasted ranking slot. A re-proposal arrives with a fresh case-for and no counter-argument attached, so the decision gets re-made on half the evidence; hexyl would have been adopted on that pass if the report had been actioned without someone happening to remember. fastgron is the near-miss in the same report — correctly skipped, with reasoning the report itself noted should be written down, caught by luck rather than by process. Seeded with both. The load-bearing half is that the routine is made to read it: the instruction lands in .claude/commands/tool-scout.md and .claude/agents/tool-scout.md, since the subagent does the actual ranking and would otherwise get it second-hand. A listed tool may be re-proposed only against the recorded reasoning, naming what changed, and the report states the prior decision per candidate — explicitly \"none\" when there is none, since an omitted line reads the same as an unchecked one. /os-package-availability and /modernize share the shape but are deliberately left alone: both already carry a working in-band equivalent (the \"intentionally excluded\" comments in packages.txt, and the machine-readable floor in scripts/modern-baseline.yml). That reasoning is recorded in the ledger itself so it is not re-proposed either.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "security",
+      "text": "V5-PROPOSAL.md — the design record for the next major. Core is at 4.18.0 with the whole fleet synced to it and an empty backlog; nothing in the repo proposed a v5, and the only v5 strings anywhere were RELEASE-RUNBOOK.md using v4→v5 as the worked example for the moving-alias procedure. So the machinery for cutting a major was documented and rehearsed while the content of one was not written down anywhere. The proposal follows V4-PROPOSAL.md's structure and states one thesis: the OS layer becomes a contract instead of a convention. v4 made the load order declarative — modules stopped being a hand-listed array and became NN- fragments the loader globs — and v5 does the same to capability, payload and surface. Four bundled changes, chosen because they touch the same three contracts (the bootstrap.sh symlink set, the load chain, and what a vendored core/ contains), so the fleet re-bootstraps once rather than four times: 1. os.capabilities — each OS repo declares its package-manager verbs, clipboard backend, scheduler and opt-in tool split, and Core dispatches through the declaration. Core currently carries 154 package-manager references — 88 in zsh/60-update.zsh, 49 in maint/dotfiles-maint.sh, 17 in zsh/30-functions.zsh — in the layer whose own test is \"if it changes when the OS changes, it's not Core\". CHANGELOG.md:927-931 already recorded that fixing core-doctor's opt-in classification \"needs a per-repo manifest\"; this is it. 2. Vendor only what is Core — the core.manifest payload is 1.4 MB and a vendored core/ is 5.9 MB, so 76% of what ships to every machine is not Core. The largest single item is assets/demo.gif at 1.8 MB, larger than the entire Core payload, replicated into nine trees where no README displays it. 3. Retire what nothing uses, declare what things do — delete CORE_PROFILE (nothing writes the $ZSH_CFG/profile it reads, no OS repo mentions it, and bootstrap-test.yml asserts ~/.zshrc must not set it), which also closes the unenforceable band-squatting footgun VENDORING.md:185-192 documents; and turn HAVE_* from 43 accidental exports into a stated API, since five are consumed downstream and none are declared anywhere. 4. clip learns what a secret is — optoken pipes a live TOTP through clip, which on a headless box reaches OSC 52 and, under the set-clipboard on that tmux/tmux.conf:45 itself sets, leaves the code in a tmux show-buffer-readable paste buffer. §11 records the non-goals with their reasons — renumbering the bands (~470 references across 62 files, and V4-PROPOSAL.md §9 already resolved against it), retiring the bare verb names, consolidating bootstrap.sh, and an nvim overhaul — plus four open questions the implementation must answer rather than assume. It is report-first: nothing here is implemented, and an issue the proposal rejects should be closed not_planned with a reason rather than left open. V5-PROPOSAL.md joins the META_ALLOWLIST in scripts/audit-core.sh beside V4-PROPOSAL.md, so §1's manifest-drift check accounts for it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "security",
+      "text": "The secret-scan policy gate (audit-core.sh §5g) now BLOCKS. It shipped advisory in #623, on the principle §5f states: repos are short on arrival, and a gate that is red from its first run is a gate someone turns off. That reason has expired — the fleet is clean. dotfiles-Alpine and dotfiles-Gentoo each carried a root .gitleaks.toml. gitleaks auto-discovers a config at the scan root, so those files silently governed every local scan in their repos, including invocations that pass no -c and look, from the command line, like stock scans. Both rule sets were simultaneously narrower than Core's (gitleaks' stock defaults, with Core's variable-reference allowlist dropped) and wider (whole-path exemptions for core/, and in Gentoo's case README.md). Being green under them was not evidence of being clean; it was evidence of being measured differently. CI was never affected: the reusable lint-call.yml secrets leg passes -c explicitly and an explicit config beats auto-discovery. The entire divergence lived in the author-time path — which is where it is least likely to be noticed, and where a hook greener than CI does the most damage. Both are now deleted (dotfiles-Alpine#133, dotfiles-Gentoo#125), and both repos verified clean under core/gitleaks.toml — working tree, plus all 271 commits of Gentoo's history, which is what proved its README.md exemption stale. No Core sync was needed: Core's variable-reference allowlist already covers the core/CHANGELOG.md line the stock curl-auth-user rule flags. All nine OS repos now measure by the same policy. Blocking is the right posture here specifically because this failure is quiet. A repo running its own rule set is green, and stays green as that rule set drifts, because nothing compares it to Core's — so the next person to look sees a passing gate, which is worse than a red one. Advisory suits a finding people can see; not one whose whole hazard is that it looks fine. Still skipped when siblings are not checked out, exactly like §5f, so it is inert in CI (which clones only Core) and bites locally and in fleet sweeps.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "V5-PROPOSAL.md §11 records the bare-verb-name decision instead of deferring it. The section listed retiring up / serve / gsync / maint-* as an open question tracked in #692, ending \"it must be decided before the tag, not left open for a whole major cycle.\" #692 is now closed not_planned — the names stay — so the paragraph asserted an open decision that had already been made. It now records the outcome and the grounds for revisiting: the additive dispatcher in #684 already buys the coherence, while deletion buys namespace purity at the cost of daily friction on the most-typed verbs plus churn across 28 completions, core-help's rows, _core_suggest, aliases.md and PARITY.md (a two-repo change). Reopening needs evidence of a real collision — up and serve are genuinely collision-prone and a shadowing up fails silently — not a fresh aesthetic objection. The point of #692 was that an unrecorded decision gets silently re-proposed, so leaving the RFC saying \"must be decided\" while the answer sat only in a closed issue was the same failure one level up. (#692)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "Opening a file linted it only about half the time — nvim-lint's on-open replay raced mason.nvim's PATH prepend. plugins/nvim-lint.lua loads on User FilePost and replays the triggering buffer at the end of its config(), because that buffer's real BufReadPost has already fired by then. The replay spawns Mason-installed linters, which resolve only once mason.setup() has prepended <data>/mason/bin to vim.env.PATH — and nvim-lint declared no dependencies at all. nvim-lspconfig loads on the same event and pulls mason in as its own dependency, but lazy.nvim orders a plugin against its declared dependencies only, never against another plugin on the same event. Which of the two ran first was therefore undefined, and losing the race meant vim.uv.spawn got ENOENT on a bare rubocop. Measured over six opens each: ruby/rubocop linted 4/6 on macOS and 3/6 on native Windows, markdown/markdownlint-cli2 2/6. The controls are what pin it — sh/shellcheck, which lives on the PATH nvim inherits rather than under Mason, was 6/6 and never failed, and rubocop itself went 6/6 when Mason's bin directory was pre-seeded onto PATH before nvim started. Nothing about the linters, the filetypes or the config gates was involved. It read as flakiness for two issues rather than as a missing binary because :w always worked: by the first save mason has long since fixed PATH. On Windows the failure was also fully silent — no error, no notification, no :messages entry — so an unlinted file was indistinguishable from a clean one (macOS at least printed Error running rubocop: ENOENT). Both rows in the original Windows report were Mason binaries, so it had no base-PATH linter acting as a control, which is why the scope sat at \"Windows-only\" until it was measured elsewhere. The fix is one declaration: nvim-lint now names mason-org/mason.nvim in its dependencies, so lazy loads mason — setup() and all — before the replay runs. It costs no startup time, because mason was already being loaded at that event; the edge simply was not written down. Verified on macOS by A/B on one box: 3/6 before, 6/6 after, with every ENOENT gone. scripts/test-core.sh §D gains a spec-level assertion as the regression net. The ordering being guarded is a lazy.nvim guarantee, so re-deriving it at runtime would test lazy rather than this config, and the race cannot be reproduced hermetically anyway (it needs lazy, nvim-lint and mason really installed) — whereas dropping the dependency is luacheck-clean, load-clean and regresses only intermittently on a real machine, which is exactly the profile that needs a static gate. Two comments that had gone stale against the replay are corrected in the same change: config/autocmds.lua's \"nvim-lint is driven by BufWritePost/InsertLeave only — nothing to replay\", and nvim-lint.lua's own header. (#652, dotgibson/dotfiles-MacBook#191)",
+      "core": true
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
