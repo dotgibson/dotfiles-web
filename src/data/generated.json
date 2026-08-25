@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "22c2d3da64a61047dc2f446866e33ef5ee01a8cf",
+        "commit": "3aafb23dc78ff447859b18007949baa077fb7a5d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "3b777a1c9b1bccc7589b39a4739871a4627209e1",
+        "commit": "9a6b6975d01d37e6e28c8765db714465d0ea476e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "947bcd76ea211e2bc523f45fd7ee34cfb827a777",
+        "commit": "6d8c55a9fb345f1c446d00d57acd116012369b06",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "211f707a60c45f9eddff88db59a07c847cd843d6",
+        "commit": "d90342c31a4189c81f00159f1b32e951224b1f3c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "cde7fecad150a3edac1feefcce9c31c575641d3a",
+        "commit": "4171daca11449b6291ffa4a69d87da4bb010aa7b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "e0d34eab14dad07727ffe00dbfb664ff1dcf29db",
+        "commit": "0593947563d905a331860f6b5ccc0edf0910ad5a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "1ccb87f5bf8da4910f9f2758b44b5e3762b227e0",
+        "commit": "707b6a3760adc0c4337ebb88a43d9a1403409c61",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "d20abd05be80e9b5a1e3df7601d927dfa7799f29",
+        "commit": "00968f748565d7c4f71145521c3ac3f82c997333",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "1886fdc4b223d1d80b098dc0bce2c72ab1812ffd",
+        "commit": "454f3d407090aabcfb6aee260681726d56022061",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "aed208a20979f392fa233314481a0af638fc5fad",
+        "commit": "6ad84f2596db2f91d245cbbf15b2c75ac6e66d68",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -143,7 +143,7 @@
   "core": {
     "version": "4.18.0",
     "sourcedModules": 14,
-    "zshLoc": 5322,
+    "zshLoc": 5328,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 28
@@ -179,6 +179,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "tealdeer/config.toml — the page cache nothing was refreshing. help is a Core alias (zsh/20-aliases.zsh, HAVE_TLDR-guarded) and tealdeer is packaged across the fleet, but Core shipped no config for it and maint/dotfiles-maint.sh has no tldr --update step. Upstream's auto_update defaults to false, so the two facts compose into a gap nobody owned: on a fresh box help ls fails with \"page not found\" until someone runs tldr --update by hand, and on an old box the pages rot silently. Three lines of [updates] fix both without touching the maintenance runner. auto_update_interval_hours is set to 168 rather than upstream's 720 so the refresh tracks the weekly maintenance cadence instead of lagging a month behind it. The file is deliberately conservative, and the reason is not the obvious one. tealdeer 1.9.0 (2026-08-24) made config parsing error on unknown keys (upstream #516); before that an unknown key was silently ignored. So the risk does not run the direction it first appears: a newer key is not what breaks an old build — an old build ignores it — but any key this file gets wrong is now a hard failure on every 1.9.0+ box, surfacing on every tldr invocation, which on this fleet means help stops working outright. Core is vendored to nine repos running whatever tealdeer their distro ships (PORTING-MATRIX.md ¹: Tumbleweed 1.8.0; Leap 16.x has no package at all), so nothing here is newer than 1.8.0 — and updates.warn_cache_age, which is 1.9.0-only, is left out on purpose rather than by omission. Symlinked, not seeded: Core owns the file and it is identical everywhere, so blib_link is right and blib_seed (sesh.toml, local.gitconfig — files the user edits locally) is not. Wired into the existing tools group, so no new BLIB_MODULES entry. (#702)",
+              "kind": "perf"
+            },
             {
               "text": "The OS layer can now DECLARE its package-manager verbs instead of Core hardcoding them. Core's own test (CONTRIBUTING.md) is \"if it changes when the OS changes, it is not Core\" — and Core broke it 154 times: 88 package-manager references in zsh/60-update.zsh, 49 in maint/dotfiles-maint.sh, 17 in zsh/30-functions.zsh, including a grep -qi tumbleweed /etc/os-release to choose zypper dup over zypper up. ARCHITECTURE.md defended that as \"one verb with N backends\", and the defence of the verb is right — up belongs in Core so every machine has the same muscle memory. What expired is the defence of the implementation: one verb with N backends is what a dispatch table is for. The verb stays; the backends move to the layer that changes with the OS. An OS repo now authors os/<os>.capabilities — flat KEY=value, read and never sourced, so a per-repo file is not a code-execution surface in your login shell (the precedent and the reasoning are scripts/tool-versions.env and scripts/setup.sh:23-26). Values are multi-word command prefixes, which is why blib_read_pkgs could not be reused: it strips all whitespace. - zsh/02-capabilities.zsh — a new Core fragment at band 02 that reads the declaration into $_CORE_CAP, with _core_cap <key> [fallback] as the accessor. Inside the Core band, so every CORE_PROFILE loads it: minimal's ceiling is 30, and a lean profile must not silently lose the dispatch table. - blib_link_os_layer links it as a fifth OS overlay, beside the .zsh/.conf/ .gitconfig it already links. Every OS repo's bootstrap.sh calls that helper today, so no repo edits a bootstrap to adopt this — it authors a file. - scripts/check-capabilities.sh is the schema, and the gate: unknown key, missing or empty required verb, duplicate key, SCHEDULER outside systemd|launchd|none, and trailing whitespace are all failures. It takes a path, so the same validator runs from Core's make audit (on the shipped example) and from each OS repo's own lint as core/scripts/check-capabilities.sh os/<os>.capabilities — nine repos gated by one definition instead of nine greps that drift. --packages install/packages.txt adds an opt-in cross-check that each verb's binary is one the repo installs. - examples/os.capabilities.example — the Fedora declaration to copy from, held to that same gate so the fleet's template cannot drift from the fleet's schema. Nothing in Core dispatches through $_CORE_CAP yet — up, the maint scheduler and core-doctor's opt-in split are separate changes. Landing the schema alone keeps the foundational commit reviewable, and means a box with no declaration is byte-for-byte unaffected. Two decisions worth recording, because both went against the original proposal: - A missing declaration warns and falls back; it does not fail. A hard failure at shell startup leaves an unusable interactive shell on a box you are very likely SSH'd into precisely to fix it. Enforcement belongs in a gate you run, not in the login shell. - The clipboard backend is deliberately not in the schema. bin/clip is re-exec'd by nvim and tmux on every yank and paste, and its WSL probe was already rewritten to avoid forking a grep per invocation. Adding a file read and parse to that path would spend exactly what that optimisation bought, for a value that changes once per machine.",
               "kind": "perf"
@@ -229,6 +233,10 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "zsh/35-fzf.zsh claimed the shell and tmux share one session picker. They do not. The Ctrl-G widget runs its own inline sesh list | fzf; tmux/scripts/tmux-sesh.sh's richer picker — --height 100%, a border label, and the ctrl-a/ctrl-t/ctrl-g/ctrl-d mode-switch reloads — is reached only when sesh is absent, on the fallback path. So the two have been drifting in the one direction the comment promised they could not, and a reader fixing the tmux picker had no reason to look at the shell one. The comment now says which path is which and points at the row that records the option of collapsing them. That row is the other half. /tool-scout (#702) ranked adopting sesh's built-in sesh picker as adopt, low priority, on the grounds that both recorded blockers were spent. Only one is. #518 held it on \"no preview\" — genuinely spent, since sesh 2.28.0 (2026-07-27) added an opt-in preview pane, custom icons and index jumping. #376 held it on loss of fzf theming, and that one still stands: verified against the binary rather than the docs, the complete [tui] key set is prompt, placeholder, show_icons, show_windows, preview, preview_width, preview_min_width, preview_border, the three alias_* keys and separator_aware — **no colour key of any kind, and no SESH_* environment override (preview_border picks a divider glyph, not a colour). Core's tokyonight-storm palette lives once**, in FZF_DEFAULT_OPTS, and every picker inherits it deliberately. Adopting would swap the two most-used pickers on the box for unthemeable ones across eight machines, to gain a preview pane the fzf path already has via --preview 'sesh preview {}'. Declined and recorded in .claude/tool-decisions.md under Watching, with the condition that would reverse it: a colour schema under [tui] — not a new release, and not the preview pane, which is already here. (#702)",
+              "kind": "fix"
+            },
             {
               "text": "A scripted nvim -c 'write' never formatted anything — conform.nvim spawns Mason formatters without declaring mason as a dependency. The same undeclared edge as the nvim-lint fix below (#652), in plugins/conform.lua, with a worse shape. conform loads on BufWritePre and spawns Mason-installed formatters (prettierd, gofumpt, clang-format, php-cs-fixer, sql-formatter, ktlint, google-java-format, taplo, …), which resolve only once mason.setup() has prepended <data>/mason/bin to vim.env.PATH; conform declared no dependencies at all, and mason arrived incidentally via nvim-lspconfig (User FilePost) and mason-tool-installer (VeryLazy) — neither of which lazy.nvim orders against it. Unlike #652 this is not a race: -c commands run before VimEnter, so VeryLazy has not fired and the vim.schedule'd User FilePost emit in config/autocmds.lua has not either. mason has therefore never loaded by BufWritePre, deterministically. Measured on macOS with a {\"a\":1, \"b\":[1,2,3]} fixture and prettierd (Mason-only here — stylua and shfmt also sit on the base PATH and mask this): nvim --headless f.json -c 'write' -c 'qa!' formatted 0/4, with mason unloaded and executable(\"prettierd\") = 0 at BufWritePre; the same write deferred past startup — the interactive shape — formatted 4/4. It failed silently, which is why it survived: conform auto-skips a formatter that is not on PATH (the same self-gating that makes the optional formatters in the map safe on a box without them), so there was no error, no vim.notify, nothing in :messages — the file was just written unformatted, and a later :ConformInfo showed the formatter as available. Invisible interactively, and every time for nvim -c writes in a Makefile, git hook, or CI check. Declaring dependencies = { { \"mason-org/mason.nvim\", opts = {} } } fixes it at 4/4 and costs nothing (startup over five runs: 92.3 ms before, 89.9 ms after — noise). scripts/test-core.sh §D's #652 assertion is now table-driven and covers both specs. (#703)",
               "kind": "perf"
@@ -1318,6 +1326,14 @@
       "version": "Unreleased",
       "category": "Added",
       "kind": "perf",
+      "text": "tealdeer/config.toml — the page cache nothing was refreshing. help is a Core alias (zsh/20-aliases.zsh, HAVE_TLDR-guarded) and tealdeer is packaged across the fleet, but Core shipped no config for it and maint/dotfiles-maint.sh has no tldr --update step. Upstream's auto_update defaults to false, so the two facts compose into a gap nobody owned: on a fresh box help ls fails with \"page not found\" until someone runs tldr --update by hand, and on an old box the pages rot silently. Three lines of [updates] fix both without touching the maintenance runner. auto_update_interval_hours is set to 168 rather than upstream's 720 so the refresh tracks the weekly maintenance cadence instead of lagging a month behind it. The file is deliberately conservative, and the reason is not the obvious one. tealdeer 1.9.0 (2026-08-24) made config parsing error on unknown keys (upstream #516); before that an unknown key was silently ignored. So the risk does not run the direction it first appears: a newer key is not what breaks an old build — an old build ignores it — but any key this file gets wrong is now a hard failure on every 1.9.0+ box, surfacing on every tldr invocation, which on this fleet means help stops working outright. Core is vendored to nine repos running whatever tealdeer their distro ships (PORTING-MATRIX.md ¹: Tumbleweed 1.8.0; Leap 16.x has no package at all), so nothing here is newer than 1.8.0 — and updates.warn_cache_age, which is 1.9.0-only, is left out on purpose rather than by omission. Symlinked, not seeded: Core owns the file and it is identical everywhere, so blib_link is right and blib_seed (sesh.toml, local.gitconfig — files the user edits locally) is not. Wired into the existing tools group, so no new BLIB_MODULES entry. (#702)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
       "text": "The OS layer can now DECLARE its package-manager verbs instead of Core hardcoding them. Core's own test (CONTRIBUTING.md) is \"if it changes when the OS changes, it is not Core\" — and Core broke it 154 times: 88 package-manager references in zsh/60-update.zsh, 49 in maint/dotfiles-maint.sh, 17 in zsh/30-functions.zsh, including a grep -qi tumbleweed /etc/os-release to choose zypper dup over zypper up. ARCHITECTURE.md defended that as \"one verb with N backends\", and the defence of the verb is right — up belongs in Core so every machine has the same muscle memory. What expired is the defence of the implementation: one verb with N backends is what a dispatch table is for. The verb stays; the backends move to the layer that changes with the OS. An OS repo now authors os/<os>.capabilities — flat KEY=value, read and never sourced, so a per-repo file is not a code-execution surface in your login shell (the precedent and the reasoning are scripts/tool-versions.env and scripts/setup.sh:23-26). Values are multi-word command prefixes, which is why blib_read_pkgs could not be reused: it strips all whitespace. - zsh/02-capabilities.zsh — a new Core fragment at band 02 that reads the declaration into $_CORE_CAP, with _core_cap <key> [fallback] as the accessor. Inside the Core band, so every CORE_PROFILE loads it: minimal's ceiling is 30, and a lean profile must not silently lose the dispatch table. - blib_link_os_layer links it as a fifth OS overlay, beside the .zsh/.conf/ .gitconfig it already links. Every OS repo's bootstrap.sh calls that helper today, so no repo edits a bootstrap to adopt this — it authors a file. - scripts/check-capabilities.sh is the schema, and the gate: unknown key, missing or empty required verb, duplicate key, SCHEDULER outside systemd|launchd|none, and trailing whitespace are all failures. It takes a path, so the same validator runs from Core's make audit (on the shipped example) and from each OS repo's own lint as core/scripts/check-capabilities.sh os/<os>.capabilities — nine repos gated by one definition instead of nine greps that drift. --packages install/packages.txt adds an opt-in cross-check that each verb's binary is one the repo installs. - examples/os.capabilities.example — the Fedora declaration to copy from, held to that same gate so the fleet's template cannot drift from the fleet's schema. Nothing in Core dispatches through $_CORE_CAP yet — up, the maint scheduler and core-doctor's opt-in split are separate changes. Landing the schema alone keeps the foundational commit reviewable, and means a box with no declaration is byte-for-byte unaffected. Two decisions worth recording, because both went against the original proposal: - A missing declaration warns and falls back; it does not fail. A hard failure at shell startup leaves an unusable interactive shell on a box you are very likely SSH'd into precisely to fix it. Enforcement belongs in a gate you run, not in the login shell. - The clipboard backend is deliberately not in the schema. bin/clip is re-exec'd by nvim and tmux on every yank and paste, and its WSL probe was already rewritten to avoid forking a grep per invocation. Adding a file read and parse to that path would spend exactly what that optimisation bought, for a value that changes once per machine.",
       "core": true
     },
@@ -1391,6 +1407,14 @@
       "category": "Changed",
       "kind": "perf",
       "text": "V5-PROPOSAL.md §11 records the bare-verb-name decision instead of deferring it. The section listed retiring up / serve / gsync / maint-* as an open question tracked in #692, ending \"it must be decided before the tag, not left open for a whole major cycle.\" #692 is now closed not_planned — the names stay — so the paragraph asserted an open decision that had already been made. It now records the outcome and the grounds for revisiting: the additive dispatcher in #684 already buys the coherence, while deletion buys namespace purity at the cost of daily friction on the most-typed verbs plus churn across 28 completions, core-help's rows, _core_suggest, aliases.md and PARITY.md (a two-repo change). Reopening needs evidence of a real collision — up and serve are genuinely collision-prone and a shadowing up fails silently — not a fresh aesthetic objection. The point of #692 was that an unrecorded decision gets silently re-proposed, so leaving the RFC saying \"must be decided\" while the answer sat only in a closed issue was the same failure one level up. (#692)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "zsh/35-fzf.zsh claimed the shell and tmux share one session picker. They do not. The Ctrl-G widget runs its own inline sesh list | fzf; tmux/scripts/tmux-sesh.sh's richer picker — --height 100%, a border label, and the ctrl-a/ctrl-t/ctrl-g/ctrl-d mode-switch reloads — is reached only when sesh is absent, on the fallback path. So the two have been drifting in the one direction the comment promised they could not, and a reader fixing the tmux picker had no reason to look at the shell one. The comment now says which path is which and points at the row that records the option of collapsing them. That row is the other half. /tool-scout (#702) ranked adopting sesh's built-in sesh picker as adopt, low priority, on the grounds that both recorded blockers were spent. Only one is. #518 held it on \"no preview\" — genuinely spent, since sesh 2.28.0 (2026-07-27) added an opt-in preview pane, custom icons and index jumping. #376 held it on loss of fzf theming, and that one still stands: verified against the binary rather than the docs, the complete [tui] key set is prompt, placeholder, show_icons, show_windows, preview, preview_width, preview_min_width, preview_border, the three alias_* keys and separator_aware — **no colour key of any kind, and no SESH_* environment override (preview_border picks a divider glyph, not a colour). Core's tokyonight-storm palette lives once**, in FZF_DEFAULT_OPTS, and every picker inherits it deliberately. Adopting would swap the two most-used pickers on the box for unthemeable ones across eight machines, to gain a preview pane the fzf path already has via --preview 'sesh preview {}'. Declined and recorded in .claude/tool-decisions.md under Watching, with the condition that would reverse it: a colour schema under [tui] — not a new release, and not the preview pane, which is already here. (#702)",
       "core": true
     },
     {
