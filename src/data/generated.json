@@ -1,70 +1,70 @@
 {
-  "generatedAt": "2026-08-25",
+  "generatedAt": "2026-08-26",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "3c2b1cbeecd506c44e13cc63edb25012cc34d47a",
+        "commit": "6401a6868858f82dee0d79b4c568cabce21726b8",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "8eb54c8a04b9cba679df0470562bfd1662abcb6d",
+        "commit": "a229b720a665ab4a62a2278dedbd131eadfa7edc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "7d9cd1ee29962f196cb9a9a004efb94d593871af",
+        "commit": "52bd3f83abe1449b22e889427be1b40ef4395508",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "6d8c55a9fb345f1c446d00d57acd116012369b06",
+        "commit": "69fb7cfedc9ed353641cc3540ff3268465852843",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "a59c2d13ef96884c1a8b45d216bb1b72714facf7",
+        "commit": "adfb91d6d056cb4d2a2022188d1d59680d66d625",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "4171daca11449b6291ffa4a69d87da4bb010aa7b",
+        "commit": "6dc2d648e8ec8d7700a1ac27431085a6b14ce661",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "0593947563d905a331860f6b5ccc0edf0910ad5a",
+        "commit": "69071a254249f0d030ae33aefc1acda0416f72aa",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "707b6a3760adc0c4337ebb88a43d9a1403409c61",
+        "commit": "c896d29541129357b54e99d2bb104db591ed9c38",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "00968f748565d7c4f71145521c3ac3f82c997333",
+        "commit": "149b908d12ee26b46d6613db8f086ea7dfe58c0d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "454f3d407090aabcfb6aee260681726d56022061",
+        "commit": "7f2a57f7f99b4ad255680d44ca46d370a98de6a5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "6ad84f2596db2f91d245cbbf15b2c75ac6e66d68",
+        "commit": "c774b582331019a65f545530b087ac7cd8f3498d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,72 +76,72 @@
     "layers": 3
   },
   "releases": {
-    "current": "v4.19.0",
+    "current": "v5.0.0",
     "channels": [
+      "v5.0.0",
       "v4.19.0",
       "v4.18.0",
-      "v4.17.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "4.19.0",
+    "coreVersion": "5.0.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-Windows": {
         "ref": null,
         "carried": null,
-        "mirroredFrom": "v4.18.0",
+        "mirroredFrom": "v4.19.0",
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-Defense": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-Fedora": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-Arch": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-Debian": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-openSUSE": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-Alpine": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       },
       "dotfiles-Gentoo": {
-        "ref": "v4.18.0",
-        "carried": "4.18.0",
+        "ref": "v4.19.0",
+        "carried": "4.19.0",
         "status": "behind"
       }
     }
   },
   "core": {
-    "version": "4.19.0",
+    "version": "5.0.0",
     "sourcedModules": 14,
     "zshLoc": 5370,
     "gitAliases": 57,
@@ -172,6 +172,89 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "groups": [
+        {
+          "category": "Breaking",
+          "items": [
+            {
+              "text": "~/.config/mise/config.toml is no longer a symlink into vendored core/. bootstrap.sh now ADOPTS it — the file becomes a real copy you own (blib_adopt). This is the change that makes the release a MAJOR: it alters the bootstrap.sh symlink contract. No host breaks, and nothing is lost. Re-running ./bootstrap.sh migrates an existing symlink to a real file automatically, with identical content, and a copy you have edited is never clobbered. There is no manual step on a host and no command goes away. What you must adapt to is propagation. That file no longer tracks Core, so a pin change landed here stops reaching a provisioned box on its own — the box picks it up when it re-bootstraps, and bootstrap.sh reports drift when your copy has diverged. Fleet-wide pin changes are now: edit Core → release → sync → re-bootstrap. That is the deliberate trade; the alternative was leaving mise use -g able to write into the vendored tree, which is what #724 and #727 were fixing. For repo maintainers: v4 stays frozen where it is, so nothing pinned @v4 changes underneath you. Adopting this major means bumping uses: dotgibson/dotfiles-core/.github/ workflows/*@v4 to @v5 by hand — 52 references across nine repos at time of writing. make fleet-drift does NOT surface these: it compares core.lock provenance, not workflow pins, so finding them is a grep -rl 'uses:.*@v4' .github/workflows sweep. dotfiles-Windows is invisible to that sweep — it vendors no core/, is absent from scripts/os-repos.txt, and SHA-pins its caller deliberately. Check it by hand.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "**.gitignore now drops crash dumps — as core.[0-9]*, deliberately not core.*. A core.<pid> dump landing in a repo was untracked noise nothing ignored. The obvious spelling is the trap. This repo tracks core.manifest and core.version, and every OS repo also tracks core.lock — while bare core is the vendored Core directory** there. core.* would hide the next such file the moment someone added one, silently, which is exactly the failure #700 already cost us. Pinned in test-core.sh against the real .gitignore, with --no-index so the assertions answer from the rules rather than the index: without that flag, check-ignore never calls an already-tracked path ignored and the core.manifest / core.version cases would pass under core.* too — tautologies guarding nothing. Verified by mutating the rule; all three go red. scripts/new-os-repo.sh seeds the same rule, so a repo generated tomorrow starts with it.",
+              "kind": "config"
+            },
+            {
+              "text": "mise.lock is deliberately NOT ignored, and the reason is recorded where it would be re-proposed. It was suggested alongside the crash dumps, and it would have been a quiet regression: mise/config.toml sets lockfile = true precisely so mise records exact resolved versions and checksums — \"the same idea as Cargo.lock / package-lock.json\" — and that comment says commit it. A bare mise.lock line carries no slash, so it matches at every depth and would have swallowed mise/mise.lock, turning off hermetic tool resolution with nothing to show for it. The .gitignore now says so at the point someone would add it, and a test asserts mise/mise.lock stays trackable.",
+              "kind": "fix"
+            },
+            {
+              "text": "audit-core.sh §1c: a .claude/ file that ships nowhere and that nothing reports. §1b (#709) catches a .claude/ path a routine names but git does not carry. It only fires because something pointed at the missing file — which is why #700 was catchable at all: three routine files referenced the ledger. A .claude/ file nothing references — a new subagent, a convention-named config a hook reads, a second ledger — has no such witness. Nothing else reports it either, and that is the whole point. .gitignore blocks .claude/* wholesale, so git is silent in every direction: not in git status, not added by git add -A, and invisible to every content gate here, since they all read the working tree where the file is present and correct. The audit was faithfully answering \"is this tree consistent\" — it was — while nobody was asking \"will this reach a clone\". The verdict is the .gitignore rule that wins, which is what keeps the gate from needing a hand-kept allowlist. git check-ignore -v names the line that hid the file: the blanket .claude/* means nobody decided anything about it (a finding), while any more specific rule means somebody wrote a line naming it (a decision, and silent). So settings.local.json is exempt because .gitignore names it, not because §1c lists it — and the next per-machine file becomes exempt the moment its rule is written, with no edit to the scanner. Untracked-but-visible is deliberately not a finding. A new file git can still see is already git status's job, and flagging it would red the audit on every work-in-progress file. The defect this exists for is invisibility. Blocking on arrival, the §5i argument: settings.local.json is the only untracked file under .claude/ and it carries its own rule, so the tree is green as this lands and every future hit is a regression in the commit under test. Nine fixture cases in test-core.sh, each on a throwaway git repo with its own index and .gitignore — no text fixture can stand in for \"which rule wins\" — plus a live canary asserting .gitignore still uses the blanket spelling the scanner keys on, so the gate cannot go green by recognising nothing.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "~/.config/mise/config.toml is now a COPY, not a symlink into vendored core/ — blib_adopt. A symlinked config is a write path back into the vendored tree, and for a config whose own tool rewrites it, that path gets used. mise use -g ruby@4.0 — an ordinary command, and the one mise's own header advertises — wrote straight through the symlink into core/mise/config.toml: vendored Core edited in place, the trailing pin comments stripped (mise rewrites the file rather than editing the line), the tree TAMPERED per core-integrity, and sync-core.sh skipping that repo on the next fan-out with an error naming nothing about mise. The entry below restored the stripped comments; this removes the write path that stripped them. Adopted, not merely seeded. blib_adopt migrates an existing symlink into a real file, so already-provisioned boxes convert on their next bootstrap rather than needing a manual step. A real file that differs from Core is never clobbered — the divergence is REPORTED and yours is kept. The trade, stated plainly: the copy stops tracking Core, so a pin edit here no longer reaches a provisioned box on its own. Drift is reported instead of silently tolerated — the same bargain fleet-drift.sh and core-integrity already make, a visible checkable condition rather than an invisible override. Fleet-wide pin changes become: edit, release, sync, re-bootstrap. Deliberately NOT conf.d, recorded at blib_adopt because the next reader will otherwise \"fix\" it backwards. Measured on mise 2026.5.16, isolated XDG_CONFIG_HOME, neutral cwd: conf.d OUTRANKS config.toml in both directions — mise states this itself (\"lua is defined in …/conf.d/00-core.toml which overrides the global config\") — and within conf.d the LOWEST-numbered file wins (00- beats 99-, the reverse of the systemd convention). Read it with mise current <tool>; mise ls prints one line per config file and is easy to misread as a precedence answer. The hazard is where mise use -g writes — the highest-precedence file that already exists — which gives conf.d two failures and no good case. On a fresh box with no config.toml, the write lands inside conf.d/00-core.toml; where that is Core's symlink, it reproduces the original write-through bug exactly. Where config.toml does exist, the write lands there and is then shadowed by Core's conf.d entry — mise warns, so it is not silent, but the user's global choice does not take effect. A plain copy has neither failure. Scope. blib_link remains correct for the ~34 configs a tool only READS — the symlink is what makes a Core edit reach every box for free. blib_adopt is only for configs the tool itself writes. jj is the other live instance of that shape (jj config set --user rewrites in place) and is NOT converted here; atuin, lazygit and tealdeer remain unconverted and unaudited.",
+              "kind": "fix"
+            },
+            {
+              "text": "mise/config.toml: ruby 3.4 → 4.0, lua 5.4 → 5.5. Both verified resolvable before pinning (mise latest ruby@4.0 → 4.0.6, lua@5.5 → 5.5.1) — a global pin that does not resolve breaks mise install on every box Core lands on, so this is not a place to take an upstream version number on faith. How this surfaced is the part worth recording. The change was found as an uncommitted modification inside a vendored core/ tree: ~/.config/mise/config.toml is symlinked to core/mise/config.toml, so a mise use -g writes straight through the symlink into vendored Core, and core-integrity reports such a tree as TAMPERED. (This entry first said the edit was \"on course to be silently reverted on the next sync\". That is wrong and worth correcting in place, because the real behaviour is the opposite: sync-core.sh:559-563 refuses to fan out into a repo with a dirty tree, so the edit SURVIVES and the repo is counted a FAILURE — err \"$repo has uncommitted changes\" then repos_failed=$((repos_failed + 1)). Nothing is lost, and the fan-out reports the repo as failed rather than merely quiet.) The through-the-symlink write also stripped the trailing comments that say why each pin exists; they are restored here. Four more configs have the same exposure (atuin, lazygit, jj, tealdeer), so the shape will recur. lua = \"5.5\" is NOT the interpreter luacheck runs on, and the config now says so at the line. luacheck 1.2.0 — its last release — cannot even load under 5.5: 5.5 made some locals const, which trips attempt to assign to const variable inside luacheck's own source. Both installers already pin an explicit 5.4 of their own and are unaffected (.github/workflows/ci.yml via brew lua@5.4, .claude/hooks/session-start.sh via distro lua5.4). Anyone who installs luacheck against this lua gets an audit failure naming neither mise nor that file, which is why the warning sits at the pin rather than in a commit message.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "#732's fix was right; its test could not fail. The test re-implemented the classification loop inline in test-core.sh, so it exercised its own copy and never audit-core.sh's. Demonstrated in review: leaving the new index loop exactly as written and re-adding the two deleted lines after it reintroduces the masked-tool-gap defect in full — and the behavioural test, plus the grep guard for _CORE_ENV_SKIP_IDX, both stay green. A test that cannot fail when the shipped logic changes is documentation, not a gate. The classifier is now _core_tool_skip_count in scripts/lib/common.sh, and both audit-core.sh and test-core.sh call that one function — the same render-vs-judge split _core_luacheck_verdict uses (#728), and the split skip_env itself already used. Guarded against both revert shapes, each verified by mutation: reverting the helper's logic fails the behavioural tests (4 0 2 instead of 4 1 2), while the partial revert — helper untouched, arithmetic re-added in audit-core.sh — leaves those green and fails a new static assertion that _tool_skips is assigned exactly once, straight from the helper, and never post-processed. Neither shape passes now; before, the second one did. This is the third defect in this series found by review rather than by the tests shipped alongside it. The tell each time was the same and is worth stating plainly: revert the fix and watch the test. If it still passes, it is not guarding anything — and check that the revert is applied where the shipped logic lives, not to a copy of it.",
+              "kind": "fix"
+            },
+            {
+              "text": "The blib_adopt note named the wrong safeguard for the confound it warns about. #731 said mise config ls makes the double-load visible, because \"a count higher than the fixtures you created is the confound\". That is true of only one of the two shapes — and not the one that produced the wrong precedence note in the first place. SHAPE 1 the cwd sits in some other project carrying its own mise/config.toml. Distinct path, so config ls does show an extra entry — and mise refuses it until mise trust, so this shape announces itself twice over. SHAPE 2 the cwd sits under the XDG tree itself, so the global config.toml is also discovered as the project config. Same path, already trusted, no prompt: config ls prints exactly your fixture count and exactly your fixture paths, and the ordering is still inverted. Both measured. So the file count is reassurance, not a check — and it reassures hardest in the case where it is blind, which is how both readers of that note reached the wrong conclusion. The note now says which shape it covers and points at the one safeguard covering both: no mise/config.toml in ANY ancestor of the cwd. A comment that tells the reader how to verify has to be right about the verification, or it is worse than saying nothing.",
+              "kind": "fix"
+            },
+            {
+              "text": "The environment-skip classifier decided a gate by prose again, one layer down. #730 split skips into tool / out of scope / environment precisely so wording would stop being load-bearing — then computed the tool tally as (skips whose text lacks out of scope) minus the environment COUNT. That subtraction is correct only while no skip_env message ever contains out of scope, a property nothing enforced and which held purely by how each call site happened to be worded. One such message cancels a genuine gap: ``text skip \"luacheck (not installed)\" # a real tool gap skip_env \"gitleaks policy (no sibling checked out — out of scope)\" # poisoned wording raw tool tally 1 − env 1 = 0 → --strict GREEN ` That is the false green the gate exists to prevent, reintroduced by the fix for it. The classifier now keys on the index skip_env records rather than on the message, so wording is irrelevant and two identically-worded skips cannot be confused. No subtraction means no underflow, so the ((_tool_skips < 0)) && _tool_skips=0` floor is gone too — it turned an impossible state into a plausible zero instead of surfacing it. Pinned by a test that uses the poisoned wording, since every in-tree call site is worded innocently and a happy-path partition test cannot see this. Found in review, not by the tests that shipped with #730.",
+              "kind": "fix"
+            },
+            {
+              "text": "lockfile = true does not do what mise/config.toml says it does. The comment sells hermetic tool resolution — \"mise install reproduces the same toolchain everywhere\" — but lockfile is project-scoped, and on a provisioned box that file IS the global config. Measured on mise 2026.5.16 with this exact file as the global config and all 11 tools declared: mise lock answers ! No tools configured to lock and writes nothing. The identical content as a project mise.toml locks all 7 platforms normally. The fleet corroborates it: the setting has been on for some time, real installs have gone through it (ruby 4.0.6 and lua 5.5.1 are installed), and there is no mise.lock anywhere in any of the ten repos. The floating lts/latest/stable pins are still what a box actually resolves, so two boxes provisioned a month apart can differ — exactly the thing the paragraph promised was solved. The setting is kept (it is live when this repo is entered as a project, which is why mise/mise.lock is deliberately trackable — #729); what changes is that the file no longer claims a fleet-wide guarantee it cannot deliver.",
+              "kind": "config"
+            },
+            {
+              "text": "The blib_adopt conf.d note now records how verifying it goes wrong. It tells the reader to verify before \"fixing\" the ordering, and two of us independently got it backwards the same way: mise walks up from the cwd and treats mise/config.toml as a PROJECT config path, so a fixture root containing mise/config.toml loads it twice — once global, once project — and project outranks global conf.d. The ordering then inverts and looks fine. Worth recording because the obvious cross-check does not catch it: neither mise current nor mise which detects the confound — under it both report the project value and agree with each other. mise config ls is the safeguard, since it lists the files actually loaded. A note that says \"verify this\" owes the reader the two ways verification fails.",
+              "kind": "fix"
+            },
+            {
+              "text": "A run that skipped a third of the fleet-wide gates still signed off audit OK. The summary body said PARTIAL and named every skip, but the LAST line — the one a human quotes into a PR — said audit OK and nothing else. The verdict now reads audit OK — PARTIAL (N check(s) skipped; see above). Exit status is unchanged: partial is not failure, and --strict / the new --require-siblings remain the ways to make it one. The deeper problem was that a skip's WORDING was its classification. Skips were sorted into \"tool absent\" (a real gap, reds --strict) and \"out of scope\" (an intentional --scope/--changed narrowing) by testing the message text for the literal out of scope. The three fleet-wide gates — helper adoption, the gitleaks-policy sweep, the coverage register — read SIBLING OS repos, which CI never checks out, so their skips were deliberately PHRASED out of scope to keep --strict green. That made the prose load-bearing: honest wording would have moved a gate. It also filed two different claims — \"you asked me to narrow this run\" and \"this box cannot cover it\" — under one heading. There is now a third class, recorded STRUCTURALLY by skip_env() rather than by text: tool / out of scope / environment. --strict keeps its exact previous meaning (absent tools only — verified A/B against main on a lone clone: same exit, same tool_skips: 1, same message), so CI does not move. --require-siblings is the new opt-in that reds on the environment class, and the summary now names the gap and says how to close it rather than leaving the reader to infer that three gates never ran. --json was emitting invalid JSON, and only on a full fleet checkout. The fleet sections' advisory reports printed to stdout unguarded, so audit-core.sh --json produced bullets ahead of the object — but only where sibling repos exist, since otherwise those sections skip before reaching the report. CI checks out one repo, so CI never saw it. Now guarded and pinned by a test. That bug is this entry's thesis in miniature: a gate that never runs cannot report its own breakage. Adds env_skips and partial to the JSON object; result keeps its existing vocabulary so the \"--json must not change the verdict\" invariant still holds.",
+              "kind": "fix"
+            },
+            {
+              "text": "The audit reported a luacheck that could not RUN as \"luacheck reported issues\". §4 treated every non-zero exit as a lint result, so a broken toolchain was announced as a defect in nvim/ — and the repair it printed, re-run luacheck, only reproduced the error. It sent the reader hunting through clean code. Exit status alone cannot decide this, which is why the fix is a probe rather than a threshold. luacheck's own vocabulary is 0 clean / 1 warnings / 2 syntax errors / 3 I/O error — and a load failure also exits 1. That is the documented mise/config.toml trap, not a hypothetical: luacheck 1.2.0 cannot load under Lua 5.5 at all (\"attempt to assign to const variable\" in its own source), so the likeliest toolchain break lands on the same code as honest warnings. A missing interpreter is the easier shape — the shell's 126/127 — and would have been separable; the 5.5 one is not. §4 now runs luacheck --version first. It lints nothing and loads the same modules, so any failure from it is a toolchain failure by construction. have luacheck was never enough on its own: a luarocks wrapper execs an absolute interpreter path, so it keeps answering command -v long after the Lua it was built against is upgraded away. Three verdicts now, not two — broken, broken-midrun (126/127 after a passing probe, so the tool stopped being runnable mid-audit) and issues — decided by _core_luacheck_verdict in scripts/lib/common.sh so test-core.sh can drive every branch. Same split §1b uses, and for the same reason: §4 renders, the helper judges. Twelve cases, including both sides of the 126 boundary and a canary asserting §4 still routes through it. §4b solved this class ten lines below — \"gate on the EXIT STATUS as well as the output ... a silent non-zero exit reads as a passing gate, which is the one outcome a backstop must never produce\" — and §4 had simply never had the same pass applied.",
+              "kind": "fix"
+            },
+            {
+              "text": "The Lua 5.4 requirement now appears where someone installing luacheck will meet it. It was only in mise/config.toml, a runtime pin file nobody reaching for luarocks install luacheck reads — and that comment predicts this exact outcome: \"the audit's luacheck leg breaks with an error that names neither mise nor this file.\" It is now in CONTRIBUTING.md beside the other luacheck note, and in §4's own not installed skip message, which is the moment the reader learns they need the tool.",
+              "kind": "config"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v4.19.0",
@@ -374,84 +457,6 @@
             },
             {
               "text": "Ctrl+\\ (toggle autosuggestions) was dead inside tmux — which is every shell. zsh/40-bindings.zsh binds ^\\ to autosuggest-toggle, and tmux/scripts/tmux-cheat.sh advertises it by name. It never fired. vim-tmux-navigator binds five keys at the tmux ROOT table, not four: C-h/j/k/l plus C-\\ → select-pane -l. That fifth binding forwards the key to the pane only when the pane is running vim/fzf; a shell pane is neither, so tmux consumed C-\\ and zsh never saw the byte. Since every OS repo's zshrc exec tmux on login, the key was dead in essentially every shell on every box in the fleet. The zsh half was never the problem, and is unchanged — a PTY driven through the full config shows main aliased to viins, \"^\\\\\" autosuggest-toggle bound, the widget present, and _ZSH_AUTOSUGGEST_DISABLED flipping 0 → 1 → 0 on two 0x1C bytes. The 40-bindings comment about binding it unconditionally (the widget is deferred, so a $+widgets guard would always be false) remains correct. tmux/tmux.conf now sets @vim_navigator_mapping_prev '', which disables that one mapping and leaves C-h/j/k/l — the reason the plugin is here — untouched. Dropping the plugin's side rather than moving zsh's is what the rest of the tree already assumed: nvim/lua/gerrrt/plugins/vim-tmux-navigator.lua maps only <C-h/j/k/l> and deliberately never mapped <C-\\>, so TmuxNavigatePrevious was a lazy cmd bound to nothing. \"Previous pane\" was half-wired; the autosuggest toggle is documented. An empty value is the plugin's off switch: its get_tmux_option() falls back to the default only when show-options -gq prints nothing, and a defined-but-empty option prints its own name — so the value resolves to \"\" and the for k in $(echo \"\") loop never runs. Verified end-to-end on tmux 3.7c: root C-\\ disappears, C-h/j/k/l survive, and a PTY client attached to a server carrying this conf toggles the suggestion on Ctrl+\\. The option must stay above the trailing run '…/tpm' — tpm sources the plugin's .tmux script, which reads it at that moment — so scripts/test-core.sh pins the value, the emptiness, and the line order, in the same spirit as the gh/carapace order in 45-plugins.zsh.",
-              "kind": "perf"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "groups": [
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "The CI floor gains rule 7: no attacker-controlled expression may be spliced into a run: body. A ${{ }} expression is substituted by the runner, textually, before the shell ever parses the script — so a PR title or a branch name is not data at that point, it is source code. The remedy is to route it through env: and read $VAR, which the shell treats as a value. The fleet already does this everywhere, and says so at the call sites — auto-tag-call.yml spells out that \"caller-supplied values reach the script through the ENVIRONMENT, never spliced into the run: body\", and notify-web-call.yml states the same. But a comment is not a gate: nothing stopped the next reusable workflow from splicing ${{ github.event.pull_request.title }} straight into a shell block. actionlint, which the audit already runs, has no equivalent rule, so this was a real gap in current coverage. banned_run_interpolation_contexts in modern-baseline.yml lists github.event., github.head_ref, github.actor and github.triggering_actor. inputs. is deliberately absent: setup-core-tools/action.yml interpolates ${{ inputs.bindir }} inline in ~8 run: steps, and that is a first-party composite input — banning it would be a fix-first migration for no security gain. Enforcement is the same block-scalar walk rule 6 uses for the checkout/with: association: find the run: key, take its column, and treat every more-indented line as body until the first non-blank dedent. Matching happens inside each ${{ … }} span rather than against the raw line, so a context name appearing in prose beside a step is not a false fire. Scoped to workflows and composite actions, since a composite's run: is the same hazard. Green on the current tree with no workflow edits. (#521)",
-              "kind": "security"
-            },
-            {
-              "text": "core-doctor now says when a tool is present but Core never wired it. A ✓ used to read as \"Core wired this\" when all it ever meant was \"this is on PATH right now\" — and the difference was invisible. Every HAVE_* flag is decided at band 00, against a PATH that keeps changing afterwards: mise activate registers a chpwd hook that rewrites it on every cd, 80-os.zsh loads at band 80, an 85-* role fragment at 85, and 99-local.zsh — the user's own escape hatch — at 99. A tool contributed by any of them gets no flag, no alias and no shell init. The doctor, which probes live against the finished PATH, reported it ✓ anyway. Such a row now renders ✓ procs⚠ plus a not wired block that names the tool and the directory that joined late, which is what makes it actionable — the remedy is to move that prepend into 00-tools.zsh's bindir list. Where the directory was already there, the tool was simply installed after the shell started, and the message says so instead. ⚠ is a modifier on ✓, not a fourth presence glyph: the tool genuinely is present, so ✓ is not wrong. That keeps the legend's three states intact, and keeps the render⇄JSON parity test blind to it by construction. --json gains detection.ran / detection.missed. Named detection, not wiring, because it sits beside wired — which answers the unrelated question of whether an integration registered its hooks — and a consumer reading both would conflate them. The gate is jq -e '.detection.missed == []'. How it is recorded matters. The obvious approach — have core-doctor parse 00-tools.zsh's have <tool> && HAVE<X>=1 lines at runtime — handles only the flag-name irregulars (ast-grep→HAVE_ASTGREP but git-absorb→HAVE_GIT_ABSORB, three lines apart) and is blind to every probe that does not take that shape: the fd/bat ladder, the derived flags, the git-absorb exec-path backfill. It would need those special cases anyway, plus a parser, plus logic to locate the file at runtime in a vendored tree. So _have records its own verdict instead, into a _CORE_PROBED ledger keyed on the canonical tool name — which makes every irregular disappear. It stores 0 as well as 1, because \"Core probed this and said no\" must be distinguishable from \"Core does not probe this tool at all\", or every row the doctor knows and 00-tools.zsh does not would false-positive. Cost: ~45 array stores at startup, no forks, no stats — the zero-fork contract is untouched. Two gates keep it honest: no ledger at all means band 00 never ran in this shell (a script, zsh -c, the unit harness) and no claim is made; no entry for a row means Core does not probe it, and again no claim. Both are checked in the render and in --json, so the two renderers cannot disagree about whether the axis applies. 05-ui.zsh's _core_have is deliberately not merged with _have despite an identical body, and now says so: it is the live probe the doctor itself calls, so recording there would write the doctor's own lookups into the ledger and make every row it probed report as wired — exactly the false ✓ this exists to expose. (#545)",
-              "kind": "perf"
-            }
-          ]
-        },
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "_cache_eval now converges on a generator that produces nothing. It decided whether a cache was usable on -s alone — \"the file is non-empty\" — and wrote the generator's output straight at the destination with >|, which truncates before the generator runs and never looks at its exit status. Two failure modes followed, and both were invisible: - Generator exits 0 and prints nothing → a 0-byte cache. -s then fails forever, so the next shell regenerates, and the next. The cache never converges: every interactive shell pays a fork for a tool that is permanently un-cached, with no error, no output and nothing in the prompt to show for it. - Generator prints part of a script and then dies → the cache is non-empty and newer than the binary, so both halves of the freshness test go false and a truncated init is sourced on every shell from then on. That one never self-heals. The silence is not incidental. 2>/dev/null on the generator is deliberate and correct — a generator's chatter must never be sourced into the shell — so the \"command not found\"-shaped signal is discarded by design, and the file is all that is left to judge by. Now the output goes to a temp file and is installed only if the generator exited 0, wrote something, and the result parses (zsh -n, the same \"prove it parses before you keep it\" discipline update-plugins.sh applies to a rolled plugin pin). A generator that breaks after a good cache existed keeps the last good cache — degrading a working shell because a generator regressed is strictly worse than serving yesterday's completions — and the cache is touched so the mtime half stops re-firing. With nothing good to fall back on, a comment-only negative cache lands: valid zsh, sources to a no-op, and non-empty, so the per-shell fork stops. It regenerates when the binary's mtime moves, which an upgrade does. The zsh -n fork is paid on the regeneration path only — once per tool per upgrade, not once per shell — and is skipped where zsh is not on $PATH rather than failing every regeneration. Why now: the trigger is a renamed or removed generator subcommand, and _cache_eval gained three new callers in #578 — one of them ty, a pre-1.0 type checker whose generate-shell-completion is exactly the CLI surface that gets renamed before 1.0. Eleven tools reach this path, counting the brew shellenv / pyenv init callers OS repos add through the documented Core→OS API. The suite gains five fixtures, each running the same shell twice — one run cannot tell \"regenerated once\" from \"regenerates forever\", and forever is the defect. Four of the five fail against the previous implementation. (#580)",
-              "kind": "perf"
-            },
-            {
-              "text": "The banned-runner rule was silently missing the -arm / -large / -xlarge variants. This was a defect in a rule the floor already declared, not a new floor. The label class that terminates the match contains no hyphen, so with ubuntu-22.04 in banned_runners, runs-on: ubuntu-22.04-arm did not match — the - fails every alternative. Same for macos-14-large and macos-14-xlarge. That matters because GitHub names those exact labels in the same deprecation notices as their base images: runner-images#14254 lists ubuntu-22.04 and ubuntu-22.04-arm; #13518 lists macos-14, macos-14-large and macos-14-xlarge. The list was right; the matcher was leaky, and had been since the floor was written. Fixed by matching an optional variant suffix rather than adding six more list entries — that keeps banned_runners reading as one label per image and covers every present and future variant of every label on it, including ones added later. (#521)",
-              "kind": "fix"
-            },
-            {
-              "text": "check-modern.sh gains its first behavioural coverage. Every rule was previously only \"green on this tree\", which cannot distinguish a rule that passes from a rule that never matches — and rule 2 was in exactly that state. The new fixtures build a throwaway git repo (the gate inventories through git ls-files, so a plain directory yields \"no workflow/action files to check\" and every assertion would vacuously pass) and assert both directions: that each rule fires on the violating shape, and that the prescribed remedy, inputs.*, and if:/env:/concurrency:/with: contexts do not fire. Both new rules' fixtures fail against the previous script. (#521)",
-              "kind": "fix"
-            },
-            {
-              "text": "clip's OSC 52 fallback was unreachable from the one tmux binding that names it. bin/clip's header claimed tmux needed no special handling, because set-clipboard on makes tmux consume a pane's OSC 52 and forward it. That is true for a pane process — nvim, optoken, the cheat popup. It is not true for the yank binding: ``text tmux.reset.conf: bind -T copy-mode-vi y send -X copy-pipe-and-cancel \"clip\" ` copy-pipe runs its command through tmux's job_run() — a child of the daemonized server, which has called setsid() and has no controlling terminal, and whose stderr is dup2'd to /dev/null. So the /dev/tty open fails with ENXIO, the error message goes nowhere, and clip exits 1 in silence. Prefix-y still copied only because window_copy_copy_pipe() also calls window_copy_copy_buffer(), which under set-clipboard on emits its own OSC 52 from the server side. That is tmux covering for us, not clip working — so the comment credited the wrong mechanism, and the next person to touch set-clipboard would have lost copy-out on exactly the headless box the fallback was written for, with an in-file comment saying it was handled. _osc52_copy now falls back to tmux load-buffer -w -, which reaches the client from the server side and needs no tty at all. The raw payload is reconstructed by decoding the base64 rather than being stashed on the way in: a shell variable is not binary-safe (command substitution strips trailing newlines and cannot carry a NUL), and a temp file would add mktemp/cat/rm to a path that runs on the most minimal boxes we support — and would put a TOTP on disk, since optoken pipes one through here. Verified byte-exact for tabs and trailing newlines. The large-payload write-splitting hazard is now stated in the file rather than left implicit: writing to a character device is line-buffered and the sequence contains no newline, so a payload past BUFSIZ leaves as several write() calls on a tty the foreground TUI also owns. New fixtures reproduce the real shape with setsid — the only faithful reproduction, since a redirected or closed stdin does not detach the controlling terminal — and skip on macOS, which has no setsid. Both fail against the previous bin/clip`. (#525)",
-              "kind": "fix"
-            },
-            {
-              "text": "tmux-cheat's copy() discarded clip's exit status, so a failed copy was completely silent. It now propagates, and the caller reports through tmux display-message rather than stderr: the script runs under display-popup -E, which tears the popup down the instant the command exits, so anything on stderr is painted and destroyed in the same frame. (#525)",
-              "kind": "fix"
-            },
-            {
-              "text": "optoken overclaimed. OSC 52 succeeds as soon as the escape is written, not when a terminal accepts it — clipboard writes are refused by default in several emulators and unimplemented in others, and the failure is a silent drop. The message is now \"TOTP sent to the clipboard\". The function also now documents a disclosure its own rationale did not cover: under set-clipboard on tmux accepts the escape and creates a tmux paste buffer, so the code is readable via tmux show-buffer by anything that can reach the tmux socket — which \"never lands in your shell history/scrollback\" does not address. (#525)",
-              "kind": "config"
-            },
-            {
-              "text": "make sync vendored the branch tip while stamping the SHA it resolved ~250s earlier. sync-core.sh resolves Core's tip once, up front, then runs the pre-fan-out audit, then vendored by re-resolving the branch. Those are two different resolutions of main. A push to Core inside that window — a docs PR merging, say — gave core/ the newer tree while core.lock recorded the older SHA, and make core-integrity then reported the repo TAMPERED (core/ edited since sync). For a tree nobody hand-edited. The diagnosis pointed at the wrong thing entirely, which is the part that cost the most time. Reported firing three times in a single afternoon. The fix pins everything to the commit that was resolved: the fetch asks for that SHA (falling back to a ref fetch purely as an object-delivery mechanism on remotes that refuse unadvertised wants), and the tree is materialized as <sha>^{tree} — never FETCH_HEAD, which is by definition the new tip and would have re-created the bug inside its own fix. A serial fan-out is now consistent by construction: every repo materializes the same commit however long the loop takes. And a warm repo needs no network at all, because the fetch short-circuits on cat-file, which makes a re-run of the same sync fully offline. Two further instances of the same bug are fixed with it, neither of which was in the report: - core_tag was resolved with a || git describe \"$CORE_BRANCH\" fallback that re-resolved the branch at describe time — so a moved branch stamped a tag belonging to a different commit, into core.lock and onto every rewritten workflow pin comment in all nine repos. That comment is what Renovate reads to pick the next bump. - The git-subtree-split: trailer was stamped from the same stale snapshot. Consumer tooling (dotfiles-MacBook's verify-core) warns when it disagrees with the lock, so the fleet was emitting a wrong marker too. And the unknown path turned out to be a third producer of the identical symptom, with no race required: it materialized core/ from the branch and then skipped writing core.lock entirely. A sync must vendor a named commit, so that now refuses outright, before the audit and before anything is written. Two latent defects on that path are fixed as well — an unreachable remote killed the script at set -e with exit 128 and no output at all (ls-remote's stderr is deliberately suppressed), and the bare git rev-parse fallback echoed the unresolvable ref to stdout, so the unknown sentinel it was tested against could never actually be produced by that path. The sync now checks its own work: after each repo it compares HEAD:core against the pinned tree. That comparison moved into a new shared scripts/lib/core-lock.sh so the producer's self-check and core-integrity.sh's verdict are one implementation — two would let a sync pass its own assertion and still be reported dirty. It reports and buckets the repo as failed rather than exiting, because sync-fanout.yml runs the script under bash -e and an abort would deny PRs to every repo that synced correctly; and it prints the recovery command rather than auto-reverting, since on the idempotent path no commit was made and a blind reset --hard HEAD~1 would destroy a good one. sync-fanout.yml gains the matching post-condition. Its three existing ones all compare the lock to the intent; none looked at what core/ actually contained, which is the axis this bug broke. The audit gate now compares full SHAs — rev-parse --short=12 returns more than 12 characters when 12 would be ambiguous, a latent spurious refusal that grows more likely as history does — and the parallel prefetch is pinned too, picking up the --no-tags it was missing (without it every prefetch dragged Core's whole tag namespace, including the moving v4 alias, into every OS repo). Twelve new fixtures. The race is reproduced deterministically, with no sleeps, by having the stub audit push to Core mid-run — the audit gate is the one place guaranteed to sit inside the window. It runs three ways: direct-SHA fetch, with allowReachableSHA1InWant off so the fallback is exercised (the case that catches a FETCH_HEAD-based fallback), and with the parallel prefetch on. core-integrity.sh also gains its first behavioural coverage, since extracting its classifier could otherwise have changed the verdict silently. All three race fixtures fail against the previous implementation. (#556)",
-              "kind": "fix"
-            },
-            {
-              "text": "op had this bug, inside the doctor's own inventory, behind a test comment asserting it could not. The coverage guard excused op on the grounds that \"the doctor probes it live and no alias or function is gated on it\". That was false: 50-op.zsh's command -v op guard gates four verbs — opsecret, openv, optoken, opssh — and band 50 still runs before 80-os.zsh, an 85-* role fragment and 99-local.zsh. op now records into the ledger too, and with fd/bat recording under their canonical names, the guard's exemption list is empty — a list that had grown to three entries, one of them wrong, now has none. (#545)",
-              "kind": "fix"
-            },
-            {
-              "text": "The atuin daemon guard now probes a candidate list, not one path — before upstream moves it. atuin PR #3910 (merged 2026-08-12, shipping in 18.20.0) changes the default daemon socket for systemd_socket = false — the shape Core recommends — from $XDG_RUNTIME_DIR/atuin.sock (falling back to the data dir where that is unset) to $TMPDIR/atuin-$UID/atuin.sock. systemd_socket = true is unchanged. atuin's own client gained a legacy search list so it can still reach an older daemon. _core_atuin_daemon_guard had none: it resolved exactly one expression. On 18.20.0, with the plain always-running unit Core recommends, the daemon would bind the new path, zsocket would fail, and every shell would export ATUIN_DAEMON__ENABLED=false at its first precmd and unhook the watchdog — permanently, with no warning, because _CORE_ATUIN_DAEMON_WAS_UP is never set on that path. It fails in the cheap direction (history still lands; only the lock relief is lost), which is exactly why it would have gone unnoticed on every systemd machine at once. The guard now tries the 18.20.0 default first, then the two legacy locations, stopping at the first that answers — the same shape as the git-absorb exec-path loop, so the zero-fork discipline is intact. An explicit ATUIN_DAEMON__SOCKET_PATH still wins outright and probes nothing else, because a config knob that silently got second-guessed would be a worse bug than the one this fixes. The cost, stated rather than hidden: a genuinely-absent daemon now pays N failed connects per probe instead of one. Each is ~0.06–0.10 ms (measured in this file's own bench), the probe is throttled, and the degrade is one-way — so such a box pays it at most twice before unhooking for good. Verified independently against upstream rather than taken from the scout's report: 18.19.0 is still the newest stable release, so this lands with roughly a release of lead time. The anchors stay at 18.19.0 — bumping them asserts a measurement nobody has taken yet, and that needs an on-box atuin daemon start && ss -lx | grep atuin against an 18.20.0 beta. Three prose claims that the change falsifies are corrected with it (atuin/config.toml, PORTING-MATRIX.md, and the socket-path note in bench-atuin-daemon.sh), and two harness bugs it would have introduced are fixed: - bench-atuin-daemon.sh printed a ✓ beside a hand-copy of the guard's single expression. That is prose, and it would have kept printing ✓ while the guard and atuin had drifted apart — the one failure the check exists to catch. It now asserts membership of the candidate list and fails loudly otherwise. - verify-atuin-guard.sh isolated atuin's socket into its sandbox by unsetting XDG_RUNTIME_DIR. Under 18.20.0 that is no longer sufficient: with TMPDIR unset under env -i, atuin would resolve /tmp/atuin-$UID/atuin.sock — outside the sandbox, and possibly a socket the developer's own daemon is already holding. TMPDIR is now pinned into the sandbox. (#518)",
-              "kind": "fix"
-            },
-            {
-              "text": "Docs caught up with a fleet topology change they were still describing the old way. dotfiles-Offense shed its OS-native layer entirely — no os/, no install/packages.txt, no scripts/tool-versions.env — and adopted blib_link_role_layer, with the Kali package lane moving to dotfiles-Debian's only:kali / skip:kali tiers. dotfiles-Debian is therefore a first-class ubuntu/debian/kali target now, not the frozen-Ubuntu-LTS one the docs described. That single move is what made most of the surviving drift, rather than several independent errors: - core.manifest and PORTING-MATRIX.md both said neither role repo had adopted the role-layer helper. Offense has; Defense still hand-rolls the band in wire_defense_stage, and migrating it is what actually remains. - The matrix said Offense \"also carries its own OS-native layer (Debian/apt, kali-rolling)\". It does not. - Two footnotes asserted Kali \"installs it nowhere\" and \"installs nothing from this family\". Both are false: dotfiles-Debian's only:kali tier installs a substantial subset. - Three Kali cells were demonstrably wrong — lazygit was marked ²¹ (available, not installed) and starship script³ when both are apt packages there, and atuin was marked ³ (best-effort script) when it is a pinned, checksummed release asset. The Kali column as a whole is not re-derived here, and the table now says so: a caveat marks it as inherited-not-verified until /os-package-availability has run against the new owner. Correcting three cells and claiming the column is verified would be the same mistake the ²¹ footnote block already made once. Also corrected: footnote ¹⁴ listed ouch among Alpine's testing-repo tools, but Alpine's own bootstrap says it is unpackaged there outright; the OSC 52 clip fallback was still described as a pending fix, having shipped in v4.13.0 (and gained the tmux server-side path in #525); and README.md offered --dry-run to macOS only, when all nine bootstraps implement it and the Linux list also omitted Debian, Defense and Offense. Finally, eleven stale fleet counts across ci.yml, pr-link-check.yml, zsh/10-options.zsh, zsh/45-plugins.zsh, tmux/scripts/tmux-claude.sh, scripts/lib/common.sh and scripts/test-core.sh — variously \"8 OS repos\", \"10-repo fan-out\" and \"ten repos\" — now agree with scripts/os-repos.txt (nine vendoring repos; eleven including Core and dotfiles-Windows). Two were wrong in a more interesting way than the count: common.sh disagreed with itself two functions apart, and pr-link-check.yml described ci.yml's matrix as \"macOS + seven distros\" when it is ubuntu + macOS + alpine + arch. (#519)",
-              "kind": "fix"
-            },
-            {
-              "text": "The CI floor's first-party SHA-pin exemption was wider than the policy it was named for. Rule 3 exempted any uses: whose owner is dotgibson with a bare owner-string match, so uses: dotgibson/anything@main passed the gate outright. RELEASE-STRATEGY.md's exemption is narrower than that: it is the @vN moving-major policy for the fleet's own reusable workflows. Nothing asserted that shape, so the policy was documented in one place and enforced in none. The exemption now requires dotgibson/<repo>/.github/workflows/<name>.yml@v<N>. Anything else from the same owner falls through to the 40-hex requirement rather than being rejected outright — a first-party caller that chose to SHA-pin is stricter than @vN, not weaker, and must not be told off for it. Fix-first, in the same PR: core-integrity-call.yml's copy-paste caller stub documented @main. It was the only non-@v4 first-party ref in .github/, and it contradicted bootstrap-test.yml, which spells out that stubs pin @vN \"NOT @main\". That mattered more than a stray doc comment usually would — the stub advertised the exact shape whose acceptance the exemption's own premise depends on being impossible. (#521)",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "zsh-syntax-highlighting pin moves to 2fc57d63067c. The only pin of the eight that was behind; the other seven and every nvim/lazy-lock.json entry were already current. The range is one upstream commit, and it touches only tests/README.md (+2/-2, fixing relative links) — verified against the upstream compare before landing rather than inferred from the SHA moving. So this is a pin refresh with no runtime change at all, which is worth saying plainly: this plugin runs a highlighter on every keystroke, so \"the pin moved\" and \"behaviour moved\" are worth keeping distinct in the record. update-plugins.sh re-fetches and zsh -n parses each rolled pin before writing, so the new commit is proven fetchable and syntactically valid, not just newer.",
               "kind": "perf"
             }
           ]
@@ -846,6 +851,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "The SMB enum fold and its detection are now entry-backed. companion.lock bumps to htpx b80741f, which pairs smb-enum-nxc with a new smb-enum-5145 blue entry (htpx#97), and both sides are wrapped in companion:gen markers: the nxc commands in hacktheplanet's SMB fold, and the detection in PURPLE-TEAM.md's recon section. The hacktheplanet block is the notable half. Those five nxc smb lines have been hand-written since the file existed, and the entry upstream carried only three of them — so wrapping them would have silently deleted --loggedon-users and the /24 spray. htpx#100 widened the entry to the full fold with its inline comments matched, which makes render_red reproduce the existing lines byte for byte: the diff to hacktheplanet here is the two marker lines and nothing else. That is the bar for putting a marker around prose that was already good — the tempting shortcut, wrap it and let the generator win, loses content nobody notices for months. This sync also brings pair_note: (htpx#98), which the vendored copy predated: an entry carrying pair: null must now say why, and upstream CI rejects one that does not.",
+              "kind": "feature"
+            },
+            {
               "text": "ROADtools is now installed by --install, on every route (#231). Entra/M365 tooling in this layer was entirely Windows-side (AADInternals, TeamFiltration, MSOLSpray); the corpus even cited dirkjanm's ROADtools as device-code-phish's source: while handing you Windows-only PowerShell. bootstrap.sh grew an _install_apt_absent step — a THIRD install category for tools no route can apt-install — that pipx-installs roadrecon and roadtx on the Kali path too, not just the portable subset, so the Entra corpus entries finally run from the attacker box. hacktheplanet's M365 fold documents the Linux commands and install/offensive-packages.txt carries the annotation. The corpus entry's own platform:/source: fix lands upstream in dotgibson/htpx.",
               "kind": "fix"
             },
@@ -990,6 +999,18 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "htpx-drift.yml — a weekly question about the pinned corpus, and a correction to what #202 claimed. Pinning htpx (detections/htpx.pin) is what makes check-htpx-pairing.sh reproducible, and it opens one specific hole: the gate reads the pinned sha, but the references: URLs the rules write point at /blob/main/. So if upstream removes or renames an entry this repo names, the link is a live 404 for anyone who clicks it while CI stays green. Nothing watched for that. This does, weekly, and the report leads with exactly those entries. The correction. #202's commit message and PR said bloodhound-sharphound \"was renamed bloodhound-collect upstream\". That is wrong, and the distinction matters. Checked against htpx's full history: bloodhound-sharphound, bloodhound-sharphound-4662, archive-staging-rar, local-data-collection and rogue-account have never existed in that repo — not as a file, not as an id:, in any commit. All eight dead references were ids written *here* that were never right, not upstream drift. The fix was the same either way, and check-htpx-pairing.sh catches that class permanently at author time. But the rename story would have made this workflow look like a response to something that had already happened, when the hole it covers has not bitten yet. It is a cheap weekly question, not a reaction. It reports on corpus changes, not commits. A pin behind by a README edit or a .gitignore commit is behind by nothing — only two gates read this corpus and both read entries/ alone. Verified against real history: two consecutive upstream commits that touched no entry produce no issue. Filing for those is the nagging core-drift.yml's header says it refuses to do, and a weekly nag becomes a weekly ignored issue. Report-only, like core-drift.yml: one deduplicated issue via the existing file-routine-issue.sh, nothing changed. Bumping the pin stays deliberate, because a bump moves HTPX-COVERAGE.md and that diff is the point. check-htpx-pairing.sh gained --list-claims, a data query printing every entry this repo names. The workflow uses it rather than re-implementing \"what counts as a claim\" in YAML — that definition already has two readers, and a third would be how they start disagreeing.",
+              "kind": "fix"
+            },
+            {
+              "text": "The Defense↔htpx link is checked, not just asserted — check-htpx-pairing.sh plus a drift-gated HTPX-COVERAGE.md. detections/README.md opens by promising that each rule names the exact Offense fold and htpx pair that reproduces it, \"so the purple loop is closed in the file itself\". Rules kept that promise in three places — ~84 references: URLs, an htpx pair <id> in each validation note, and 82 cells of the Validate with (Offense fold · htpx pair) tables — and nothing verified any of it. htpx is a separate repo on its own release cycle, so an entry renamed there left a rule here pointing at a 404, and the only way to find out was for someone to click the link. The split is the design decision #196 asked for, and it is deliberate: - Claims are a hard gate. Naming an entry is a factual assertion about another repo — it is true or it is false. check-htpx-pairing.sh resolves every named entry against the pinned corpus and checks the blue ones still pair back to a red entry that points at them. - Gaps are a report. HTPX-COVERAGE.md renders which blue entries this repo claims, which it does not, which techniques here the corpus has no attack for, and which entries htpx declares unpaired. It never fails on a gap and it is drift-gated, so a change in the shape of the boundary arrives as a reviewable diff. htpx spans Okta, Workspace, GitHub Actions, GitLab, Jenkins, Harbor, Vault, Terraform Cloud, Snowflake, Cloudflare, npm and PyPI; a bidirectional foreign key would be red forever and silenced within a week. The issue predicted exactly that. Declared holes are excluded by field, not by an allowlist. htpx now requires pair_note: on any entry carrying pair: null (htpx#98), so the report reads the upstream reason verbatim instead of keeping a local copy of someone else's decision — which is the thing that goes stale. The corpus comes from a pinned commit (detections/htpx.pin), fetched by htpx-corpus.sh. Same argument as attack-data.pin: a check whose answer depends on what upstream did this morning is not a gate. No sha256 field, because the pin names a git commit and git's own object hashing already binds it — verifying HEAD against the pin *is* the digest check. This repo deliberately does not vendor htpx as a subtree the way Offense does; two gates read it, and a ~200-file subtree plus a second sync obligation is a steep price for that. Adopted after fixing what it found, in the same PR — the standard check-rule-coverage and the Splunk precedence gate were held to. Eight dead names: - bloodhound-sharphound / bloodhound-sharphound-4662 were renamed bloodhound-collect upstream — a dead references: URL, a dead validation note, and a dead table cell. - archive-staging-rar, local-data-collection and rogue-account named entries htpx has never had — the corpus's Collection and Exfiltration entries are all SaaS-side and it has no account-creation entry at all. Those rules now say so in prose rather than naming a phantom, which reads as a working cross-reference. Half of those were in the README table, which is why the gate reads that column too and not just the rules.",
+              "kind": "fix"
+            },
+            {
+              "text": "host_enum_srvsvc_wkssvc_5145 now cites its htpx blue entry. The rule's validation note has named the red side (smb-enum-nxc) since it was written, but the corpus had no detection to put beside it — htpx#97 tracked that hole for exactly this rule. entries/blue/smb-enum-5145.md is now upstream, ported from this rule, and the rule references it. It is the first edge the new gate was built to verify, so the gate ships with a live cross-boundary link rather than an empty set.",
+              "kind": "feature"
+            },
             {
               "text": "The repo hygiene surface: Makefile, CONTRIBUTING.md, .editorconfig, .gitattributes, and the PR/issue templates. This repo and dotfiles-Offense are deliberate mirrors — equal CI weight at 14 workflows each, and Defense carries *more* tracked files — but Defense was the only repo in the fleet missing all of these at once. The Makefile is the one with immediate value: every gate here was already real and already scripted, but there was no front door, so reproducing CI locally meant reading .github/workflows/ and reconstructing the command list by hand. It wires what exists — tests/lint-shell.sh, tests/test-defense.sh, the four --check drift gates, the methodology and validation-coverage gates, lab-smoke.sh — and reads MARKDOWNLINT_VERSION from the vendored Core pins so a local run matches CI exactly. Offense's target list was not ported wholesale, because that would have recreated in reverse the exact bug Offense's Makefile was written to fix: core-sync, core-lock and the companion-* targets name scripts this repo does not have (Core is pushed *into* here by dotfiles-core's own make sync, and this repo vendors no htpx companion). They are absent rather than stubbed. .gitattributes is the one with teeth. dotfiles-Arch/CLAUDE.md documents what its absence costs when a repo is touched from Windows over a UNC share: a .sh that picks up CRLF gets a shebang of …/env bash\\r and dies with *\"bad interpreter\"* — text that looks perfectly valid and that both shellcheck and bash -n accept. It also pins *.rules, *.zeek and *.pcap, which are this repo's product and are parsed by tools that are not uniformly CRLF-tolerant. Adding this file also makes Defense visible to dotfiles-web's changelog feed, which derives from each repo's CHANGELOG.md and had been skipping this one for want of the file. (dotgibson/dotfiles-Defense#196)",
               "kind": "perf"
@@ -1547,6 +1568,14 @@
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
+      "kind": "feature",
+      "text": "The SMB enum fold and its detection are now entry-backed. companion.lock bumps to htpx b80741f, which pairs smb-enum-nxc with a new smb-enum-5145 blue entry (htpx#97), and both sides are wrapped in companion:gen markers: the nxc commands in hacktheplanet's SMB fold, and the detection in PURPLE-TEAM.md's recon section. The hacktheplanet block is the notable half. Those five nxc smb lines have been hand-written since the file existed, and the entry upstream carried only three of them — so wrapping them would have silently deleted --loggedon-users and the /24 spray. htpx#100 widened the entry to the full fold with its inline comments matched, which makes render_red reproduce the existing lines byte for byte: the diff to hacktheplanet here is the two marker lines and nothing else. That is the bar for putting a marker around prose that was already good — the tempting shortcut, wrap it and let the generator win, loses content nobody notices for months. This sync also brings pair_note: (htpx#98), which the vendored copy predated: an entry carrying pair: null must now say why, and upstream CI rejects one that does not.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "fix",
       "text": "ROADtools is now installed by --install, on every route (#231). Entra/M365 tooling in this layer was entirely Windows-side (AADInternals, TeamFiltration, MSOLSpray); the corpus even cited dirkjanm's ROADtools as device-code-phish's source: while handing you Windows-only PowerShell. bootstrap.sh grew an _install_apt_absent step — a THIRD install category for tools no route can apt-install — that pipx-installs roadrecon and roadtx on the Kali path too, not just the portable subset, so the Entra corpus entries finally run from the attacker box. hacktheplanet's M365 fold documents the Linux commands and install/offensive-packages.txt carries the annotation. The corpus entry's own platform:/source: fix lands upstream in dotgibson/htpx.",
       "core": false
@@ -1789,6 +1818,30 @@
       "category": "Known gaps",
       "kind": "security",
       "text": "The WSL Git-Credential-Manager note that lived in os/kali.gitconfig (how to point credential.helper at the Windows host's GCM) did not travel with the file. It belongs in dotfiles-Debian's git overlay now that that repo owns WSL.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "htpx-drift.yml — a weekly question about the pinned corpus, and a correction to what #202 claimed. Pinning htpx (detections/htpx.pin) is what makes check-htpx-pairing.sh reproducible, and it opens one specific hole: the gate reads the pinned sha, but the references: URLs the rules write point at /blob/main/. So if upstream removes or renames an entry this repo names, the link is a live 404 for anyone who clicks it while CI stays green. Nothing watched for that. This does, weekly, and the report leads with exactly those entries. The correction. #202's commit message and PR said bloodhound-sharphound \"was renamed bloodhound-collect upstream\". That is wrong, and the distinction matters. Checked against htpx's full history: bloodhound-sharphound, bloodhound-sharphound-4662, archive-staging-rar, local-data-collection and rogue-account have never existed in that repo — not as a file, not as an id:, in any commit. All eight dead references were ids written *here* that were never right, not upstream drift. The fix was the same either way, and check-htpx-pairing.sh catches that class permanently at author time. But the rename story would have made this workflow look like a response to something that had already happened, when the hole it covers has not bitten yet. It is a cheap weekly question, not a reaction. It reports on corpus changes, not commits. A pin behind by a README edit or a .gitignore commit is behind by nothing — only two gates read this corpus and both read entries/ alone. Verified against real history: two consecutive upstream commits that touched no entry produce no issue. Filing for those is the nagging core-drift.yml's header says it refuses to do, and a weekly nag becomes a weekly ignored issue. Report-only, like core-drift.yml: one deduplicated issue via the existing file-routine-issue.sh, nothing changed. Bumping the pin stays deliberate, because a bump moves HTPX-COVERAGE.md and that diff is the point. check-htpx-pairing.sh gained --list-claims, a data query printing every entry this repo names. The workflow uses it rather than re-implementing \"what counts as a claim\" in YAML — that definition already has two readers, and a third would be how they start disagreeing.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "The Defense↔htpx link is checked, not just asserted — check-htpx-pairing.sh plus a drift-gated HTPX-COVERAGE.md. detections/README.md opens by promising that each rule names the exact Offense fold and htpx pair that reproduces it, \"so the purple loop is closed in the file itself\". Rules kept that promise in three places — ~84 references: URLs, an htpx pair <id> in each validation note, and 82 cells of the Validate with (Offense fold · htpx pair) tables — and nothing verified any of it. htpx is a separate repo on its own release cycle, so an entry renamed there left a rule here pointing at a 404, and the only way to find out was for someone to click the link. The split is the design decision #196 asked for, and it is deliberate: - Claims are a hard gate. Naming an entry is a factual assertion about another repo — it is true or it is false. check-htpx-pairing.sh resolves every named entry against the pinned corpus and checks the blue ones still pair back to a red entry that points at them. - Gaps are a report. HTPX-COVERAGE.md renders which blue entries this repo claims, which it does not, which techniques here the corpus has no attack for, and which entries htpx declares unpaired. It never fails on a gap and it is drift-gated, so a change in the shape of the boundary arrives as a reviewable diff. htpx spans Okta, Workspace, GitHub Actions, GitLab, Jenkins, Harbor, Vault, Terraform Cloud, Snowflake, Cloudflare, npm and PyPI; a bidirectional foreign key would be red forever and silenced within a week. The issue predicted exactly that. Declared holes are excluded by field, not by an allowlist. htpx now requires pair_note: on any entry carrying pair: null (htpx#98), so the report reads the upstream reason verbatim instead of keeping a local copy of someone else's decision — which is the thing that goes stale. The corpus comes from a pinned commit (detections/htpx.pin), fetched by htpx-corpus.sh. Same argument as attack-data.pin: a check whose answer depends on what upstream did this morning is not a gate. No sha256 field, because the pin names a git commit and git's own object hashing already binds it — verifying HEAD against the pin *is* the digest check. This repo deliberately does not vendor htpx as a subtree the way Offense does; two gates read it, and a ~200-file subtree plus a second sync obligation is a steep price for that. Adopted after fixing what it found, in the same PR — the standard check-rule-coverage and the Splunk precedence gate were held to. Eight dead names: - bloodhound-sharphound / bloodhound-sharphound-4662 were renamed bloodhound-collect upstream — a dead references: URL, a dead validation note, and a dead table cell. - archive-staging-rar, local-data-collection and rogue-account named entries htpx has never had — the corpus's Collection and Exfiltration entries are all SaaS-side and it has no account-creation entry at all. Those rules now say so in prose rather than naming a phantom, which reads as a working cross-reference. Half of those were in the README table, which is why the gate reads that column too and not just the rules.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "host_enum_srvsvc_wkssvc_5145 now cites its htpx blue entry. The rule's validation note has named the red side (smb-enum-nxc) since it was written, but the corpus had no detection to put beside it — htpx#97 tracked that hole for exactly this rule. entries/blue/smb-enum-5145.md is now upstream, ported from this rule, and the rule references it. It is the first edge the new gate was built to verify, so the gate ships with a live cross-boundary link rather than an empty set.",
       "core": false
     },
     {
@@ -2169,6 +2222,132 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Breaking",
+      "kind": "fix",
+      "text": "~/.config/mise/config.toml is no longer a symlink into vendored core/. bootstrap.sh now ADOPTS it — the file becomes a real copy you own (blib_adopt). This is the change that makes the release a MAJOR: it alters the bootstrap.sh symlink contract. No host breaks, and nothing is lost. Re-running ./bootstrap.sh migrates an existing symlink to a real file automatically, with identical content, and a copy you have edited is never clobbered. There is no manual step on a host and no command goes away. What you must adapt to is propagation. That file no longer tracks Core, so a pin change landed here stops reaching a provisioned box on its own — the box picks it up when it re-bootstraps, and bootstrap.sh reports drift when your copy has diverged. Fleet-wide pin changes are now: edit Core → release → sync → re-bootstrap. That is the deliberate trade; the alternative was leaving mise use -g able to write into the vendored tree, which is what #724 and #727 were fixing. For repo maintainers: v4 stays frozen where it is, so nothing pinned @v4 changes underneath you. Adopting this major means bumping uses: dotgibson/dotfiles-core/.github/ workflows/*@v4 to @v5 by hand — 52 references across nine repos at time of writing. make fleet-drift does NOT surface these: it compares core.lock provenance, not workflow pins, so finding them is a grep -rl 'uses:.*@v4' .github/workflows sweep. dotfiles-Windows is invisible to that sweep — it vendors no core/, is absent from scripts/os-repos.txt, and SHA-pins its caller deliberately. Check it by hand.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Added",
+      "kind": "config",
+      "text": "**.gitignore now drops crash dumps — as core.[0-9]*, deliberately not core.*. A core.<pid> dump landing in a repo was untracked noise nothing ignored. The obvious spelling is the trap. This repo tracks core.manifest and core.version, and every OS repo also tracks core.lock — while bare core is the vendored Core directory** there. core.* would hide the next such file the moment someone added one, silently, which is exactly the failure #700 already cost us. Pinned in test-core.sh against the real .gitignore, with --no-index so the assertions answer from the rules rather than the index: without that flag, check-ignore never calls an already-tracked path ignored and the core.manifest / core.version cases would pass under core.* too — tautologies guarding nothing. Verified by mutating the rule; all three go red. scripts/new-os-repo.sh seeds the same rule, so a repo generated tomorrow starts with it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Added",
+      "kind": "fix",
+      "text": "mise.lock is deliberately NOT ignored, and the reason is recorded where it would be re-proposed. It was suggested alongside the crash dumps, and it would have been a quiet regression: mise/config.toml sets lockfile = true precisely so mise records exact resolved versions and checksums — \"the same idea as Cargo.lock / package-lock.json\" — and that comment says commit it. A bare mise.lock line carries no slash, so it matches at every depth and would have swallowed mise/mise.lock, turning off hermetic tool resolution with nothing to show for it. The .gitignore now says so at the point someone would add it, and a test asserts mise/mise.lock stays trackable.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Added",
+      "kind": "fix",
+      "text": "audit-core.sh §1c: a .claude/ file that ships nowhere and that nothing reports. §1b (#709) catches a .claude/ path a routine names but git does not carry. It only fires because something pointed at the missing file — which is why #700 was catchable at all: three routine files referenced the ledger. A .claude/ file nothing references — a new subagent, a convention-named config a hook reads, a second ledger — has no such witness. Nothing else reports it either, and that is the whole point. .gitignore blocks .claude/* wholesale, so git is silent in every direction: not in git status, not added by git add -A, and invisible to every content gate here, since they all read the working tree where the file is present and correct. The audit was faithfully answering \"is this tree consistent\" — it was — while nobody was asking \"will this reach a clone\". The verdict is the .gitignore rule that wins, which is what keeps the gate from needing a hand-kept allowlist. git check-ignore -v names the line that hid the file: the blanket .claude/* means nobody decided anything about it (a finding), while any more specific rule means somebody wrote a line naming it (a decision, and silent). So settings.local.json is exempt because .gitignore names it, not because §1c lists it — and the next per-machine file becomes exempt the moment its rule is written, with no edit to the scanner. Untracked-but-visible is deliberately not a finding. A new file git can still see is already git status's job, and flagging it would red the audit on every work-in-progress file. The defect this exists for is invisibility. Blocking on arrival, the §5i argument: settings.local.json is the only untracked file under .claude/ and it carries its own rule, so the tree is green as this lands and every future hit is a regression in the commit under test. Nine fixture cases in test-core.sh, each on a throwaway git repo with its own index and .gitignore — no text fixture can stand in for \"which rule wins\" — plus a live canary asserting .gitignore still uses the blanket spelling the scanner keys on, so the gate cannot go green by recognising nothing.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "~/.config/mise/config.toml is now a COPY, not a symlink into vendored core/ — blib_adopt. A symlinked config is a write path back into the vendored tree, and for a config whose own tool rewrites it, that path gets used. mise use -g ruby@4.0 — an ordinary command, and the one mise's own header advertises — wrote straight through the symlink into core/mise/config.toml: vendored Core edited in place, the trailing pin comments stripped (mise rewrites the file rather than editing the line), the tree TAMPERED per core-integrity, and sync-core.sh skipping that repo on the next fan-out with an error naming nothing about mise. The entry below restored the stripped comments; this removes the write path that stripped them. Adopted, not merely seeded. blib_adopt migrates an existing symlink into a real file, so already-provisioned boxes convert on their next bootstrap rather than needing a manual step. A real file that differs from Core is never clobbered — the divergence is REPORTED and yours is kept. The trade, stated plainly: the copy stops tracking Core, so a pin edit here no longer reaches a provisioned box on its own. Drift is reported instead of silently tolerated — the same bargain fleet-drift.sh and core-integrity already make, a visible checkable condition rather than an invisible override. Fleet-wide pin changes become: edit, release, sync, re-bootstrap. Deliberately NOT conf.d, recorded at blib_adopt because the next reader will otherwise \"fix\" it backwards. Measured on mise 2026.5.16, isolated XDG_CONFIG_HOME, neutral cwd: conf.d OUTRANKS config.toml in both directions — mise states this itself (\"lua is defined in …/conf.d/00-core.toml which overrides the global config\") — and within conf.d the LOWEST-numbered file wins (00- beats 99-, the reverse of the systemd convention). Read it with mise current <tool>; mise ls prints one line per config file and is easy to misread as a precedence answer. The hazard is where mise use -g writes — the highest-precedence file that already exists — which gives conf.d two failures and no good case. On a fresh box with no config.toml, the write lands inside conf.d/00-core.toml; where that is Core's symlink, it reproduces the original write-through bug exactly. Where config.toml does exist, the write lands there and is then shadowed by Core's conf.d entry — mise warns, so it is not silent, but the user's global choice does not take effect. A plain copy has neither failure. Scope. blib_link remains correct for the ~34 configs a tool only READS — the symlink is what makes a Core edit reach every box for free. blib_adopt is only for configs the tool itself writes. jj is the other live instance of that shape (jj config set --user rewrites in place) and is NOT converted here; atuin, lazygit and tealdeer remain unconverted and unaudited.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "mise/config.toml: ruby 3.4 → 4.0, lua 5.4 → 5.5. Both verified resolvable before pinning (mise latest ruby@4.0 → 4.0.6, lua@5.5 → 5.5.1) — a global pin that does not resolve breaks mise install on every box Core lands on, so this is not a place to take an upstream version number on faith. How this surfaced is the part worth recording. The change was found as an uncommitted modification inside a vendored core/ tree: ~/.config/mise/config.toml is symlinked to core/mise/config.toml, so a mise use -g writes straight through the symlink into vendored Core, and core-integrity reports such a tree as TAMPERED. (This entry first said the edit was \"on course to be silently reverted on the next sync\". That is wrong and worth correcting in place, because the real behaviour is the opposite: sync-core.sh:559-563 refuses to fan out into a repo with a dirty tree, so the edit SURVIVES and the repo is counted a FAILURE — err \"$repo has uncommitted changes\" then repos_failed=$((repos_failed + 1)). Nothing is lost, and the fan-out reports the repo as failed rather than merely quiet.) The through-the-symlink write also stripped the trailing comments that say why each pin exists; they are restored here. Four more configs have the same exposure (atuin, lazygit, jj, tealdeer), so the shape will recur. lua = \"5.5\" is NOT the interpreter luacheck runs on, and the config now says so at the line. luacheck 1.2.0 — its last release — cannot even load under 5.5: 5.5 made some locals const, which trips attempt to assign to const variable inside luacheck's own source. Both installers already pin an explicit 5.4 of their own and are unaffected (.github/workflows/ci.yml via brew lua@5.4, .claude/hooks/session-start.sh via distro lua5.4). Anyone who installs luacheck against this lua gets an audit failure naming neither mise nor that file, which is why the warning sits at the pin rather than in a commit message.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "#732's fix was right; its test could not fail. The test re-implemented the classification loop inline in test-core.sh, so it exercised its own copy and never audit-core.sh's. Demonstrated in review: leaving the new index loop exactly as written and re-adding the two deleted lines after it reintroduces the masked-tool-gap defect in full — and the behavioural test, plus the grep guard for _CORE_ENV_SKIP_IDX, both stay green. A test that cannot fail when the shipped logic changes is documentation, not a gate. The classifier is now _core_tool_skip_count in scripts/lib/common.sh, and both audit-core.sh and test-core.sh call that one function — the same render-vs-judge split _core_luacheck_verdict uses (#728), and the split skip_env itself already used. Guarded against both revert shapes, each verified by mutation: reverting the helper's logic fails the behavioural tests (4 0 2 instead of 4 1 2), while the partial revert — helper untouched, arithmetic re-added in audit-core.sh — leaves those green and fails a new static assertion that _tool_skips is assigned exactly once, straight from the helper, and never post-processed. Neither shape passes now; before, the second one did. This is the third defect in this series found by review rather than by the tests shipped alongside it. The tell each time was the same and is worth stating plainly: revert the fix and watch the test. If it still passes, it is not guarding anything — and check that the revert is applied where the shipped logic lives, not to a copy of it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The blib_adopt note named the wrong safeguard for the confound it warns about. #731 said mise config ls makes the double-load visible, because \"a count higher than the fixtures you created is the confound\". That is true of only one of the two shapes — and not the one that produced the wrong precedence note in the first place. SHAPE 1 the cwd sits in some other project carrying its own mise/config.toml. Distinct path, so config ls does show an extra entry — and mise refuses it until mise trust, so this shape announces itself twice over. SHAPE 2 the cwd sits under the XDG tree itself, so the global config.toml is also discovered as the project config. Same path, already trusted, no prompt: config ls prints exactly your fixture count and exactly your fixture paths, and the ordering is still inverted. Both measured. So the file count is reassurance, not a check — and it reassures hardest in the case where it is blind, which is how both readers of that note reached the wrong conclusion. The note now says which shape it covers and points at the one safeguard covering both: no mise/config.toml in ANY ancestor of the cwd. A comment that tells the reader how to verify has to be right about the verification, or it is worse than saying nothing.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The environment-skip classifier decided a gate by prose again, one layer down. #730 split skips into tool / out of scope / environment precisely so wording would stop being load-bearing — then computed the tool tally as (skips whose text lacks out of scope) minus the environment COUNT. That subtraction is correct only while no skip_env message ever contains out of scope, a property nothing enforced and which held purely by how each call site happened to be worded. One such message cancels a genuine gap: ``text skip \"luacheck (not installed)\" # a real tool gap skip_env \"gitleaks policy (no sibling checked out — out of scope)\" # poisoned wording raw tool tally 1 − env 1 = 0 → --strict GREEN ` That is the false green the gate exists to prevent, reintroduced by the fix for it. The classifier now keys on the index skip_env records rather than on the message, so wording is irrelevant and two identically-worded skips cannot be confused. No subtraction means no underflow, so the ((_tool_skips < 0)) && _tool_skips=0` floor is gone too — it turned an impossible state into a plausible zero instead of surfacing it. Pinned by a test that uses the poisoned wording, since every in-tree call site is worded innocently and a happy-path partition test cannot see this. Found in review, not by the tests that shipped with #730.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "lockfile = true does not do what mise/config.toml says it does. The comment sells hermetic tool resolution — \"mise install reproduces the same toolchain everywhere\" — but lockfile is project-scoped, and on a provisioned box that file IS the global config. Measured on mise 2026.5.16 with this exact file as the global config and all 11 tools declared: mise lock answers ! No tools configured to lock and writes nothing. The identical content as a project mise.toml locks all 7 platforms normally. The fleet corroborates it: the setting has been on for some time, real installs have gone through it (ruby 4.0.6 and lua 5.5.1 are installed), and there is no mise.lock anywhere in any of the ten repos. The floating lts/latest/stable pins are still what a box actually resolves, so two boxes provisioned a month apart can differ — exactly the thing the paragraph promised was solved. The setting is kept (it is live when this repo is entered as a project, which is why mise/mise.lock is deliberately trackable — #729); what changes is that the file no longer claims a fleet-wide guarantee it cannot deliver.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The blib_adopt conf.d note now records how verifying it goes wrong. It tells the reader to verify before \"fixing\" the ordering, and two of us independently got it backwards the same way: mise walks up from the cwd and treats mise/config.toml as a PROJECT config path, so a fixture root containing mise/config.toml loads it twice — once global, once project — and project outranks global conf.d. The ordering then inverts and looks fine. Worth recording because the obvious cross-check does not catch it: neither mise current nor mise which detects the confound — under it both report the project value and agree with each other. mise config ls is the safeguard, since it lists the files actually loaded. A note that says \"verify this\" owes the reader the two ways verification fails.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "A run that skipped a third of the fleet-wide gates still signed off audit OK. The summary body said PARTIAL and named every skip, but the LAST line — the one a human quotes into a PR — said audit OK and nothing else. The verdict now reads audit OK — PARTIAL (N check(s) skipped; see above). Exit status is unchanged: partial is not failure, and --strict / the new --require-siblings remain the ways to make it one. The deeper problem was that a skip's WORDING was its classification. Skips were sorted into \"tool absent\" (a real gap, reds --strict) and \"out of scope\" (an intentional --scope/--changed narrowing) by testing the message text for the literal out of scope. The three fleet-wide gates — helper adoption, the gitleaks-policy sweep, the coverage register — read SIBLING OS repos, which CI never checks out, so their skips were deliberately PHRASED out of scope to keep --strict green. That made the prose load-bearing: honest wording would have moved a gate. It also filed two different claims — \"you asked me to narrow this run\" and \"this box cannot cover it\" — under one heading. There is now a third class, recorded STRUCTURALLY by skip_env() rather than by text: tool / out of scope / environment. --strict keeps its exact previous meaning (absent tools only — verified A/B against main on a lone clone: same exit, same tool_skips: 1, same message), so CI does not move. --require-siblings is the new opt-in that reds on the environment class, and the summary now names the gap and says how to close it rather than leaving the reader to infer that three gates never ran. --json was emitting invalid JSON, and only on a full fleet checkout. The fleet sections' advisory reports printed to stdout unguarded, so audit-core.sh --json produced bullets ahead of the object — but only where sibling repos exist, since otherwise those sections skip before reaching the report. CI checks out one repo, so CI never saw it. Now guarded and pinned by a test. That bug is this entry's thesis in miniature: a gate that never runs cannot report its own breakage. Adds env_skips and partial to the JSON object; result keeps its existing vocabulary so the \"--json must not change the verdict\" invariant still holds.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The audit reported a luacheck that could not RUN as \"luacheck reported issues\". §4 treated every non-zero exit as a lint result, so a broken toolchain was announced as a defect in nvim/ — and the repair it printed, re-run luacheck, only reproduced the error. It sent the reader hunting through clean code. Exit status alone cannot decide this, which is why the fix is a probe rather than a threshold. luacheck's own vocabulary is 0 clean / 1 warnings / 2 syntax errors / 3 I/O error — and a load failure also exits 1. That is the documented mise/config.toml trap, not a hypothetical: luacheck 1.2.0 cannot load under Lua 5.5 at all (\"attempt to assign to const variable\" in its own source), so the likeliest toolchain break lands on the same code as honest warnings. A missing interpreter is the easier shape — the shell's 126/127 — and would have been separable; the 5.5 one is not. §4 now runs luacheck --version first. It lints nothing and loads the same modules, so any failure from it is a toolchain failure by construction. have luacheck was never enough on its own: a luarocks wrapper execs an absolute interpreter path, so it keeps answering command -v long after the Lua it was built against is upgraded away. Three verdicts now, not two — broken, broken-midrun (126/127 after a passing probe, so the tool stopped being runnable mid-audit) and issues — decided by _core_luacheck_verdict in scripts/lib/common.sh so test-core.sh can drive every branch. Same split §1b uses, and for the same reason: §4 renders, the helper judges. Twelve cases, including both sides of the 126 boundary and a canary asserting §4 still routes through it. §4b solved this class ten lines below — \"gate on the EXIT STATUS as well as the output ... a silent non-zero exit reads as a passing gate, which is the one outcome a backstop must never produce\" — and §4 had simply never had the same pass applied.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.0.0",
+      "date": "2026-08-25",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "The Lua 5.4 requirement now appears where someone installing luacheck will meet it. It was only in mise/config.toml, a runtime pin file nobody reaching for luarocks install luacheck reads — and that comment predicts this exact outcome: \"the audit's luacheck leg breaks with an error that names neither mise nor this file.\" It is now in CONTRIBUTING.md beside the other luacheck note, and in §4's own not installed skip message, which is the moment the reader learns they need the tool.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v4.19.0",
       "date": "2026-08-25",
       "category": "Added",
@@ -2534,132 +2713,6 @@
       "category": "Fixed",
       "kind": "perf",
       "text": "Ctrl+\\ (toggle autosuggestions) was dead inside tmux — which is every shell. zsh/40-bindings.zsh binds ^\\ to autosuggest-toggle, and tmux/scripts/tmux-cheat.sh advertises it by name. It never fired. vim-tmux-navigator binds five keys at the tmux ROOT table, not four: C-h/j/k/l plus C-\\ → select-pane -l. That fifth binding forwards the key to the pane only when the pane is running vim/fzf; a shell pane is neither, so tmux consumed C-\\ and zsh never saw the byte. Since every OS repo's zshrc exec tmux on login, the key was dead in essentially every shell on every box in the fleet. The zsh half was never the problem, and is unchanged — a PTY driven through the full config shows main aliased to viins, \"^\\\\\" autosuggest-toggle bound, the widget present, and _ZSH_AUTOSUGGEST_DISABLED flipping 0 → 1 → 0 on two 0x1C bytes. The 40-bindings comment about binding it unconditionally (the widget is deferred, so a $+widgets guard would always be false) remains correct. tmux/tmux.conf now sets @vim_navigator_mapping_prev '', which disables that one mapping and leaves C-h/j/k/l — the reason the plugin is here — untouched. Dropping the plugin's side rather than moving zsh's is what the rest of the tree already assumed: nvim/lua/gerrrt/plugins/vim-tmux-navigator.lua maps only <C-h/j/k/l> and deliberately never mapped <C-\\>, so TmuxNavigatePrevious was a lazy cmd bound to nothing. \"Previous pane\" was half-wired; the autosuggest toggle is documented. An empty value is the plugin's off switch: its get_tmux_option() falls back to the default only when show-options -gq prints nothing, and a defined-but-empty option prints its own name — so the value resolves to \"\" and the for k in $(echo \"\") loop never runs. Verified end-to-end on tmux 3.7c: root C-\\ disappears, C-h/j/k/l survive, and a PTY client attached to a server carrying this conf toggles the suggestion on Ctrl+\\. The option must stay above the trailing run '…/tpm' — tpm sources the plugin's .tmux script, which reads it at that moment — so scripts/test-core.sh pins the value, the emptiness, and the line order, in the same spirit as the gh/carapace order in 45-plugins.zsh.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Added",
-      "kind": "security",
-      "text": "The CI floor gains rule 7: no attacker-controlled expression may be spliced into a run: body. A ${{ }} expression is substituted by the runner, textually, before the shell ever parses the script — so a PR title or a branch name is not data at that point, it is source code. The remedy is to route it through env: and read $VAR, which the shell treats as a value. The fleet already does this everywhere, and says so at the call sites — auto-tag-call.yml spells out that \"caller-supplied values reach the script through the ENVIRONMENT, never spliced into the run: body\", and notify-web-call.yml states the same. But a comment is not a gate: nothing stopped the next reusable workflow from splicing ${{ github.event.pull_request.title }} straight into a shell block. actionlint, which the audit already runs, has no equivalent rule, so this was a real gap in current coverage. banned_run_interpolation_contexts in modern-baseline.yml lists github.event., github.head_ref, github.actor and github.triggering_actor. inputs. is deliberately absent: setup-core-tools/action.yml interpolates ${{ inputs.bindir }} inline in ~8 run: steps, and that is a first-party composite input — banning it would be a fix-first migration for no security gain. Enforcement is the same block-scalar walk rule 6 uses for the checkout/with: association: find the run: key, take its column, and treat every more-indented line as body until the first non-blank dedent. Matching happens inside each ${{ … }} span rather than against the raw line, so a context name appearing in prose beside a step is not a false fire. Scoped to workflows and composite actions, since a composite's run: is the same hazard. Green on the current tree with no workflow edits. (#521)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Added",
-      "kind": "perf",
-      "text": "core-doctor now says when a tool is present but Core never wired it. A ✓ used to read as \"Core wired this\" when all it ever meant was \"this is on PATH right now\" — and the difference was invisible. Every HAVE_* flag is decided at band 00, against a PATH that keeps changing afterwards: mise activate registers a chpwd hook that rewrites it on every cd, 80-os.zsh loads at band 80, an 85-* role fragment at 85, and 99-local.zsh — the user's own escape hatch — at 99. A tool contributed by any of them gets no flag, no alias and no shell init. The doctor, which probes live against the finished PATH, reported it ✓ anyway. Such a row now renders ✓ procs⚠ plus a not wired block that names the tool and the directory that joined late, which is what makes it actionable — the remedy is to move that prepend into 00-tools.zsh's bindir list. Where the directory was already there, the tool was simply installed after the shell started, and the message says so instead. ⚠ is a modifier on ✓, not a fourth presence glyph: the tool genuinely is present, so ✓ is not wrong. That keeps the legend's three states intact, and keeps the render⇄JSON parity test blind to it by construction. --json gains detection.ran / detection.missed. Named detection, not wiring, because it sits beside wired — which answers the unrelated question of whether an integration registered its hooks — and a consumer reading both would conflate them. The gate is jq -e '.detection.missed == []'. How it is recorded matters. The obvious approach — have core-doctor parse 00-tools.zsh's have <tool> && HAVE<X>=1 lines at runtime — handles only the flag-name irregulars (ast-grep→HAVE_ASTGREP but git-absorb→HAVE_GIT_ABSORB, three lines apart) and is blind to every probe that does not take that shape: the fd/bat ladder, the derived flags, the git-absorb exec-path backfill. It would need those special cases anyway, plus a parser, plus logic to locate the file at runtime in a vendored tree. So _have records its own verdict instead, into a _CORE_PROBED ledger keyed on the canonical tool name — which makes every irregular disappear. It stores 0 as well as 1, because \"Core probed this and said no\" must be distinguishable from \"Core does not probe this tool at all\", or every row the doctor knows and 00-tools.zsh does not would false-positive. Cost: ~45 array stores at startup, no forks, no stats — the zero-fork contract is untouched. Two gates keep it honest: no ledger at all means band 00 never ran in this shell (a script, zsh -c, the unit harness) and no claim is made; no entry for a row means Core does not probe it, and again no claim. Both are checked in the render and in --json, so the two renderers cannot disagree about whether the axis applies. 05-ui.zsh's _core_have is deliberately not merged with _have despite an identical body, and now says so: it is the live probe the doctor itself calls, so recording there would write the doctor's own lookups into the ledger and make every row it probed report as wired — exactly the false ✓ this exists to expose. (#545)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "perf",
-      "text": "_cache_eval now converges on a generator that produces nothing. It decided whether a cache was usable on -s alone — \"the file is non-empty\" — and wrote the generator's output straight at the destination with >|, which truncates before the generator runs and never looks at its exit status. Two failure modes followed, and both were invisible: - Generator exits 0 and prints nothing → a 0-byte cache. -s then fails forever, so the next shell regenerates, and the next. The cache never converges: every interactive shell pays a fork for a tool that is permanently un-cached, with no error, no output and nothing in the prompt to show for it. - Generator prints part of a script and then dies → the cache is non-empty and newer than the binary, so both halves of the freshness test go false and a truncated init is sourced on every shell from then on. That one never self-heals. The silence is not incidental. 2>/dev/null on the generator is deliberate and correct — a generator's chatter must never be sourced into the shell — so the \"command not found\"-shaped signal is discarded by design, and the file is all that is left to judge by. Now the output goes to a temp file and is installed only if the generator exited 0, wrote something, and the result parses (zsh -n, the same \"prove it parses before you keep it\" discipline update-plugins.sh applies to a rolled plugin pin). A generator that breaks after a good cache existed keeps the last good cache — degrading a working shell because a generator regressed is strictly worse than serving yesterday's completions — and the cache is touched so the mtime half stops re-firing. With nothing good to fall back on, a comment-only negative cache lands: valid zsh, sources to a no-op, and non-empty, so the per-shell fork stops. It regenerates when the binary's mtime moves, which an upgrade does. The zsh -n fork is paid on the regeneration path only — once per tool per upgrade, not once per shell — and is skipped where zsh is not on $PATH rather than failing every regeneration. Why now: the trigger is a renamed or removed generator subcommand, and _cache_eval gained three new callers in #578 — one of them ty, a pre-1.0 type checker whose generate-shell-completion is exactly the CLI surface that gets renamed before 1.0. Eleven tools reach this path, counting the brew shellenv / pyenv init callers OS repos add through the documented Core→OS API. The suite gains five fixtures, each running the same shell twice — one run cannot tell \"regenerated once\" from \"regenerates forever\", and forever is the defect. Four of the five fail against the previous implementation. (#580)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The banned-runner rule was silently missing the -arm / -large / -xlarge variants. This was a defect in a rule the floor already declared, not a new floor. The label class that terminates the match contains no hyphen, so with ubuntu-22.04 in banned_runners, runs-on: ubuntu-22.04-arm did not match — the - fails every alternative. Same for macos-14-large and macos-14-xlarge. That matters because GitHub names those exact labels in the same deprecation notices as their base images: runner-images#14254 lists ubuntu-22.04 and ubuntu-22.04-arm; #13518 lists macos-14, macos-14-large and macos-14-xlarge. The list was right; the matcher was leaky, and had been since the floor was written. Fixed by matching an optional variant suffix rather than adding six more list entries — that keeps banned_runners reading as one label per image and covers every present and future variant of every label on it, including ones added later. (#521)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "check-modern.sh gains its first behavioural coverage. Every rule was previously only \"green on this tree\", which cannot distinguish a rule that passes from a rule that never matches — and rule 2 was in exactly that state. The new fixtures build a throwaway git repo (the gate inventories through git ls-files, so a plain directory yields \"no workflow/action files to check\" and every assertion would vacuously pass) and assert both directions: that each rule fires on the violating shape, and that the prescribed remedy, inputs.*, and if:/env:/concurrency:/with: contexts do not fire. Both new rules' fixtures fail against the previous script. (#521)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "clip's OSC 52 fallback was unreachable from the one tmux binding that names it. bin/clip's header claimed tmux needed no special handling, because set-clipboard on makes tmux consume a pane's OSC 52 and forward it. That is true for a pane process — nvim, optoken, the cheat popup. It is not true for the yank binding: ``text tmux.reset.conf: bind -T copy-mode-vi y send -X copy-pipe-and-cancel \"clip\" ` copy-pipe runs its command through tmux's job_run() — a child of the daemonized server, which has called setsid() and has no controlling terminal, and whose stderr is dup2'd to /dev/null. So the /dev/tty open fails with ENXIO, the error message goes nowhere, and clip exits 1 in silence. Prefix-y still copied only because window_copy_copy_pipe() also calls window_copy_copy_buffer(), which under set-clipboard on emits its own OSC 52 from the server side. That is tmux covering for us, not clip working — so the comment credited the wrong mechanism, and the next person to touch set-clipboard would have lost copy-out on exactly the headless box the fallback was written for, with an in-file comment saying it was handled. _osc52_copy now falls back to tmux load-buffer -w -, which reaches the client from the server side and needs no tty at all. The raw payload is reconstructed by decoding the base64 rather than being stashed on the way in: a shell variable is not binary-safe (command substitution strips trailing newlines and cannot carry a NUL), and a temp file would add mktemp/cat/rm to a path that runs on the most minimal boxes we support — and would put a TOTP on disk, since optoken pipes one through here. Verified byte-exact for tabs and trailing newlines. The large-payload write-splitting hazard is now stated in the file rather than left implicit: writing to a character device is line-buffered and the sequence contains no newline, so a payload past BUFSIZ leaves as several write() calls on a tty the foreground TUI also owns. New fixtures reproduce the real shape with setsid — the only faithful reproduction, since a redirected or closed stdin does not detach the controlling terminal — and skip on macOS, which has no setsid. Both fail against the previous bin/clip`. (#525)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "tmux-cheat's copy() discarded clip's exit status, so a failed copy was completely silent. It now propagates, and the caller reports through tmux display-message rather than stderr: the script runs under display-popup -E, which tears the popup down the instant the command exits, so anything on stderr is painted and destroyed in the same frame. (#525)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "optoken overclaimed. OSC 52 succeeds as soon as the escape is written, not when a terminal accepts it — clipboard writes are refused by default in several emulators and unimplemented in others, and the failure is a silent drop. The message is now \"TOTP sent to the clipboard\". The function also now documents a disclosure its own rationale did not cover: under set-clipboard on tmux accepts the escape and creates a tmux paste buffer, so the code is readable via tmux show-buffer by anything that can reach the tmux socket — which \"never lands in your shell history/scrollback\" does not address. (#525)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "make sync vendored the branch tip while stamping the SHA it resolved ~250s earlier. sync-core.sh resolves Core's tip once, up front, then runs the pre-fan-out audit, then vendored by re-resolving the branch. Those are two different resolutions of main. A push to Core inside that window — a docs PR merging, say — gave core/ the newer tree while core.lock recorded the older SHA, and make core-integrity then reported the repo TAMPERED (core/ edited since sync). For a tree nobody hand-edited. The diagnosis pointed at the wrong thing entirely, which is the part that cost the most time. Reported firing three times in a single afternoon. The fix pins everything to the commit that was resolved: the fetch asks for that SHA (falling back to a ref fetch purely as an object-delivery mechanism on remotes that refuse unadvertised wants), and the tree is materialized as <sha>^{tree} — never FETCH_HEAD, which is by definition the new tip and would have re-created the bug inside its own fix. A serial fan-out is now consistent by construction: every repo materializes the same commit however long the loop takes. And a warm repo needs no network at all, because the fetch short-circuits on cat-file, which makes a re-run of the same sync fully offline. Two further instances of the same bug are fixed with it, neither of which was in the report: - core_tag was resolved with a || git describe \"$CORE_BRANCH\" fallback that re-resolved the branch at describe time — so a moved branch stamped a tag belonging to a different commit, into core.lock and onto every rewritten workflow pin comment in all nine repos. That comment is what Renovate reads to pick the next bump. - The git-subtree-split: trailer was stamped from the same stale snapshot. Consumer tooling (dotfiles-MacBook's verify-core) warns when it disagrees with the lock, so the fleet was emitting a wrong marker too. And the unknown path turned out to be a third producer of the identical symptom, with no race required: it materialized core/ from the branch and then skipped writing core.lock entirely. A sync must vendor a named commit, so that now refuses outright, before the audit and before anything is written. Two latent defects on that path are fixed as well — an unreachable remote killed the script at set -e with exit 128 and no output at all (ls-remote's stderr is deliberately suppressed), and the bare git rev-parse fallback echoed the unresolvable ref to stdout, so the unknown sentinel it was tested against could never actually be produced by that path. The sync now checks its own work: after each repo it compares HEAD:core against the pinned tree. That comparison moved into a new shared scripts/lib/core-lock.sh so the producer's self-check and core-integrity.sh's verdict are one implementation — two would let a sync pass its own assertion and still be reported dirty. It reports and buckets the repo as failed rather than exiting, because sync-fanout.yml runs the script under bash -e and an abort would deny PRs to every repo that synced correctly; and it prints the recovery command rather than auto-reverting, since on the idempotent path no commit was made and a blind reset --hard HEAD~1 would destroy a good one. sync-fanout.yml gains the matching post-condition. Its three existing ones all compare the lock to the intent; none looked at what core/ actually contained, which is the axis this bug broke. The audit gate now compares full SHAs — rev-parse --short=12 returns more than 12 characters when 12 would be ambiguous, a latent spurious refusal that grows more likely as history does — and the parallel prefetch is pinned too, picking up the --no-tags it was missing (without it every prefetch dragged Core's whole tag namespace, including the moving v4 alias, into every OS repo). Twelve new fixtures. The race is reproduced deterministically, with no sleeps, by having the stub audit push to Core mid-run — the audit gate is the one place guaranteed to sit inside the window. It runs three ways: direct-SHA fetch, with allowReachableSHA1InWant off so the fallback is exercised (the case that catches a FETCH_HEAD-based fallback), and with the parallel prefetch on. core-integrity.sh also gains its first behavioural coverage, since extracting its classifier could otherwise have changed the verdict silently. All three race fixtures fail against the previous implementation. (#556)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "op had this bug, inside the doctor's own inventory, behind a test comment asserting it could not. The coverage guard excused op on the grounds that \"the doctor probes it live and no alias or function is gated on it\". That was false: 50-op.zsh's command -v op guard gates four verbs — opsecret, openv, optoken, opssh — and band 50 still runs before 80-os.zsh, an 85-* role fragment and 99-local.zsh. op now records into the ledger too, and with fd/bat recording under their canonical names, the guard's exemption list is empty — a list that had grown to three entries, one of them wrong, now has none. (#545)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The atuin daemon guard now probes a candidate list, not one path — before upstream moves it. atuin PR #3910 (merged 2026-08-12, shipping in 18.20.0) changes the default daemon socket for systemd_socket = false — the shape Core recommends — from $XDG_RUNTIME_DIR/atuin.sock (falling back to the data dir where that is unset) to $TMPDIR/atuin-$UID/atuin.sock. systemd_socket = true is unchanged. atuin's own client gained a legacy search list so it can still reach an older daemon. _core_atuin_daemon_guard had none: it resolved exactly one expression. On 18.20.0, with the plain always-running unit Core recommends, the daemon would bind the new path, zsocket would fail, and every shell would export ATUIN_DAEMON__ENABLED=false at its first precmd and unhook the watchdog — permanently, with no warning, because _CORE_ATUIN_DAEMON_WAS_UP is never set on that path. It fails in the cheap direction (history still lands; only the lock relief is lost), which is exactly why it would have gone unnoticed on every systemd machine at once. The guard now tries the 18.20.0 default first, then the two legacy locations, stopping at the first that answers — the same shape as the git-absorb exec-path loop, so the zero-fork discipline is intact. An explicit ATUIN_DAEMON__SOCKET_PATH still wins outright and probes nothing else, because a config knob that silently got second-guessed would be a worse bug than the one this fixes. The cost, stated rather than hidden: a genuinely-absent daemon now pays N failed connects per probe instead of one. Each is ~0.06–0.10 ms (measured in this file's own bench), the probe is throttled, and the degrade is one-way — so such a box pays it at most twice before unhooking for good. Verified independently against upstream rather than taken from the scout's report: 18.19.0 is still the newest stable release, so this lands with roughly a release of lead time. The anchors stay at 18.19.0 — bumping them asserts a measurement nobody has taken yet, and that needs an on-box atuin daemon start && ss -lx | grep atuin against an 18.20.0 beta. Three prose claims that the change falsifies are corrected with it (atuin/config.toml, PORTING-MATRIX.md, and the socket-path note in bench-atuin-daemon.sh), and two harness bugs it would have introduced are fixed: - bench-atuin-daemon.sh printed a ✓ beside a hand-copy of the guard's single expression. That is prose, and it would have kept printing ✓ while the guard and atuin had drifted apart — the one failure the check exists to catch. It now asserts membership of the candidate list and fails loudly otherwise. - verify-atuin-guard.sh isolated atuin's socket into its sandbox by unsetting XDG_RUNTIME_DIR. Under 18.20.0 that is no longer sufficient: with TMPDIR unset under env -i, atuin would resolve /tmp/atuin-$UID/atuin.sock — outside the sandbox, and possibly a socket the developer's own daemon is already holding. TMPDIR is now pinned into the sandbox. (#518)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "Docs caught up with a fleet topology change they were still describing the old way. dotfiles-Offense shed its OS-native layer entirely — no os/, no install/packages.txt, no scripts/tool-versions.env — and adopted blib_link_role_layer, with the Kali package lane moving to dotfiles-Debian's only:kali / skip:kali tiers. dotfiles-Debian is therefore a first-class ubuntu/debian/kali target now, not the frozen-Ubuntu-LTS one the docs described. That single move is what made most of the surviving drift, rather than several independent errors: - core.manifest and PORTING-MATRIX.md both said neither role repo had adopted the role-layer helper. Offense has; Defense still hand-rolls the band in wire_defense_stage, and migrating it is what actually remains. - The matrix said Offense \"also carries its own OS-native layer (Debian/apt, kali-rolling)\". It does not. - Two footnotes asserted Kali \"installs it nowhere\" and \"installs nothing from this family\". Both are false: dotfiles-Debian's only:kali tier installs a substantial subset. - Three Kali cells were demonstrably wrong — lazygit was marked ²¹ (available, not installed) and starship script³ when both are apt packages there, and atuin was marked ³ (best-effort script) when it is a pinned, checksummed release asset. The Kali column as a whole is not re-derived here, and the table now says so: a caveat marks it as inherited-not-verified until /os-package-availability has run against the new owner. Correcting three cells and claiming the column is verified would be the same mistake the ²¹ footnote block already made once. Also corrected: footnote ¹⁴ listed ouch among Alpine's testing-repo tools, but Alpine's own bootstrap says it is unpackaged there outright; the OSC 52 clip fallback was still described as a pending fix, having shipped in v4.13.0 (and gained the tmux server-side path in #525); and README.md offered --dry-run to macOS only, when all nine bootstraps implement it and the Linux list also omitted Debian, Defense and Offense. Finally, eleven stale fleet counts across ci.yml, pr-link-check.yml, zsh/10-options.zsh, zsh/45-plugins.zsh, tmux/scripts/tmux-claude.sh, scripts/lib/common.sh and scripts/test-core.sh — variously \"8 OS repos\", \"10-repo fan-out\" and \"ten repos\" — now agree with scripts/os-repos.txt (nine vendoring repos; eleven including Core and dotfiles-Windows). Two were wrong in a more interesting way than the count: common.sh disagreed with itself two functions apart, and pr-link-check.yml described ci.yml's matrix as \"macOS + seven distros\" when it is ubuntu + macOS + alpine + arch. (#519)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The CI floor's first-party SHA-pin exemption was wider than the policy it was named for. Rule 3 exempted any uses: whose owner is dotgibson with a bare owner-string match, so uses: dotgibson/anything@main passed the gate outright. RELEASE-STRATEGY.md's exemption is narrower than that: it is the @vN moving-major policy for the fleet's own reusable workflows. Nothing asserted that shape, so the policy was documented in one place and enforced in none. The exemption now requires dotgibson/<repo>/.github/workflows/<name>.yml@v<N>. Anything else from the same owner falls through to the 40-hex requirement rather than being rejected outright — a first-party caller that chose to SHA-pin is stricter than @vN, not weaker, and must not be told off for it. Fix-first, in the same PR: core-integrity-call.yml's copy-paste caller stub documented @main. It was the only non-@v4 first-party ref in .github/, and it contradicted bootstrap-test.yml, which spells out that stubs pin @vN \"NOT @main\". That mattered more than a stray doc comment usually would — the stub advertised the exact shape whose acceptance the exemption's own premise depends on being impossible. (#521)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v4.17.0",
-      "date": "2026-08-24",
-      "category": "Changed",
-      "kind": "perf",
-      "text": "zsh-syntax-highlighting pin moves to 2fc57d63067c. The only pin of the eight that was behind; the other seven and every nvim/lazy-lock.json entry were already current. The range is one upstream commit, and it touches only tests/README.md (+2/-2, fixing relative links) — verified against the upstream compare before landing rather than inferred from the SHA moving. So this is a pin refresh with no runtime change at all, which is worth saying plainly: this plugin runs a highlighter on every keystroke, so \"the pin moved\" and \"behaviour moved\" are worth keeping distinct in the record. update-plugins.sh re-fetches and zsh -n parses each rolled pin before writing, so the new commit is proven fetchable and syntactically valid, not just newer.",
       "core": true
     },
     {
