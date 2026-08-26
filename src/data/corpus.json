@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-08-25",
+  "generatedAt": "2026-08-26",
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "a878ea3f83807dc1f36227b091aca7dc20f8ed4e"
+    "commit": "b80741fdc07406ac652866c903530caf0f778acf"
   },
-  "totalPairs": 101,
+  "totalPairs": 102,
   "groupCount": 16,
-  "techniqueCount": 71,
+  "techniqueCount": 72,
   "tacticCount": 13,
   "groups": [
     {
       "label": "On-prem AD / Windows",
-      "count": 46
+      "count": 47
     },
     {
       "label": "Cloud IAM (Entra · AWS · GCP)",
@@ -484,6 +484,18 @@
       "tactic": "TA0006",
       "techniques": [
         "T1558.002"
+      ]
+    },
+    {
+      "id": "smb-enum-nxc",
+      "attack": "SMB enum via NetExec (null → authed → pass-the-hash)",
+      "detection": "Detect SMB share/session enumeration (5145 srvsvc/wkssvc fan-out)",
+      "group": "On-prem AD / Windows",
+      "phase": "Discovery",
+      "tactic": "TA0007",
+      "techniques": [
+        "T1135",
+        "T1087.002"
       ]
     },
     {
