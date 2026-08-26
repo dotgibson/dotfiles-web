@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "6401a6868858f82dee0d79b4c568cabce21726b8",
+        "commit": "db940285d0cf9d71bf99bc78cda21e4862dd7419",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -16,7 +16,7 @@
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "69071a254249f0d030ae33aefc1acda0416f72aa",
+        "commit": "3cd3b80863836ed75c6d7be55f2445b73636da33",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
