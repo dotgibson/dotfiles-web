@@ -10,7 +10,7 @@
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "a229b720a665ab4a62a2278dedbd131eadfa7edc",
+        "commit": "c9dbaaaa5a0e4387a01797c5e9769348691f0f28",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "69fb7cfedc9ed353641cc3540ff3268465852843",
+        "commit": "586190206a292666400cded63f2872d624cd7146",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "aa1c0e89a08b62822ba4c0388434296e87ccce52",
+        "commit": "0a9900d27e96f9624314f14a1e22d1182f5196b9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "6dc2d648e8ec8d7700a1ac27431085a6b14ce661",
+        "commit": "90b2f82f29dad15ad99478fa3cb5804233e2fe9a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "3cd3b80863836ed75c6d7be55f2445b73636da33",
+        "commit": "d754f66e9c4827426b63f78416d06e2ee6a36742",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "c896d29541129357b54e99d2bb104db591ed9c38",
+        "commit": "444fa6435d878ac725474c2b2f9c40cbe7897744",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "c6e25f7c915f1acd048b5d436a296d70bca0cd8c",
+        "commit": "ed1924e09c6fe340a5b25f02a6edba1781b29c51",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "7f2a57f7f99b4ad255680d44ca46d370a98de6a5",
+        "commit": "a5f0842146468b0d3deaa53850cfb5f628fa0690",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "c774b582331019a65f545530b087ac7cd8f3498d",
+        "commit": "aeecea0da661f02514157a75233f695844527d7d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,9 +88,9 @@
     "coreVersion": "5.0.2",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v4.19.0",
-        "carried": "4.19.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -99,44 +99,44 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v4.19.0",
-        "carried": "4.19.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v4.19.0",
-        "carried": "4.19.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v4.19.0",
-        "carried": "4.19.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v5.0.0",
-        "carried": "5.0.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v4.19.0",
-        "carried": "4.19.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v5.0.0",
-        "carried": "5.0.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v4.19.0",
-        "carried": "4.19.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v4.19.0",
-        "carried": "4.19.0",
-        "status": "behind"
+        "ref": "v5.0.2",
+        "carried": "5.0.2",
+        "status": "current"
       }
     }
   },
