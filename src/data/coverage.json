@@ -3,10 +3,10 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "a981d6f7774f7aabb56e170a18ffe32dd8a8daf4"
+    "commit": "99a6aa837d5e71171361ef0af6cc0b73d240b50f"
   },
-  "ruleCount": 104,
-  "documentCount": 122,
+  "ruleCount": 105,
+  "documentCount": 123,
   "techniqueCount": 80,
   "tacticCount": 6,
   "logsourceCount": 24,
@@ -649,8 +649,9 @@
     },
     {
       "id": "T1685.005",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
+        "windows_event_log_cleared_104",
         "windows_event_log_cleared_1102"
       ]
     },
@@ -699,7 +700,7 @@
       "products": [
         "windows"
       ],
-      "rules": 2
+      "rules": 3
     },
     {
       "dir": "discovery",

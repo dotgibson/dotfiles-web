@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "4ae3c1fcb228e4a224f69c1af9c8dcb2a180d18a",
+        "commit": "91cac104ff466dfe2316182336cd1f7767231b68",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "3760b9196ac95e9d18e524d0ab571ece84af30b7",
+        "commit": "c90ab3973d9bf1bc3134a15558165b2a0825b0ff",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "fdc327568ae4efce9bb6f7cfb8dc4c0cb8a60b29",
+        "commit": "6882b0a9305d24ab8ec5ae1f5ad9fe263f9de439",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "a981d6f7774f7aabb56e170a18ffe32dd8a8daf4",
+        "commit": "99a6aa837d5e71171361ef0af6cc0b73d240b50f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "325658bbd128045b80af4a75baeadeaec5420953",
+        "commit": "9026935180adfc9512c4a73cf7a82124d188d7f8",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "48c118d848759dd726ab715eebdccd9abff10132",
+        "commit": "439381a2683ec01105f5c215d83e4c8d201864e7",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "615cdfcc77ab869d86a11071d8d3dbee3da1a5c3",
+        "commit": "16e3f66bf34b92cb887a8beaeac010f93b720a39",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "90b67c6d9bbbb7525202d74e39c1370f80f666cc",
+        "commit": "91880a10a403083a521b6e0df8210729ff4654e0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "412976374378680bd0225b412bfb44f4c1c652ee",
+        "commit": "685d1490c3b39bfcef339841d39dd74bd491cef0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "67bf031a0c4722d5f3bdc331d283c18148947721",
+        "commit": "bf7e3ad8d245aafa92a067a23b394436c828532e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,20 +76,20 @@
     "layers": 3
   },
   "releases": {
-    "current": "v5.1.0",
+    "current": "v5.2.0",
     "channels": [
+      "v5.2.0",
       "v5.1.0",
       "v5.0.3",
-      "v5.0.2",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "5.1.0",
+    "coreVersion": "5.2.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-Windows": {
@@ -99,51 +99,51 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-Defense": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-Fedora": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-Arch": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-Debian": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-openSUSE": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-Alpine": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       },
       "dotfiles-Gentoo": {
-        "ref": "v5.0.3",
-        "carried": "5.0.3",
+        "ref": "v5.1.0",
+        "carried": "5.1.0",
         "status": "behind"
       }
     }
   },
   "core": {
-    "version": "5.1.0",
+    "version": "5.2.0",
     "sourcedModules": 14,
-    "zshLoc": 5370,
+    "zshLoc": 5648,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 28
@@ -172,6 +172,73 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "up is a dispatcher now, not a seven-package-manager driver (#664). zsh/60-update.zsh was the largest concentration of OS knowledge in Core — five case statements that knew how seven archives count and apply updates, including a grep -qi tumbleweed /etc/os-release to choose zypper dup over zypper up. ARCHITECTURE.md named it one of two deliberate exceptions to Core's own rule and defended it as \"one verb with N backends\". The defence of the verb was right and still stands; one verb with N backends is what a dispatch table is for, and #663 landed the table. What runs is now resolved through _pkgup_verb from the OS layer's os.capabilities declaration. The seven per-manager parse heuristics collapsed into one pipeline — run the declared count verb, keep lines matching PKG_PENDING_MATCH, print field PKG_PENDING_FIELD split on PKG_PENDING_FS — and the apply case into four resolved verbs and one && chain. _pkgup_mgr stays: probing with command -v is the shape PORTABILITY.md asks for, and the token it returns is the label every message interpolates. ARCHITECTURE.md's \"two deliberate exceptions\" is now one, and PORTABILITY.md's companion section with it. Note that the issue expected an audit-core.sh §5c exception to be removed here and there was never one to remove — §5c excepts zsh/55-maint.zsh (the LaunchAgents segment only) and *.example, nothing else. PORTABILITY.md already said so: this file was excepted architecturally, not at the gate.",
+              "kind": "config"
+            },
+            {
+              "text": "Core still carries built-in defaults, and they are a stopgap with a demolition date. #667 — which authors the nine declarations — is blocked by this change, so on the day this lands no box in the fleet has one and the built-ins are what every host actually runs. They live in one typeset -gA at the top of zsh/60-update.zsh, in the declaration's own KEY=value shape, so each row is the transcription source for the repo that will replace it and a declaration that behaves differently from its row is a visible diff. #667 deletes the block.",
+              "kind": "config"
+            },
+            {
+              "text": "A declaration is authoritative — all or nothing, never merged per key. Per-key fallback is the obvious shape and it is wrong, because in this schema an omission is a statement: no PKG_ASSUME_YES means never auto-confirm, and no PKG_UPGRADE_PARTIAL means up -i refuses, this archive updates as a whole. Merging Core's built-in row into a real declaration answers both of those with a default — handing an auto-confirm flag to a repo that deliberately withheld one, and letting up -i through into the partial upgrade a repo deliberately refused. A missing required verb is a broken declaration, and the thing that catches it is scripts/check-capabilities.sh, a gate you run — not a silent substitution on a box you are SSH'd into.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "Nine optional keys, and one required key redefined (#664). PKG_UPGRADE is now the interactive upgrade verb — up without a flag must still let the manager print its transaction summary and ask, which is what it has always done — and auto-confirm moved to the new PKG_ASSUME_YES. New optional keys: PKG_ASSUME_YES, PKG_UPGRADE_PRE, PKG_CLEANUP, PKG_UPGRADE_PARTIAL, PKG_COUNT_REFRESH, PKG_COUNT_EXIT_TRUSTED, PKG_PENDING_MATCH, PKG_PENDING_FIELD, PKG_PENDING_FS. Every one is optional and every default reproduces what the box did before, so #667's authoring burden stays small and a declaration written against the v5 schema keeps validating. --packages no longer checks the PKG_PENDING_* values as if they were binaries, and PKG_PENDING_FIELD is gated as a positive integer — a typo there does not fail at runtime, it reads a different column and reports confident nonsense.",
+              "kind": "config"
+            },
+            {
+              "text": "PORTING-MATRIX.md §\"Package-manager commands\" gained its macOS and Fedora columns, and a count-pending row. #667 is told to transcribe declarations from that table, and it was two managers short — missing exactly the reference implementation (dotfiles-MacBook) and the template the other Linux repos stamp from (dotfiles-Fedora), so the two most-copied repos had nothing to copy.",
+              "kind": "feature"
+            },
+            {
+              "text": "PKG_COUNT_EXIT_TRUSTED, which is what carries #756 through the refactor. Gentoo's count is a real Portage resolve, and a resolve that fails must report the -1 unknown sentinel rather than 0 — a box whose Portage cannot resolve is not a box with nothing to do. That distinction cannot be inferred generically, because most archives overload the exit status of their count verb in the opposite direction: dnf check-update exits 100 when updates exist, and pacman -Qu and checkupdates exit non-zero when there are none. So Core ignores the status by default and counts lines; an archive whose verb means what it says declares this key. Gentoo is the only one that does.",
+              "kind": "config"
+            },
+            {
+              "text": "Tests for the dispatch, and two parse arms that never had any. brew and emerge had no _pkgup_count/_pkgup_list coverage at all — the section header claimed four managers and the file has seven — including, now, Gentoo's Portage resolve, its [nomerge] filtering and atom stripping, and the failed-resolve sentinel. Both directions of the exit-status question are pinned: a failed resolve reports -1, and dnf's exit 100 does not. Plus the declared path end to end: a declared verb overriding the built-in row, the assume-yes token appended and not appended, PKG_UPGRADE_PRE aborting the upgrade when it fails, up -i's refusal driven by omission, a declared sudo mapped onto doas on a box that has only doas, and a ; in a declared value staying an argument rather than becoming a command separator.",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "A declared privilege prefix names the intent, not the tool. A declaration says sudo zypper dup, but Alpine has doas and not sudo, and a container has neither. _pkgup_run strips the prefix and hands the rest to _pkgup_priv, the existing ladder, so the same declaration is correct on all three. A value with no prefix (brew upgrade) runs bare, which for Homebrew is the only correct answer.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Behaviour deltas",
+          "items": [
+            {
+              "text": "A failing PKG_UPGRADE_PRE now aborts the upgrade. Debian's apt-get update used to run un-chained, so a failed index refresh still proceeded to full-upgrade; apk, emerge and brew all chained theirs with &&. One rule now, and it is the safer three's: an upgrade computed against an index that could not be refreshed is how a box half-applies.",
+              "kind": "other"
+            },
+            {
+              "text": "up -i on macOS now runs brew update first. The partial path previously skipped it while the full path did not. It costs a network round-trip and removes the case where you hand-pick from a stale outdated list.",
+              "kind": "other"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v5.1.0",
@@ -244,26 +311,6 @@
             },
             {
               "text": "Stale @v4 in the callers' own usage examples and two live claims. The # uses: …@v4 header examples in all six *-call.yml files plus bootstrap-test.yml would have taught the next caller to pin the frozen major. CLAUDE.md described the routines idiom as a @v4 caller and RELEASE-RUNBOOK.md:183 said the fleet pins \"currently @v4\"; both now say @v5. sync-fanout.yml's illustrative @v4 became @vN, which is version-neutral and needs no bump on the next major. Untouched deliberately: CHANGELOG.md's own history, V5-PROPOSAL.md, and RELEASE-RUNBOOK.md's worked @v4→@v5 examples, which describe the release just cut and are correct as written. Also untouched: bootstrap-test.yml's four v4 mentions, which are the architecture generation — dotfiles-managed v4 is a literal marker string written into ~/.zshrc by lib/bootstrap-lib.sh:904, not a tag alias.",
-              "kind": "fix"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v5.0.2",
-      "date": "2026-08-25",
-      "groups": [
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "v5.0.0 turned the fleet's links-only job red: bootstrap-test.yml still asserted the mise SYMLINK. The contract changed in bootstrap-lib.sh (mise is adopted, not linked) and this workflow kept checking the old one, so every OS repo's sync PR failed with MISSING symlink: $HOME/.config/mise/config.toml — correctly, against a bootstrap that had deliberately stopped creating it. It shipped green because nothing in Core runs this workflow. bootstrap-test.yml is a reusable workflow that only ever executes from an OS repo's caller; Core's own audit never invokes it, so no gate here could see the stale assertion. That is the same false-green shape three other fixes in this release address — a gate that never runs cannot report its own breakage — and it is the one that reached the fleet. The assertion is inverted rather than deleted: a symlink at that path is now the FAILURE (STILL A SYMLINK … bootstrap must ADOPT it), a missing file is a failure, and a fresh adopt must match core/mise/config.toml byte-for-byte. Compared with git hash-object, not cmp — Core keeps diffutils optional and the audit gates on it. Rollout note: repos still calling @v4 get the v4 test, which asserts the old contract and will keep failing against v5-vendored Core. The @v4 → @v5 caller bump is not cosmetic — it is what makes a repo's CI agree with the Core it vendors.",
-              "kind": "fix"
-            },
-            {
-              "text": "v5.0.1 was cut but never tagged, so its number is retired rather than reused: the release commit carried an empty [v5.0.1] section and make publish correctly refused it (release.yml rejects an empty Release body, and a published tag is immutable here). The entry below was written for that cut and ships as v5.0.2 unchanged.",
               "kind": "fix"
             }
           ]
@@ -2046,6 +2093,96 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Changed",
+      "kind": "config",
+      "text": "up is a dispatcher now, not a seven-package-manager driver (#664). zsh/60-update.zsh was the largest concentration of OS knowledge in Core — five case statements that knew how seven archives count and apply updates, including a grep -qi tumbleweed /etc/os-release to choose zypper dup over zypper up. ARCHITECTURE.md named it one of two deliberate exceptions to Core's own rule and defended it as \"one verb with N backends\". The defence of the verb was right and still stands; one verb with N backends is what a dispatch table is for, and #663 landed the table. What runs is now resolved through _pkgup_verb from the OS layer's os.capabilities declaration. The seven per-manager parse heuristics collapsed into one pipeline — run the declared count verb, keep lines matching PKG_PENDING_MATCH, print field PKG_PENDING_FIELD split on PKG_PENDING_FS — and the apply case into four resolved verbs and one && chain. _pkgup_mgr stays: probing with command -v is the shape PORTABILITY.md asks for, and the token it returns is the label every message interpolates. ARCHITECTURE.md's \"two deliberate exceptions\" is now one, and PORTABILITY.md's companion section with it. Note that the issue expected an audit-core.sh §5c exception to be removed here and there was never one to remove — §5c excepts zsh/55-maint.zsh (the LaunchAgents segment only) and *.example, nothing else. PORTABILITY.md already said so: this file was excepted architecturally, not at the gate.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Core still carries built-in defaults, and they are a stopgap with a demolition date. #667 — which authors the nine declarations — is blocked by this change, so on the day this lands no box in the fleet has one and the built-ins are what every host actually runs. They live in one typeset -gA at the top of zsh/60-update.zsh, in the declaration's own KEY=value shape, so each row is the transcription source for the repo that will replace it and a declaration that behaves differently from its row is a visible diff. #667 deletes the block.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "A declaration is authoritative — all or nothing, never merged per key. Per-key fallback is the obvious shape and it is wrong, because in this schema an omission is a statement: no PKG_ASSUME_YES means never auto-confirm, and no PKG_UPGRADE_PARTIAL means up -i refuses, this archive updates as a whole. Merging Core's built-in row into a real declaration answers both of those with a default — handing an auto-confirm flag to a repo that deliberately withheld one, and letting up -i through into the partial upgrade a repo deliberately refused. A missing required verb is a broken declaration, and the thing that catches it is scripts/check-capabilities.sh, a gate you run — not a silent substitution on a box you are SSH'd into.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Added",
+      "kind": "config",
+      "text": "Nine optional keys, and one required key redefined (#664). PKG_UPGRADE is now the interactive upgrade verb — up without a flag must still let the manager print its transaction summary and ask, which is what it has always done — and auto-confirm moved to the new PKG_ASSUME_YES. New optional keys: PKG_ASSUME_YES, PKG_UPGRADE_PRE, PKG_CLEANUP, PKG_UPGRADE_PARTIAL, PKG_COUNT_REFRESH, PKG_COUNT_EXIT_TRUSTED, PKG_PENDING_MATCH, PKG_PENDING_FIELD, PKG_PENDING_FS. Every one is optional and every default reproduces what the box did before, so #667's authoring burden stays small and a declaration written against the v5 schema keeps validating. --packages no longer checks the PKG_PENDING_* values as if they were binaries, and PKG_PENDING_FIELD is gated as a positive integer — a typo there does not fail at runtime, it reads a different column and reports confident nonsense.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Added",
+      "kind": "feature",
+      "text": "PORTING-MATRIX.md §\"Package-manager commands\" gained its macOS and Fedora columns, and a count-pending row. #667 is told to transcribe declarations from that table, and it was two managers short — missing exactly the reference implementation (dotfiles-MacBook) and the template the other Linux repos stamp from (dotfiles-Fedora), so the two most-copied repos had nothing to copy.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Added",
+      "kind": "config",
+      "text": "PKG_COUNT_EXIT_TRUSTED, which is what carries #756 through the refactor. Gentoo's count is a real Portage resolve, and a resolve that fails must report the -1 unknown sentinel rather than 0 — a box whose Portage cannot resolve is not a box with nothing to do. That distinction cannot be inferred generically, because most archives overload the exit status of their count verb in the opposite direction: dnf check-update exits 100 when updates exist, and pacman -Qu and checkupdates exit non-zero when there are none. So Core ignores the status by default and counts lines; an archive whose verb means what it says declares this key. Gentoo is the only one that does.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Added",
+      "kind": "feature",
+      "text": "Tests for the dispatch, and two parse arms that never had any. brew and emerge had no _pkgup_count/_pkgup_list coverage at all — the section header claimed four managers and the file has seven — including, now, Gentoo's Portage resolve, its [nomerge] filtering and atom stripping, and the failed-resolve sentinel. Both directions of the exit-status question are pinned: a failed resolve reports -1, and dnf's exit 100 does not. Plus the declared path end to end: a declared verb overriding the built-in row, the assume-yes token appended and not appended, PKG_UPGRADE_PRE aborting the upgrade when it fails, up -i's refusal driven by omission, a declared sudo mapped onto doas on a box that has only doas, and a ; in a declared value staying an argument rather than becoming a command separator.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "A declared privilege prefix names the intent, not the tool. A declaration says sudo zypper dup, but Alpine has doas and not sudo, and a container has neither. _pkgup_run strips the prefix and hands the rest to _pkgup_priv, the existing ladder, so the same declaration is correct on all three. A value with no prefix (brew upgrade) runs bare, which for Homebrew is the only correct answer.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Behaviour deltas",
+      "kind": "other",
+      "text": "A failing PKG_UPGRADE_PRE now aborts the upgrade. Debian's apt-get update used to run un-chained, so a failed index refresh still proceeded to full-upgrade; apk, emerge and brew all chained theirs with &&. One rule now, and it is the safer three's: an upgrade computed against an index that could not be refreshed is how a box half-applies.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.2.0",
+      "date": "2026-08-27",
+      "category": "Behaviour deltas",
+      "kind": "other",
+      "text": "up -i on macOS now runs brew update first. The partial path previously skipped it while the full path did not. It costs a network round-trip and removes the case where you hand-pick from a stale outdated list.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v5.1.0",
       "date": "2026-08-27",
       "category": "Added",
@@ -2141,24 +2278,6 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "Stale @v4 in the callers' own usage examples and two live claims. The # uses: …@v4 header examples in all six *-call.yml files plus bootstrap-test.yml would have taught the next caller to pin the frozen major. CLAUDE.md described the routines idiom as a @v4 caller and RELEASE-RUNBOOK.md:183 said the fleet pins \"currently @v4\"; both now say @v5. sync-fanout.yml's illustrative @v4 became @vN, which is version-neutral and needs no bump on the next major. Untouched deliberately: CHANGELOG.md's own history, V5-PROPOSAL.md, and RELEASE-RUNBOOK.md's worked @v4→@v5 examples, which describe the release just cut and are correct as written. Also untouched: bootstrap-test.yml's four v4 mentions, which are the architecture generation — dotfiles-managed v4 is a literal marker string written into ~/.zshrc by lib/bootstrap-lib.sh:904, not a tag alias.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v5.0.2",
-      "date": "2026-08-25",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "v5.0.0 turned the fleet's links-only job red: bootstrap-test.yml still asserted the mise SYMLINK. The contract changed in bootstrap-lib.sh (mise is adopted, not linked) and this workflow kept checking the old one, so every OS repo's sync PR failed with MISSING symlink: $HOME/.config/mise/config.toml — correctly, against a bootstrap that had deliberately stopped creating it. It shipped green because nothing in Core runs this workflow. bootstrap-test.yml is a reusable workflow that only ever executes from an OS repo's caller; Core's own audit never invokes it, so no gate here could see the stale assertion. That is the same false-green shape three other fixes in this release address — a gate that never runs cannot report its own breakage — and it is the one that reached the fleet. The assertion is inverted rather than deleted: a symlink at that path is now the FAILURE (STILL A SYMLINK … bootstrap must ADOPT it), a missing file is a failure, and a fresh adopt must match core/mise/config.toml byte-for-byte. Compared with git hash-object, not cmp — Core keeps diffutils optional and the audit gates on it. Rollout note: repos still calling @v4 get the v4 test, which asserts the old contract and will keep failing against v5-vendored Core. The @v4 → @v5 caller bump is not cosmetic — it is what makes a repo's CI agree with the Core it vendors.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v5.0.2",
-      "date": "2026-08-25",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "v5.0.1 was cut but never tagged, so its number is retired rather than reused: the release commit carried an empty [v5.0.1] section and make publish correctly refused it (release.yml rejects an empty Release body, and a published tag is immutable here). The entry below was written for that cut and ships as v5.0.2 unchanged.",
       "core": true
     },
     {
