@@ -3,11 +3,11 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "c4aab8c13a89e3fb5bafabd37a1a676f6dd5351c"
+    "commit": "a981d6f7774f7aabb56e170a18ffe32dd8a8daf4"
   },
-  "ruleCount": 102,
-  "documentCount": 120,
-  "techniqueCount": 78,
+  "ruleCount": 104,
+  "documentCount": 122,
+  "techniqueCount": 80,
   "tacticCount": 6,
   "logsourceCount": 24,
   "tactics": [
@@ -195,6 +195,13 @@
       "rules": 1,
       "ruleNames": [
         "harbor_artifact_deleted"
+      ]
+    },
+    {
+      "id": "T1070.003",
+      "rules": 1,
+      "ruleNames": [
+        "history_clearing"
       ]
     },
     {
@@ -641,6 +648,13 @@
       ]
     },
     {
+      "id": "T1685.005",
+      "rules": 1,
+      "ruleNames": [
+        "windows_event_log_cleared_1102"
+      ]
+    },
+    {
       "id": "T1686.001",
       "rules": 2,
       "ruleNames": [
@@ -685,7 +699,7 @@
       "products": [
         "windows"
       ],
-      "rules": 1
+      "rules": 2
     },
     {
       "dir": "discovery",
@@ -748,7 +762,7 @@
       "products": [
         "linux"
       ],
-      "rules": 8
+      "rules": 9
     },
     {
       "dir": "npm",
