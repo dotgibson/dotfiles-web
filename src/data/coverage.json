@@ -1,32 +1,32 @@
 {
-  "generatedAt": "2026-08-26",
+  "generatedAt": "2026-08-27",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "0a9900d27e96f9624314f14a1e22d1182f5196b9"
+    "commit": "c4aab8c13a89e3fb5bafabd37a1a676f6dd5351c"
   },
-  "ruleCount": 95,
-  "documentCount": 113,
-  "techniqueCount": 70,
+  "ruleCount": 102,
+  "documentCount": 120,
+  "techniqueCount": 78,
   "tacticCount": 6,
   "logsourceCount": 24,
   "tactics": [
     {
       "id": "TA0002",
       "name": "Execution",
-      "techniques": 8,
-      "rules": 10
+      "techniques": 7,
+      "rules": 8
     },
     {
       "id": "TA0003",
       "name": "Persistence",
-      "techniques": 13,
-      "rules": 34
+      "techniques": 16,
+      "rules": 37
     },
     {
       "id": "TA0007",
       "name": "Discovery",
-      "techniques": 13,
+      "techniques": 14,
       "rules": 6
     },
     {
@@ -68,6 +68,13 @@
       "rules": 1,
       "ruleNames": [
         "dcsync_replication_4662"
+      ]
+    },
+    {
+      "id": "T1003.008",
+      "rules": 1,
+      "ruleNames": [
+        "shadow_file_read"
       ]
     },
     {
@@ -138,6 +145,13 @@
         "host_enum_srvsvc_wkssvc_5145",
         "host_recon_command_burst",
         "host_recon_powershell_4104"
+      ]
+    },
+    {
+      "id": "T1053.003",
+      "rules": 1,
+      "ruleNames": [
+        "cron_persistence"
       ]
     },
     {
@@ -264,6 +278,13 @@
       ]
     },
     {
+      "id": "T1098.004",
+      "rules": 1,
+      "ruleNames": [
+        "ssh_authorized_keys_write"
+      ]
+    },
+    {
       "id": "T1110.003",
       "rules": 1,
       "ruleNames": [
@@ -337,6 +358,13 @@
       "rules": 1,
       "ruleNames": [
         "dcshadow_rogue_dc_4742"
+      ]
+    },
+    {
+      "id": "T1482",
+      "rules": 1,
+      "ruleNames": [
+        "sharphound_ldap_sweep_4662"
       ]
     },
     {
@@ -417,10 +445,31 @@
       ]
     },
     {
+      "id": "T1543.002",
+      "rules": 1,
+      "ruleNames": [
+        "systemd_unit_persistence"
+      ]
+    },
+    {
       "id": "T1546.003",
       "rules": 1,
       "ruleNames": [
         "wmi_event_subscription_consumer"
+      ]
+    },
+    {
+      "id": "T1548.001",
+      "rules": 1,
+      "ruleNames": [
+        "suid_bit_set"
+      ]
+    },
+    {
+      "id": "T1548.003",
+      "rules": 1,
+      "ruleNames": [
+        "sudo_root_shell"
       ]
     },
     {
@@ -435,6 +484,13 @@
       "rules": 1,
       "ruleNames": [
         "unconstrained_delegation_4624"
+      ]
+    },
+    {
+      "id": "T1552.004",
+      "rules": 1,
+      "ruleNames": [
+        "ssh_private_key_read"
       ]
     },
     {
@@ -692,7 +748,7 @@
       "products": [
         "linux"
       ],
-      "rules": 1
+      "rules": 8
     },
     {
       "dir": "npm",
