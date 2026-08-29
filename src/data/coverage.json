@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-08-28",
+  "generatedAt": "2026-08-29",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "f3ecf2f9457b8641e1fcd91843515d49ca0bc81f"
+    "commit": "9e552a3c0e522e467b6e3ba980d19147525dd687"
   },
-  "ruleCount": 106,
-  "documentCount": 124,
-  "techniqueCount": 80,
+  "ruleCount": 108,
+  "documentCount": 126,
+  "techniqueCount": 81,
   "tacticCount": 6,
   "logsourceCount": 24,
   "tactics": [
     {
       "id": "TA0002",
       "name": "Execution",
-      "techniques": 7,
-      "rules": 8
+      "techniques": 8,
+      "rules": 9
     },
     {
       "id": "TA0003",
@@ -116,6 +116,13 @@
       ]
     },
     {
+      "id": "T1021.002",
+      "rules": 1,
+      "ruleNames": [
+        "svcctl_atsvc_remote_pipe_sysmon_18"
+      ]
+    },
+    {
       "id": "T1033",
       "rules": 3,
       "ruleNames": [
@@ -156,9 +163,10 @@
     },
     {
       "id": "T1053.005",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "scheduled_task_suspicious_4698"
+        "scheduled_task_suspicious_4698",
+        "svcctl_atsvc_remote_pipe_sysmon_18"
       ]
     },
     {
@@ -347,8 +355,9 @@
     },
     {
       "id": "T1187",
-      "rules": 2,
+      "rules": 3,
       "ruleNames": [
+        "coercion_efsrpc_pipe_sysmon_18",
         "coercion_named_pipes_5145",
         "unconstrained_delegation_4624"
       ]
@@ -590,9 +599,10 @@
     },
     {
       "id": "T1569.002",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "service_creation_psexec_7045"
+        "service_creation_psexec_7045",
+        "svcctl_atsvc_remote_pipe_sysmon_18"
       ]
     },
     {
@@ -694,7 +704,7 @@
       "products": [
         "windows"
       ],
-      "rules": 10
+      "rules": 11
     },
     {
       "dir": "defense_impairment",
@@ -757,7 +767,7 @@
       "products": [
         "windows"
       ],
-      "rules": 5
+      "rules": 6
     },
     {
       "dir": "linux",
