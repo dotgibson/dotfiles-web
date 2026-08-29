@@ -44,7 +44,7 @@ export const layerMeta: Record<Layer, { label: string; accent: string; desc: str
   core: {
     label: 'Core',
     accent: 'purple',
-    desc: 'Authored once, vendored everywhere via git subtree.',
+    desc: 'Authored once, vendored everywhere, fanned out on release.',
   },
   os: {
     label: 'OS-native',
@@ -100,7 +100,7 @@ export const repos: Repo[] = [
       {
         label: 'A change here fans out N-way',
         detail:
-          'Core is vendored into every OS repo via git subtree — except Windows, which replicates it natively — so a defect fixed once lands in all of them on the next make sync. Treat every change as if it ships to all of them — because it does.',
+          'Core is vendored into every OS repo — except Windows, which replicates it natively — so a defect fixed once lands in all of them on the next fan-out. Treat every change as if it ships to all of them — because it does.',
       },
     ],
     docs: [
@@ -170,7 +170,7 @@ cd dotfiles-Windows
       {
         label: 'No vendored core/ here',
         detail:
-          'Unlike every OS repo, Windows does NOT vendor Core as a git subtree — host config is replicated natively in PowerShell. Only nvim/ and starship.toml are mirrored from Core (via nvim-sync.ps1 / starship-sync.ps1).',
+          'Unlike every OS repo, Windows does NOT vendor Core at all — host config is replicated natively in PowerShell. Only nvim/ and starship.toml are mirrored from Core (via nvim-sync.ps1 / starship-sync.ps1).',
       },
       {
         label: 'A pwsh loader that mirrors the zsh one',

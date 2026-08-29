@@ -10,9 +10,9 @@ order: 2
 `dotfiles-core` ships **configuration only** — shell modules, a Neovim tree, tmux,
 git, starship, and mise. It is not a running service and stores no credentials or
 machine state (see `.gitignore`: secrets, `*.bak`, and `zsh/99-local.zsh` never get
-tracked). Even so, this repo is the keystone of an eleven-repo system: it is vendored
-into every OS repo via `git subtree`, so a defect here **fans out N-way**. That
-makes two classes of issue worth a security report rather than a normal issue:
+tracked). Even so, this repo is the keystone of an eleven-repo system: it is
+vendored into every OS repo, so a defect here **fans out N-way**. That makes two
+classes of issue worth a security report rather than a normal issue:
 
 - a tracked file that leaks a secret, token, or other sensitive value, and
 - a Core script (`bin/clip*`, `maint/dotfiles-maint.sh`, `tmux/scripts/*`, or the
