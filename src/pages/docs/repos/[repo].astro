@@ -34,16 +34,16 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
     repo.layer === 'core' ? (
       <p>
         The keystone. Every OS repo except Windows — which replicates Core natively in
-        PowerShell — vendors this into its <code>core/</code> directory via
-        <code>git subtree</code>, so a change here fans out to all of them at once; Windows
-        picks up only the mirrored Neovim and starship configs. See{' '}
+        PowerShell — vendors this into its <code>core/</code> directory, so a change here fans
+        out to all of them at once; Windows picks up only the mirrored Neovim and starship
+        configs. See{' '}
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> and{' '}
-        <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring with git subtree</a>.
+        <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring Core</a>.
       </p>
     ) : repo.name === 'dotfiles-Windows' ? (
       <p>
         The <strong>{layer.label}</strong> layer — {layer.desc} Unlike the OS repos, it does{' '}
-        <strong>not</strong> vendor Core as a <code>git subtree</code>; the host config is replicated
+        <strong>not</strong> vendor Core at all; the host config is replicated
         natively in PowerShell (only <code>nvim</code> and <code>starship</code> are mirrored). See{' '}
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> for how the
         layers compose.

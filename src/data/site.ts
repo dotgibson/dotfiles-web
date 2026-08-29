@@ -39,9 +39,9 @@ export function isValidRef(channel: string): boolean {
 //
 //   • 'main' is always the rolling channel — clones track the default branch, so no
 //     `--branch` flag is emitted.
-//   • Each tag (e.g. 'v2.2.0') pins a hermetic release: because Core is vendored via
-//     `git subtree --squash`, a tagged OS-repo clone carries the exact Core it was
-//     tested with, so the same three-command install works for ANY tag.
+//   • Each tag (e.g. 'v2.2.0') pins a hermetic release: because Core is vendored as a
+//     real copy and the commit is recorded in `core.lock`, a tagged OS-repo clone carries
+//     the exact Core it was tested with, so the same three-command install works for ANY tag.
 //
 // Defensive: an older generated.json without `releases`, or any malformed entry,
 // degrades to a main-only rolling pill rather than throwing. Typed with widened

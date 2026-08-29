@@ -27,7 +27,7 @@ const fmtVer = (version: string, date?: string) => (date ? `${version} · ${date
           classified so you can filter to <strong>perf</strong>, <strong>config</strong>, or
           <strong>security</strong> at a glance. A
           <span class="badge tone-purple feed-core"><span class="dot" />Core</span>
-          change fans out to every OS repo on the next <code>git subtree pull</code>.
+          change fans out to every OS repo on Core’s next release.
         </p>
       </div>
 
@@ -129,7 +129,7 @@ const fmtVer = (version: string, date?: string) => (date ? `${version} · ${date
 
       <p class="muted center" style="margin-top:2.5rem;">
         Only repos with a <code>CHANGELOG.md</code> appear here. The distro layers track Core
-        via <code>git subtree</code> and don’t keep their own yet — they’ll show up
+        through their vendored <code>core/</code> and don’t keep their own yet — they’ll show up
         automatically once they do.
       </p>
     </div>

@@ -4,6 +4,7 @@ import CommandBlock from '../components/CommandBlock.astro';
 import Callout from '../components/Callout.astro';
 import { platforms } from '../data/install';
 import { site, release } from '../data/site';
+import { withBase } from '../lib/url';
 
 // The channels to offer. Always include `current` so a config where `current` is
 // a tag but `channels` wasn't updated still surfaces (and pins) that version
@@ -147,19 +148,20 @@ const showSelect = channels.length > 1 || release.current !== 'main';
         <Callout type="important" title="Keeping Core current">
           <p>
             Core is authored in <code>dotfiles-core</code> and vendored into every OS repo —
-            except Windows, which replicates Core natively in PowerShell and has no
-            <code>core/</code> subtree to pull. To pull the latest Core into a machine repo and
-            re-wire links:
+            except Windows, which replicates Core natively in PowerShell and carries no
+            <code>core/</code> at all. You don't pull Core down yourself: a release
+            <strong>fans out from Core</strong> and lands in each machine repo as a pull request.
+            Merge it, then re-wire links:
           </p>
-          <CommandBlock
-            code={`git subtree pull --prefix=core https://github.com/dotgibson/dotfiles-core main --squash
-./bootstrap.sh --links-only`}
-          />
+          <CommandBlock code={`./bootstrap.sh --links-only`} />
           <p class="muted" style="margin-bottom:0;">
-            Tracking a pinned release instead? Re-clone the new tag (or
-            <code>git fetch --tags && git checkout vX.Y.Z</code>) — the vendored Core moves
-            with it. Maintainers can fan a Core change out to every OS repo at once with
-            <code>scripts/sync-core.sh</code> from <code>dotfiles-core</code>.
+            To run a sync by hand, do it from a <code>dotfiles-core</code> checkout —
+            <code>./scripts/sync-core.sh dotfiles-&lt;OS&gt;</code> — which materializes
+            <code>core/</code> and stamps <code>core.lock</code> in one commit. Doing it from the
+            machine repo instead moves the tree but not the lock, and the integrity check reports
+            it as tampered; see <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring
+            Core</a>. Tracking a pinned release? Re-clone the new tag (or
+            <code>git fetch --tags && git checkout vX.Y.Z</code>) — the vendored Core moves with it.
           </p>
         </Callout>
       </div>

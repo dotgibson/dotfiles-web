@@ -1,10 +1,10 @@
 ---
-// ArchitectureDiagram — a static, data-driven SVG of the subtree topology.
+// ArchitectureDiagram — a static, data-driven SVG of the vendoring topology.
 //
 // The one fact the site never SHOWED: dotfiles-core is authored once and vendored
-// into every machine repo via `git subtree` (full Core), while dotfiles-Windows
+// into every machine repo as a full copy of Core, while dotfiles-Windows
 // mirrors only select Core assets — nvim/ and starship/ via their sync scripts
-// (dashed edge), not the full subtree. Layout is computed from the
+// (dashed edge), not the full Core tree. Layout is computed from the
 // real repo list in src/data/repos.ts, so adding a repo there updates this diagram
 // — no hand-drawn drift. Pure inline SVG: no dependency, no hydration, Tokyo Night
 // tokens only (matches the interactive-features design constraints).
@@ -70,7 +70,7 @@ const nodes = consumers.map((r, i) => {
     sub: r.layer === 'role' ? (r.name === 'dotfiles-Defense' ? 'OS + defensive' : 'OS + offensive') : r.layer === 'host' ? 'nvim+starship' : layerMeta[r.layer].label,
     x: cx - nodeW / 2,
     cx,
-    dashed: r.layer === 'host', // Windows: nvim + starship mirror, not the full subtree
+    dashed: r.layer === 'host', // Windows: nvim + starship mirror, not the full Core tree
     accent: accentVar[layerMeta[r.layer].accent],
     driftStatus: d.status,
     driftRef: d.ref, // the release/sha this repo currently carries
@@ -101,13 +101,13 @@ const edge = (cx: number) => {
     <title id="arch-dg-t">Core vendoring topology</title>
     <desc id="arch-dg-d">
       dotfiles-core is vendored into {fleetCounts.vendoring} machine
-      repositories via git subtree (solid edges); dotfiles-Windows mirrors only the Neovim and
+      repositories as a full copy (solid edges); dotfiles-Windows mirrors only the Neovim and
       starship configs via sync scripts (dashed edge). Edges are coloured by live vendoring drift — green when the
       repo carries Core's current release, orange when it is behind, cyan when the repo replicates
       Core instead of vendoring it — from each repo's recorded provenance.
     </desc>
 
-    <!-- edges: solid = full subtree, dashed = nvim-only mirror -->
+    <!-- edges: solid = full vendored Core, dashed = nvim-only mirror -->
     {
       nodes.map((n) => (
         <path
@@ -126,7 +126,7 @@ const edge = (cx: number) => {
         {core.name}
       </text>
       <text x={coreCx} y={coreY + 45} class="arch-node__sub" text-anchor="middle">
-        authored once · vendored via git subtree
+        authored once · fanned out on release
       </text>
     </g>
 
@@ -163,7 +163,7 @@ const edge = (cx: number) => {
     <!-- legend -->
     <g transform={`translate(${padX}, ${H - 70})`}>
       <line x1="0" y1="6" x2="34" y2="6" class="arch-edge" />
-      <text x="42" y="10" class="arch-legend">git subtree — full Core, self-contained</text>
+      <text x="42" y="10" class="arch-legend">vendored — full Core, self-contained</text>
       <line x1="0" y1="30" x2="34" y2="30" class="arch-edge arch-edge--mirror" />
       <text x="42" y="34" class="arch-legend">nvim + starship mirror — sync scripts (Windows host)</text>
 
@@ -208,10 +208,10 @@ const edge = (cx: number) => {
     </g>
   </svg>
   <figcaption>
-    One Core, vendored into {fleetCounts.vendoring} machine repos via
-    <code>git subtree</code> — each clone is self-contained (no submodule init).
+    One Core, vendored into {fleetCounts.vendoring} machine repos as a full copy — each
+    clone is self-contained (no submodule init).
     <strong>dotfiles-Offense</strong> and <strong>dotfiles-Defense</strong> are Role layers that stack on any OS layer; <strong>dotfiles-Windows</strong>
-    carries no <code>core/</code> subtree and mirrors only the Neovim and starship configs.
+    carries no <code>core/</code> at all and mirrors only the Neovim and starship configs.
     {
       (hasDrift || hasReplicated) && (
         <span>

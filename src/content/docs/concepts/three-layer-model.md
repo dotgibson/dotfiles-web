@@ -14,9 +14,14 @@ put something in is decided by **one question: what does it change with?**
 
 | Layer | Lives in | Owns |
 | --- | --- | --- |
-| **Core** | `dotfiles-core`, vendored into every OS repo's `core/` (except Windows — replicated natively) | zsh modules, tmux, nvim, git, starship |
-| **OS-native** | `dotfiles-{MacBook,Windows,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
+| **Core** | `dotfiles-core`, vendored into every OS repo's `core/` | zsh modules, tmux, nvim, git, starship |
+| **OS-native** | `dotfiles-{MacBook,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
 | **Role** | `dotfiles-Offense`, `dotfiles-Defense` | offensive / defensive tooling on the OS layer |
+| *Native host* | `dotfiles-Windows` | the Windows host: pwsh, Terminal, the WSL bridge |
+
+`dotfiles-Windows` is the model's one named exception rather than a fourth layer: it vendors no
+Core at all, replicating it natively in PowerShell, so it sits beside the three rather than inside
+the OS-native row.
 
 ## The rule for where a change belongs
 
@@ -29,10 +34,10 @@ A change belongs in **Core** only if it is **identical on every machine**, **not
   `dotfiles-Offense`; defensive detection tooling in `dotfiles-Defense`.
 - **Everything else that's truly universal → Core.**
 
-Core is authored once and **vendored** into each OS repo — except Windows, which replicates Core
-natively in PowerShell — so a defect in Core fans out to all of them at once. That leverage is the
-whole point — and the reason Core changes go through a single audit gate before they ship. See
-[Vendoring with git subtree](/docs/concepts/vendoring-with-subtree) for how the fan-out works.
+Core is authored once and **vendored** into each OS repo, so a defect in Core fans out to all of
+them at once. That leverage is the whole point — and the reason Core changes go through a single
+audit gate before they ship. See
+[Vendoring Core](/docs/concepts/vendoring-with-subtree) for how the fan-out works.
 
 ## Why split it this way
 
