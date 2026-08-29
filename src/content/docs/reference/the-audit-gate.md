@@ -8,7 +8,7 @@ order: 1
 # The audit gate
 
 `scripts/audit-core.sh` is the **single definition of "Core is healthy."** Because Core fans out
-to every OS repo via `git subtree`, a defect here is an N-way defect — so nothing is vendored out
+to every OS repo, a defect here is an N-way defect — so nothing is vendored out
 until the gate is green. CI, the pre-commit hook, and `make audit` all call the same script, so
 "passes locally" and "passes in CI" mean the same thing.
 
@@ -42,7 +42,7 @@ Run `make` with no target for the full list of entry points.
 ## The workflow
 
 1. Make your change in `dotfiles-core` (never in a vendored `core/` — see
-   [Vendoring with git subtree](/docs/concepts/vendoring-with-subtree)).
+   [Vendoring Core](/docs/concepts/vendoring-with-subtree)).
 2. `make audit-changed` while iterating; `make audit` before you push.
 3. Record the change in `CHANGELOG.md` under `[Unreleased]` with a Conventional Commits message.
 4. Once green, `make sync` fans it out to the fleet.

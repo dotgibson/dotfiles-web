@@ -71,6 +71,10 @@ the Fedora template (see `PORTING-MATRIX.md` in `dotfiles-core`).
 > needs an existing `HEAD`. So you must `git init` **and make the first commit of
 > the OS-layer files** *before* vendoring Core. And git won't commit at all until
 > it has an identity. Hence the sequence below — don't reorder it.
+>
+> **This add is initial vendoring only, never the update path.** It is the one
+> `git subtree` still in play, and only for a repo with no `core/` yet. Updates
+> come from Core — see [After setup](#after-setup).
 
 ```bash
 cd ~/dotfiles-Arch
@@ -87,12 +91,19 @@ git config user.email "<you@example.com>"
 git add -A
 git commit -m "Arch OS-native layer (stamped from Fedora template)"
 
-# 3. NOW vendor Core as a squashed subtree under core/
-git subtree add --prefix=core https://github.com/<you>/dotfiles-core main --squash
+# 3. NOW vendor Core under core/ — a RELEASED tag, never main
+git subtree add --prefix=core https://github.com/<you>/dotfiles-core refs/tags/v5 --squash
 ```
 
+**The ref matters.** Vendoring from whatever `main` happened to be produces a tree
+at a commit no `core.lock` records, and `core-integrity` then reports the fresh
+copy as `TAMPERED` before the repo has done anything wrong. Pin a released tag.
+
 If `dotfiles-core` lives only on disk (not yet pushed), step 3 takes a path just
-as happily: `git subtree add --prefix=core ~/dotfiles-core main --squash`.
+as happily: `git subtree add --prefix=core ~/dotfiles-core refs/tags/v5 --squash`.
+
+Core's `scripts/new-os-repo.sh` scaffolds all of this for you — including this add,
+with the same released-tag default.
 
 ---
 

@@ -28,7 +28,7 @@ const loadOrder = [
 const comparisons = [
   {
     title: 'vs git submodule',
-    body: 'A submodule stores a pointer, so a fresh clone is empty until git submodule update --init — the classic "I cloned it and nothing works" footgun. Subtree vendors the actual files, so every machine repo is self-contained and clone-and-go. The cost subtree pays back: a vendored copy in each repo (kept honest by the sync script + a manifest audit).',
+    body: 'A submodule stores a pointer, so a fresh clone is empty until git submodule update --init — the classic "I cloned it and nothing works" footgun. Vendoring copies the actual files in, so every machine repo is self-contained and clone-and-go. The cost it pays back: a duplicated tree in each repo (kept honest by the sync script, a lockfile, and a manifest audit).',
   },
   {
     title: 'vs chezmoi / yadm',
@@ -120,7 +120,7 @@ const deepDives = [
 
 <Base
   title="Architecture"
-  description="The three-layer model behind the dotfiles ecosystem: a vendored Core, thin OS-native layers, and operator role layers (offensive Kali, defensive Defense) — wired together by git subtree and a canonical zsh load order."
+  description="The three-layer model behind the dotfiles ecosystem: a vendored Core, thin OS-native layers, and operator role layers (offensive Kali, defensive Defense) — wired together by a pinned Core fan-out and a canonical zsh load order."
 >
   <section class="section">
     <div class="container">
@@ -155,14 +155,14 @@ const deepDives = [
         <div class="layer-table__row">
           <span class="tone-purple text-mono">Core</span>
           <span>
-            this repo, vendored into each OS repo via <code>git subtree</code> — except Windows,
+            this repo, vendored into each OS repo's <code>core/</code> — except Windows,
             which replicates Core natively
           </span>
           <span class="muted">zsh modules, tmux base, nvim, git/delta</span>
         </div>
         <div class="layer-table__row">
           <span class="tone-blue text-mono">OS-native</span>
-          <span><code>dotfiles-&#123;MacBook,Windows,Fedora,Arch,…&#125;</code></span>
+          <span><code>dotfiles-&#123;MacBook,Fedora,Arch,Debian,…&#125;</code></span>
           <span class="muted">package manager, clipboard shim, paths</span>
         </div>
         <div class="layer-table__row">
@@ -170,9 +170,19 @@ const deepDives = [
           <span><code>dotfiles-Offense</code> · <code>dotfiles-Defense</code></span>
           <span class="muted">offensive engagement (Offense) · defensive detection/hunt (Defense)</span>
         </div>
+        <div class="layer-table__row">
+          <span class="tone-cyan text-mono">Native host</span>
+          <span><code>dotfiles-Windows</code></span>
+          <span class="muted">pwsh, Terminal, the WSL bridge — vendors no Core, replicates it</span>
+        </div>
       </div>
+      <p class="muted">
+        The Windows host is the model's one named exception rather than a fourth layer: it carries
+        no vendored <code>core/</code>, so it sits beside the three rather than inside the
+        OS-native row.
+      </p>
 
-      <!-- the subtree topology, drawn from the real repo list -->
+      <!-- the vendoring topology, drawn from the real repo list -->
       <h2 class="mt">The fleet at a glance</h2>
       <ArchitectureDiagram />
 
@@ -180,22 +190,27 @@ const deepDives = [
       <h2 class="mt">How an OS repo consumes Core</h2>
       <p>
         Each machine repo (except Windows, which replicates Core natively in PowerShell)
-        vendors <code>dotfiles-core</code> under <code>core/</code> as a
-        git subtree. That physically copies Core in and commits it, so the repo clones and
-        works with no submodule flags — important, since these are public showcase repos
-        people will browse.
+        <strong>vendors</strong> <code>dotfiles-core</code> under <code>core/</code> — Core is
+        physically copied in and committed, so the repo clones and works with no submodule flags,
+        important since these are public showcase repos people will browse. Updates are not pulled
+        from the machine repo; they are <strong>fanned out from Core</strong>.
       </p>
       <CommandBlock
-        code={`# one-time, inside an OS repo:
-git subtree add --prefix=core https://github.com/dotgibson/dotfiles-core main --squash
+        code={`# one-time, for a repo with no core/ yet — a RELEASED tag, never main:
+git subtree add --prefix=core https://github.com/dotgibson/dotfiles-core refs/tags/v5 --squash
 
-# later, to pull Core updates down:
-git subtree pull --prefix=core https://github.com/dotgibson/dotfiles-core main --squash`}
+# every update after that, run from a dotfiles-core checkout:
+./scripts/sync-core.sh dotfiles-<OS>`}
       />
       <p class="muted">
-        Maintainers fan a Core change out to every OS repo in one shot with
-        <code>scripts/sync-core.sh</code>, which prints the exact short SHA each repo
-        receives so a sync is traceable.
+        <code>sync-core.sh</code> resolves Core once, materializes <code>core/</code> at that exact
+        commit, and stamps <code>core.lock</code> beside it in the same commit — so every repo in a
+        fan-out carries the same Core no matter how long the loop takes, and "which Core is this box
+        on?" is answerable offline. The one command never to run is
+        <code>git subtree pull</code>: it moves the tree but not the lock, and the integrity check
+        then reports a repo nobody touched as tampered. See
+        <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring Core</a> for the full
+        contract.
       </p>
 
       <!-- how it compares -->

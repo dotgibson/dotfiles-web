@@ -30,7 +30,7 @@ export interface ChangelogEntry {
 }
 
 // One entry per change, newest first, flattened across every repo. `core` marks a
-// change authored in Core — it ships to every OS repo on the next subtree pull.
+// change authored in Core — it ships to every OS repo on Core's next fan-out.
 export interface FeedItem {
   repo: string;
   version: string;

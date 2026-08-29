@@ -54,8 +54,9 @@ Push the **new** structure (the files from this session: `bootstrap.sh`, `os/`,
 git clone <REMOTE>/dotfiles-MacBook ~/dotfiles-MacBook
 cd ~/dotfiles-MacBook
 
-# one-time: vendor Core as a subtree (same as the other repos)
-git subtree add --prefix=core <REMOTE>/dotfiles-core main --squash
+# one-time initial vendoring, never the update path (same as the other repos).
+# A RELEASED tag, never main — see the note below.
+git subtree add --prefix=core <REMOTE>/dotfiles-core refs/tags/v5 --squash
 
 # make the popup scripts executable (the outputs filesystem can't carry +x)
 chmod +x core/tmux/scripts/*.sh core/bin/clip core/bin/clip-paste
@@ -65,6 +66,12 @@ git push
 
 > Don't run `bootstrap.sh` yet — first clear the old repo-ness from `~/.config`
 > in the next step, or the two will fight over the same files.
+
+> **Why the tag, and why only once.** Vendoring from `main` lands a tree at a commit
+> no `core.lock` records, and `core-integrity` reports the fresh copy as `TAMPERED`.
+> After this one-time add, Core updates arrive as a fan-out PR from `dotfiles-core`
+> — never `git subtree pull`, which moves `core/` without the lock. See
+> [Vendoring Core](/docs/concepts/vendoring-with-subtree).
 
 ---
 
