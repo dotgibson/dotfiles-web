@@ -10,31 +10,31 @@
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "4c4900b65f6a1723f944bace8142965fbda5fe1a",
+        "commit": "664f776fd8e1ed2cd1688c5a0d1464754133de51",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "c331dbc5031004fdbda75c35fa7740a1db6deb2b",
+        "commit": "86d372d94e744bcac09f08e53116392a3021cd1e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "7ecb7f67c7fa8196bbc1f57eb5f38e3a29fe1050",
+        "commit": "7b1191a0e82d17e7739789160b1b069e5048add8",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "3e7da742c2993847f3d75df2d5d92857bf489697",
+        "commit": "f8f9b3cd98f083de6111115e93aedc533c45fbac",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "01ba84755e0ae14aa5160f6510d273f9c561a491",
+        "commit": "fb7feb2abf8bc2fdc57633bb4183f5a0fe265d91",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
