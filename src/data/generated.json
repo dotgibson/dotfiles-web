@@ -1,58 +1,58 @@
 {
-  "generatedAt": "2026-08-29",
+  "generatedAt": "2026-08-30",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "a8b8e6e40fffb219037693088eb732928ef77bf7",
+        "commit": "44ac5a5c20cc36ee92a7cf71fefc793c47f1ed7b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "7b1191a0e82d17e7739789160b1b069e5048add8",
+        "commit": "7d1410f4b75fe6177cbdc99745f09dd0d5c751ba",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "6d0255ccfff6c401ad6b21b655285c64554c8afe",
+        "commit": "f33269f89ee42b1adcd869178dc9b5911706cc56",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "fb7feb2abf8bc2fdc57633bb4183f5a0fe265d91",
+        "commit": "5299585e273e7d221522c0addf51e344c9fadeeb",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "a8f8f9fa6406750dff92dd6b37a781c57be47e31",
+        "commit": "d7bfae1262a5dd62c0a5e51e1630a7402ffb3896",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "664f776fd8e1ed2cd1688c5a0d1464754133de51",
+        "commit": "8b8927e01061de16d5002d7e8d1960f54fb87fa9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "86d372d94e744bcac09f08e53116392a3021cd1e",
+        "commit": "590ec0315eb156546b1358ef71faa773c6a2e0bf",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "b740bbe8d13668714ecac64627a37c39618af570",
+        "commit": "2e6d0f91b992a6c2fd9bf19af7f6465af6e52ff5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "d8db0212a40208857688ed46d483603e5d7cc3a5",
+        "commit": "9617dff08328c1581bbf1df73ea58f2db7a268c2",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -64,7 +64,7 @@
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "f18b2d8494bb658b7c37f906e76037a6c6019ce3",
+        "commit": "d67759c17ee86bd2faf20f573dfdbd2e245b5bc9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -124,9 +124,9 @@
         "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v5.4.1",
-        "carried": "5.4.1",
-        "status": "behind"
+        "ref": "v5.4.2",
+        "carried": "5.4.2",
+        "status": "current"
       },
       "dotfiles-Alpine": {
         "ref": "v5.4.2",
@@ -151,12 +151,12 @@
   "packages": {
     "dotfiles-MacBook": 77,
     "dotfiles-Fedora": 38,
-    "dotfiles-Arch": 45,
+    "dotfiles-Arch": 46,
     "dotfiles-Debian": 46,
     "dotfiles-openSUSE": 47,
     "dotfiles-Alpine": 72,
     "dotfiles-Gentoo": 40,
-    "dotfiles-Offense-offensive": 82
+    "dotfiles-Offense-offensive": 85
   },
   "ci": {
     "dotfiles-core": true,
@@ -172,6 +172,43 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "A gate for local gates that cannot do what their name says (#775). scripts/lib/common.sh :: _core_make_gate_hits reads a repo's Makefile and reports three shapes, all found by hand across the fleet and none previously catchable: - A skip that cannot skip. command -v x || { echo \"skipping\"; exit 0; } on one recipe line, the tool on the next. make gives each recipe line its own shell, so the exit 0 ends only that line — the target announces a skip and then runs the missing tool, exiting 127. Found in Debian, Fedora (×2), Offense (×3) and Defense (×2). - A check that cannot fail. A checker ended with ; before a success echo: the echo runs regardless and becomes the line's exit status, so findings print and the target exits 0. openSUSE's lint-sh did this while its two siblings used && and || exit 1 — which is exactly why nobody looked at it. - A blocking CI leg with no local mirror. A .markdownlint.jsonc that only CI ever read, for a leg blocking since #592, plus the narrower case where the local target globs '*.md' (top-level only) while the gate lints git ls-files recursively. Rendered in two places, because the defect is in the callers and Core's audit can only see Core: §8d of audit-core.sh keeps the authoring repo honest, and a new make-gates leg in lint-call.yml judges each caller's own Makefile. Both drive the shipped function rather than a copy — the discipline _core_tool_skip_count records, where a test that re-implemented its subject stayed green while the defect it existed to catch was fully reintroduced. Blocking, and only because the fleet was cleared first. #592's markdown leg had to ship advisory for a release because seven of nine callers would have gone red before a maintainer could act; the nine #775 PRs merged while this was in review, so every caller's main measures 0 and that staging is unnecessary here. The measurement is the precondition, not a formality: a future rule that any caller fails must ship advisory the way #592 did, because callers read lint-call.yml at the moving @v5 tag and meet a new rule the moment auto-tag moves — red on arrival, in a repo whose author changed nothing. Recorded on the job so nobody loosens the rule to get past a red. Three things worth recording about how it was built, because they are the reason to trust it: - It found four defects the hand sweep missed — Offense's shellcheck and secrets (both exit 127 with the tool absent) and Defense's core-check, which is the worst of the set: it prints its skip notice, runs gh anyway, and reports vendored core is 5.4.1, upstream is — a sync from dotfiles-core is owed from an empty variable. A confidently wrong answer about fleet drift, not a crash. - The false positives shaped the rules more than the true ones. A first draft used \"any exit 0 before the last recipe line\" and reported Alpine's shell, which guards shellcheck and runs it on the same line — a correct skip. It also flagged lint-zsh and zsh-syntax, which handle failure with || exit 1 inside the loop. All three are pinned as must-not-fire cases: a gate that cries wolf on working code teaches the fleet to ignore it. - It was seen failing before being trusted. The fixtures are the real pre-fix and post-fix recipes copied verbatim, not synthetic approximations, and §8d was run against a defect injected into Core's own Makefile. A guard for a historical defect that is never run against that defect is the same category error it exists to fix. The audit-alpine leg caught the guard doing the thing it hunts. Its markdownlint reachability probe used grep --exclude-dir and -I, both GNU extensions; busybox grep rejects the first, so the probe exited 2, that was read as \"no mirror\", and Core — the repo that authors the rule — was reported as the one repo missing it. A false finding produced by an unsupported flag, in the gate whose entire subject is checks that answer wrongly. Neither flag was needed. The probe now also distinguishes \"searched, absent\" from \"could not search\", and stays silent in the second case: unknown and absent are different facts and only one is a defect. Pinned by a fixture that rejects those flags exactly as busybox does, so a developer box catches it without an Alpine runner. Complements, and does not replace, dotfiles-MacBook/test/check-skip-guards.sh, which tests the first shape at runtime by rebuilding a PATH without the guarded tool. That is stronger evidence per finding but can only judge the repo it sits in; this is the static, fleet-portable half.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "VENDORING.md described a resolved core.lock defect as a live hazard (#670). It warned, in the present tense, that three OS repos independently generate core.lock and \"have already drifted from it and from each other\" — naming Arch's hardcoded core_branch=main, openSUSE's SHA-in-that-field, and MacBook's read-back of the previous value. #593 retired all three more than a release ago. Every one of the four make core-lock targets in the fleet is now an echo-only redirect that writes nothing and names its own retired defect in the past tense (Offense's runs a read-only freshness check and points at its own pull). Telling a reader the fleet is in a state it is not in is worse than silence: it also spends the credibility of the surrounding warnings, which are still live. The paragraph now states the rule that survives — Core's sync-core.sh is the only writer of core.lock in a fan-out repo, because it stamps the lock in the same commit that materializes core/ — and records the four redirects as the enforcement of that rule rather than as breaches of it. The three retired generators stay in the text as the evidence for why a second writer cannot be kept in step by discipline; they are no longer presented as something to go and fix.",
+              "kind": "fix"
+            },
+            {
+              "text": "The same stale claim stood in a second document. RELEASE-STRATEGY.md also read \"three consumers carry an independent generator of a format Core owns, and all three have already drifted from it\", so correcting VENDORING.md alone would have left two Core documents disagreeing about the repo's own rule — the shape of defect #668 had just finished clearing out. Both now say one thing.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "core_branch is documented as gone, and the flat \"only sanctioned writer\" claim is qualified (#670). Two things were true but unwritten. First, dotfiles-Offense is a real second writer: make core-sync runs that repo's own scripts/sync-core.sh, a git subtree pull --squash that stamps all four fields, and Offense's CONTRIBUTING.md teaches it as the update route there. It is sanctioned — unlike the three retired generators it writes Core's format from what it actually pulled, taking core_sha from the squash commit's git-subtree-split trailer and core_version from the tree on disk, so the lock cannot name a commit its own core/ does not contain — but an unqualified \"only sanctioned writer\" read as covering it and did not. VENDORING.md now names it as the one exception, and notes the consequence: Offense has two paths into core/, the fan-out which replaces the tree and its own pull which merges, and core-integrity gates both because both stamp the lock. Second, the pre-#453 core_branch field survives in no core.lock anywhere — all nine fleet locks are Core-stamped with core_ref — so it is now documented as gone as of v5, and a lock still carrying it is pre-v5 and fixed by a sync rather than by hand. Offense's reader-side fallback (scripts/sync-core.sh:80-82,183, test/check-core-freshness.sh:59-63) is the last consumer of the old name and is dead against every lock that exists; retiring it is a dotfiles-Offense change, tracked separately.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v5.4.2",
@@ -270,6 +307,41 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "The maintenance tasks were pointing at a pwsh that Windows deletes. maint-install baked (Get-Command pwsh).Source into both scheduled tasks, and a Store-installed pwsh resolves to a *version-pinned* package directory (…\\WindowsApps\\Microsoft.PowerShell_<ver>_…\\pwsh.exe). When Windows cleans up a superseded package the task fails with 0x80070002 — silently, because a task that never launches writes nothing to maint.log. Measured on this host: dotfiles-maint sat at 0x80070002 with no completed run between 2026-08-26 and 2026-08-29, which also meant the scoop junction sweep from #217/#221 was not happening. The feature was correct and simply never got to run. maint-install now prefers a version-stable path — MSI install, machine-wide app alias, per-user app alias, scoop shim — and only falls back to the resolved version-pinned path, warning when it does. The daily task runs as you and takes the per-user alias; the SYSTEM task cannot, since SYSTEM's %LOCALAPPDATA% is under config\\systemprofile, so with a Store-only pwsh it stays pinned and says so. Installing the MSI build gives both a stable path. Get-DotStablePwshPath is the pure, unit-tested policy; the probing stays in the fragment. Detection, so this cannot rot silently again: maint-status now shows each task's Execute and attaches a verdict — a missing executable or a 0x80070002 last result is a fail, and the informational SCHED_S_* codes are not. dotfiles-doctor carries a Maint tasks row. Both are careful about what they can actually see: Task Scheduler ACLs a SYSTEM-principal registration to SYSTEM and BUILTIN\\Administrators, so an unelevated shell cannot distinguish a broken junction task from a healthy one and reports not visible rather than guessing not installed. (A self-check inside the daily run was tried and removed for exactly this reason: it would have reported a confident false failure every day.)",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "A drift gate on the maintenance runner's own step list. Maintenance.ps1 states its steps in three places — the file header, the -Help block, and the actual Step calls — and nothing kept them honest, so both prose copies had silently lost the scoop junction step (the header had also lost navi). tests/Maint.Tests.ps1 now discovers the steps from the AST and fails when one is not documented in both, with a bidirectional map assertion so a renamed or removed step cannot leave a stale entry that passes forever. Both prose blocks are corrected.",
+              "kind": "fix"
+            },
+            {
+              "text": "The scoop junction repair now covers every junction scoop makes, and runs on a schedule. #218 established the mechanism — Redirection Guard refuses a junction *created* by a non-admin, trust is stamped at creation, so re-creating it elevated is the only lever — and fixed apps\\<app>\\current. Two gaps remained. Scope. scoop also wires persisted state back out of an app dir with junctions into scoop\\persist\\<app>\\... (bat\\themes, bat\\syntaxes, btop-lhm\\themes, composer\\cache, php\\cli, syncthing\\config, the yt-dlp plugin dirs), and scoop\\modules\\gsudoModule points into apps\\gsudo\\current from outside apps\\ entirely — 15 further junctions on this host, created by the same non-admin scoop process and untrusted for the same reason. Re-stamp only current and bat --list-themes is still broken over ssh. The sweep is now every directory reparse point under the scoop root; -Recurse does not descend *through* a reparse point, so each physical junction is reported exactly once under its canonical path. It never actually ran. The step is gated on elevation, and dotfiles-maint is registered RunLevel = Limited — which is the open question issue #217 asked to resolve first. maint-install now also registers dotfiles-maint-scoop-junctions, running as SYSTEM an hour after the daily job. SYSTEM rather than the interactive user at RunLevel Highest, because an Interactive task only runs while someone is logged on and the case this fixes is nobody being; -ScoopRoot and -LogPath are baked into the action since SYSTEM's profile paths are not the user's. Sequencing is a time offset rather than an event trigger on the first task completing, because Microsoft-Windows-TaskScheduler/Operational is disabled by default and that subscription would never fire. The daily task deliberately stays unelevated — scoop update * must not run as admin. The sweep moved out of Maintenance.ps1 into maint/Repair-ScoopJunctions.ps1 so the elevated task has an entry point; the policy behind it is Get-DotScoopJunctionPlan, pure and unit-tested. Registering an elevated task itself needs an elevated shell, so maint-install run unelevated installs the daily task and says plainly that it skipped the other one. maint-status reports both tasks with their run level; maint-uninstall removes both.",
+              "kind": "perf"
+            }
+          ]
+        },
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "wsl-ssh-config — the client-side ssh_config for the distros behind this host. docs/REMOTE-ACCESS.md §4 told you to hand-write the Host <distro> block that Format-DotWslSshConfig could already generate: the renderer, the port allocator and the alias slug all shipped as tested module exports with nothing calling them. powershell/os/34-remote.ps1 is that caller. Ports are allocated from the sorted distro list, because wsl --list reorders on install / unregister / re-default and a port that moves is worse than no port — it is already baked into ssh_config, into firewall rules and into muscle memory. -HostPort reserves the port the Windows sshd actually answers on instead of assuming 22; assume otherwise and a distro is handed the host's port, a collision that stays invisible until that distro silently fails to bind. -JumpHost emits the ProxyJump shape — one LAN port, distro ports on the host's loopback — rather than a network-facing listener per distro. It prints and never writes: the file this output belongs in lives on the machine you ssh *from*, which by definition is not this one. Reading the distro list back out of wsl.exe is the one impure step, and it is impure in a way that bites — wsl --list --quiet emits UTF-16LE, which lands in PowerShell as a string with a NUL between every character, so a naive reader finds no distros on a box that has several. WSL_UTF8=1 is set on the child only (and restored, including the unset case, which must be removed rather than blanked), with the NUL strip as the belt for builds that ignore the variable. Still deliberately absent, and still a runbook rather than a script: standing sshd up. The service, the firewall rules, the HKLM DefaultShell key, the boot task and the power settings are machine-global state that varies per box.",
+              "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "hostip returned an address no other machine could reach. It took the first non-link-local IPv4 Windows reported, and on any box with a Hyper-V or WSL virtual switch that is vEthernet (Default Switch) — a Manual 172.x address that exists only inside the host. Measured here: hostip answered 172.26.80.1 while the LAN address was 10.0.50.90. Nothing about the address itself says which is which, so it read as correct right up until the connection timed out. What separates them is the routing table: the LAN interface carries a default route and a virtual switch has none. hostip now reads the default routes and the addresses and hands both to Select-DotHostAddress, a new pure module export that makes the choice — preferring a default-route interface in the caller's metric order, and falling back to the old SkipAsSource ordering on an offline box with no default route at all, rather than returning nothing. Surfaced by wsl-ssh-config above, which prints this address into a config you paste on another machine — the one place the wrong answer is guaranteed to bite.",
+              "kind": "fix"
+            },
             {
               "text": "Configs are unreadable over ssh, and it was never an execution-policy problem. On a host running OpenSSH Server, the PowerShell profile failed to load in an ssh session with *\"untrusted source\"* while loading fine in Windows Terminal. The cause is Redirection Guard (ProcessRedirectionTrustPolicy), which Windows enforces across the whole service / session-0 lineage: a process with it enforced refuses to traverse a reparse point whose target sits under a non-admin-owned directory — i.e. every symlink this repo wired into a repo under C:\\Users\\<you>. The error is ERROR_UNTRUSTED_MOUNT_POINT. Measured, not theorised: explorer / WindowsTerminal / glazewm report 0x100 (not enforced), while services.exe / wslservice / Task Scheduler's svchost / sshd all report 0x105. sshd inherits it, and every ssh session inherits it from sshd. That split is the whole symptom. It cannot be configured away. fsutil ... R2L:1, deleting the sshd.exe IFEO MitigationOptions, setting that value to REDIRECTION_TRUST_ALWAYS_OFF, and changing the symlink's owner were each tried on a real host and each did nothing — the policy is inherited and non-relaxable. Running sshd as a real Windows service would not help either (services.exe is 0x105 too). docs/REMOTE-ACCESS.md records all of it so nobody re-runs the experiment. The fix is to stop using reparse points for the configs that have to work over ssh. Get-DotfilesLinkPlan rows now carry a Kind ('Symlink' | 'Stub'), and the three that matter are wired as real files that pull in the repo copy through the config format's own include mechanism — same single source of truth, no reparse point: | Config | Mechanism | | --- | --- | | $PROFILE | a real .ps1 that dot-sources powershell/profile.ps1 | | ~/.gitconfig | [include] path = <repo>/git/.gitconfig | | ~/.ssh/config | Include <repo>\\ssh\\config, first line | ~/.gitignore_global deliberately stays a symlink — a .gitignore has nothing to include — so the .gitconfig stub overrides core.excludesfile to the repo copy instead, *after* the include, because last value wins for a single-valued key. ~/.ssh/config bit twice: as a symlink it also stalled the ssh client on the host, because ssh.exe reads it at startup and inherits the same enforcement. A plain ssh hung while ssh -F NUL returned instantly. Re-wire an existing box with .\\install.ps1 -SkipPackages. Not fixed, and called out honestly in the doc: scoop. Its current junctions have the same problem (77 of 78 apps unreachable over ssh on the host this was found on), and there is no include trick for a junction — only taking ownership of the app directories, which scoop undoes on every update.",
               "kind": "perf"
@@ -580,6 +652,86 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "Two more targets had the same guard defect, found by the new gate rather than by eye. make shellcheck and make secrets each announced a skip and then ran the missing tool, exiting 127 — the same shape as markdown below, in targets nobody had thought to check. Both collapsed into one recipe line. _core_make_gate_hits (dotgibson/dotfiles-core#775) found them the first time it was pointed at this repo, having been written from the markdown case alone.",
+              "kind": "fix"
+            },
+            {
+              "text": "make markdown announced a skip and then ran anyway. Each make recipe line runs in its own shell, so the guard's exit 0 only ended that line: without npx it printed \"npx not available — skipping markdown\" and then ran npx, exiting 127. Collapsed into one recipe line, so the skip is a real skip (dotgibson/dotfiles-core#775 — the same defect in six other fleet repos). MD_FILES was already correct here, including the offensive/companion exclude that matches the gate's, so only the guard needed fixing. An unreadable MARKDOWNLINT_VERSION now fails rather than silently linting unpinned — \"same version as CI\" is this target's whole claim.",
+              "kind": "fix"
+            },
+            {
+              "text": ".markdownlint.jsonc's header claimed this config was \"the local check for the README\" and that \"CI here gates this repo's own code, not its Markdown\". Both were true when written; dotgibson/dotfiles-core#592 made the markdown leg blocking and it covers all 17 repo-owned files, not just the README.",
+              "kind": "config"
+            },
+            {
+              "text": "Seven tools carried claims that were incomplete, imprecise, or absent — the annotation half of #275 (item 9). No package added or removed; the parsed set is byte-identical at 85 names. - httpx-toolkit's warning was right in conclusion, wrong in mechanism. It said the \"bare 'httpx' apt pkg is the python lib, not this\". There is no binary package named httpx at all — apt-cache show httpx returns E: No packages found; the source package builds python3-httpx. So the bare name does not install the wrong tool, it resolves to nothing — which makes this an instance of the *hexyl* rule (a name this manifest must never carry), not of the package/binary split it was filed under. Currency added: apt runs about one minor behind. - wpscan changed under you. kali-rolling jumped 3.8.28 → 4.1.0 in Aug 2026 after 3.8.28 sat since Mar 2025, so an apt upgrade since then swapped the tool, not the patch level. v4.0.0 requires Ruby 3.3+, no longer scans plugins by default (-e ap), moved config/cache to XDG dirs, and removed --timthumbs-detection, --config-backups-detection, --db-exports-detection and --medias-detection. Verified that nothing shipped breaks: hacktheplanet passes --enumerate u,vp,vt explicitly, so the plugin-default change never reaches it. - nikto is alive and current, recorded so it is not re-suspected (upstream pushed 2026-08-28; 2.6.1 released Jul 2026). It was flagged as a likely-stale \"old Perl scanner\" and is not. Its 2.6.x line does change the tool's network signature — a static Chrome User-Agent by default instead of one rotating per request — which is worth knowing when reasoning about what a defender saw. - snmpcheck and smtp-user-enum were the enum block's last two unmarked freezes. Both upstreams are frozen (nothink.org 1.9, 2015; pentestmonkey v1.2), and in both cases apt is at that version, not behind it — there is nothing to chase. Kept for the reason mitm6 and PrintSpoofer are kept: SNMP community strings and SMTP VRFY/EXPN are protocol behaviours, not bugs anyone will patch out. Deliberately no year for smtp-user-enum — its page states no release date, so any date here would be invented. - bloodyad ships BadSuccessor, which the README does not mention (it is in the wiki: add badSuccessor, msldap badsuccessor_check, msldap dmsas), so the dMSA escalation path is already on the box. Annotated with the target-state caveat the mitm6 note draws on the same axis: Microsoft patched it 2025-08-12 (Server 2025 DCs from build 26100.4946), and the post-patch variant needs a second primitive plus SharpSuccessor/Rubeus — neither of which this layer ships, and neither added. - PKINITtools is going quiet — not archived, but last push 2025-01-03, the stalest live pointer in the AD block. Dated note only. The note explicitly refuses to claim certipy supersedes it: that could not be confirmed from a primary source, and says so rather than leaving a plausible guess in the manifest. - GodPotato was the last unmarked freeze in the target-dropped block once PrintSpoofer got its ARCHIVED note. Static since 2023-11-24 and kept — the RPCSS OXID abuse survived the DCOM activation-hardening waves. SigmaPotato is named as the in-memory .NET fork but gets no pointer: itself untouched since 2024, so a mention rather than a successor.",
+              "kind": "security"
+            },
+            {
+              "text": "PACK is in Kali apt, and the manifest sent you to a dead Python-2 repo instead. The pointer read → UPSTREAM (github.com/iphelix/pack) … Python 2 era — run from the clone, no apt package, and both halves were wrong. This is the fifth instance of the error class this file already records fixing for caldera, name-that-hash, evilginx2 and sliver: a manifest that routes you upstream for something apt ships. Confirmed against apt's own index rather than a report — pack (0.0.4+git20191128.fd779b2-0kali3, arch all) Depends: python3, python3-enchant, and the package's Homepage field is github.com/Hydraze/pack, the maintained Python-3 fork (last push 2024-07-28). iphelix's original is dead (last push 2019-12-10). Now a plain apt line in Credential attacks. The membership rule does not block it the way it blocks trufflehog — offensive/hacktheplanet:580 invokes statsgen and maskgen directly. The shipped binaries were read off the package rather than guessed: statsgen, maskgen, policygen, rulegen and dictstat, a fifth legacy binary the old note did not know about. The kwp-is-not-in-PACK note on the next line depends on this block naming iphelix/pack and is left intact. #275 item 1.",
+              "kind": "security"
+            },
+            {
+              "text": "chisel had no annotation at all, and apt ships a pre-release of it. kali-rolling is 1.12.0~rc2-0kali1; upstream cut v1.12.0 final on 2026-08-29, two RCs ahead — the opposite of the ffuf case, where apt trails a live upstream. 1.12.0 breaks flags: --auth now requires <user>:<pass> and *fails startup* on a missing colon, SOCKS5 users need an authfile entry matching socks, truncated MD5 fingerprints are rejected, and a client exhausting --max-retry-count exits non-zero. Nothing shipped here breaks — the hacktheplanet lines and the corpus' reverse-tunnel-chisel entry were checked and both use the bare chisel server --reverse form; the exposure is an operator adding --auth from memory. The pspy split is recorded too: apt's build is for your box, the static release binary is what you upload, and mixing is safe because the wire protocol is unchanged. #275 item 2.",
+              "kind": "perf"
+            },
+            {
+              "text": "kubectl is outside Kubernetes' documented support skew, which the line did not say. Its provenance note was correct; its silence on currency was the problem. kali-rolling is 1.33.4+ds-1 (imported 2025-10-02) against upstream stable v1.37.0. kubectl is supported within ±1 minor of the apiserver, so a 1.33 client is unsupported against 1.35/1.36/1.37 — a documented window, not a version-number aesthetic, and it degrades the corpus' k8s-* entries sitting under peirates. The line now points at pkgs.k8s.io when a cluster's version matters, the same shape as the google-cloud-cli/gh/vault pointers in the same block. #275 item 3.",
+              "kind": "fix"
+            },
+            {
+              "text": "The covert-egress header excepted ptunnel-ng as \"the CURRENT upstream\" — an annotation this changelog added two entries below, wrong within three weeks. Its *version* claim holds (kali 1.43-2 is upstream v1.43); its *vitality* claim did not. v1.43's own release note says \"due to time constraints, there will be no further publications in the near future\" (tagged 2024-11-27) and master has not moved since 2024-04-07. It froze at a version apt happens to have. All five tools in that block are frozen, dead, or behind — which is the honest state of covert-channel egress and more useful than implying one live option exists. ptunnel-ng is still the right choice of the two ptunnels; it is the maintained-*er* fork, not a live project. #275 item 4.",
+              "kind": "config"
+            },
+            {
+              "text": "dnsenum's name lands you on the wrong repo. The line carried no upstream pointer, and fwaeytens/dnsenum — what you find searching the name, 702 stars — has not moved since 2019-10-08. Kali ships 1.3.2-1, whose Homepage names SparrowOchon/dnsenum2 (\"officially mainlined in Kali\"). Same use-the-fork trap the kwp-vs-iphelix/pack and ConfuserEx-vs-mkaring notes exist to prevent — and the same shape as the pack fix above, where apt's Homepage also named a fork the note did not know about. Honest status: frozen fork, and apt is on it. dnsrecon is the maintained analogue and is in apt, but no doc or corpus entry names it, so it stays out on this file's membership rule. #275 item 5.",
+              "kind": "fix"
+            },
+            {
+              "text": "PowerUpSQL was named in the payload-build block's \"absent\" list but was the one member of six with no status line. Verified: not archived, but no release has ever been cut and the last functional commits are Aug 2024 — quiet, not dead, the sRDI shape. Recorded as low impact here, because the Linux-native half is already on the box: impacket-mssqlclient (enum_links/use_link) and nxc mssql cover linked-server hopping and are both already listed. skahwah/SQLRecon is named as the maintained analogue with no pointer of its own — the pretender treatment. The block's reference to that tool in offensive/evasion had also drifted, and is corrected from :124 to :126. #275 item 6.",
+              "kind": "fix"
+            },
+            {
+              "text": "sliver's note ran one release ahead of the facts. It said upstream \"has kept releasing (past 1.7.6 by Aug 2026)\"; v1.7.6 shipped 2026-08-28 and is the head, so \"past\" was wrong — now \"through 1.7.6\". The durable phrasing the last cycle introduced (check sliver-server version before an op, never a patch count) is unchanged and still right. What 1.7.6 contains sharpens it: it bounds mTLS/WireGuard envelope and pivot-frame allocation from the length prefix and fixes DNS varint boundary handling — memory exhaustion on network-facing paths, not cosmetic stability. #275 item 7.",
+              "kind": "fix"
+            },
+            {
+              "text": "proxychains4 carried no annotation, and the bare proxychains name is a live trap. apt is at upstream's head (4.17-3.1 = v4.17; rofl0r alive but slow to release — fixes landed 2026-08-27 against a 2024 tag). The addition is the trap: a real proxychains package exists in Kali and Debian sid at 3.1-9 — proxychains 3.1, from 2007. It escapes the usual apt-file search '/usr/bin/proxychains$' check because it ships /usr/bin/proxychains3, a third binary name, so apt install proxychains *succeeds* and silently hands you an 18-year-old tool. A sharper reason to name proxychains4 than \"the bare name is only a virtual Provides:\". #275 item 8.",
+              "kind": "fix"
+            },
+            {
+              "text": "redup's katana step would have inherited the nuclei miscount on migration. It ran katana -update unconditionally — the exact shape the nuclei engine step had before it was fixed below. katana 1.7.0-0kali1 landed in kali-dev on 2026-08-27 and has not migrated to kali-rolling; apt owning a binary is precisely when Kali patches its self-updater out, as it already did to nuclei. On the day katana migrates and is patched, the step would have started printing ✗ katana update failed and tallying it on every run of a healthy box. The flag is now probed before use, reusing the nuclei step's whole-token regex byte-for-byte — the match has to be whole-token here too, since katana's help carries -duc, -disable-update-check, which a bare grep -- -update would match on exactly the patched build the probe exists to catch. A flagless build now degrades to a skip that tallies nothing. Preventive: no behaviour change on today's go install build, where the probe passes. redup -h, the redup header comment, aliases.md and install/tools.lst all gave nuclei a build hedge and katana none; all four now match. #260 item 5.",
+              "kind": "fix"
+            },
+            {
+              "text": "The Cloud / SaaS / CI-CD block claimed Terraform Cloud entries are \"pure REST — curl + a token, nothing to install.\" The tfc-agent entry lower in the same file already said the opposite — that it \"corrects this file's older claim that the Terraform Cloud entries are pure REST\" — so the correction was written at one end and never applied at the other, leaving the two halves of one file contradicting each other. tfc-agent-hijack creates the agent pool over REST and then runs tfc-agent, a HashiCorp release binary on infrastructure you control; only tfc-token-backdoor and tfc-var-injection are curl-only. Checking the rest of the sentence while correcting it found it loose for two more of the five services it named: Snowflake's three entries are SQL (``sql fences, which is why the corpus gate never sees a command in them) and slack-2fa-disable` is a console toggle with no command at all. \"Nothing to install\" still holds for both — \"curl + a token\" did not. Okta and GitLab were accurate as claimed.",
+              "kind": "fix"
+            },
+            {
+              "text": "katana's manifest pointer said \"not in apt\", which is no longer true. Initial Kali packaging (1.7.0-0kali1) was committed to kali-dev on 2026-08-27. It has not migrated, so go install is still the only route on any box today — but the pointer now states the kali-dev version and the \"has not migrated\" qualifier, mirroring the shape rustscan already carries in the same file, and names pkg.kali.org/pkg/katana as the re-check. It also records what a migration would bring: the kali-dev packaging carries no debian/patches directory yet, so -update survives there for now. #260 item 5.",
+              "kind": "config"
+            },
+            {
+              "text": "mitm6's freeze note claimed \"there is no maintained successor to move to.\" Too strong, and the near-miss has a name: RedTeamPentesting's pretender (Go, v1.4.1, Jul 2026) is maintained and does mitm6's exact DHCPv6/DNS takeover plus mDNS/LLMNR/NBT-NS. But it is a spoofer only — no listener, no capture, no relay — so it replaces neither mitm6 nor responder, and the note's conclusion (keep mitm6, frozen because finished) is unchanged. It gets no → UPSTREAM pointer of its own: no doc and no corpus entry invokes it. The same note now records a second axis the old text conflated with it — whether the coercion fires is not whether the relay yields. On fully-patched Server 2025 / Win11 24H2, SMB signing is required by default and LDAP channel binding ships Enabled-When-Supported (MSRC, Dec 2024): the trigger still fires, the SMB and plain-LDAP relay legs close, and value shifts toward krbrelayx and the AD CS / PKINIT path. #260 item 6.",
+              "kind": "config"
+            },
+            {
+              "text": "redup counted every successful searchsploit -u as a failure. The step ran if searchsploit -u; then …, but searchsploit exits 6, not 0, after any successful update — its own header documents it (\"Exit code '6' means updated packages (APT, brew or Git)\") and its update routine ends in a bare exit 6 on every route (apt, brew and git alike). So a completely successful refresh printed ✗ searchsploit -u failed and was tallied, making the summary read red on a healthy box. This is the same miscount as the nuclei engine step below, one step further down the same function, and it survived that fix. The exit status is now captured and both 0 and 6 count as success; anything else still reports, and now prints the code. Found while correcting the step's prose for #260 item 8 — the report called this a comment-only fix.",
+              "kind": "fix"
+            },
+            {
+              "text": "redup's searchsploit comment described a code path that does not run on Kali. It explained the sudo escalation as a permissions problem on a root-owned git checkout under /usr/share/exploitdb. On a deb install searchsploit -u never reaches its git pull: it probes apt-cache search \"^exploitdb$\" first and, on a hit, runs sudo apt update && sudo apt -y install exploitdb, escalating on its own. The writability probe is kept — it is still correct for a user-local or /opt checkout and on non-Kali — but it is now documented as inert on the deb route. The consequence strengthens the never-mid-engagement warning rather than softening it: the step can move apt state, not just refresh a data directory.",
+              "kind": "perf"
+            },
+            {
+              "text": "Five more annotations routed you around a package apt already ships — the same error class as caldera below, found by re-verifying every → UPSTREAM name in the manifest against apt rather than by any report. None of the five appears in #260: - evilginx2 was annotated → UPSTREAM (go install or release binary) and filed under the block headed \"Operator-side tooling, not in apt\", whose preamble says outright that these \"have no Kali package\". kali-rolling ships evilginx2 (3.3.0+ds1-0kali1), which *is* upstream's latest release (v3.3.0, Apr 2024). Now a plain apt line in Credential attacks, ROE warning intact. - name-that-hash was annotated → UPSTREAM (pip install name-that-hash). Kali ships it (1.11.0-0kali1). The decision to leave it uninstalled stands on its own merits; only the packaging pointer was wrong. - pspy was annotated → UPSTREAM (release binary) in a block whose premise is \"per-engagement downloads rather than apt packages\". Kali ships pspy (1.2.1-0kali1). Here the conclusion survives for a sharper reason than the block gave: what apt ships is a host-arch, dynamically-linked Debian Go build (Depends: libc6), while what you upload to a target is upstream's *static* pspy32/pspy64. So the release binary really is the per-engagement download — just not because \"there is no package\". - PowerUp.ps1 was annotated → UPSTREAM (PowerSploit …). Kali packages it: the powersploit package (3.0.0+git20200817-0kali1) drops the script at /usr/share/windows-resources/powersploit/Privesc/PowerUp.ps1 — the same pattern as mimikatz, a Linux package whose payload is Windows content you copy to the target. It is pulled in by kali-linux-headless, so it is already present on a default box. Still not an apt line of its own, but \"fetch it from GitHub\" was wrong. - The evasion payload-build paragraph asserted \"None is in Kali apt\" of its five tools. donut is packaged (1.1-0kali3+b1, /usr/bin/donut) and is the one member whose generator runs natively on Linux, so the paragraph's \"all run operator-side on WINDOWS\" was wrong about it too. It stays unlisted as a judgement, not because apt cannot supply it. macro_pack, PowerUpSQL, sRDI, ConfuserEx and ScareCrow are genuinely absent, as claimed.",
+              "kind": "security"
+            },
+            {
+              "text": "caldera is in kali-linux-large. The note added with the caldera fix below claimed it is \"in NO kali-linux-* metapackage\"; apt-cache rdepends caldera says otherwise. It is absent from kali-linux-default, which is what the line was reaching for, so the conclusion (a default box needs this line) is unchanged.",
+              "kind": "perf"
+            },
+            {
               "text": "redup's nuclei engine step could never succeed on Kali. It ran nuclei -update unconditionally, but Kali patches that flag out of its packaged nuclei — apt owns the binary, so self-updating it is not nuclei's job there. Kali's -h UPDATE section carries only -update-templates, -update-template-dir and -disable-update-check. So the step failed on every run on the primary target platform and tallied a failure, making the summary read red on a completely healthy box — the exact miscount the function's own comments exist to prevent. The engine step is now probed and the templates step (the daily-moving half) stays unconditional, so a go install-provided nuclei on non-Kali Debian still self-updates. The probe matches -update/-up as a whole TOKEN: a bare substring grep matches -update-templates, -update-template-dir and -disable-update-check, three hits on the very help text that proves the flag is absent.",
               "kind": "fix"
             },
@@ -725,6 +877,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "Three tool decisions recorded so the next scout cycle doesn't re-raise them. All three were proposed by #260 and all three were declined, on stated grounds rather than by omission: - gh in redup's go_fast_movers (item 9). It has the profile the machinery was kept for — go-only, apt-absent since kali-rolling dropped 2.46.0-3 on 2025-12-10, and genuinely fast — but upstream supports the release binary and GitHub's own apt repo, not go install, and a bare go install build reports an unset/dev version string. The entry would replace a correct build with one that cannot report its own version. Recorded in the comment beside the katana rejection already there, so the array is now empty for two stated reasons rather than one. - trufflehog. In kali apt (3.94.3-0kali1) and a good fit for what the Cloud / SaaS / CI-CD block is for — \"find the leaked key\" is the missing first step of most of the gh-*/npm-*/pypi-* supply-chain entries. Held out on this file's own membership rule, not on merit: no doc and no corpus entry invokes it. The doc edit is the prerequisite; the note says so, and says it becomes a plain apt line once one does. - PrivescCheck — same rule, same note, beside the PowerUp.ps1 entry it would complement. The report conceded the prerequisite for this one and not for trufflehog; the rule applies to both identically.",
+              "kind": "fix"
+            },
+            {
               "text": "make view-counts / test/check-view-counts.sh — a gate on the hand-typed corpus counts in hacktheplanet, PURPLE-TEAM.md and OFFENSIVE-METHODOLOGY.md. Two of those files already carried a caveat saying the numbers go stale on every companion-sync; this executes it. It exists because the drift above is a repeat — the same fix is recorded for the v2.10.0 sync — and nothing could see it: gen-views.sh --check byte-compares block *contents* and has no opinion on how many blocks exist, and markdownlint cannot tell 101 from 102. It is repo-owned rather than an extension of gen-views.sh because offensive/companion/ is a vendored subtree and an edit there is lost on the next sync. It checks only what is mechanically derivable (entry totals, projected-block counts, and the sums of those); the semantic buckets — 56 cloud/SaaS/ CI-CD, 13 C2-egress/Impact, 7 Linux, 69/76, the percentages — are deliberately ungated, because nothing in entries/*.md marks an entry \"cloud\". Exit 2 means a stale count; exit 1 means an anchored sentence was rewritten and needs re-anchoring — two different failures, so a maintainer is never told the wrong one.",
               "kind": "fix"
             },
@@ -789,6 +945,42 @@
         {
           "category": "Changed",
           "items": [
+            {
+              "text": "ptunnel-ng added beside ptunnel, not instead of it. ptunnel-ng (utoni/ptunnel-ng, redirected from lnslbrty) is the maintained fork and kali's 1.43-2 *is* its latest upstream release, so it is the one to reach for. The original ptunnel line stays for one mechanical reason: the corpus entry entries/red/icmp-tunnel-c2.md invokes the bare ptunnel binary, and test/check-corpus-commands.sh — offline and required — resolves that name against the manifest, so dropping the line reds a blocking gate. ptunnel-ng cannot cover for it either: it ships only /usr/bin/ptunnel-ng, with no ptunnel binary and no alternatives symlink. Retargeting the entry is an upstream change in htpx — entries/ is a vendored subtree — and it is a rewrite, not a rename: the two are not flag-compatible, -lp/-da/-dp having become -l/-r/-R.",
+              "kind": "config"
+            },
+            {
+              "text": "The covert-egress block now carries a status per tool. It read as though all four were current upstreams; not one is. iodine is a full release behind (kali 0.7.0-13 vs upstream v0.8.0); dnscat2 is frozen at its own last release (v0.07, 2016 — so apt is *not* behind, there is simply nothing newer); ptunnel is frozen at 0.72; icmpsh is dead (last push 2018, never released).",
+              "kind": "config"
+            },
+            {
+              "text": "sliver's currency note no longer hardcodes a patch count. \"TWO patches behind\" was accurate when written and wrong within five months. It now states the shape — apt froze at 1.7.1-0kali4 while upstream kept releasing — and points at sliver-server version instead of a number that rots.",
+              "kind": "config"
+            },
+            {
+              "text": "Freeze and archive statuses added where the file asserted none. PrintSpoofer (archived Sep 2024) was the last unmarked freeze in the target-dropped block; hashid is frozen at Jun 2022 while the line calls it \"the cracking entrypoint\"; the evasion payload-build paragraph carried no status for any of its five tools (macro_pack and ScareCrow archived, Donut alive, sRDI static since 2023). Each is kept — these target behaviours and formats that have not moved — with the reason stated.",
+              "kind": "feature"
+            },
+            {
+              "text": "The ConfuserEx pointer now names the mkaring fork. Canonical yck1509/ConfuserEx is archived and has not moved since 2019, so a bare \"ConfuserEx\" landed a reader in a dead repo — the failure the kwp-vs-iphelix/pack note already guards against elsewhere in the file.",
+              "kind": "config"
+            },
+            {
+              "text": "ligolo-ng loses its \"(upstream if repo build lags)\" hedge. Kali tracks it closely (0.9.1-0kali1 within ~2 weeks of upstream v0.9.1), so the hedge invited a hand-built pivot that is almost never warranted.",
+              "kind": "config"
+            },
+            {
+              "text": "The hexyl note's reason is narrower than it claimed. \"There is no hexyl package in Kali at all\" is false: the rust-hexyl source package, which builds a hexyl binary package, has been imported into and removed from kali-rolling repeatedly (0.4.0, 0.5.1, 0.7.0, 0.8.0, most recently 0.16.0-4), following Debian testing. It is out right now, so the conclusion — keep it out, it would hand check-packages.sh an unresolvable name — is unchanged, but it can return without warning.",
+              "kind": "config"
+            },
+            {
+              "text": "rusthound-ce's version pair replaced with its cadence. The quoted v2.4.91 -> v2.5.2 in seven weeks had itself gone stale (seven releases shipped in the eight weeks to Aug 2026). The mechanical reason it stays out of redup — cargo, no self-updater, go_fast_movers is go-only — is unchanged.",
+              "kind": "config"
+            },
+            {
+              "text": "redup's ffuf/gobuster note now separates ownership from currency. \"apt-packaged ones (gobuster/ffuf) update via up\" implied apt keeps them current. apt *owns* them, so up is the only correct route and neither belongs in go_fast_movers — but kali's ffuf is 2.1.0 (Jan 2024) against an upstream that resumed releasing at 2.2.x. The routing claim stands; the currency implication does not.",
+              "kind": "fix"
+            },
             {
               "text": "packages.yml now emits ::warning:: annotations as well as its job summary. It stays advisory — Kali is rolling, and a package that vanishes mid-migration must not red an unrelated PR — but summary-only proved to be the same as silent: three unresolvable apt names sat in the manifest while the job reported them into a page nobody opened and exited 0 every week. Annotations surface on the Checks and Files tabs without changing any exit code. Its header also claimed you could make the job blocking by dropping a || true that does not exist in the file; the real lever is the exit 0 at the end of the resolve step.",
               "kind": "config"
@@ -879,8 +1071,29 @@
       "version": "Unreleased",
       "groups": [
         {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "make core-check reported fleet drift from an empty variable. It printed \"gh not installed — cannot query upstream tags\" and then queried anyway; gh failing left upstream_ver empty, which is never equal to local_ver, so it announced • vendored core is 5.4.1, upstream is — a sync from dotfiles-core is owed. A confidently wrong answer about drift, which is worse than the 127 the same defect causes elsewhere. The guard and the query are now one recipe line, and an empty upstream is its own branch: it reports drift UNKNOWN, not current and exits 1, rather than guessing. Found by _core_make_gate_hits (dotgibson/dotfiles-core#775), not by eye.",
+              "kind": "fix"
+            },
+            {
+              "text": "make markdown announced a skip and then ran anyway. Each make recipe line runs in its own shell, so the guard's exit 0 only ended that line: without npx it printed \"npx not available — skipping markdown\" and then ran npx, exiting 127. Collapsed into one recipe line, so the skip is a real skip (dotgibson/dotfiles-core#775 — the same defect in six other fleet repos). MD_FILES was already correct here, so only the guard needed fixing, not the scope. An unreadable MARKDOWNLINT_VERSION now fails rather than silently linting unpinned — \"same version as CI\" is this target's whole claim.",
+              "kind": "fix"
+            },
+            {
+              "text": ".markdownlint.jsonc's header claimed this config was \"the local README check\" and that \"CI in this repo gates its own code, not its Markdown\". Both were true when written; dotgibson/dotfiles-core#592 made the markdown leg blocking and it covers all 21 repo-owned files, not just the README.",
+              "kind": "config"
+            }
+          ]
+        },
+        {
           "category": "Added",
           "items": [
+            {
+              "text": "The token-context half of T1134.001 closes, on a different event than #230 asked for (#230). #223 reserved the Stealth half of T1134.001 for a rule that observes the impersonation rather than the shape around it, and named two candidates; #225 answered the spoolss one. The other candidate was \"a token-context anomaly on 4624/4672\", and it is declined on evidence: neither event is written by this attack. 4624 generates when a logon session is created and 4672 when privileges are assigned to a new one, and no live potato variant creates one — the pipe-impersonation majority never authenticates at all, the local-relay minority rides NTLM's local-call short circuit instead of calling LsaLogonUser, and DuplicateTokenEx preserves AuthenticationId so the resulting SYSTEM process reuses logon session 0x3e7. Only HotPotato and GhostPotato ever produced that shape, and both died with MS16-075 and CVE-2019-1384. Such a rule would have passed its own true positive and its own true negative and then sat inert, which is #149 with a Windows event id on it. What answers it is detections/sigma/privilege_escalation/token_theft_process_target_subject_4688.yml, on the plane where the telemetry exists. Event version 2 of 4688 carries a Target Subject block that Windows populates only when the creator and target \"do not share the same logon\", so a process whose Target Subject is SYSTEM was created with a token that is not its creator's — the theft stated as a field. It carries no Image constraint, so unlike the potato pair it survives a payload that is not a named shell; and because every variant ends in CreateProcessWithTokenW or CreateProcessAsUserW, it sits downstream of the DCOM-coerced variants that leave the spoolss rule silent. It takes both tactic tags on its own evidence. One assumption travels with it and is written into the rule rather than buried: whether the audit reads Creator Subject from the calling process's token or its impersonating thread token is inference from Microsoft's documentation, not a capture. Ledger: Stealth TA0005 3 | 3 -> 3 | 4, Privilege Escalation TA0004 9 | 12 -> 9 | 13, T1134.001 3 -> 4 rules. Tactic TECHNIQUE counts do not move, exactly as #230 predicted — the spoolss rule already took the row.",
+              "kind": "security"
+            },
             {
               "text": "The rest of the Sysmon PipeEvent block gets read (#229). #225 closed one of the five pipe names detections/sysmon/sysmonconfig-detection-lab.xml collects and left four collected-and-unread — the same telemetry-ahead-of-detection hole, one size smaller. Two rules close three of them: svcctl_atsvc_remote_pipe_sysmon_18 (Sysmon 18 / ConnectPipe on \\svcctl and \\atsvc with Image = System) and coercion_efsrpc_pipe_sysmon_18 (Sysmon 18 / ConnectPipe on \\efsrpc). This is corroboration, not new coverage, and the ledger should not be read as wider than it is. The service smbexec/psexec installs over svcctl is already caught by service_creation_psexec_7045; the task atexec schedules over atsvc by scheduled_task_suspicious_4698; efsrpc coercion by coercion_named_pipes_5145 and the Suricata coercion.rules. What the pair adds is a second, independent plane: the bind is visible on the host where those audit subcategories are never forwarded, and it is the request rather than the result, so it fires earlier in the chain. Only T1021.002 is a genuinely new technique row, and only because nothing here previously named the admin-share access itself. The invariant was re-derived, not copied. #225's shape was ownership on pipe *creation*, and it transfers to none of these: svcctl, atsvc, efsrpc and lsarpc are all created once at boot by the OS, and every tool in scope *connects* to a pipe already there — so the creation half detects nothing on those names and the new rules take the connect half, the opposite trade for the opposite reason. Origin replaces ownership: a remote SMB client's pipe open is serviced by the kernel SMB server, so Image reads System rather than a local sc.exe/schtasks.exe, and that is what separates impacket from administration. lsarpc deliberately ships no rule. Sysmon PipeEvent carries no authenticating principal, so coercion_named_pipes_5145's filter_machine — the block that makes that pipe survivable on 5145 — has no counterpart here, and a coercion bind and a routine domain bind arrive as byte-identical events. The decline is argued in DEFENSE-METHODOLOGY.md and recorded in a form that runs: the efsrpc rule's true negative *is* an lsarpc bind. The cost is stated rather than buried — PetitPotam's default endpoint is lsarpc, so 5145 stays the primary for coercion. Both rules ship with unverified fixture provenance on purpose. That Sysmon emits an 18 for a remote SMB pipe open, attributed to System, is derived from where the kernel services that open rather than observed — the purple-team run that would confirm it has not been done, and until it has, the rules' silence means nothing.",
               "kind": "fix"
@@ -920,6 +1133,18 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "make zsh-syntax and make markdown announced a skip and then ran anyway. Each make recipe line runs in its own shell, so each guard's exit 0 only ended that line: with zsh absent, zsh-syntax printed \"zsh not installed — skipping\" and then ran zsh -n (Error 1); with no global markdownlint-cli2, markdown printed its own skip and then ran the linter (Error 127). Both collapsed into one recipe line, so a skip is a real skip. This is the defect dotfiles-Debian recorded and fixed for its zsh-syntax, noting the shape survived in the other OS repos' Makefiles — this is that repo, and it had both (dotgibson/dotfiles-core#775).",
+              "kind": "fix"
+            },
+            {
+              "text": "make markdown also scanned the wrong files. It globbed '*.md', which is top-level only, while the reusable gate's markdown leg — blocking since dotgibson/dotfiles-core#592 — lints git ls-files '*.md' ':!:core/**', recursively. The three .github/ markdown files were therefore enforced by a required check and invisible locally, so this target could read green against a red PR. Now uses the same pathspec via a new MD_FILES. All nine files lint clean, so nothing was hiding.",
+              "kind": "feature"
+            },
+            {
+              "text": ".markdownlint.jsonc's header claimed the rules were \"mirrored from Core rather than CI-enforced\" and that \"lint.yml skips **.md entirely\". Both were true when written and neither survived dotgibson/dotfiles-core#592.",
+              "kind": "fix"
+            },
             {
               "text": "bootstrap.sh no longer fails on a machine without sudo. The escalator is now resolved once (BLIB_SU: empty as root, else sudo, else doas) and used everywhere, instead of a hard-coded sudo at a dozen call sites. A container, a WSL first boot, or a minimal Server image previously died at the first dnf line with sudo: command not found (exit 127) before doing anything.",
               "kind": "fix"
@@ -1021,6 +1246,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "make markdown, wired into make lint. lint-call.yml's markdown leg has been blocking since dotgibson/dotfiles-core#592, but this repo had no local target for it — a required check nobody could run before pushing, and a .markdownlint.jsonc only CI ever read. MD_FILES uses the gate's own pathspec (git ls-files '*.md' ':!:core/**'), so the local run scans exactly what CI scans, recursively — a '*.md' glob would be top-level only and miss pull_request_template.md. All seven files already pass, so nothing rides along. It skips when markdownlint-cli2 is absent rather than failing like the shellcheck arm: shellcheck is a pacman package, so missing means a box to fix, while markdownlint-cli2 is npm-only. Part of the fleet sweep in dotgibson/dotfiles-core#775.",
+              "kind": "fix"
+            },
             {
               "text": "os/arch.capabilities — this repo's Core v5 capability declaration (dotgibson/dotfiles-core#663, #667). Core's up, maint runner and core-doctor now dispatch through it rather than through package-manager branches inside portable Core modules. PKG_COUNT_PENDING is checkupdates (from pacman-contrib, already in install/packages.txt), which syncs a copy of the database in user space and never touches the real sync DB. PKG_ASSUME_YES, PKG_UPGRADE_PARTIAL and MAINT_UNATTENDED_UPGRADE are deliberately absent: each omission is a safety statement Core honours exactly, so up -i refuses a partial upgrade and the scheduled runner refuses to upgrade this rolling distro unattended. Do not add them.",
               "kind": "feature"
@@ -1168,8 +1397,8 @@
               "kind": "other"
             },
             {
-              "text": "wl-clipboard/xclip: no display on these boxes. This leaves Core's clip without a backend — see the README's *Headless clipboard* note for the OSC 52 fix, which belongs upstream in dotfiles-core.",
-              "kind": "fix"
+              "text": "wl-clipboard/xclip: no display on these headless ubuntu/debian boxes. Tiered in for Kali (# only:kali), which runs under WSL2 with WSLg. Copying still works regardless: Core's clip falls back to OSC 52 when it finds no local backend. Pasting does not, deliberately — see the README's *Headless clipboard* note.",
+              "kind": "other"
             },
             {
               "text": "PPAs, in any form. They are keyed to an Ubuntu series and would break the Debian lane; vendor-signed apt repos (Charm, 1Password) are used instead.",
@@ -1183,6 +1412,18 @@
             {
               "text": "make zsh-syntax printed \"zsh not installed — skipping\" and then ran zsh -n anyway. Each make recipe line runs in its own shell, so the guard's exit 0 only ended that line. The same shape is still present in the other OS repos' Makefiles.",
               "kind": "fix"
+            },
+            {
+              "text": "make markdown had the same defect, and it was still live here. Without a global markdownlint-cli2 it printed \"not installed — skipping\" and then ran the linter anyway, failing with Error 127. Collapsed into one recipe line, so the skip is a real skip. Of the fleet, dotfiles-Fedora carries this target byte-for-byte (also live); dotfiles-Offense and dotfiles-Defense have the same shape guarding npx instead (latent — it only bites where npx is absent); dotfiles-MacBook already fixed its copy; Alpine, Arch, Gentoo and openSUSE have no markdown target at all.",
+              "kind": "fix"
+            },
+            {
+              "text": "make markdown also scanned the wrong files. It globbed '*.md', which is top-level only, while the reusable gate's markdown leg — blocking since dotgibson/dotfiles-core#592 — lints git ls-files '*.md' ':!:core/**', recursively. The three .github/ markdown files were therefore enforced by a required check and invisible locally, so this target could read green against a red PR. It now uses the same pathspec via a new MD_FILES. All nine files lint clean, so nothing was hiding.",
+              "kind": "feature"
+            },
+            {
+              "text": ".markdownlint.jsonc's header claimed the rules were \"mirrored from Core rather than CI-enforced\" and that \"lint.yml skips **.md entirely\". Both were true when written and neither survived dotgibson/dotfiles-core#592.",
+              "kind": "fix"
             }
           ]
         }
@@ -1190,6 +1431,78 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "A gate for local gates that cannot do what their name says (#775). scripts/lib/common.sh :: _core_make_gate_hits reads a repo's Makefile and reports three shapes, all found by hand across the fleet and none previously catchable: - A skip that cannot skip. command -v x || { echo \"skipping\"; exit 0; } on one recipe line, the tool on the next. make gives each recipe line its own shell, so the exit 0 ends only that line — the target announces a skip and then runs the missing tool, exiting 127. Found in Debian, Fedora (×2), Offense (×3) and Defense (×2). - A check that cannot fail. A checker ended with ; before a success echo: the echo runs regardless and becomes the line's exit status, so findings print and the target exits 0. openSUSE's lint-sh did this while its two siblings used && and || exit 1 — which is exactly why nobody looked at it. - A blocking CI leg with no local mirror. A .markdownlint.jsonc that only CI ever read, for a leg blocking since #592, plus the narrower case where the local target globs '*.md' (top-level only) while the gate lints git ls-files recursively. Rendered in two places, because the defect is in the callers and Core's audit can only see Core: §8d of audit-core.sh keeps the authoring repo honest, and a new make-gates leg in lint-call.yml judges each caller's own Makefile. Both drive the shipped function rather than a copy — the discipline _core_tool_skip_count records, where a test that re-implemented its subject stayed green while the defect it existed to catch was fully reintroduced. Blocking, and only because the fleet was cleared first. #592's markdown leg had to ship advisory for a release because seven of nine callers would have gone red before a maintainer could act; the nine #775 PRs merged while this was in review, so every caller's main measures 0 and that staging is unnecessary here. The measurement is the precondition, not a formality: a future rule that any caller fails must ship advisory the way #592 did, because callers read lint-call.yml at the moving @v5 tag and meet a new rule the moment auto-tag moves — red on arrival, in a repo whose author changed nothing. Recorded on the job so nobody loosens the rule to get past a red. Three things worth recording about how it was built, because they are the reason to trust it: - It found four defects the hand sweep missed — Offense's shellcheck and secrets (both exit 127 with the tool absent) and Defense's core-check, which is the worst of the set: it prints its skip notice, runs gh anyway, and reports vendored core is 5.4.1, upstream is — a sync from dotfiles-core is owed from an empty variable. A confidently wrong answer about fleet drift, not a crash. - The false positives shaped the rules more than the true ones. A first draft used \"any exit 0 before the last recipe line\" and reported Alpine's shell, which guards shellcheck and runs it on the same line — a correct skip. It also flagged lint-zsh and zsh-syntax, which handle failure with || exit 1 inside the loop. All three are pinned as must-not-fire cases: a gate that cries wolf on working code teaches the fleet to ignore it. - It was seen failing before being trusted. The fixtures are the real pre-fix and post-fix recipes copied verbatim, not synthetic approximations, and §8d was run against a defect injected into Core's own Makefile. A guard for a historical defect that is never run against that defect is the same category error it exists to fix. The audit-alpine leg caught the guard doing the thing it hunts. Its markdownlint reachability probe used grep --exclude-dir and -I, both GNU extensions; busybox grep rejects the first, so the probe exited 2, that was read as \"no mirror\", and Core — the repo that authors the rule — was reported as the one repo missing it. A false finding produced by an unsupported flag, in the gate whose entire subject is checks that answer wrongly. Neither flag was needed. The probe now also distinguishes \"searched, absent\" from \"could not search\", and stays silent in the second case: unknown and absent are different facts and only one is a defect. Pinned by a fixture that rejects those flags exactly as busybox does, so a developer box catches it without an Alpine runner. Complements, and does not replace, dotfiles-MacBook/test/check-skip-guards.sh, which tests the first shape at runtime by rebuilding a PATH without the guarded tool. That is stronger evidence per finding but can only judge the repo it sits in; this is the static, fleet-portable half.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "VENDORING.md described a resolved core.lock defect as a live hazard (#670). It warned, in the present tense, that three OS repos independently generate core.lock and \"have already drifted from it and from each other\" — naming Arch's hardcoded core_branch=main, openSUSE's SHA-in-that-field, and MacBook's read-back of the previous value. #593 retired all three more than a release ago. Every one of the four make core-lock targets in the fleet is now an echo-only redirect that writes nothing and names its own retired defect in the past tense (Offense's runs a read-only freshness check and points at its own pull). Telling a reader the fleet is in a state it is not in is worse than silence: it also spends the credibility of the surrounding warnings, which are still live. The paragraph now states the rule that survives — Core's sync-core.sh is the only writer of core.lock in a fan-out repo, because it stamps the lock in the same commit that materializes core/ — and records the four redirects as the enforcement of that rule rather than as breaches of it. The three retired generators stay in the text as the evidence for why a second writer cannot be kept in step by discipline; they are no longer presented as something to go and fix.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The same stale claim stood in a second document. RELEASE-STRATEGY.md also read \"three consumers carry an independent generator of a format Core owns, and all three have already drifted from it\", so correcting VENDORING.md alone would have left two Core documents disagreeing about the repo's own rule — the shape of defect #668 had just finished clearing out. Both now say one thing.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "core_branch is documented as gone, and the flat \"only sanctioned writer\" claim is qualified (#670). Two things were true but unwritten. First, dotfiles-Offense is a real second writer: make core-sync runs that repo's own scripts/sync-core.sh, a git subtree pull --squash that stamps all four fields, and Offense's CONTRIBUTING.md teaches it as the update route there. It is sanctioned — unlike the three retired generators it writes Core's format from what it actually pulled, taking core_sha from the squash commit's git-subtree-split trailer and core_version from the tree on disk, so the lock cannot name a commit its own core/ does not contain — but an unqualified \"only sanctioned writer\" read as covering it and did not. VENDORING.md now names it as the one exception, and notes the consequence: Offense has two paths into core/, the fan-out which replaces the tree and its own pull which merges, and core-integrity gates both because both stamp the lock. Second, the pre-#453 core_branch field survives in no core.lock anywhere — all nine fleet locks are Core-stamped with core_ref — so it is now documented as gone as of v5, and a lock still carrying it is pre-v5 and fixed by a sync rather than by hand. Offense's reader-side fallback (scripts/sync-core.sh:80-82,183, test/check-core-freshness.sh:59-63) is the last consumer of the old name and is dead against every lock that exists; retiring it is a dotfiles-Offense change, tracked separately.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The maintenance tasks were pointing at a pwsh that Windows deletes. maint-install baked (Get-Command pwsh).Source into both scheduled tasks, and a Store-installed pwsh resolves to a *version-pinned* package directory (…\\WindowsApps\\Microsoft.PowerShell_<ver>_…\\pwsh.exe). When Windows cleans up a superseded package the task fails with 0x80070002 — silently, because a task that never launches writes nothing to maint.log. Measured on this host: dotfiles-maint sat at 0x80070002 with no completed run between 2026-08-26 and 2026-08-29, which also meant the scoop junction sweep from #217/#221 was not happening. The feature was correct and simply never got to run. maint-install now prefers a version-stable path — MSI install, machine-wide app alias, per-user app alias, scoop shim — and only falls back to the resolved version-pinned path, warning when it does. The daily task runs as you and takes the per-user alias; the SYSTEM task cannot, since SYSTEM's %LOCALAPPDATA% is under config\\systemprofile, so with a Store-only pwsh it stays pinned and says so. Installing the MSI build gives both a stable path. Get-DotStablePwshPath is the pure, unit-tested policy; the probing stays in the fragment. Detection, so this cannot rot silently again: maint-status now shows each task's Execute and attaches a verdict — a missing executable or a 0x80070002 last result is a fail, and the informational SCHED_S_* codes are not. dotfiles-doctor carries a Maint tasks row. Both are careful about what they can actually see: Task Scheduler ACLs a SYSTEM-principal registration to SYSTEM and BUILTIN\\Administrators, so an unelevated shell cannot distinguish a broken junction task from a healthy one and reports not visible rather than guessing not installed. (A self-check inside the daily run was tried and removed for exactly this reason: it would have reported a confident false failure every day.)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "A drift gate on the maintenance runner's own step list. Maintenance.ps1 states its steps in three places — the file header, the -Help block, and the actual Step calls — and nothing kept them honest, so both prose copies had silently lost the scoop junction step (the header had also lost navi). tests/Maint.Tests.ps1 now discovers the steps from the AST and fails when one is not documented in both, with a bidirectional map assertion so a renamed or removed step cannot leave a stale entry that passes forever. Both prose blocks are corrected.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "The scoop junction repair now covers every junction scoop makes, and runs on a schedule. #218 established the mechanism — Redirection Guard refuses a junction *created* by a non-admin, trust is stamped at creation, so re-creating it elevated is the only lever — and fixed apps\\<app>\\current. Two gaps remained. Scope. scoop also wires persisted state back out of an app dir with junctions into scoop\\persist\\<app>\\... (bat\\themes, bat\\syntaxes, btop-lhm\\themes, composer\\cache, php\\cli, syncthing\\config, the yt-dlp plugin dirs), and scoop\\modules\\gsudoModule points into apps\\gsudo\\current from outside apps\\ entirely — 15 further junctions on this host, created by the same non-admin scoop process and untrusted for the same reason. Re-stamp only current and bat --list-themes is still broken over ssh. The sweep is now every directory reparse point under the scoop root; -Recurse does not descend *through* a reparse point, so each physical junction is reported exactly once under its canonical path. It never actually ran. The step is gated on elevation, and dotfiles-maint is registered RunLevel = Limited — which is the open question issue #217 asked to resolve first. maint-install now also registers dotfiles-maint-scoop-junctions, running as SYSTEM an hour after the daily job. SYSTEM rather than the interactive user at RunLevel Highest, because an Interactive task only runs while someone is logged on and the case this fixes is nobody being; -ScoopRoot and -LogPath are baked into the action since SYSTEM's profile paths are not the user's. Sequencing is a time offset rather than an event trigger on the first task completing, because Microsoft-Windows-TaskScheduler/Operational is disabled by default and that subscription would never fire. The daily task deliberately stays unelevated — scoop update * must not run as admin. The sweep moved out of Maintenance.ps1 into maint/Repair-ScoopJunctions.ps1 so the elevated task has an entry point; the policy behind it is Get-DotScoopJunctionPlan, pure and unit-tested. Registering an elevated task itself needs an elevated shell, so maint-install run unelevated installs the daily task and says plainly that it skipped the other one. maint-status reports both tasks with their run level; maint-uninstall removes both.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "wsl-ssh-config — the client-side ssh_config for the distros behind this host. docs/REMOTE-ACCESS.md §4 told you to hand-write the Host <distro> block that Format-DotWslSshConfig could already generate: the renderer, the port allocator and the alias slug all shipped as tested module exports with nothing calling them. powershell/os/34-remote.ps1 is that caller. Ports are allocated from the sorted distro list, because wsl --list reorders on install / unregister / re-default and a port that moves is worse than no port — it is already baked into ssh_config, into firewall rules and into muscle memory. -HostPort reserves the port the Windows sshd actually answers on instead of assuming 22; assume otherwise and a distro is handed the host's port, a collision that stays invisible until that distro silently fails to bind. -JumpHost emits the ProxyJump shape — one LAN port, distro ports on the host's loopback — rather than a network-facing listener per distro. It prints and never writes: the file this output belongs in lives on the machine you ssh *from*, which by definition is not this one. Reading the distro list back out of wsl.exe is the one impure step, and it is impure in a way that bites — wsl --list --quiet emits UTF-16LE, which lands in PowerShell as a string with a NUL between every character, so a naive reader finds no distros on a box that has several. WSL_UTF8=1 is set on the child only (and restored, including the unset case, which must be removed rather than blanked), with the NUL strip as the belt for builds that ignore the variable. Still deliberately absent, and still a runbook rather than a script: standing sshd up. The service, the firewall rules, the HKLM DefaultShell key, the boot task and the power settings are machine-global state that varies per box.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "hostip returned an address no other machine could reach. It took the first non-link-local IPv4 Windows reported, and on any box with a Hyper-V or WSL virtual switch that is vEthernet (Default Switch) — a Manual 172.x address that exists only inside the host. Measured here: hostip answered 172.26.80.1 while the LAN address was 10.0.50.90. Nothing about the address itself says which is which, so it read as correct right up until the connection timed out. What separates them is the routing table: the LAN interface carries a default route and a virtual switch has none. hostip now reads the default routes and the addresses and hands both to Select-DotHostAddress, a new pure module export that makes the choice — preferring a default-route interface in the caller's metric order, and falling back to the old SkipAsSource ordering on an offline box with no default route at all, rather than returning nothing. Surfaced by wsl-ssh-config above, which prints this address into a config you paste on another machine — the one place the wrong answer is guaranteed to bite.",
+      "core": false
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
@@ -1332,6 +1645,166 @@
       "category": "Security",
       "kind": "security",
       "text": "bhce can take credentials off argv — op://… resolves through 1Password, - prompts with echo off.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Two more targets had the same guard defect, found by the new gate rather than by eye. make shellcheck and make secrets each announced a skip and then ran the missing tool, exiting 127 — the same shape as markdown below, in targets nobody had thought to check. Both collapsed into one recipe line. _core_make_gate_hits (dotgibson/dotfiles-core#775) found them the first time it was pointed at this repo, having been written from the markdown case alone.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make markdown announced a skip and then ran anyway. Each make recipe line runs in its own shell, so the guard's exit 0 only ended that line: without npx it printed \"npx not available — skipping markdown\" and then ran npx, exiting 127. Collapsed into one recipe line, so the skip is a real skip (dotgibson/dotfiles-core#775 — the same defect in six other fleet repos). MD_FILES was already correct here, including the offensive/companion exclude that matches the gate's, so only the guard needed fixing. An unreadable MARKDOWNLINT_VERSION now fails rather than silently linting unpinned — \"same version as CI\" is this target's whole claim.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": ".markdownlint.jsonc's header claimed this config was \"the local check for the README\" and that \"CI here gates this repo's own code, not its Markdown\". Both were true when written; dotgibson/dotfiles-core#592 made the markdown leg blocking and it covers all 17 repo-owned files, not just the README.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "Seven tools carried claims that were incomplete, imprecise, or absent — the annotation half of #275 (item 9). No package added or removed; the parsed set is byte-identical at 85 names. - httpx-toolkit's warning was right in conclusion, wrong in mechanism. It said the \"bare 'httpx' apt pkg is the python lib, not this\". There is no binary package named httpx at all — apt-cache show httpx returns E: No packages found; the source package builds python3-httpx. So the bare name does not install the wrong tool, it resolves to nothing — which makes this an instance of the *hexyl* rule (a name this manifest must never carry), not of the package/binary split it was filed under. Currency added: apt runs about one minor behind. - wpscan changed under you. kali-rolling jumped 3.8.28 → 4.1.0 in Aug 2026 after 3.8.28 sat since Mar 2025, so an apt upgrade since then swapped the tool, not the patch level. v4.0.0 requires Ruby 3.3+, no longer scans plugins by default (-e ap), moved config/cache to XDG dirs, and removed --timthumbs-detection, --config-backups-detection, --db-exports-detection and --medias-detection. Verified that nothing shipped breaks: hacktheplanet passes --enumerate u,vp,vt explicitly, so the plugin-default change never reaches it. - nikto is alive and current, recorded so it is not re-suspected (upstream pushed 2026-08-28; 2.6.1 released Jul 2026). It was flagged as a likely-stale \"old Perl scanner\" and is not. Its 2.6.x line does change the tool's network signature — a static Chrome User-Agent by default instead of one rotating per request — which is worth knowing when reasoning about what a defender saw. - snmpcheck and smtp-user-enum were the enum block's last two unmarked freezes. Both upstreams are frozen (nothink.org 1.9, 2015; pentestmonkey v1.2), and in both cases apt is at that version, not behind it — there is nothing to chase. Kept for the reason mitm6 and PrintSpoofer are kept: SNMP community strings and SMTP VRFY/EXPN are protocol behaviours, not bugs anyone will patch out. Deliberately no year for smtp-user-enum — its page states no release date, so any date here would be invented. - bloodyad ships BadSuccessor, which the README does not mention (it is in the wiki: add badSuccessor, msldap badsuccessor_check, msldap dmsas), so the dMSA escalation path is already on the box. Annotated with the target-state caveat the mitm6 note draws on the same axis: Microsoft patched it 2025-08-12 (Server 2025 DCs from build 26100.4946), and the post-patch variant needs a second primitive plus SharpSuccessor/Rubeus — neither of which this layer ships, and neither added. - PKINITtools is going quiet — not archived, but last push 2025-01-03, the stalest live pointer in the AD block. Dated note only. The note explicitly refuses to claim certipy supersedes it: that could not be confirmed from a primary source, and says so rather than leaving a plausible guess in the manifest. - GodPotato was the last unmarked freeze in the target-dropped block once PrintSpoofer got its ARCHIVED note. Static since 2023-11-24 and kept — the RPCSS OXID abuse survived the DCOM activation-hardening waves. SigmaPotato is named as the in-memory .NET fork but gets no pointer: itself untouched since 2024, so a mention rather than a successor.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "PACK is in Kali apt, and the manifest sent you to a dead Python-2 repo instead. The pointer read → UPSTREAM (github.com/iphelix/pack) … Python 2 era — run from the clone, no apt package, and both halves were wrong. This is the fifth instance of the error class this file already records fixing for caldera, name-that-hash, evilginx2 and sliver: a manifest that routes you upstream for something apt ships. Confirmed against apt's own index rather than a report — pack (0.0.4+git20191128.fd779b2-0kali3, arch all) Depends: python3, python3-enchant, and the package's Homepage field is github.com/Hydraze/pack, the maintained Python-3 fork (last push 2024-07-28). iphelix's original is dead (last push 2019-12-10). Now a plain apt line in Credential attacks. The membership rule does not block it the way it blocks trufflehog — offensive/hacktheplanet:580 invokes statsgen and maskgen directly. The shipped binaries were read off the package rather than guessed: statsgen, maskgen, policygen, rulegen and dictstat, a fifth legacy binary the old note did not know about. The kwp-is-not-in-PACK note on the next line depends on this block naming iphelix/pack and is left intact. #275 item 1.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "chisel had no annotation at all, and apt ships a pre-release of it. kali-rolling is 1.12.0~rc2-0kali1; upstream cut v1.12.0 final on 2026-08-29, two RCs ahead — the opposite of the ffuf case, where apt trails a live upstream. 1.12.0 breaks flags: --auth now requires <user>:<pass> and *fails startup* on a missing colon, SOCKS5 users need an authfile entry matching socks, truncated MD5 fingerprints are rejected, and a client exhausting --max-retry-count exits non-zero. Nothing shipped here breaks — the hacktheplanet lines and the corpus' reverse-tunnel-chisel entry were checked and both use the bare chisel server --reverse form; the exposure is an operator adding --auth from memory. The pspy split is recorded too: apt's build is for your box, the static release binary is what you upload, and mixing is safe because the wire protocol is unchanged. #275 item 2.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "kubectl is outside Kubernetes' documented support skew, which the line did not say. Its provenance note was correct; its silence on currency was the problem. kali-rolling is 1.33.4+ds-1 (imported 2025-10-02) against upstream stable v1.37.0. kubectl is supported within ±1 minor of the apiserver, so a 1.33 client is unsupported against 1.35/1.36/1.37 — a documented window, not a version-number aesthetic, and it degrades the corpus' k8s-* entries sitting under peirates. The line now points at pkgs.k8s.io when a cluster's version matters, the same shape as the google-cloud-cli/gh/vault pointers in the same block. #275 item 3.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "The covert-egress header excepted ptunnel-ng as \"the CURRENT upstream\" — an annotation this changelog added two entries below, wrong within three weeks. Its *version* claim holds (kali 1.43-2 is upstream v1.43); its *vitality* claim did not. v1.43's own release note says \"due to time constraints, there will be no further publications in the near future\" (tagged 2024-11-27) and master has not moved since 2024-04-07. It froze at a version apt happens to have. All five tools in that block are frozen, dead, or behind — which is the honest state of covert-channel egress and more useful than implying one live option exists. ptunnel-ng is still the right choice of the two ptunnels; it is the maintained-*er* fork, not a live project. #275 item 4.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "dnsenum's name lands you on the wrong repo. The line carried no upstream pointer, and fwaeytens/dnsenum — what you find searching the name, 702 stars — has not moved since 2019-10-08. Kali ships 1.3.2-1, whose Homepage names SparrowOchon/dnsenum2 (\"officially mainlined in Kali\"). Same use-the-fork trap the kwp-vs-iphelix/pack and ConfuserEx-vs-mkaring notes exist to prevent — and the same shape as the pack fix above, where apt's Homepage also named a fork the note did not know about. Honest status: frozen fork, and apt is on it. dnsrecon is the maintained analogue and is in apt, but no doc or corpus entry names it, so it stays out on this file's membership rule. #275 item 5.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "PowerUpSQL was named in the payload-build block's \"absent\" list but was the one member of six with no status line. Verified: not archived, but no release has ever been cut and the last functional commits are Aug 2024 — quiet, not dead, the sRDI shape. Recorded as low impact here, because the Linux-native half is already on the box: impacket-mssqlclient (enum_links/use_link) and nxc mssql cover linked-server hopping and are both already listed. skahwah/SQLRecon is named as the maintained analogue with no pointer of its own — the pretender treatment. The block's reference to that tool in offensive/evasion had also drifted, and is corrected from :124 to :126. #275 item 6.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "sliver's note ran one release ahead of the facts. It said upstream \"has kept releasing (past 1.7.6 by Aug 2026)\"; v1.7.6 shipped 2026-08-28 and is the head, so \"past\" was wrong — now \"through 1.7.6\". The durable phrasing the last cycle introduced (check sliver-server version before an op, never a patch count) is unchanged and still right. What 1.7.6 contains sharpens it: it bounds mTLS/WireGuard envelope and pivot-frame allocation from the length prefix and fixes DNS varint boundary handling — memory exhaustion on network-facing paths, not cosmetic stability. #275 item 7.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "proxychains4 carried no annotation, and the bare proxychains name is a live trap. apt is at upstream's head (4.17-3.1 = v4.17; rofl0r alive but slow to release — fixes landed 2026-08-27 against a 2024 tag). The addition is the trap: a real proxychains package exists in Kali and Debian sid at 3.1-9 — proxychains 3.1, from 2007. It escapes the usual apt-file search '/usr/bin/proxychains$' check because it ships /usr/bin/proxychains3, a third binary name, so apt install proxychains *succeeds* and silently hands you an 18-year-old tool. A sharper reason to name proxychains4 than \"the bare name is only a virtual Provides:\". #275 item 8.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "redup's katana step would have inherited the nuclei miscount on migration. It ran katana -update unconditionally — the exact shape the nuclei engine step had before it was fixed below. katana 1.7.0-0kali1 landed in kali-dev on 2026-08-27 and has not migrated to kali-rolling; apt owning a binary is precisely when Kali patches its self-updater out, as it already did to nuclei. On the day katana migrates and is patched, the step would have started printing ✗ katana update failed and tallying it on every run of a healthy box. The flag is now probed before use, reusing the nuclei step's whole-token regex byte-for-byte — the match has to be whole-token here too, since katana's help carries -duc, -disable-update-check, which a bare grep -- -update would match on exactly the patched build the probe exists to catch. A flagless build now degrades to a skip that tallies nothing. Preventive: no behaviour change on today's go install build, where the probe passes. redup -h, the redup header comment, aliases.md and install/tools.lst all gave nuclei a build hedge and katana none; all four now match. #260 item 5.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The Cloud / SaaS / CI-CD block claimed Terraform Cloud entries are \"pure REST — curl + a token, nothing to install.\" The tfc-agent entry lower in the same file already said the opposite — that it \"corrects this file's older claim that the Terraform Cloud entries are pure REST\" — so the correction was written at one end and never applied at the other, leaving the two halves of one file contradicting each other. tfc-agent-hijack creates the agent pool over REST and then runs tfc-agent, a HashiCorp release binary on infrastructure you control; only tfc-token-backdoor and tfc-var-injection are curl-only. Checking the rest of the sentence while correcting it found it loose for two more of the five services it named: Snowflake's three entries are SQL (``sql fences, which is why the corpus gate never sees a command in them) and slack-2fa-disable` is a console toggle with no command at all. \"Nothing to install\" still holds for both — \"curl + a token\" did not. Okta and GitLab were accurate as claimed.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "katana's manifest pointer said \"not in apt\", which is no longer true. Initial Kali packaging (1.7.0-0kali1) was committed to kali-dev on 2026-08-27. It has not migrated, so go install is still the only route on any box today — but the pointer now states the kali-dev version and the \"has not migrated\" qualifier, mirroring the shape rustscan already carries in the same file, and names pkg.kali.org/pkg/katana as the re-check. It also records what a migration would bring: the kali-dev packaging carries no debian/patches directory yet, so -update survives there for now. #260 item 5.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "mitm6's freeze note claimed \"there is no maintained successor to move to.\" Too strong, and the near-miss has a name: RedTeamPentesting's pretender (Go, v1.4.1, Jul 2026) is maintained and does mitm6's exact DHCPv6/DNS takeover plus mDNS/LLMNR/NBT-NS. But it is a spoofer only — no listener, no capture, no relay — so it replaces neither mitm6 nor responder, and the note's conclusion (keep mitm6, frozen because finished) is unchanged. It gets no → UPSTREAM pointer of its own: no doc and no corpus entry invokes it. The same note now records a second axis the old text conflated with it — whether the coercion fires is not whether the relay yields. On fully-patched Server 2025 / Win11 24H2, SMB signing is required by default and LDAP channel binding ships Enabled-When-Supported (MSRC, Dec 2024): the trigger still fires, the SMB and plain-LDAP relay legs close, and value shifts toward krbrelayx and the AD CS / PKINIT path. #260 item 6.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "redup counted every successful searchsploit -u as a failure. The step ran if searchsploit -u; then …, but searchsploit exits 6, not 0, after any successful update — its own header documents it (\"Exit code '6' means updated packages (APT, brew or Git)\") and its update routine ends in a bare exit 6 on every route (apt, brew and git alike). So a completely successful refresh printed ✗ searchsploit -u failed and was tallied, making the summary read red on a healthy box. This is the same miscount as the nuclei engine step below, one step further down the same function, and it survived that fix. The exit status is now captured and both 0 and 6 count as success; anything else still reports, and now prints the code. Found while correcting the step's prose for #260 item 8 — the report called this a comment-only fix.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "redup's searchsploit comment described a code path that does not run on Kali. It explained the sudo escalation as a permissions problem on a root-owned git checkout under /usr/share/exploitdb. On a deb install searchsploit -u never reaches its git pull: it probes apt-cache search \"^exploitdb$\" first and, on a hit, runs sudo apt update && sudo apt -y install exploitdb, escalating on its own. The writability probe is kept — it is still correct for a user-local or /opt checkout and on non-Kali — but it is now documented as inert on the deb route. The consequence strengthens the never-mid-engagement warning rather than softening it: the step can move apt state, not just refresh a data directory.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "Five more annotations routed you around a package apt already ships — the same error class as caldera below, found by re-verifying every → UPSTREAM name in the manifest against apt rather than by any report. None of the five appears in #260: - evilginx2 was annotated → UPSTREAM (go install or release binary) and filed under the block headed \"Operator-side tooling, not in apt\", whose preamble says outright that these \"have no Kali package\". kali-rolling ships evilginx2 (3.3.0+ds1-0kali1), which *is* upstream's latest release (v3.3.0, Apr 2024). Now a plain apt line in Credential attacks, ROE warning intact. - name-that-hash was annotated → UPSTREAM (pip install name-that-hash). Kali ships it (1.11.0-0kali1). The decision to leave it uninstalled stands on its own merits; only the packaging pointer was wrong. - pspy was annotated → UPSTREAM (release binary) in a block whose premise is \"per-engagement downloads rather than apt packages\". Kali ships pspy (1.2.1-0kali1). Here the conclusion survives for a sharper reason than the block gave: what apt ships is a host-arch, dynamically-linked Debian Go build (Depends: libc6), while what you upload to a target is upstream's *static* pspy32/pspy64. So the release binary really is the per-engagement download — just not because \"there is no package\". - PowerUp.ps1 was annotated → UPSTREAM (PowerSploit …). Kali packages it: the powersploit package (3.0.0+git20200817-0kali1) drops the script at /usr/share/windows-resources/powersploit/Privesc/PowerUp.ps1 — the same pattern as mimikatz, a Linux package whose payload is Windows content you copy to the target. It is pulled in by kali-linux-headless, so it is already present on a default box. Still not an apt line of its own, but \"fetch it from GitHub\" was wrong. - The evasion payload-build paragraph asserted \"None is in Kali apt\" of its five tools. donut is packaged (1.1-0kali3+b1, /usr/bin/donut) and is the one member whose generator runs natively on Linux, so the paragraph's \"all run operator-side on WINDOWS\" was wrong about it too. It stays unlisted as a judgement, not because apt cannot supply it. macro_pack, PowerUpSQL, sRDI, ConfuserEx and ScareCrow are genuinely absent, as claimed.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "caldera is in kali-linux-large. The note added with the caldera fix below claimed it is \"in NO kali-linux-* metapackage\"; apt-cache rdepends caldera says otherwise. It is absent from kali-linux-default, which is what the line was reaching for, so the conclusion (a default box needs this line) is unchanged.",
       "core": false
     },
     {
@@ -1619,6 +2092,14 @@
       "version": "Unreleased",
       "category": "Added",
       "kind": "fix",
+      "text": "Three tool decisions recorded so the next scout cycle doesn't re-raise them. All three were proposed by #260 and all three were declined, on stated grounds rather than by omission: - gh in redup's go_fast_movers (item 9). It has the profile the machinery was kept for — go-only, apt-absent since kali-rolling dropped 2.46.0-3 on 2025-12-10, and genuinely fast — but upstream supports the release binary and GitHub's own apt repo, not go install, and a bare go install build reports an unset/dev version string. The entry would replace a correct build with one that cannot report its own version. Recorded in the comment beside the katana rejection already there, so the array is now empty for two stated reasons rather than one. - trufflehog. In kali apt (3.94.3-0kali1) and a good fit for what the Cloud / SaaS / CI-CD block is for — \"find the leaked key\" is the missing first step of most of the gh-*/npm-*/pypi-* supply-chain entries. Held out on this file's own membership rule, not on merit: no doc and no corpus entry invokes it. The doc edit is the prerequisite; the note says so, and says it becomes a plain apt line once one does. - PrivescCheck — same rule, same note, beside the PowerUp.ps1 entry it would complement. The report conceded the prerequisite for this one and not for trufflehog; the rule applies to both identically.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
       "text": "make view-counts / test/check-view-counts.sh — a gate on the hand-typed corpus counts in hacktheplanet, PURPLE-TEAM.md and OFFENSIVE-METHODOLOGY.md. Two of those files already carried a caveat saying the numbers go stale on every companion-sync; this executes it. It exists because the drift above is a repeat — the same fix is recorded for the v2.10.0 sync — and nothing could see it: gen-views.sh --check byte-compares block *contents* and has no opinion on how many blocks exist, and markdownlint cannot tell 101 from 102. It is repo-owned rather than an extension of gen-views.sh because offensive/companion/ is a vendored subtree and an edit there is lost on the next sync. It checks only what is mechanically derivable (entry totals, projected-block counts, and the sums of those); the semantic buckets — 56 cloud/SaaS/ CI-CD, 13 C2-egress/Impact, 7 Linux, 69/76, the percentages — are deliberately ungated, because nothing in entries/*.md marks an entry \"cloud\". Exit 2 means a stale count; exit 1 means an anchored sentence was rewritten and needs re-anchoring — two different failures, so a maintainer is never told the wrong one.",
       "core": false
     },
@@ -1732,6 +2213,78 @@
       "category": "Added",
       "kind": "feature",
       "text": "companion_version / companion_tag in companion.lock, for symmetry with core.lock.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "ptunnel-ng added beside ptunnel, not instead of it. ptunnel-ng (utoni/ptunnel-ng, redirected from lnslbrty) is the maintained fork and kali's 1.43-2 *is* its latest upstream release, so it is the one to reach for. The original ptunnel line stays for one mechanical reason: the corpus entry entries/red/icmp-tunnel-c2.md invokes the bare ptunnel binary, and test/check-corpus-commands.sh — offline and required — resolves that name against the manifest, so dropping the line reds a blocking gate. ptunnel-ng cannot cover for it either: it ships only /usr/bin/ptunnel-ng, with no ptunnel binary and no alternatives symlink. Retargeting the entry is an upstream change in htpx — entries/ is a vendored subtree — and it is a rewrite, not a rename: the two are not flag-compatible, -lp/-da/-dp having become -l/-r/-R.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "The covert-egress block now carries a status per tool. It read as though all four were current upstreams; not one is. iodine is a full release behind (kali 0.7.0-13 vs upstream v0.8.0); dnscat2 is frozen at its own last release (v0.07, 2016 — so apt is *not* behind, there is simply nothing newer); ptunnel is frozen at 0.72; icmpsh is dead (last push 2018, never released).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "sliver's currency note no longer hardcodes a patch count. \"TWO patches behind\" was accurate when written and wrong within five months. It now states the shape — apt froze at 1.7.1-0kali4 while upstream kept releasing — and points at sliver-server version instead of a number that rots.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "Freeze and archive statuses added where the file asserted none. PrintSpoofer (archived Sep 2024) was the last unmarked freeze in the target-dropped block; hashid is frozen at Jun 2022 while the line calls it \"the cracking entrypoint\"; the evasion payload-build paragraph carried no status for any of its five tools (macro_pack and ScareCrow archived, Donut alive, sRDI static since 2023). Each is kept — these target behaviours and formats that have not moved — with the reason stated.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "The ConfuserEx pointer now names the mkaring fork. Canonical yck1509/ConfuserEx is archived and has not moved since 2019, so a bare \"ConfuserEx\" landed a reader in a dead repo — the failure the kwp-vs-iphelix/pack note already guards against elsewhere in the file.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "ligolo-ng loses its \"(upstream if repo build lags)\" hedge. Kali tracks it closely (0.9.1-0kali1 within ~2 weeks of upstream v0.9.1), so the hedge invited a hand-built pivot that is almost never warranted.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "The hexyl note's reason is narrower than it claimed. \"There is no hexyl package in Kali at all\" is false: the rust-hexyl source package, which builds a hexyl binary package, has been imported into and removed from kali-rolling repeatedly (0.4.0, 0.5.1, 0.7.0, 0.8.0, most recently 0.16.0-4), following Debian testing. It is out right now, so the conclusion — keep it out, it would hand check-packages.sh an unresolvable name — is unchanged, but it can return without warning.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "rusthound-ce's version pair replaced with its cadence. The quoted v2.4.91 -> v2.5.2 in seven weeks had itself gone stale (seven releases shipped in the eight weeks to Aug 2026). The mechanical reason it stays out of redup — cargo, no self-updater, go_fast_movers is go-only — is unchanged.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "redup's ffuf/gobuster note now separates ownership from currency. \"apt-packaged ones (gobuster/ffuf) update via up\" implied apt keeps them current. apt *owns* them, so up is the only correct route and neither belongs in go_fast_movers — but kali's ffuf is 2.1.0 (Jan 2024) against an upstream that resumed releasing at 2.2.x. The routing claim stands; the currency implication does not.",
       "core": false
     },
     {
@@ -1889,6 +2442,38 @@
     {
       "repo": "dotfiles-Defense",
       "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make core-check reported fleet drift from an empty variable. It printed \"gh not installed — cannot query upstream tags\" and then queried anyway; gh failing left upstream_ver empty, which is never equal to local_ver, so it announced • vendored core is 5.4.1, upstream is — a sync from dotfiles-core is owed. A confidently wrong answer about drift, which is worse than the 127 the same defect causes elsewhere. The guard and the query are now one recipe line, and an empty upstream is its own branch: it reports drift UNKNOWN, not current and exits 1, rather than guessing. Found by _core_make_gate_hits (dotgibson/dotfiles-core#775), not by eye.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make markdown announced a skip and then ran anyway. Each make recipe line runs in its own shell, so the guard's exit 0 only ended that line: without npx it printed \"npx not available — skipping markdown\" and then ran npx, exiting 127. Collapsed into one recipe line, so the skip is a real skip (dotgibson/dotfiles-core#775 — the same defect in six other fleet repos). MD_FILES was already correct here, so only the guard needed fixing, not the scope. An unreadable MARKDOWNLINT_VERSION now fails rather than silently linting unpinned — \"same version as CI\" is this target's whole claim.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": ".markdownlint.jsonc's header claimed this config was \"the local README check\" and that \"CI in this repo gates its own code, not its Markdown\". Both were true when written; dotgibson/dotfiles-core#592 made the markdown leg blocking and it covers all 21 repo-owned files, not just the README.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "security",
+      "text": "The token-context half of T1134.001 closes, on a different event than #230 asked for (#230). #223 reserved the Stealth half of T1134.001 for a rule that observes the impersonation rather than the shape around it, and named two candidates; #225 answered the spoolss one. The other candidate was \"a token-context anomaly on 4624/4672\", and it is declined on evidence: neither event is written by this attack. 4624 generates when a logon session is created and 4672 when privileges are assigned to a new one, and no live potato variant creates one — the pipe-impersonation majority never authenticates at all, the local-relay minority rides NTLM's local-call short circuit instead of calling LsaLogonUser, and DuplicateTokenEx preserves AuthenticationId so the resulting SYSTEM process reuses logon session 0x3e7. Only HotPotato and GhostPotato ever produced that shape, and both died with MS16-075 and CVE-2019-1384. Such a rule would have passed its own true positive and its own true negative and then sat inert, which is #149 with a Windows event id on it. What answers it is detections/sigma/privilege_escalation/token_theft_process_target_subject_4688.yml, on the plane where the telemetry exists. Event version 2 of 4688 carries a Target Subject block that Windows populates only when the creator and target \"do not share the same logon\", so a process whose Target Subject is SYSTEM was created with a token that is not its creator's — the theft stated as a field. It carries no Image constraint, so unlike the potato pair it survives a payload that is not a named shell; and because every variant ends in CreateProcessWithTokenW or CreateProcessAsUserW, it sits downstream of the DCOM-coerced variants that leave the spoolss rule silent. It takes both tactic tags on its own evidence. One assumption travels with it and is written into the rule rather than buried: whether the audit reads Creator Subject from the calling process's token or its impersonating thread token is inference from Microsoft's documentation, not a capture. Ledger: Stealth TA0005 3 | 3 -> 3 | 4, Privilege Escalation TA0004 9 | 12 -> 9 | 13, T1134.001 3 -> 4 rules. Tactic TECHNIQUE counts do not move, exactly as #230 predicted — the spoolss rule already took the row.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
       "category": "Added",
       "kind": "fix",
       "text": "The rest of the Sysmon PipeEvent block gets read (#229). #225 closed one of the five pipe names detections/sysmon/sysmonconfig-detection-lab.xml collects and left four collected-and-unread — the same telemetry-ahead-of-detection hole, one size smaller. Two rules close three of them: svcctl_atsvc_remote_pipe_sysmon_18 (Sysmon 18 / ConnectPipe on \\svcctl and \\atsvc with Image = System) and coercion_efsrpc_pipe_sysmon_18 (Sysmon 18 / ConnectPipe on \\efsrpc). This is corroboration, not new coverage, and the ledger should not be read as wider than it is. The service smbexec/psexec installs over svcctl is already caught by service_creation_psexec_7045; the task atexec schedules over atsvc by scheduled_task_suspicious_4698; efsrpc coercion by coercion_named_pipes_5145 and the Suricata coercion.rules. What the pair adds is a second, independent plane: the bind is visible on the host where those audit subcategories are never forwarded, and it is the request rather than the result, so it fires earlier in the chain. Only T1021.002 is a genuinely new technique row, and only because nothing here previously named the admin-share access itself. The invariant was re-derived, not copied. #225's shape was ownership on pipe *creation*, and it transfers to none of these: svcctl, atsvc, efsrpc and lsarpc are all created once at boot by the OS, and every tool in scope *connects* to a pipe already there — so the creation half detects nothing on those names and the new rules take the connect half, the opposite trade for the opposite reason. Origin replaces ownership: a remote SMB client's pipe open is serviced by the kernel SMB server, so Image reads System rather than a local sc.exe/schtasks.exe, and that is what separates impacket from administration. lsarpc deliberately ships no rule. Sysmon PipeEvent carries no authenticating principal, so coercion_named_pipes_5145's filter_machine — the block that makes that pipe survivable on 5145 — has no counterpart here, and a coercion bind and a routine domain bind arrive as byte-identical events. The decline is argued in DEFENSE-METHODOLOGY.md and recorded in a form that runs: the efsrpc rule's true negative *is* an lsarpc bind. The cost is stated rather than buried — PetitPotam's default endpoint is lsarpc, so 5145 stays the primary for coercion. Both rules ship with unverified fixture provenance on purpose. That Sysmon emits an 18 for a remote SMB pipe open, attributed to System, is derived from where the kernel services that open rather than observed — the purple-team run that would confirm it has not been done, and until it has, the rules' silence means nothing.",
@@ -1940,6 +2525,30 @@
       "category": "Added",
       "kind": "perf",
       "text": "The repo hygiene surface: Makefile, CONTRIBUTING.md, .editorconfig, .gitattributes, and the PR/issue templates. This repo and dotfiles-Offense are deliberate mirrors — equal CI weight at 14 workflows each, and Defense carries *more* tracked files — but Defense was the only repo in the fleet missing all of these at once. The Makefile is the one with immediate value: every gate here was already real and already scripted, but there was no front door, so reproducing CI locally meant reading .github/workflows/ and reconstructing the command list by hand. It wires what exists — tests/lint-shell.sh, tests/test-defense.sh, the four --check drift gates, the methodology and validation-coverage gates, lab-smoke.sh — and reads MARKDOWNLINT_VERSION from the vendored Core pins so a local run matches CI exactly. Offense's target list was not ported wholesale, because that would have recreated in reverse the exact bug Offense's Makefile was written to fix: core-sync, core-lock and the companion-* targets name scripts this repo does not have (Core is pushed *into* here by dotfiles-core's own make sync, and this repo vendors no htpx companion). They are absent rather than stubbed. .gitattributes is the one with teeth. dotfiles-Arch/CLAUDE.md documents what its absence costs when a repo is touched from Windows over a UNC share: a .sh that picks up CRLF gets a shebang of …/env bash\\r and dies with *\"bad interpreter\"* — text that looks perfectly valid and that both shellcheck and bash -n accept. It also pins *.rules, *.zeek and *.pcap, which are this repo's product and are parsed by tools that are not uniformly CRLF-tolerant. Adding this file also makes Defense visible to dotfiles-web's changelog feed, which derives from each repo's CHANGELOG.md and had been skipping this one for want of the file. (dotgibson/dotfiles-Defense#196)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make zsh-syntax and make markdown announced a skip and then ran anyway. Each make recipe line runs in its own shell, so each guard's exit 0 only ended that line: with zsh absent, zsh-syntax printed \"zsh not installed — skipping\" and then ran zsh -n (Error 1); with no global markdownlint-cli2, markdown printed its own skip and then ran the linter (Error 127). Both collapsed into one recipe line, so a skip is a real skip. This is the defect dotfiles-Debian recorded and fixed for its zsh-syntax, noting the shape survived in the other OS repos' Makefiles — this is that repo, and it had both (dotgibson/dotfiles-core#775).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "make markdown also scanned the wrong files. It globbed '*.md', which is top-level only, while the reusable gate's markdown leg — blocking since dotgibson/dotfiles-core#592 — lints git ls-files '*.md' ':!:core/**', recursively. The three .github/ markdown files were therefore enforced by a required check and invisible locally, so this target could read green against a red PR. Now uses the same pathspec via a new MD_FILES. All nine files lint clean, so nothing was hiding.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": ".markdownlint.jsonc's header claimed the rules were \"mirrored from Core rather than CI-enforced\" and that \"lint.yml skips **.md entirely\". Both were true when written and neither survived dotgibson/dotfiles-core#592.",
       "core": false
     },
     {
@@ -2100,6 +2709,14 @@
       "category": "Removed",
       "kind": "config",
       "text": "A stale 4.5 MB orphaned worktree copy under .claude/worktrees/, and the obsolete zsh/local.zsh ignore entry (host overrides have lived at ~/.config/zsh/99-local.zsh since v4).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "make markdown, wired into make lint. lint-call.yml's markdown leg has been blocking since dotgibson/dotfiles-core#592, but this repo had no local target for it — a required check nobody could run before pushing, and a .markdownlint.jsonc only CI ever read. MD_FILES uses the gate's own pathspec (git ls-files '*.md' ':!:core/**'), so the local run scans exactly what CI scans, recursively — a '*.md' glob would be top-level only and miss pull_request_template.md. All seven files already pass, so nothing rides along. It skips when markdownlint-cli2 is absent rather than failing like the shellcheck arm: shellcheck is a pacman package, so missing means a box to fix, while markdownlint-cli2 is npm-only. Part of the fleet sweep in dotgibson/dotfiles-core#775.",
       "core": false
     },
     {
@@ -2346,8 +2963,8 @@
       "repo": "dotfiles-Debian",
       "version": "Unreleased",
       "category": "Notes on what is deliberately absent",
-      "kind": "fix",
-      "text": "wl-clipboard/xclip: no display on these boxes. This leaves Core's clip without a backend — see the README's *Headless clipboard* note for the OSC 52 fix, which belongs upstream in dotfiles-core.",
+      "kind": "other",
+      "text": "wl-clipboard/xclip: no display on these headless ubuntu/debian boxes. Tiered in for Kali (# only:kali), which runs under WSL2 with WSLg. Copying still works regardless: Core's clip falls back to OSC 52 when it finds no local backend. Pasting does not, deliberately — see the README's *Headless clipboard* note.",
       "core": false
     },
     {
@@ -2364,6 +2981,30 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "make zsh-syntax printed \"zsh not installed — skipping\" and then ran zsh -n anyway. Each make recipe line runs in its own shell, so the guard's exit 0 only ended that line. The same shape is still present in the other OS repos' Makefiles.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make markdown had the same defect, and it was still live here. Without a global markdownlint-cli2 it printed \"not installed — skipping\" and then ran the linter anyway, failing with Error 127. Collapsed into one recipe line, so the skip is a real skip. Of the fleet, dotfiles-Fedora carries this target byte-for-byte (also live); dotfiles-Offense and dotfiles-Defense have the same shape guarding npx instead (latent — it only bites where npx is absent); dotfiles-MacBook already fixed its copy; Alpine, Arch, Gentoo and openSUSE have no markdown target at all.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "make markdown also scanned the wrong files. It globbed '*.md', which is top-level only, while the reusable gate's markdown leg — blocking since dotgibson/dotfiles-core#592 — lints git ls-files '*.md' ':!:core/**', recursively. The three .github/ markdown files were therefore enforced by a required check and invisible locally, so this target could read green against a red PR. It now uses the same pathspec via a new MD_FILES. All nine files lint clean, so nothing was hiding.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": ".markdownlint.jsonc's header claimed the rules were \"mirrored from Core rather than CI-enforced\" and that \"lint.yml skips **.md entirely\". Both were true when written and neither survived dotgibson/dotfiles-core#592.",
       "core": false
     },
     {
