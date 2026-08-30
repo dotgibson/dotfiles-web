@@ -3,7 +3,7 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "9e552a3c0e522e467b6e3ba980d19147525dd687"
+    "commit": "a8f8f9fa6406750dff92dd6b37a781c57be47e31"
   },
   "ruleCount": 108,
   "documentCount": 126,
