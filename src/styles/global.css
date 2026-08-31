@@ -5,30 +5,48 @@
    ========================================================================== */
 
 :root {
-  /* Tokyo Night (Storm) core palette */
+  /* ── Tokyo Night — GENERATED from dotfiles-core theme/palette.toml ─────────
+     Written by scripts/collect-palette.mjs. Do not hand-edit between the markers.
+     Core resolves this table from a pinned tokyonight commit rather than typing it
+     (dotfiles-core#679), and CI regenerates this block and fails on a diff — so the
+     "themed in Tokyo Night" claim this site makes is now held up by construction
+     instead of by hand. Token NAMES are this site's, not Core's: they say what a
+     colour does in a web layout. The mapping is BINDINGS in the generator. */
+  /* web:theme:gen palette */
+  --tn-bg-storm: #24283b;   /* core: color_bg */
+  --tn-surface: #1f2335;    /* core: color_bg_dark */
+  --tn-surface-2: #292e42;  /* core: color_bg_highlight */
+  --tn-fg: #c0caf5;         /* core: color_fg */
+  --tn-fg-dim: #a9b1d6;     /* core: color_fg_dark */
+  --tn-comment: #565f89;    /* core: color_comment */
+  --tn-blue: #7aa2f7;       /* core: color_blue */
+  --tn-cyan: #7dcfff;       /* core: color_cyan */
+  --tn-purple: #bb9af7;     /* core: color_magenta */
+  --tn-green: #9ece6a;      /* core: color_green */
+  --tn-red: #f7768e;        /* core: color_red */
+  --tn-orange: #ff9e64;     /* core: color_orange */
+  --tn-yellow: #e0af68;     /* core: color_yellow */
+  /* web:theme:end palette */
+
+  /* ── Site extensions — NOT in Core's palette, hand-authored ────────────────
+     Core's table is a TERMINAL palette; a docs site needs a few colours it has no
+     opinion about. Each of these has a reason, and the generator deliberately does
+     not touch them — none may be quietly "corrected" to a Core value.
+
+       bg, bg-dark        the page ground and code wells. Deliberately DEEPER than
+                          Core's color_bg (#24283b), which is a terminal background
+                          and reads washed out stretched behind a whole page.
+       border,            Core's nearest is color_terminal_black (#414868), which is
+       border-bright      visibly lighter — adopting it would recolour every card
+                          edge, focus ring and terminal frame on the site.
+       muted, teal        no Core equivalent. De-emphasised UI text, and types/regex
+                          in the syntax mockups. */
   --tn-bg: #1a1b26;
   --tn-bg-dark: #16161e;
-  --tn-bg-storm: #24283b;
-  --tn-surface: #1f2335;
-  --tn-surface-2: #292e42;
   --tn-border: #2a2e45;
   --tn-border-bright: #3b4261;
-
-  --tn-fg: #c0caf5;
-  --tn-fg-dim: #a9b1d6;
-  --tn-comment: #565f89;
   --tn-muted: #737aa2;
-
-  /* Accents */
-  --tn-blue: #7aa2f7;
-  --tn-cyan: #7dcfff;
-  --tn-purple: #bb9af7;
-  --tn-magenta: #c678dd;
-  --tn-green: #9ece6a;
   --tn-teal: #73daca;
-  --tn-red: #f7768e;
-  --tn-orange: #ff9e64;
-  --tn-yellow: #e0af68;
 
   /* Semantic */
   --bg: var(--tn-bg);
@@ -342,13 +360,13 @@ pre {
   border-radius: 999px;
 }
 .terminal__dot--r {
-  background: #f7768e;
+  background: var(--tn-red);
 }
 .terminal__dot--y {
-  background: #e0af68;
+  background: var(--tn-yellow);
 }
 .terminal__dot--g {
-  background: #9ece6a;
+  background: var(--tn-green);
 }
 .terminal__title {
   margin-left: 0.6rem;

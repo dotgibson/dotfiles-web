@@ -12,22 +12,45 @@
  * The four `styles` pills mirror tokyonight's built-in styles that the Neovim config
  * can flip between in one line (nvim/lua/gerrrt/plugins/theme.lua → `style = ...`).
  *
- * NO-DRIFT: both the swatch fill AND its printed hex trace to the SAME source —
- * src/styles/global.css. The chip paints `var(--tn-*)` live; the label is the same
- * token read out of global.css at BUILD time (hexOf below), so the two can't disagree
- * and the printed value can't drift from the shipped token. No client-side JS needed.
+ * NO-DRIFT, TWO LINKS NOW. Both the swatch fill AND its printed hex trace to the SAME
+ * source — src/styles/global.css. The chip paints `var(--tn-*)` live; the label is the
+ * same token read out of global.css at BUILD time (hexOf below), so the two can't
+ * disagree and the printed value can't drift from the shipped token. No client-side JS.
+ *
+ * And since #230, global.css's half of that is itself GENERATED from dotfiles-core's
+ * theme/palette.toml (scripts/collect-palette.mjs, gated in CI). So the sentence in the
+ * lead below — that these are the same colours as Neovim, tmux and starship — stopped
+ * being a promise the copywriter made and became one the build checks. That is the
+ * whole point: this component asserted "one palette, every surface" while shipping
+ * --tn-magenta: #c678dd, which is One Dark's magenta and was in no Tokyo Night at all.
+ *
+ * Read the palette's METADATA (which style is active) from src/data/palette.json, and
+ * the COLOURS from global.css. Two inputs, deliberately: a colour must come from the
+ * stylesheet the browser actually paints with, or the no-drift claim above is hollow.
  */
 // Inline the canonical stylesheet's TEXT at build time. Vite's `?raw` returns the
 // file as a string (and does NOT register it as a stylesheet — Base.astro already
 // imports global.css normally for the real styles), and it's bundler-safe, unlike a
 // runtime fs read whose relative path breaks once the frontmatter is chunked.
 import globalCss from '../styles/global.css?raw';
+// Generated from dotfiles-core/theme/palette.toml — see scripts/collect-palette.mjs.
+import palette from '../data/palette.json';
 
 // Pull a `--tn-name: #hex;` declaration out of global.css. The trailing colon in the
 // pattern makes it exact — `--tn-bg:` never matches `--tn-bg-dark:`.
 function hexOf(cssVar: string): string {
   const m = globalCss.match(new RegExp(`${cssVar}:\\s*(#[0-9a-fA-F]{3,8})`));
-  return m ? m[1].toLowerCase() : '#000000';
+  // Fail the BUILD rather than fall back. This used to return '#000000', which paints a
+  // black hex label underneath a correctly-coloured chip — precisely the disagreement
+  // this component exists to make impossible, arriving with no error anywhere. A token
+  // named here and absent from global.css is now a build error.
+  if (!m) {
+    throw new Error(
+      `Palette.astro: ${cssVar} is not declared in src/styles/global.css. If the token ` +
+        `was retired, remove it from the swatch list; if it was renamed, update it here.`,
+    );
+  }
+  return m[1].toLowerCase();
 }
 
 // Accent ramp — the "theme highlights". `var` is the canonical token; the printed
@@ -35,8 +58,7 @@ function hexOf(cssVar: string): string {
 const accents = [
   { name: 'Blue', var: '--tn-blue', role: 'primary · links · keywords' },
   { name: 'Cyan', var: '--tn-cyan', role: 'hover · inline code' },
-  { name: 'Purple', var: '--tn-purple', role: 'accent · eyebrows' },
-  { name: 'Magenta', var: '--tn-magenta', role: 'constants' },
+  { name: 'Purple', var: '--tn-purple', role: 'accent · eyebrows · keywords' },
   { name: 'Green', var: '--tn-green', role: 'strings · git add' },
   { name: 'Teal', var: '--tn-teal', role: 'types · regex' },
   { name: 'Red', var: '--tn-red', role: 'errors · git del' },
@@ -53,13 +75,21 @@ const surfaces = [
   { name: 'border', var: '--tn-border-bright' },
 ];
 
-// tokyonight styles the Neovim config can switch to with a one-line edit.
+// tokyonight styles the Neovim config can switch to with a one-line edit. WHICH ONE is
+// active is not typed here — it is Core's palette.toml `style` key, the same value
+// gen-theme.sh resolves the whole table from. Flip Core's theme and this pill, and the
+// lead sentence below, both move on the next regeneration instead of quietly lying.
+const activeStyle = (palette.style ?? 'storm').toLowerCase();
 const styles = [
-  { name: 'Storm', note: 'default', active: true },
-  { name: 'Moon', note: 'softer', active: false },
-  { name: 'Night', note: 'darker', active: false },
-  { name: 'Day', note: 'light', active: false },
-];
+  { name: 'Storm', note: 'default' },
+  { name: 'Moon', note: 'softer' },
+  { name: 'Night', note: 'darker' },
+  { name: 'Day', note: 'light' },
+].map((s) => ({ ...s, active: s.name.toLowerCase() === activeStyle }));
+// Title-case for prose. Falls back to Core's raw value if it ever ships a style this
+// list doesn't know, so the page names the truth rather than silently reading "Storm".
+const styleName =
+  styles.find((s) => s.active)?.name ?? activeStyle.charAt(0).toUpperCase() + activeStyle.slice(1);
 ---
 
 <section class="section palette">
@@ -68,9 +98,10 @@ const styles = [
       <span class="eyebrow">Theme highlights</span>
       <h2>One palette, every surface</h2>
       <p class="lead">
-        The whole fleet wears <strong>Tokyo Night (Storm)</strong> — the same colours light
-        up Neovim, tmux, starship, and this page. Nine accents over a five-step surface ramp,
-        and in Neovim it’s a one-line flip to the other built-in styles.
+        The whole fleet wears <strong>Tokyo Night ({styleName})</strong> — the same colours
+        light up Neovim, tmux, starship, and this page, and they are generated from one
+        table in Core rather than copied. {accents.length} accents over a five-step surface
+        ramp, and in Neovim it’s a one-line flip to the other built-in styles.
       </p>
     </div>
 
@@ -156,7 +187,7 @@ const styles = [
   }
   @media (min-width: 960px) {
     .swatch-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
   }
   .swatch {
@@ -288,7 +319,7 @@ const styles = [
     height: 0.6rem;
   }
   .c-comment { color: var(--tn-comment); font-style: italic; }
-  .c-kw { color: var(--tn-magenta); }
+  .c-kw { color: var(--tn-purple); }
   .c-fn { color: var(--tn-blue); }
   .c-fg { color: var(--tn-fg); }
   .c-str { color: var(--tn-green); }

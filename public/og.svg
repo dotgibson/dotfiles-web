@@ -33,7 +33,7 @@
       <path d="M7 32 A25 25 0 0 1 57 32" stroke="url(#ringTop)"/>
       <path d="M57 32 A25 25 0 0 1 7 32" stroke="url(#ringBot)"/>
     </g>
-    <g stroke="#e6b166" fill="none" stroke-linecap="round">
+    <g stroke="#e0af68" fill="none" stroke-linecap="round">
       <path d="M15.5 30.5 c2 -3 5 -3 7 0 c2 3 5 3 7 0" stroke-width="3.4"/>
       <path d="M28 42 L40 22" stroke-width="6"/>
     </g>

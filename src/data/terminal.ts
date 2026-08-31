@@ -9,33 +9,66 @@
 // Output is plain text with embedded ANSI SGR escape sequences (\x1b[…m) so xterm.js
 // renders the Tokyo Night palette. A handful of helpers below keep the escapes readable.
 
+import palette from "./palette.json";
+
 const ESC = "\x1b[";
 const R = `${ESC}0m`; // reset
-// 24-bit truecolor foreground from a hex string — xterm.js renders these against the
-// Tokyo Night theme we configure on the client. Falls back gracefully if unsupported.
-function fg(hex: string): string {
+// A hex string as the `r;g;b` triple an SGR truecolor escape wants.
+function rgb(hex: string): string {
   const h = hex.replace("#", "");
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  return `${ESC}38;2;${r};${g};${b}m`;
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)).join(";");
 }
-// Tokyo Night Storm palette (matches src/styles/global.css).
+// 24-bit truecolor from a hex string — xterm.js renders these against the Tokyo Night
+// theme we configure on the client. Falls back gracefully if unsupported.
+function fg(hex: string): string {
+  return `${ESC}38;2;${rgb(hex)}m`;
+}
+// Background half of the same pair. It exists because prompt() below used to write its
+// two segment fills as RAW TRIPLES (`48;2;41;46;66m`), which no grep for a colour would
+// ever find — so the starship-style prompt was the one part of this demo that could not
+// be recoloured from the palette, and silently wouldn't have been.
+function bg(hex: string): string {
+  return `${ESC}48;2;${rgb(hex)}m`;
+}
+
+// The palette, from Core.
+//
+// The Core-derived entries below come from src/data/palette.json — generated out of
+// dotfiles-core's theme/palette.toml by scripts/collect-palette.mjs — so the colours
+// this SIMULATED shell prints are the ones the REAL shell prints, by construction
+// rather than by someone remembering to retype them.
+//
+// YES, THIS MODULE IMPORTS A JSON PAYLOAD, and the note on setCoreVersion below says
+// this file goes out of its way NOT to. That note is about generated.json, which is
+// ~86 KB of fleet metrics for one version string; palette.json is ~1 KB and every byte
+// of it is colour this module actually prints. Routing it through the DOM-attribute
+// channel instead would be a second mechanism for a problem two orders of magnitude
+// smaller. Don't "fix" this to match.
+//
+// Names are the site's, matching the --tn-* tokens in global.css; the Core key each
+// one resolves is spelled out there.
+const C = palette.colors;
 export const TN = {
+  // ── Core's palette (generated) ──
+  surface: C.bg_dark,
+  surface2: C.bg_highlight,
+  fg: C.fg,
+  comment: C.comment,
+  blue: C.blue,
+  cyan: C.cyan,
+  purple: C.magenta,
+  green: C.green,
+  red: C.red,
+  orange: C.orange,
+  yellow: C.yellow,
+  // Selection highlight for the xterm theme on /playground. Core's bg_visual is what
+  // a real terminal running these dotfiles paints behind selected text.
+  selection: C.bg_visual,
+  // ── site extensions — see the "Site extensions" block in global.css ──
   bg: "#1a1b26",
   bgDark: "#16161e",
-  surface: "#1f2335",
-  fg: "#c0caf5",
-  comment: "#565f89",
   muted: "#737aa2",
-  blue: "#7aa2f7",
-  cyan: "#7dcfff",
-  purple: "#bb9af7",
-  green: "#9ece6a",
   teal: "#73daca",
-  red: "#f7768e",
-  orange: "#ff9e64",
-  yellow: "#e0af68",
 } as const;
 
 const c = {
@@ -327,10 +360,10 @@ export function unknown(cmd: string): string {
 // only ASCII so it renders without a Nerd Font. Mirrors the SHAPE of the real
 // starship.toml prompt (dir segment + git branch segment) without its powerline glyphs.
 export function prompt(dir = "~/dotfiles-core", branch = "main"): string {
-  const d = `${ESC}48;2;41;46;66m${fg(TN.cyan)} ${dir} ${R}`;
-  const g = `${ESC}48;2;31;35;53m${fg(TN.green)}  ${branch} ${R}`;
+  const d = `${bg(TN.surface2)}${fg(TN.cyan)} ${dir} ${R}`;
+  const g = `${bg(TN.surface)}${fg(TN.green)}  ${branch} ${R}`;
   return `${d}${g} ${fg(TN.purple)}❯${R} `;
 }
 
 // Re-export the color helpers for the client island (typed access to ANSI output).
-export const ansi = { ...c, hex: fg, R };
+export const ansi = { ...c, hex: fg, bg, R };

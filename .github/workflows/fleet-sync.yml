@@ -421,6 +421,9 @@ jobs:
           GH_TOKEN: ${{ steps.app.outputs.token || secrets.FLEET_SYNC_TOKEN || github.token }}
           REPO: ${{ github.event.repository.name }}
           MIRROR: src/content/docs/reference/porting-matrix.md
+          # The palette's CSS half. Like the mirror it is not JSON, so it is compared
+          # with a plain `git diff` rather than through the filter.
+          PALETTE_CSS: src/styles/global.css
         run: |
           set -euo pipefail
           # WHAT COUNTS AS DRIFT lives in scripts/data-strip.jq, which data-freshness.yml
@@ -443,7 +446,7 @@ jobs:
           # file that had been exempted from it. Handling it here removes the ordering hazard
           # instead of documenting it.
           content_changed=no
-          for f in generated corpus coverage snippets; do
+          for f in generated corpus coverage snippets palette; do
             old="$(git show "HEAD:src/data/${f}.json" | jq -f scripts/data-strip.jq)"
             new="$(jq -f scripts/data-strip.jq "src/data/${f}.json")"
             [ "$old" = "$new" ] || content_changed=yes
@@ -454,6 +457,14 @@ jobs:
           # four rather than in its own step because a release moves BOTH, and splitting
           # them would open two PRs for one event.
           git diff --quiet -- "$MIRROR" || content_changed=yes
+          # The palette lands in TWO places: src/data/palette.json (stamped, so it goes
+          # through the filter with the other four above) and a generated block inside
+          # global.css. The CSS gets a plain diff for the same reason the mirror does —
+          # no generatedAt and no SHA in it to strip. That is not an accident of the
+          # format: collect-palette.mjs deliberately keeps every per-run byte OUT of the
+          # CSS, because a stamp there would make this line report drift daily and the
+          # bot would PR the site stylesheet every morning with no colour having changed.
+          git diff --quiet -- "$PALETTE_CSS" || content_changed=yes
           # Reported as a step output, not just a summary line, because the marker step below
           # keys on it: a fleet state is only worth remembering as swept if the sweep actually
           # found the data in step. Set on BOTH paths so the step's absence and a `yes` can
@@ -461,7 +472,8 @@ jobs:
           echo "drift=${content_changed}" >>"$GITHUB_OUTPUT"
           if [ "$content_changed" = no ]; then
             git checkout -- src/data/generated.json src/data/snippets.json \
-                            src/data/corpus.json src/data/coverage.json "$MIRROR"
+                            src/data/corpus.json src/data/coverage.json \
+                            src/data/palette.json "$PALETTE_CSS" "$MIRROR"
             echo "✅ site data already in step with the fleet" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -472,14 +484,15 @@ jobs:
           git remote set-url origin "https://x-access-token:${FLEET_TOKEN}@github.com/${OWNER}/${REPO}.git"
           git switch -C "$BRANCH"
           git add src/data/generated.json src/data/snippets.json \
-                  src/data/corpus.json src/data/coverage.json "$MIRROR"
-          git commit -m "chore(data): refresh fleet metrics, config snippets, corpus, coverage + porting matrix (fleet-sync bot)"
+                  src/data/corpus.json src/data/coverage.json \
+                  src/data/palette.json "$PALETTE_CSS" "$MIRROR"
+          git commit -m "chore(data): refresh fleet metrics, config snippets, corpus, coverage, palette + porting matrix (fleet-sync bot)"
           git push -f -u origin "$BRANCH"
           # Idempotent: update the existing PR if one is already open for this branch.
           if [ -z "$(gh pr list --repo "${OWNER}/${REPO}" --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
             gh pr create --repo "${OWNER}/${REPO}" --head "$BRANCH" --base "$DEFAULT_BRANCH" \
-              --title "chore(data): refresh fleet metrics, config snippets, corpus, coverage + porting matrix" \
-              --body "Automated by the fleet-sync bot. The derived site data (\`generated.json\` — changelog + by-the-numbers; \`snippets.json\` — the Config explorer's baked source files; \`corpus.json\` — the red/blue corpus from htpx; \`coverage.json\` — Sigma detection coverage from dotfiles-Defense) was behind the fleet, or the mirrored porting matrix was behind Core's latest release. This regenerates the four via \`npm run data\` and re-mirrors \`reference/porting-matrix.md\` via \`npm run mirror\`. Review, let the build run, then merge — deploy.yml redeploys on merge."
+              --title "chore(data): refresh fleet metrics, config snippets, corpus, coverage, palette + porting matrix" \
+              --body "Automated by the fleet-sync bot. The derived site data (\`generated.json\` — changelog + by-the-numbers; \`snippets.json\` — the Config explorer's baked source files; \`corpus.json\` — the red/blue corpus from htpx; \`coverage.json\` — Sigma detection coverage from dotfiles-Defense; \`palette.json\` plus the generated block in \`global.css\` — the Tokyo Night table, from Core's \`theme/palette.toml\`) was behind the fleet, or the mirrored porting matrix was behind Core's latest release. This regenerates them via \`npm run data\` and re-mirrors \`reference/porting-matrix.md\` via \`npm run mirror\`. A diff in \`global.css\` means Core RESTYLED — look at those colours before merging, because they repaint the site. Review, let the build run, then merge — deploy.yml redeploys on merge."
           fi
           echo "📊 opened/updated PR on \`$BRANCH\`" >> "$GITHUB_STEP_SUMMARY"
 

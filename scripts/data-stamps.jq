@@ -31,6 +31,20 @@
 # callers reading this filter in different orders could pin and poll different
 # commits for the same repo, which is the one way they could still drift apart.
 #
+# PALETTE.JSON IS DELIBERATELY NOT PASSED TO THIS FILTER, and that is not an
+# oversight to correct. It carries the same flat generatedFrom.{repo,path,commit}
+# shape corpus and coverage use, so it WOULD parse — it would just key
+# dotfiles-core, which generated.json already stamps, and this filter's whole
+# contract is that the last writer of a duplicate key wins. Adding a fifth file
+# that also claims Core would put a second authority for the fleet's Core pin into
+# both callers at once, decided by argument order rather than by anything a reader
+# could see. There is nothing to gain either: the palette adds no repo the other
+# four do not already name, so the union of names is unchanged. It follows that a
+# palette refresh alone never moves the pins — which is correct, because the pins
+# exist to say which fleet commits to CLONE, and cloning Core at generated.json's
+# commit is exactly what the palette check wants (see collect-palette.mjs on why a
+# Core that predates theme/palette.toml is a warning and not a failure).
+#
 # `.commit // ""` rather than dropping a null: an unverifiable source (not a git
 # checkout) stamps a null commit by design, and both callers need to SEE that name
 # with an empty SHA — silently omitting the key would make an unverifiable repo

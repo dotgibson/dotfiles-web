@@ -33,10 +33,18 @@ on:
       - "src/data/corpus.json"
       - "src/data/coverage.json"
       - "src/data/snippets.json"
+      - "src/data/palette.json"
       - "scripts/collect-metrics.mjs"
       - "scripts/collect-corpus.mjs"
       - "scripts/collect-coverage.mjs"
       - "scripts/collect-snippets.mjs"
+      - "scripts/collect-palette.mjs"
+      # The palette's CSS half. It is a hand-authored stylesheet with ONE generated
+      # block in it, so unlike the four JSON payloads most edits here are a human
+      # restyling the site — but the block between the web:theme markers is Core's, and
+      # a hand-edit to it is exactly the drift this workflow exists to refuse. Cheap to
+      # include: global.css has been touched in 3 of the repo's ~490 commits.
+      - "src/styles/global.css"
       # Shared by all four collectors: it alone decides WHERE the fleet is. A change here
       # can repoint every one of them at once, or make them resolve nothing and take their
       # lenient no-op path — which is the same silent staleness this workflow exists to
@@ -346,6 +354,14 @@ jobs:
           node scripts/collect-snippets.mjs --strict
           node scripts/collect-corpus.mjs --strict
           node scripts/collect-coverage.mjs --strict
+          # Deliberately lenient in ONE case the other four are not: a dotfiles-core that
+          # is checked out but PREDATES theme/palette.toml warns and keeps the committed
+          # outputs even under --strict. That is load-bearing here — on a pull request
+          # this job clones the fleet at the commits the committed data NAMES, and those
+          # pins currently resolve a Core older than the palette. See the header of
+          # collect-palette.mjs for why a version question and an environment question
+          # get different answers.
+          node scripts/collect-palette.mjs --strict
 
       - name: Compare the regenerated snapshots against what is committed
         env:
@@ -448,7 +464,7 @@ jobs:
           '
 
           stale=0
-          for f in generated corpus coverage snippets; do
+          for f in generated corpus coverage snippets palette; do
             # Where the drift would actually surface, and what it costs a reader — all
             # per-file, because naming the wrong page throws away the only part of this
             # message that tells someone where to go and look. /purple publishes the corpus
@@ -476,6 +492,10 @@ jobs:
               snippets)
                 page="/config" ; harm="stale config files"
                 cmd="snippets" ; render="$snippets_render" ; lines=60 ;;
+              palette)
+                page="every page (the site's chrome)"
+                harm="a palette Core does not ship"
+                cmd="palette"  ; render='.'                ; lines=60 ;;
               *)
                 page="/purple" ; harm="stale counts"
                 cmd="$f"       ; render='.'                ; lines=60 ;;
@@ -517,6 +537,26 @@ jobs:
                   if (NR>max) printf "… %d more diff line(s) suppressed (showing the first %d of %d).\n", NR-max, max, NR
                 }' || true
           done
+
+          # The palette's OTHER half. src/data/palette.json went through the loop above;
+          # the generated block in global.css is CSS, so it gets a plain `git diff` — the
+          # same treatment the porting matrix gets in fleet-sync.yml, and for the same
+          # reason: there is no generatedAt and no SHA in it to strip. The regeneration
+          # step rewrote it in place, so a diff here means the committed stylesheet is not
+          # what Core's theme/palette.toml renders.
+          if ! git diff --quiet -- src/styles/global.css; then
+            stale=1
+            echo "::error::src/styles/global.css does not match Core's theme/palette.toml." \
+                 "Every page paints from these tokens, so the showcase would depict a" \
+                 "palette Core does not ship — the failure this repo is least able to" \
+                 "notice by eye. Run 'npm run palette' and commit global.css together" \
+                 "with src/data/palette.json."
+            echo "--- committed  +++ regenerated (src/styles/global.css) ---"
+            git --no-pager diff -- src/styles/global.css \
+              | awk -v max=60 'NR<=max; END {
+                  if (NR>max) printf "… %d more diff line(s) suppressed (showing the first %d of %d).\n", NR-max, max, NR
+                }' || true
+          fi
 
           exit "$stale"
 
@@ -616,7 +656,7 @@ jobs:
           # generation time BOTH files are usually contaminated, and reporting one at a time
           # turns one fix into two round trips through CI.
           bad=0
-          for f in generated snippets; do
+          for f in generated snippets palette; do
             # NOT `.generatedFrom.clean // "absent"` — jq's // treats false as empty, so the
             # single value this job exists to catch would report as "absent" and pass. Ask
             # whether the key EXISTS, then stringify it.
