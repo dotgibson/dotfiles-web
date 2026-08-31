@@ -3,10 +3,10 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "a58703a8021b318e6e0f81143519a31ed32febd3"
+    "commit": "90f00c9d9fee34b569a7faf369dd6fc9af599312"
   },
-  "ruleCount": 110,
-  "documentCount": 128,
+  "ruleCount": 111,
+  "documentCount": 129,
   "techniqueCount": 81,
   "tacticCount": 6,
   "logsourceCount": 24,
@@ -315,11 +315,12 @@
     },
     {
       "id": "T1134.001",
-      "rules": 5,
+      "rules": 6,
       "ruleNames": [
         "potato_seimpersonate_4688",
         "potato_seimpersonate_sysmon_1",
         "spoolss_pipe_impersonation_sysmon_17",
+        "srvsvc_epmapper_pipe_impersonation_sysmon_17",
         "token_theft_parent_child_mismatch_sysmon_1",
         "token_theft_process_target_subject_4688"
       ]
@@ -804,7 +805,7 @@
       "products": [
         "windows"
       ],
-      "rules": 8
+      "rules": 9
     },
     {
       "dir": "pypi",
