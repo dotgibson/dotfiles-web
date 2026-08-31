@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "8b4fba5f5c333e9644866fae682a5151feda81e4",
+        "commit": "6a81418ed7e0a045b0d5fe9a7cd4dd67d7556f50",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "b56e5ddc2cff93889fc1a81b50873ce1fc8db192",
+        "commit": "d08f543d7edd84c296a279a3e6ea266eba0a77b3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "7e93f342c9b06639c46faf1bbc7d080936c0285c",
+        "commit": "41e0c7690663fcd8cdd6af3db03e11eb37353f6b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "32937e02e86203ebb202f5e508ece927a72028a4",
+        "commit": "a58703a8021b318e6e0f81143519a31ed32febd3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "18c2ce3e4da9e5cbbdb40a73b882589073f7c51c",
+        "commit": "4f6f187288244435040fa0a5ca80fe6110f4b1e2",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "820fb4d36271b10f2e6a26e0ce18a20aa16b73c3",
+        "commit": "8c4286c5897f7405d4d0271785f5bfb71c675b69",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "a59a4d0eb9d060c7002d8307c629e1766a604c45",
+        "commit": "a992724176413ca0e393cd7c2bcd3c878738c041",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "02a486b33545ce5e4baedded0ba153a4dc6bcced",
+        "commit": "d61ee3d646836cd2d7a773de3198b06f58e693f4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "719bd4398506f8ae642ef2df354250a86efe4816",
+        "commit": "83b19313438e7cd7a5275441531b06abc3da337c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "f6314ca821ba2da6533be95b84a6b8f10e7fa1b6",
+        "commit": "3fac2af73b1f523e8ad3ea1c4c9156f9a5500cd5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,20 +76,20 @@
     "layers": 3
   },
   "releases": {
-    "current": "v5.4.3",
+    "current": "v5.5.0",
     "channels": [
+      "v5.5.0",
       "v5.4.3",
       "v5.4.2",
-      "v5.4.1",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "5.4.3",
+    "coreVersion": "5.5.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-Windows": {
@@ -99,49 +99,49 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-Defense": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-Fedora": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-Arch": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-Debian": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-openSUSE": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-Alpine": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       },
       "dotfiles-Gentoo": {
-        "ref": "v5.4.2",
-        "carried": "5.4.2",
+        "ref": "v5.4.3",
+        "carried": "5.4.3",
         "status": "behind"
       }
     }
   },
   "core": {
-    "version": "5.4.3",
+    "version": "5.5.0",
     "sourcedModules": 14,
     "zshLoc": 5829,
     "gitAliases": 57,
@@ -156,7 +156,7 @@
     "dotfiles-openSUSE": 47,
     "dotfiles-Alpine": 72,
     "dotfiles-Gentoo": 40,
-    "dotfiles-Offense-offensive": 85
+    "dotfiles-Offense-offensive": 86
   },
   "ci": {
     "dotfiles-core": true,
@@ -172,6 +172,31 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.5.0",
+      "date": "2026-08-30",
+      "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "atuin/config.toml no longer pins search_mode, so a machine can finally choose it. The line asserted \"fuzzy\" — which is atuin's OWN default (atuin default-config ships it commented out at that value), so it pinned a default rather than choosing anything. What it DID do was shadow ATUIN_SEARCH_MODE, under the same precedence rule [daemon] documents at length: atuin builds config as defaults → Environment → file, and the later source wins, so any key present here beats the environment. That blocked the one mode worth opting into. daemon-fuzzy routes interactive search through the atuin daemon, and is meaningful only where that daemon runs — which Core ships off, per machine, for the reasons already recorded in [daemon]. It cannot be a fleet-wide assertion: even on a host that opted in, os/alpine.zsh deliberately leaves the daemon off inside containers, and these repos target containers as much as hosts, so a blanket daemon-fuzzy would apply on precisely the shells with no daemon to talk to. No host changes behaviour. atuin still defaults to \"fuzzy\", so an unset key and the old assertion are the same thing everywhere — the difference is only that the override now reaches. A machine running the daemon sets ATUIN_SEARCH_MODE=daemon-fuzzy from its OS layer (os/<os>.zsh) or host layer (99-local), beside the ATUIN_DAEMON__* exports that turned the daemon on. This is the trap [daemon] already warned about, found in the block above it: \"The same trap applies to any future per-machine key: if a machine is meant to override it via ATUIN*, it must not be written here.\"_ search_mode was written here.",
+              "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "make publish reported a network failure for a stale tag, and hid the evidence. scripts/tag-release.sh opened phase 2 with git fetch -q --tags origin 2>/dev/null. The vN major alias is force-moved to every release, so any clone that missed one carries a stale local vN — and a plain git fetch --tags REFUSES to move it (! [rejected] v5 -> v5 (would clobber existing tag)), exits 1, and takes publish down with it. Nothing was wrong with the network, but with stderr redirected to /dev/null the only thing the operator saw was could not fetch origin — publishing needs the remote's view of main, which points at exactly the wrong thing. Hit cutting v5.4.3, on a clone whose v4 and v5 were both behind; the actual repair was a one-line tag update. The fetch now passes --force and no longer swallows stderr, so a real failure names its cause (Could not resolve host: …) instead of wearing the generic message. Forcing is correct rather than merely convenient: vN is a MOVING alias whose remote value is authoritative by definition, so a local ref that disagrees is stale, never a competing truth. Immutable vX.Y.Z release tags are unaffected — they never move, so --force has nothing to overwrite there, and the tag ruleset forbids it regardless. Verified both ways: with v5 deliberately pointed at v5.4.2, the old fetch exits 1 and the new one exits 0 and realigns it, leaving v5.4.2/v5.4.3 untouched; against an unresolvable remote it still exits 1, now printing the reason.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v5.4.3",
@@ -237,22 +262,6 @@
             {
               "text": "The docs still taught git subtree as the live mechanism (#668). #587 replaced the fan-out's git subtree pull --squash with a pinned fetch plus read-tree --prefix, but the record never followed. Two Core documents contradicted each other on the repo's central mechanism, and the one giving instructions was the wrong one: RELEASE-STRATEGY.md handed the reader git subtree pull --prefix=core <core-remote> vX.Y.Z --squash for both adopting a release and rolling one OS back — precisely what VENDORING.md forbids, because it moves core/ but not core.lock and leaves core-integrity.sh reporting TAMPERED. Both recipes are now the real incantation, run from a Core checkout, with the three constraints that make it work stated for the first time: sync-core.sh refuses unless local HEAD is the pinned commit; it reads core_version from the working tree, so pinning an older tag from main writes a silently wrong lock; and the pin must be the peeled commit, never refs/tags/vX.Y.Z — releases are annotated tags, and the script resolves its pin with git ls-remote, which returns the tag object, a SHA that can never equal the HEAD a tag checkout leaves you on. The three pre-existing CORE_BRANCH=refs/tags/v… recipes in ARCHITECTURE.md, VENDORING.md and PORTING-MATRIX.md carried that same latent defect and are corrected too. The claim that a rollback \"merges backwards, it does not un-merge\" is deleted — materializing replaces the tree outright, so an older pin is just an ordinary sync. Several surfaces an operator actually reads at runtime were asserting the retired mechanism: make help, sync-core.sh --help, both lines of the core-guard hook's refusal message, the README new-os-repo.sh writes into every new OS repo, and the fan-out PR body shipped into nine repos on every release (\"Vendors the released Core into core/ via git subtree pull --squash\"). .bin/sync-upstream.sh recommended the forbidden command in its own error tip. All corrected, along with the now-false \"the subtree squash records the exact Core commit\" in ARCHITECTURE.md, core.manifest and zsh/30-functions.zsh — core.lock records it. One-line mechanism claims in CLAUDE.md, CONTRIBUTING.md, SECURITY.md, ARCHITECTURE.md, README.md, the PR and issue templates, the doc-consistency subagent, and the non-Markdown surfaces that carried the same sentence (ci.yml, core-integrity.yml, sync-fanout.yml, core-integrity.sh, CODEOWNERS, .gitattributes, .pre-commit-config.yaml) simply drop the clause: they state the invariant that matters (core/ is a copy; a defect fans out N-way) and leave VENDORING.md the single owner of how, so no mechanism claim can go stale in ten files again. What stays is the one git subtree that is still live: the one-time subtree add that creates a core/ where none exists (scripts/new-os-repo.sh runs it, and sync-core.sh skips a repo without one). It is now labelled as initial vendoring and never the update path, and its refs/tags/v4 is corrected to v5. PORTING-MATRIX.md step 5 also stopped instructing an add that could not work: step 1 copies Fedora's core/ across, so subtree add there fails with prefix 'core' already exists — the step is a re-vendor via sync-core.sh.",
               "kind": "security"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v5.4.1",
-      "date": "2026-08-28",
-      "groups": [
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "The os.capabilities fleet gate deadlocked the fan-out it depends on (#667). §9c shipped BLOCKING on a missing declaration, and scripts/sync-core.sh runs make audit over a fleet checkout before it vendors anything — deliberately, so a red tree never reaches nine repos. But a declaration cannot merge into an OS repo until that repo has vendored the Core whose validator accepts it, and that vendoring is the fan-out. So the gate refused to fan out the very release that would let the declarations land: v5.4.0 published, sync-fanout failed, and zero vendor PRs opened. The two findings now carry two severities. A malformed declaration still blocks — the repo authored one and got it wrong, and no release cycle makes that acceptable. No declaration at all is advisory for one cycle, then flips. This is the same red-on-arrival shape §5f and lint-call.yml's owned-block gate both name, and both answer the same way. It is also the shape this change's own lint-call.yml step already got right — that step makes a missing declaration advisory and a malformed one blocking. The asymmetry between the two halves was the defect, not the reasoning in the workflow.",
-              "kind": "fix"
             }
           ]
         }
@@ -3084,6 +3093,24 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v5.5.0",
+      "date": "2026-08-30",
+      "category": "Changed",
+      "kind": "config",
+      "text": "atuin/config.toml no longer pins search_mode, so a machine can finally choose it. The line asserted \"fuzzy\" — which is atuin's OWN default (atuin default-config ships it commented out at that value), so it pinned a default rather than choosing anything. What it DID do was shadow ATUIN_SEARCH_MODE, under the same precedence rule [daemon] documents at length: atuin builds config as defaults → Environment → file, and the later source wins, so any key present here beats the environment. That blocked the one mode worth opting into. daemon-fuzzy routes interactive search through the atuin daemon, and is meaningful only where that daemon runs — which Core ships off, per machine, for the reasons already recorded in [daemon]. It cannot be a fleet-wide assertion: even on a host that opted in, os/alpine.zsh deliberately leaves the daemon off inside containers, and these repos target containers as much as hosts, so a blanket daemon-fuzzy would apply on precisely the shells with no daemon to talk to. No host changes behaviour. atuin still defaults to \"fuzzy\", so an unset key and the old assertion are the same thing everywhere — the difference is only that the override now reaches. A machine running the daemon sets ATUIN_SEARCH_MODE=daemon-fuzzy from its OS layer (os/<os>.zsh) or host layer (99-local), beside the ATUIN_DAEMON__* exports that turned the daemon on. This is the trap [daemon] already warned about, found in the block above it: \"The same trap applies to any future per-machine key: if a machine is meant to override it via ATUIN*, it must not be written here.\"_ search_mode was written here.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v5.5.0",
+      "date": "2026-08-30",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make publish reported a network failure for a stale tag, and hid the evidence. scripts/tag-release.sh opened phase 2 with git fetch -q --tags origin 2>/dev/null. The vN major alias is force-moved to every release, so any clone that missed one carries a stale local vN — and a plain git fetch --tags REFUSES to move it (! [rejected] v5 -> v5 (would clobber existing tag)), exits 1, and takes publish down with it. Nothing was wrong with the network, but with stderr redirected to /dev/null the only thing the operator saw was could not fetch origin — publishing needs the remote's view of main, which points at exactly the wrong thing. Hit cutting v5.4.3, on a clone whose v4 and v5 were both behind; the actual repair was a one-line tag update. The fetch now passes --force and no longer swallows stderr, so a real failure names its cause (Could not resolve host: …) instead of wearing the generic message. Forcing is correct rather than merely convenient: vN is a MOVING alias whose remote value is authoritative by definition, so a local ref that disagrees is stale, never a competing truth. Immutable vX.Y.Z release tags are unaffected — they never move, so --force has nothing to overwrite there, and the tag ruleset forbids it regardless. Verified both ways: with v5 deliberately pointed at v5.4.2, the old fetch exits 1 and the new one exits 0 and realigns it, leaving v5.4.2/v5.4.3 untouched; against an unresolvable remote it still exits 1, now printing the reason.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v5.4.3",
       "date": "2026-08-30",
       "category": "Added",
@@ -3161,15 +3188,6 @@
       "category": "Fixed",
       "kind": "security",
       "text": "The docs still taught git subtree as the live mechanism (#668). #587 replaced the fan-out's git subtree pull --squash with a pinned fetch plus read-tree --prefix, but the record never followed. Two Core documents contradicted each other on the repo's central mechanism, and the one giving instructions was the wrong one: RELEASE-STRATEGY.md handed the reader git subtree pull --prefix=core <core-remote> vX.Y.Z --squash for both adopting a release and rolling one OS back — precisely what VENDORING.md forbids, because it moves core/ but not core.lock and leaves core-integrity.sh reporting TAMPERED. Both recipes are now the real incantation, run from a Core checkout, with the three constraints that make it work stated for the first time: sync-core.sh refuses unless local HEAD is the pinned commit; it reads core_version from the working tree, so pinning an older tag from main writes a silently wrong lock; and the pin must be the peeled commit, never refs/tags/vX.Y.Z — releases are annotated tags, and the script resolves its pin with git ls-remote, which returns the tag object, a SHA that can never equal the HEAD a tag checkout leaves you on. The three pre-existing CORE_BRANCH=refs/tags/v… recipes in ARCHITECTURE.md, VENDORING.md and PORTING-MATRIX.md carried that same latent defect and are corrected too. The claim that a rollback \"merges backwards, it does not un-merge\" is deleted — materializing replaces the tree outright, so an older pin is just an ordinary sync. Several surfaces an operator actually reads at runtime were asserting the retired mechanism: make help, sync-core.sh --help, both lines of the core-guard hook's refusal message, the README new-os-repo.sh writes into every new OS repo, and the fan-out PR body shipped into nine repos on every release (\"Vendors the released Core into core/ via git subtree pull --squash\"). .bin/sync-upstream.sh recommended the forbidden command in its own error tip. All corrected, along with the now-false \"the subtree squash records the exact Core commit\" in ARCHITECTURE.md, core.manifest and zsh/30-functions.zsh — core.lock records it. One-line mechanism claims in CLAUDE.md, CONTRIBUTING.md, SECURITY.md, ARCHITECTURE.md, README.md, the PR and issue templates, the doc-consistency subagent, and the non-Markdown surfaces that carried the same sentence (ci.yml, core-integrity.yml, sync-fanout.yml, core-integrity.sh, CODEOWNERS, .gitattributes, .pre-commit-config.yaml) simply drop the clause: they state the invariant that matters (core/ is a copy; a defect fans out N-way) and leave VENDORING.md the single owner of how, so no mechanism claim can go stale in ten files again. What stays is the one git subtree that is still live: the one-time subtree add that creates a core/ where none exists (scripts/new-os-repo.sh runs it, and sync-core.sh skips a repo without one). It is now labelled as initial vendoring and never the update path, and its refs/tags/v4 is corrected to v5. PORTING-MATRIX.md step 5 also stopped instructing an add that could not work: step 1 copies Fedora's core/ across, so subtree add there fails with prefix 'core' already exists — the step is a re-vendor via sync-core.sh.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v5.4.1",
-      "date": "2026-08-28",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The os.capabilities fleet gate deadlocked the fan-out it depends on (#667). §9c shipped BLOCKING on a missing declaration, and scripts/sync-core.sh runs make audit over a fleet checkout before it vendors anything — deliberately, so a red tree never reaches nine repos. But a declaration cannot merge into an OS repo until that repo has vendored the Core whose validator accepts it, and that vendoring is the fan-out. So the gate refused to fan out the very release that would let the declarations land: v5.4.0 published, sync-fanout failed, and zero vendor PRs opened. The two findings now carry two severities. A malformed declaration still blocks — the repo authored one and got it wrong, and no release cycle makes that acceptable. No declaration at all is advisory for one cycle, then flips. This is the same red-on-arrival shape §5f and lint-call.yml's owned-block gate both name, and both answer the same way. It is also the shape this change's own lint-call.yml step already got right — that step makes a missing declaration advisory and a malformed one blocking. The asymmetry between the two halves was the defect, not the reasoning in the workflow.",
       "core": true
     },
     {
