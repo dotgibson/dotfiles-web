@@ -110,6 +110,29 @@ jobs:
         env:
           DOTFILES_ROOT: ${{ steps.fleet.outputs.root }}
 
+      # Types, before the build rather than after it. `npm run check` has existed as a
+      # script since the site was set up and no workflow ever called it, so the repo was
+      # green on a gate nothing invoked — which is how three errors in src/data/site.ts
+      # and src/components/Footer.astro sat unnoticed long enough that `footerLinks`
+      # resolved to `unknown` in a shipped component.
+      #
+      # It runs HERE, and not as its own job, because it is the same install and the same
+      # `astro sync` the build already does: a separate job would re-clone, re-install and
+      # re-sync to learn something this one already has in hand. Before the build for the
+      # ordinary reason — a type error is cheaper to report than a bundle is to produce —
+      # and because failing here stops a broken tree reaching the upload/deploy steps.
+      #
+      # WHAT IT GATES, precisely: astro check's default failing severity is `error`, so
+      # errors fail the build and warnings and hints do not. The tree is at 0/0/8 today.
+      # Those eight hints are deliberately NOT gating: turning them red is a separate
+      # decision about each hint, not a side effect of switching the gate on, and a gate
+      # introduced already-failing is one people learn to route around.
+      #
+      # It needs no extra install — @astrojs/check and typescript are devDependencies, so
+      # `npm ci` above already provides them.
+      - name: Type-check with Astro
+        run: npm run check
+
       - name: Build with Astro
         run: npm run build
         env:
