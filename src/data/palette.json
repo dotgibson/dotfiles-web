@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-08-31",
+  "generatedFrom": {
+    "repo": "dotfiles-core",
+    "path": "theme/palette.toml",
+    "commit": "a85622e9ec439d478614d7432f2641060b3430af",
+    "branch": "main",
+    "defaultBranch": "main",
+    "dirty": false,
+    "clean": true
+  },
+  "schema": 1,
+  "style": "storm",
+  "source": {
+    "plugin": "folke/tokyonight.nvim",
+    "commit": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6"
+  },
+  "colors": {
+    "bg": "#24283b",
+    "bg_dark": "#1f2335",
+    "bg_highlight": "#292e42",
+    "bg_visual": "#2e3c64",
+    "black": "#1d202f",
+    "blue": "#7aa2f7",
+    "blue1": "#2ac3de",
+    "border_highlight": "#29a4bd",
+    "comment": "#565f89",
+    "cyan": "#7dcfff",
+    "dark3": "#545c7e",
+    "fg": "#c0caf5",
+    "fg_dark": "#a9b1d6",
+    "green": "#9ece6a",
+    "magenta": "#bb9af7",
+    "magenta2": "#ff007c",
+    "orange": "#ff9e64",
+    "red": "#f7768e",
+    "red1": "#db4b4b",
+    "terminal_black": "#414868",
+    "yellow": "#e0af68"
+  },
+  "roles": {
+    "accent": "blue",
+    "muted": "comment",
+    "ok": "green",
+    "err": "red",
+    "rule": "terminal_black"
+  }
+}

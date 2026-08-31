@@ -106,19 +106,27 @@ if (existsSync(hookFile)) {
 // exactly when it matters most: `npm run metrics`, `git add`, then edit or revert the
 // file — the working copy would look innocent while the staged one ships.
 //
-// BOTH stamped files, not just generated.json. collect-snippets.mjs stamps the identical
+// EVERY stamped file, not just generated.json. collect-snippets.mjs stamps the identical
 // clean/unclean verdict over its own six sources, and until this loop existed snippets.json
 // was checked at commit time on no machine at all — CI's committed-data-provenance was its
 // only guard. It is also the file where an absorbed local edit does the most damage:
 // generated.json would publish a wrong NUMBER, while snippets.json publishes the edited
 // file's CONTENT on /config as that repo's real configuration.
+//
+// palette.json joined them with #230. Its blast radius is the widest of the three and the
+// hardest to spot by eye: a palette read out of a dirty or unmerged dotfiles-core repaints
+// EVERY page's chrome, and it does so plausibly — a colour that is slightly wrong looks
+// like a design decision, not like stale data, so nothing about the rendered site invites
+// a second look. Note the hook stages only the JSON: the generated block in global.css
+// carries no stamp (deliberately — see collect-palette.mjs), so there is nothing there for
+// this check to read. CI's derived-data job is what covers that half.
 const HOOK = `#!/usr/bin/env bash
 # ${MARKER} — installed by scripts/install-hooks.mjs; do not edit by hand.
 #
 # Refuses to commit site data that was derived from an unclean fleet (a sibling repo on a
 # feature branch, or with uncommitted edits in a file the collector reads). Such a snapshot
-# publishes unmerged work as fact — it has happened. Covers both stamped files:
-# src/data/generated.json and src/data/snippets.json.
+# publishes unmerged work as fact — it has happened. Covers the stamped files:
+# src/data/generated.json, src/data/snippets.json and src/data/palette.json.
 #
 # Regenerate against a clean fleet:  npm run data      (settle the repos FIRST — see below)
 # Sanctioned bypass:                 DOTFILES_ALLOW_DIRTY_DATA=1 git commit …
@@ -130,7 +138,7 @@ set -u
 # generation time BOTH files are usually contaminated, and reporting one at a time turns
 # one fix into two round trips.
 bad=0
-for f in generated snippets; do
+for f in generated snippets palette; do
 # Nothing staged for that file — nothing to say. --quiet exits 0 when there is no
 # staged change and 1 when there is, which answers this without a pipeline or any
 # tool beyond git itself. A staged DELETION also reports 1; that falls through to
