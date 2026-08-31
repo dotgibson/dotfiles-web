@@ -4,67 +4,67 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "6a81418ed7e0a045b0d5fe9a7cd4dd67d7556f50",
+        "commit": "b9ee3b99e573aa75b9b1fe908f82fc5eba8296cc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "d08f543d7edd84c296a279a3e6ea266eba0a77b3",
+        "commit": "05c84cfe69278a51695441035098eeb85532aee2",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "d52e5b6cb10c0b3ef8035eb91063f9d3f5f8720a",
+        "commit": "497ae110976e81e154acfdee690f0208fecd86a3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "41e0c7690663fcd8cdd6af3db03e11eb37353f6b",
+        "commit": "3c51c9b7277b3967bb5390b31d1c9a305a9b1b97",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "a58703a8021b318e6e0f81143519a31ed32febd3",
+        "commit": "90f00c9d9fee34b569a7faf369dd6fc9af599312",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "4f6f187288244435040fa0a5ca80fe6110f4b1e2",
+        "commit": "499f7d313ce8c74a51d0cf075647d7c5488a7d2f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "8c4286c5897f7405d4d0271785f5bfb71c675b69",
+        "commit": "3853cd587ed1b4a5af011bce08a11c34910d2ba2",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "a992724176413ca0e393cd7c2bcd3c878738c041",
+        "commit": "0b52f7fc21c5924c534dfda28e408d7f44e5ae4b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "d61ee3d646836cd2d7a773de3198b06f58e693f4",
+        "commit": "b369cf95e17c717ef78818d917a533c9e724dc4e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "83b19313438e7cd7a5275441531b06abc3da337c",
+        "commit": "d0934e9b3c9c6ac218a2f187966add69a0a37fc6",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "3fac2af73b1f523e8ad3ea1c4c9156f9a5500cd5",
+        "commit": "6ae0c5eeaf93deb124c4f12907c65e32f1c725e9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,9 +88,9 @@
     "coreVersion": "5.5.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -99,44 +99,44 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v5.4.3",
-        "carried": "5.4.3",
-        "status": "behind"
+        "ref": "v5.5.0",
+        "carried": "5.5.0",
+        "status": "current"
       }
     }
   },
@@ -172,6 +172,50 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "tag-release.sh refuses a breaking change in a non-major release. The one rule in RELEASE-STRATEGY.md that nothing enforced, and the one whose failure is silent and fleet-wide: MAJOR is derived from the version, so a BREAKING entry tagged X.Y+1.0 both files the break as a minor and force-moves the vN alias onto it — pushing it to every caller still pinned @vN, which is the whole fleet. It now fails at tag time unless the version is X.0.0. It reads the section for the version being released, not [Unreleased]: release.sh has already promoted the entries under ## [vX.Y.Z] by then, so scanning [Unreleased] would read the empty section that was just opened and pass every time. No bypass, unlike TAG_SKIP_AUDIT. If the check fires and the entry is not really breaking, the answer is to reword the entry — a bypass here would be exercised exactly once, on the release that needed it most.",
+              "kind": "config"
+            },
+            {
+              "text": "BREAKING — a vendored core/ is no longer a copy of this whole repo (#676). scripts/sync-core.sh now materializes exactly core.manifest ∪ a new core.vendor and nothing else. A vendored tree goes from 285 files / 5.6 MB to 182 files / 1.2 MB — about 39 MB reclaimed across the nine repos. CONTRIBUTING.md had asserted for years that repo-meta and dev tooling were \"not vendored into OS repos\". It was false. The allowlist in scripts/audit-core.sh only kept those files out of core.manifest, which governs symlinking into $HOME — the subtree copied them to disk regardless. audit-core.sh said so plainly at the time (\"'not shipped' means 'not in the manifest', not 'not on disk'\") and the two documents simply disagreed. The largest single item shipped to every machine was assets/demo.gif at 1.8 MB — bigger than the entire Core payload, replicated nine times, and displayed by no OS repo's README. core.vendor is the second list, in core.manifest's format, and every entry names the consumer that reads it from core/: scripts/tool-versions.env (MacBook, Offense, Defense), scripts/check-capabilities.sh (seven repos), gitleaks.toml (six), .github/actions/setup-core-tools, examples/atuin-daemon.service (Fedora and Debian bootstraps), and a handful more. If you cannot name a consumer, it does not belong there. Dropped: CHANGELOG.md (687 KB), assets/ (1.8 MB), .claude/, .devcontainer/, the root docs, and the authoring half of scripts/ — release tooling, the fan-out itself, benchmarks and dashboards, none of which anything on a box or in an OS repo runs. There is no flag day. core_lock_expected_tree() derives which shape to expect from the pinned commit: one carrying core.vendor is compared against the filtered tree, one predating it against its whole tree. On the day this merged, all nine repos still pinned older Core, took the whole-tree branch, and stayed pristine. The switch flips per-repo, exactly when that repo's core.lock moves.",
+              "kind": "perf"
+            },
+            {
+              "text": "BREAKING — dotfiles-Offense's make core-sync is retired (#676). It was the one sanctioned second writer, and the sanction rested on it stamping core.lock from what it actually pulled. A git subtree pull --squash merges the whole upstream tree and has no way to apply core.vendor, so \"what it pulled\" is no longer what a vendored core/ should contain — the first pull after its lock moved would land all 285 files against an expectation of the filtered subset and be reported TAMPERED, correctly and with no hand-edit anywhere. Offense now takes the fan-out like every other repo. There is one producer: core_vendor_materialize.",
+              "kind": "fix"
+            },
+            {
+              "text": "scripts/new-os-repo.sh no longer vendors with git subtree add (#676). A subtree add copies the whole tree, so from the moment core.vendor existed it would have scaffolded a repo that was TAMPERED on its first make core-integrity, before anyone touched it. It goes through the shared producer, so a new repo is born agreeing with the fleet.",
+              "kind": "feature"
+            },
+            {
+              "text": "core-integrity.sh's header stopped overstating itself (#676). It promised \"one rev-parse each side, O(1)\" and \"never writes to a repo\". The filtered side now rebuilds the expected tree (tens of milliseconds), and does so by writing loose objects that are unreferenced and gc-prunable. It now says it never changes a repo's tracked state, which is the claim that is actually true and the one that matters.",
+              "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "scripts/lib/core-vendor.sh — one definition of the vendored set (#676). core_vendor_paths / core_vendor_keeps / core_vendor_tree / core_vendor_effective_tree / core_vendor_materialize. Three callers needed the answer from different sides — sync-core.sh and new-os-repo.sh produce the tree, core-integrity.sh verifies it — and two implementations of one filter would have re-created #556 one layer down: a producer computing a different subset would pass its own post-fan-out assertion and be reported TAMPERED by an unrelated command later. The filter is read from ${sha}:core.manifest / ${sha}:core.vendor — the commit, never a working tree. That is what makes the producer building inside the consumer and the verifier rebuilding inside Core agree by construction. The tree is built additively, feeding only the kept paths into a temporary index via update-index --index-info. The subtractive shape ends in xargs -0 … update-index --force-remove, whose empty-input behaviour is not portable (GNU needs -r, BSD/macOS differs by release, -r is not portable) — and an empty keep-set is precisely what a mis-parsed allowlist produces. Additively it is a clean no-op. File modes come straight from ls-tree, so the exec bits §2 asserts survive.",
+              "kind": "config"
+            },
+            {
+              "text": "Three audit sections for the second list (#676). §1c fails a core.vendor entry naming a path that does not exist (a typo matches nothing and silently shrinks the vendored set). §1d fails a path claimed by both lists — a duplicate is harmless to the tree today, which is exactly why it would sit there until someone removed the manifest line and silently unshipped a Core file that \"was still listed\". §1e walks the transitive closure from # entry roots declared in core.vendor and fails when a vendored script reaches a file nobody vendors. §1e walks from declared entry points rather than sweeping every vendored script, and the distinction is load-bearing: a sweep's first two findings are scripts/release.sh reaching CHANGELOG.md and gen-release-notes.sh reaching cliff.toml, leaving only the choice between handing back 687 KB and starting a suppression list — and a gate whose first act is to demand a suppression is a gate someone turns off. _core_vendor_ref_hits in common.sh does the extraction and documents what it deliberately cannot see (computed paths, Lua requires, YAML); those four paths are hand-listed in core.vendor with their consumers named, the posture §1b already takes toward .claude/.",
+              "kind": "config"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v5.5.0",
@@ -272,8 +316,38 @@
       "version": "Unreleased",
       "groups": [
         {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "The module step no longer re-downloads modules it already has, which is what had module update: PSReadLine failing on every run. Save-Module -Force rewrites <Path>\\<Name>\\<Version> wholesale even when that exact version is already on disk, and for a module whose assemblies are mapped into a running PowerShell that overwrite cannot succeed — the files are locked and it fails with *\"Access to the path … is denied\"*. PSReadLine is loaded by every PowerShell session, so on any box with a shell open it failed every time. Confirmed on this host rather than guessed: Microsoft.PowerShell.PSReadLine.dll and its Polyfiller were held open, with six other pwsh processes running. The module was not out of date. Neither were the other three — all four already matched the gallery exactly, so the step was re-downloading four modules a day to achieve nothing, and failing on one of them for the privilege. It now looks up the gallery version and saves only when there is something newer. This removes the failure rather than hiding it: a genuinely new version installs into its own version directory and never touches the locked one, so the update path that matters is untouched. Find-Module failing (offline, gallery down) deliberately falls *through* to Save-Module rather than skipping — an unknown latest version must not read as \"up to date\", or the step would go quiet on exactly the days it cannot check. Test-DotModuleUpToDate (powershell/Dotfiles/Modules.Helpers.ps1) is the pure decision, conservative by construction: nothing installed, an unparseable version on either side, or an unknown gallery version all return \"save anyway\".",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Removed",
+          "items": [
+            {
+              "text": "The navi repo update maintenance step, which was never a real command. navi repo takes only add / browse / help, so the step exited 2 with *\"unrecognized subcommand 'update'\"* on every run it has ever made — invisible until the exit-code fix above made it reportable. Nothing is lost: navi has no \"refresh my repos\" verb to re-point it at, and updating imported cheatsheets means git-pulling each one under navi info cheats-path by hand. On this host that path does not exist at all, so there was nothing to refresh either way. Worth adding back the day cheat repos are actually imported (navi repo add). Removed from all four places that named it — the runner, its file header, its -Help block, and TERMINAL_WORKFLOW_GUIDE.md — with the step-documentation gate in tests/Maint.Tests.ps1 keeping those honest. Separately, and on the host rather than in the repo: the scoop install of navi was broken — navi.exe was absent from the app directory, leaving only config.yaml, install.json and manifest.json, so the shim reported *\"Could not create process\"*. Not a Redirection Guard problem; the junction traverses fine. A reinstall of the same version (2.24.0, matching the bucket, and navi is unpinned) restored it with the persisted config.yaml intact. Two independent faults were stacked behind one silently-passing step.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
           "category": "Fixed",
           "items": [
+            {
+              "text": "The nvim maintenance step had never done anything, and the log was built so it could not say so. Found by reading maint.log to check whether the nvim wiring fix had taken effect, and discovering the log could never have answered that question. Three compounding bugs in maint/Maintenance.ps1, each hiding the next: 1. The arguments were mangled. Start-Process -ArgumentList @(...) JOINS the array with spaces and does not quote the elements, so `` @('--headless', '+Lazy! sync', '+silent! TSUpdateSync', '+silent! MasonUpdate', '+qa!') ` reached nvim as --headless +Lazy! sync +silent! TSUpdateSync …. nvim read sync, TSUpdateSync and MasonUpdate as filenames rather than as parts of the preceding +command, opened three empty buffers, hit +qa! and exited 0. Measured side by side on a real host: Start-Process 0.2s / 0 lines, ProcessStartInfo.ArgumentList (which quotes each element) 5.9s / 398 lines. Invoke-WithTimeout now uses ProcessStartInfo, reading both pipes concurrently so a child that fills one while the parent blocks on the other cannot deadlock. 2. The output was discarded. Step runs its body under & $Body *>> $Log, which holds the log open; Invoke-WithTimeout then appended the child's output to that same path with Add-Content and Windows refused — *\"The process cannot access the file … because it is being used by another process\"*. Non-terminating, so nothing failed. Reading the pipes directly retires the temp-file dance entirely and the output is emitted, letting Step's existing redirect capture it with one handle on the log instead of two. 3. Failure was unreportable. Step only ever caught *exceptions*, and a native command that exits non-zero does not throw in PowerShell — so every one of them was graded ok. Live example from the same run: navi repo update printed Shim: Could not create process and was recorded as a success. Step now checks $LASTEXITCODE, and Invoke-WithTimeout surfaces its child's code into it (neither Start-Process -PassThru nor [Process]::Start sets it). $LASTEXITCODE is nulled before each body on purpose: it is session state, not step state, so a cmdlet-only step would otherwise inherit the previous step's code and be blamed for it. Known limit, stated in the code: a body chaining several native commands only reports the last one's code. After the fix, on this host: the nvim step runs ~6s and lands 398 lines of real Lazy! sync output in the log, and navi repo update is correctly reported as FAIL … exited 1 — a genuinely broken scoop shim that had been passing silently. The tests lift Step and Invoke-WithTimeout` out of the AST and execute them — both are nested inside the runner's lock block and cannot be dot-sourced without triggering a real maintenance pass. Verified to be worth having: 6 of them fail against the pre-fix runner.",
+              "kind": "perf"
+            },
+            {
+              "text": "psmux, jj and mise were all invisible over ssh too. The follow-up #225 named: every remaining config this repo wired was a symlink into the repo, and under Redirection Guard a Windows process cannot read any of them. Measured on this host before the change — jj config get ui.default-command answered *\"Value not found\"* and mise config ls outside a project listed nothing, so both tools had been silently running on their own defaults rather than erroring. Three different config systems needed three different answers, and finding out which was the actual work: - psmux turned out to already have an include directive. Its syntax is tmux-compatible, so source-file is the mechanism — the repo's own psmux.conf opens with one. Both psmux.conf and psmux.reset.conf become Kind = 'Stub', and the repo conf's existing source-file ~/.config/psmux/psmux.reset.conf line simply resolves to the second stub. No change to the config itself. - ~/.config/psmux/scripts is a *directory* of eight pwsh popup helpers, and a directory has no include form. New Kind = 'StubDir': a real directory of one-line forwarders, one per script, each &-invoking the repo copy with @args. That leaves psmux.conf's eight display-popup binds untouched — they still name ~/.config/psmux/scripts, which is real now — and & rather than dot-sourcing keeps $PSScriptRoot pointing at the repo, so a script that resolves a sibling still finds it. - jj and mise are TOML, which has no include directive at all. Neither can be stubbed, so they are not wired as files any more: Get-DotfilesEnvPlan sets JJ_CONFIG and MISE_GLOBAL_CONFIG_FILE as persistent User-scope variables pointing into the repo — both verified against the installed versions before being committed to. User scope is what reaches an ssh session and a scheduled task, the same mechanism DOTFILES_WIN already uses. A forwarder directory does not track the repo by itself, and the drift runs both ways. Checking only that every script has a forwarder let the other direction survive indefinitely: a script deleted upstream leaves a forwarder pointing at nothing, that forwarder is not *missing*, so install returned \"already wired\" and its own stale-sweep never ran — leaving a psmux bind that opens a popup and immediately errors. Test-StubDirIntoRepo now fails on both directions, which is what makes the sweep reachable. Two honesty problems came with the env-var mechanism, both handled rather than documented away. Nothing exists at ~/.config/mise/config.toml any more, so the wiring is invisible at the conventional path — hence explicit env: rows in dotfiles-doctor, because a variable that goes missing looks exactly like a tool with no config. And a shell already open when install.ps1 runs keeps the old environment block, so the doctor checks the process value as well as the registry and reports *\"set for new sessions, but missing from THIS one\"* instead of grading it ok — the same false-ok shape the nvim row taught us to look for. install.ps1 retires the superseded jj/mise symlinks (identified by Test-SymlinkCurrent against the plan's Target, so a link belonging to another checkout is left alone), and uninstall.ps1 clears the two variables — but only while they still point into this repo, and never DOTFILES_WIN, which is how bootstrap.ps1 finds an existing checkout. Still a symlink, and correctly so: .gitignore_global (global ignores reach ssh via the .gitconfig stub's core.excludesfile override) and the interactive-only desktop configs — Windows Terminal, GlazeWM, Zebar.",
+              "kind": "fix"
+            },
+            {
+              "text": "nvim started bare over ssh — netrw and a black background. %LOCALAPPDATA%\\nvim was a directory symlink onto the repo's nvim/ tree, which is exactly the shape Redirection Guard refuses, so the editor never read its own init.lua. #215 fixed the three configs it named and wrote the rest off as \"a documented limitation with no fix at this layer\" — but nvim *does* have an include mechanism, and this is it: %LOCALAPPDATA%\\nvim is now a real directory holding a real init.lua that prepends <repo>/nvim to runtimepath and dofile()s it. Same single source of truth, no reparse point, no elevation. Confirmed on this host, where the reading was rtp=5 netrw=nil theme=nil and cat on the symlinked path returned *Permission denied*. This row is the one where the reparse point sits on the parent of the wired path, which has two consequences the rest of the change is about. dotfiles-doctor asked whether the wired path itself was a link, which for nvim resolved straight *through* the old symlink and graded a broken box ok; it now walks the whole path (Test-DotPathViaReparsePoint). And install.ps1 had to learn to retire such a parent *before* writing anything (Clear-StubParent) — otherwise every Test-Path and Move-Item in Write-StubItem resolves through the old link, the \"existing file\" backed up is the repo's own init.lua, and the shim lands inside the tree nvim-sync.ps1 mirrors byte-for-byte from Core. tests/Integration.Tests.ps1 drives the real Write-StubItem over a real symlink and asserts the repo comes out byte-identical. That retirement is gated on the plan row naming the directory as its LegacyLink, and the gate is the whole safety story: applied to whatever directory a stub happens to live in, the staleness test matched $HOME for ~/.gitconfig (which contains .gitignore_global, a real sibling of that row's target in the repo) and a -DryRun offered to retire the user's home directory. Caught before anything ran for real; a test now pins it. Prepending runtimepath turned out not to be enough, which is the part worth knowing before editing the shim: lazy.nvim's performance.rtp.reset defaults to true, so lazy.setup() replaces runtimepath wholesale from stdpath('config') — the shim directory — and the prepend is gone before an eagerly-loaded spec runs. It surfaced as a config that clearly loaded (netrw=1) and then died with Failed to run 'config' for tokyonight.nvim … module 'gerrrt.utils.ui-highlights' not found. performance.rtp.paths is the supported answer and is set in nvim/, which is Core-owned, so the shim survives the reset on its own: an appended package.loaders searcher for <repo>/nvim/lua (setting package.path does nothing — Neovim replaces the stock path searcher, and vim.loader inserts its cached loaders at 2 and 3, so it is never consulted), plus a re-prepend of runtimepath after the config returns, since a searcher only answers require() and runtime *file* lookups still need the path. Two knock-ons, both stated in docs/REMOTE-ACCESS.md: stdpath('config') is the shim directory now, so the shim seeds lazy.nvim's lockfile from the repo itself (Core's lazy.lua seeds from stdpath('config'), which no longer holds one) and <leader>rc opens the shim rather than the repo's init.lua — unfixable here, since nvim/ is Core-owned. And the daily dotfiles-maint task runs under the same enforcement, so nvim --headless +Lazy! sync had been doing nothing at all. uninstall.ps1 retires the legacy symlink and drops the shim's directory when the stub was its only occupant, so a box that changes shape is not left with a husk nothing owns. Re-wire with install.ps1 -SkipPackages.",
+              "kind": "perf"
+            },
             {
               "text": "The maintenance tasks were pointing at a pwsh that Windows deletes. maint-install baked (Get-Command pwsh).Source into both scheduled tasks, and a Store-installed pwsh resolves to a *version-pinned* package directory (…\\WindowsApps\\Microsoft.PowerShell_<ver>_…\\pwsh.exe). When Windows cleans up a superseded package the task fails with 0x80070002 — silently, because a task that never launches writes nothing to maint.log. Measured on this host: dotfiles-maint sat at 0x80070002 with no completed run between 2026-08-26 and 2026-08-29, which also meant the scoop junction sweep from #217/#221 was not happening. The feature was correct and simply never got to run. maint-install now prefers a version-stable path — MSI install, machine-wide app alias, per-user app alias, scoop shim — and only falls back to the resolved version-pinned path, warning when it does. The daily task runs as you and takes the per-user alias; the SYSTEM task cannot, since SYSTEM's %LOCALAPPDATA% is under config\\systemprofile, so with a Store-only pwsh it stays pinned and says so. Installing the MSI build gives both a stable path. Get-DotStablePwshPath is the pure, unit-tested policy; the probing stays in the fragment. Detection, so this cannot rot silently again: maint-status now shows each task's Execute and attaches a verdict — a missing executable or a 0x80070002 last result is a fail, and the informational SCHED_S_* codes are not. dotfiles-doctor carries a Maint tasks row. Both are careful about what they can actually see: Task Scheduler ACLs a SYSTEM-principal registration to SYSTEM and BUILTIN\\Administrators, so an unelevated shell cannot distinguish a broken junction task from a healthy one and reports not visible rather than guessing not installed. (A self-check inside the daily run was tried and removed for exactly this reason: it would have reported a confident false failure every day.)",
               "kind": "fix"
@@ -926,6 +1000,14 @@
           "category": "Changed",
           "items": [
             {
+              "text": "BREAKING — make core-sync no longer pulls; Core arrives by fan-out (dotfiles-core#676). scripts/sync-core.sh is now report-only: it says how far behind core/ is and how Core actually gets here, and writes nothing. This repo was the fleet's one sanctioned second writer into core/. That sanction rested on a specific property, spelled out in VENDORING.md: the pull stamped core.lock from *what it actually pulled* — core_sha from the squash commit's git-subtree-split trailer, core_version from the tree on disk — so the lock could not describe a commit its own core/ did not contain. A filtered vendor removes exactly that property. Core stopped vendoring its whole tree: core/ is now core.manifest ∪ core.vendor, roughly two thirds of it. A git subtree pull merges the whole upstream tree and has no way to apply that filter, so \"what it actually pulled\" is by construction no longer what a vendored core/ should contain. The first pull after this repo's lock moved to a filtering commit would land every upstream file against an expectation of the subset, and core-integrity would report TAMPERED — correctly, with no hand-edit anywhere. Teaching it to filter was the alternative and is worse: it would make this repo a second producer of Core's format, which the sanction never extended to. Two implementations of one filter is the failure dotfiles-core#556 exists to prevent. In practice this changes nothing about how Core actually arrives. Every one of the last ten core.lock writes in this repo came from the fan-out, not from make core-sync. The independent cadence being given up was already not in use. make core-sync and make core-lock survive as the place that explains this — they are what someone types when asking \"how do I move Core?\", and that question still has an answer. --check is accepted and ignored, since every run is now what it meant.",
+              "kind": "fix"
+            },
+            {
+              "text": "offensive/companion/ is unaffected and still pulls. htpx vendors its whole tree and has no allowlist, so make companion-sync keeps working exactly as before. The asymmetry between the two subtrees is deliberate and is now stated in CONTRIBUTING.md, CLAUDE.md and the Makefile header — do not \"fix\" companion-sync to match.",
+              "kind": "fix"
+            },
+            {
               "text": "ptunnel-ng added beside ptunnel, not instead of it. ptunnel-ng (utoni/ptunnel-ng, redirected from lnslbrty) is the maintained fork and kali's 1.43-2 *is* its latest upstream release, so it is the one to reach for. The original ptunnel line stays for one mechanical reason: the corpus entry entries/red/icmp-tunnel-c2.md invokes the bare ptunnel binary, and test/check-corpus-commands.sh — offline and required — resolves that name against the manifest, so dropping the line reds a blocking gate. ptunnel-ng cannot cover for it either: it ships only /usr/bin/ptunnel-ng, with no ptunnel binary and no alternatives symlink. Retargeting the entry is an upstream change in htpx — entries/ is a vendored subtree — and it is a rewrite, not a rename: the two are not flag-compatible, -lp/-da/-dp having become -l/-r/-R.",
               "kind": "config"
             },
@@ -1102,6 +1184,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "\\pipe\\srvsvc and \\pipe\\epmapper are read at last; EfsPotato and RoguePotato are watched on the mechanism plane. srvsvc_epmapper_pipe_impersonation_sysmon_17.yml (id 563f2958-0d44-4138-884f-14d338d37cd9) selects EventType: CreatePipe on a PipeName whose name NESTS either endpoint, closing the telemetry-ahead-of-detection hole #225 closed for spoolss and #229 for atsvc/svcctl/efsrpc. Two names, one rule: they share the invariant, the EventType pin, the absence of an Image key, the technique and both its tactics, and the false-positive story, which is the svcctl/atsvc case rather than the efsrpc one, where the split existed because the invariant genuinely differed. With this, every name the shipped config collects is either read or declined in writing. The three questions #240 carried were re-derived, not inherited, and the sweep was re-run from scratch because the original figures lived only in a config comment — a rule resting on a number recorded nowhere a reader could check is the circularity fixture-provenance.tsv exists to make visible. docker/validation/labruns/2026-08-srvsvc-epmapper-pipe-creation.md is the record: all 278 EVTX of sbousseaden/EVTX-ATTACK-SAMPLES @4ceed2f4, chainsaw 2.16.4, 61 PipeEvent records — the figure reproduces exactly. *Creation, not connection*, and for a third distinct reason, so neither sibling's argument carries across. Every nested pipe in the corpus produces exactly one 17 and one 18, tens of milliseconds apart: the 17 carries the tool's own Image, the 18 is the coerced service binding back as Image=System ProcessId=4, naming the victim. Dropping the pin takes the rule from 2 matches to 4 and adds no attack it did not already see — only a misattributed second copy of each. So the pin buys deduplication and attribution and costs no coverage, where coercion_efsrpc_pipe_sysmon_18's identical-looking pin is load-bearing against *volume* because lsass creates \\efsrpc every boot. Both siblings now say so in their own descriptions. *The generic \\<x>\\pipe\\<y> shape is rejected*, and the decisive objection turned out to be measured rather than argued. It is expressible without regex (PipeName|contains: '\\pipe\\', since Sysmon renders one leading backslash and no \\Device\\NamedPipe\\ prefix) and on the create half it matches 3 of 61, all attacks — but the third is PrintSpoofer's nested spoolss pipe, which spoolss_pipe_impersonation_sysmon_17 already fires on, so its marginal coverage over this corpus is zero. The ingestion objection stands separately: it needs unfiltered PipeEvent collection, so under the shipped onmatch=\"include\" baseline it would see only the seven collected names — a much larger decision than a rule may make on the config's behalf. And 3-of-3 measures an attack-sample corpus, not an estate. It still misses GodPotato. Reopen condition recorded in the rule: if collection is ever widened past an include list, the generic form should *replace* this rule rather than sit beside it. For the same reason spoolss is deliberately absent from the name list — that rule's contains: 'spoolss' already matches the nested form, verified against the record, so adding it here would double-alert one attack. *No filter_* block, and the omission is the argument.* The legitimate creators make the bare \\srvsvc and \\epmapper, which the selection does not contain, so the narrowing does the work an exclusion would. #240's proposed filter_legit: Image|endswith: '\\svchost.exe' is confirmed dead: the one legitimate \\epmapper record is Image=System. A cosmetic filter would be that defect written twice. Consequently no check-splunk-precedence.sh row is needed — the compiled Splunk form is EventType=\"CreatePipe\" PipeName IN (\"*\\\\pipe\\\\srvsvc*\", \"*\\\\pipe\\\\epmapper*\"), an OR list with no NOT beside it. The fixtures are a provenance first for this repo. srvsvc_epmapper_pipe_17_tp.jsonl is the two real create records transcribed verbatim from the corpus — the first pipe fixtures here whose *values*, not merely whose key set, come from the provider. They stay vendor-documented, not captured: labruns/README.md reserves that for first-party capture, and these are 2020–2021 third-party builds. A true negative ships despite the rule having no filter_* — not required by any gate, but the \\pipe\\ narrowing is the rule's entire thesis and nothing else would prove it discriminates; it changes exactly one value per line, PipeName nested to bare, holding Image at the TP's so the nesting is isolated as the sole discriminator. Validation: sigma efficacy 84/84 passed (42 with a true-negative), run against the pinned zircolite v3.7.6 — the new row fires on the transcribed EfsPotato and RoguePotato records and stays silent on the near-miss. Two claims this repo was making are corrected. The bare-srvsvc traffic was described as \"five … ordinary share enumeration … from Image=System\" — four of the five are Image=System and the fifth is wmiprvse.exe, and they come from three different capture types plus a kekeo capture. And \"3 of 61 records\" for the nested shape counts *pipes*; it is 6 records over 3 pipes. The load-bearing half — that no legitimate bind takes the nested form — holds exactly. Drive-by: docker/validation/README.md said 81 manifest rows / 38 true negatives against a real 84 / 42, and runbook-sysmon18-remote-pipe.md said \"two things still need a host\" while listing three. What is not settled: volume on a live host, in either direction. No legitimate *create* of either name appears anywhere in the corpus and none of the captures spans a boot, so the claim that a legitimate create would carry the bare name is inference. That half carries to #235, whose runbook gains it as item 4 with a pre-committed prediction and EfsPotato/RoguePotato rows in its firing table. Closes dotgibson/dotfiles-Defense#248. Ledger: corpus 110 -> 111 rules, 128 -> 129 documents, techniques unchanged at 81. Privilege Escalation TA0004 9 | 14 -> 9 | 15, Stealth TA0005 3 | 5 -> 3 | 6, T1134.001 5 -> 6 rules. No new technique or tactic row, and no new Splunk precedence allowlist row.",
+              "kind": "fix"
+            },
             {
               "text": "\\pipe\\srvsvc and \\pipe\\epmapper join the PipeEvent include list; EfsPotato and RoguePotato stop being unwatched on the mechanism plane. Measured while gathering evidence for #240: every potato in the pinned sbousseaden/EVTX-ATTACK-SAMPLES corpus that stands up its own pipe uses the nested \\<something>\\pipe\\<endpoint> shape, and two of the three do it on names nothing collected — EfsPotato on \\dd4c18dc-…\\pipe\\srvsvc, RoguePotato on \\RoguePotato\\pipe\\epmapper, both carrying their own Image on the create. detections/sysmon/sysmonconfig-detection-lab.xml dropped both events before Sigma ever saw them, which is the blocking constraint #240 records. The entries are deliberately \\pipe\\srvsvc and \\pipe\\epmapper rather than the bare names, and the measurement is the same shape twice: 7 of the 61 PipeEvent records match bare srvsvc and five are ordinary share enumeration (NetShareEnum, NetSessionEnum) arriving as \\srvsvc from Image=System; 3 match bare epmapper and one is the legitimate endpoint mapper arriving as \\epmapper. The narrow forms collect 2 apiece and leave the routine traffic out. Wanting that traffic is a separate decision and a separate rule. Worth recording on the epmapper side: that legitimate record is Image=System, not svchost.exe, so the filter_legit: Image|endswith: '\\svchost.exe' #240 proposed would not have filtered it. Narrowing the collection is what does the job the Image filter was expected to do. No rule reads either name yet, which is the telemetry-ahead-of-detection hole #225 and #229 each closed one name at a time. Both are filed with the collection rather than after it, as dotgibson/dotfiles-Defense#248, and the config's comment block — which tracks which rule reads which name and why any name is unread — now distinguishes the two kinds of unread name: lsarpc because a rule there would be unfilterable volume and that is a decision, \\pipe\\srvsvc and \\pipe\\epmapper because the rule is owed. Closes dotgibson/dotfiles-Defense#240, whose three open questions carry to #248 — the volume one in particular, since no legitimate *create* of either name was observed and none of these captures spans a boot. Ledger: unchanged — collection only, no rule, no tactic or technique count moves.",
               "kind": "config"
@@ -1451,6 +1537,102 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "tag-release.sh refuses a breaking change in a non-major release. The one rule in RELEASE-STRATEGY.md that nothing enforced, and the one whose failure is silent and fleet-wide: MAJOR is derived from the version, so a BREAKING entry tagged X.Y+1.0 both files the break as a minor and force-moves the vN alias onto it — pushing it to every caller still pinned @vN, which is the whole fleet. It now fails at tag time unless the version is X.0.0. It reads the section for the version being released, not [Unreleased]: release.sh has already promoted the entries under ## [vX.Y.Z] by then, so scanning [Unreleased] would read the empty section that was just opened and pass every time. No bypass, unlike TAG_SKIP_AUDIT. If the check fires and the entry is not really breaking, the answer is to reword the entry — a bypass here would be exercised exactly once, on the release that needed it most.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "BREAKING — a vendored core/ is no longer a copy of this whole repo (#676). scripts/sync-core.sh now materializes exactly core.manifest ∪ a new core.vendor and nothing else. A vendored tree goes from 285 files / 5.6 MB to 182 files / 1.2 MB — about 39 MB reclaimed across the nine repos. CONTRIBUTING.md had asserted for years that repo-meta and dev tooling were \"not vendored into OS repos\". It was false. The allowlist in scripts/audit-core.sh only kept those files out of core.manifest, which governs symlinking into $HOME — the subtree copied them to disk regardless. audit-core.sh said so plainly at the time (\"'not shipped' means 'not in the manifest', not 'not on disk'\") and the two documents simply disagreed. The largest single item shipped to every machine was assets/demo.gif at 1.8 MB — bigger than the entire Core payload, replicated nine times, and displayed by no OS repo's README. core.vendor is the second list, in core.manifest's format, and every entry names the consumer that reads it from core/: scripts/tool-versions.env (MacBook, Offense, Defense), scripts/check-capabilities.sh (seven repos), gitleaks.toml (six), .github/actions/setup-core-tools, examples/atuin-daemon.service (Fedora and Debian bootstraps), and a handful more. If you cannot name a consumer, it does not belong there. Dropped: CHANGELOG.md (687 KB), assets/ (1.8 MB), .claude/, .devcontainer/, the root docs, and the authoring half of scripts/ — release tooling, the fan-out itself, benchmarks and dashboards, none of which anything on a box or in an OS repo runs. There is no flag day. core_lock_expected_tree() derives which shape to expect from the pinned commit: one carrying core.vendor is compared against the filtered tree, one predating it against its whole tree. On the day this merged, all nine repos still pinned older Core, took the whole-tree branch, and stayed pristine. The switch flips per-repo, exactly when that repo's core.lock moves.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "BREAKING — dotfiles-Offense's make core-sync is retired (#676). It was the one sanctioned second writer, and the sanction rested on it stamping core.lock from what it actually pulled. A git subtree pull --squash merges the whole upstream tree and has no way to apply core.vendor, so \"what it pulled\" is no longer what a vendored core/ should contain — the first pull after its lock moved would land all 285 files against an expectation of the filtered subset and be reported TAMPERED, correctly and with no hand-edit anywhere. Offense now takes the fan-out like every other repo. There is one producer: core_vendor_materialize.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "scripts/new-os-repo.sh no longer vendors with git subtree add (#676). A subtree add copies the whole tree, so from the moment core.vendor existed it would have scaffolded a repo that was TAMPERED on its first make core-integrity, before anyone touched it. It goes through the shared producer, so a new repo is born agreeing with the fleet.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "core-integrity.sh's header stopped overstating itself (#676). It promised \"one rev-parse each side, O(1)\" and \"never writes to a repo\". The filtered side now rebuilds the expected tree (tens of milliseconds), and does so by writing loose objects that are unreferenced and gc-prunable. It now says it never changes a repo's tracked state, which is the claim that is actually true and the one that matters.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "scripts/lib/core-vendor.sh — one definition of the vendored set (#676). core_vendor_paths / core_vendor_keeps / core_vendor_tree / core_vendor_effective_tree / core_vendor_materialize. Three callers needed the answer from different sides — sync-core.sh and new-os-repo.sh produce the tree, core-integrity.sh verifies it — and two implementations of one filter would have re-created #556 one layer down: a producer computing a different subset would pass its own post-fan-out assertion and be reported TAMPERED by an unrelated command later. The filter is read from ${sha}:core.manifest / ${sha}:core.vendor — the commit, never a working tree. That is what makes the producer building inside the consumer and the verifier rebuilding inside Core agree by construction. The tree is built additively, feeding only the kept paths into a temporary index via update-index --index-info. The subtractive shape ends in xargs -0 … update-index --force-remove, whose empty-input behaviour is not portable (GNU needs -r, BSD/macOS differs by release, -r is not portable) — and an empty keep-set is precisely what a mis-parsed allowlist produces. Additively it is a clean no-op. File modes come straight from ls-tree, so the exec bits §2 asserts survive.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "Three audit sections for the second list (#676). §1c fails a core.vendor entry naming a path that does not exist (a typo matches nothing and silently shrinks the vendored set). §1d fails a path claimed by both lists — a duplicate is harmless to the tree today, which is exactly why it would sit there until someone removed the manifest line and silently unshipped a Core file that \"was still listed\". §1e walks the transitive closure from # entry roots declared in core.vendor and fails when a vendored script reaches a file nobody vendors. §1e walks from declared entry points rather than sweeping every vendored script, and the distinction is load-bearing: a sweep's first two findings are scripts/release.sh reaching CHANGELOG.md and gen-release-notes.sh reaching cliff.toml, leaving only the choice between handing back 687 KB and starting a suppression list — and a gate whose first act is to demand a suppression is a gate someone turns off. _core_vendor_ref_hits in common.sh does the extraction and documents what it deliberately cannot see (computed paths, Lua requires, YAML); those four paths are hand-listed in core.vendor with their consumers named, the posture §1b already takes toward .claude/.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "The module step no longer re-downloads modules it already has, which is what had module update: PSReadLine failing on every run. Save-Module -Force rewrites <Path>\\<Name>\\<Version> wholesale even when that exact version is already on disk, and for a module whose assemblies are mapped into a running PowerShell that overwrite cannot succeed — the files are locked and it fails with *\"Access to the path … is denied\"*. PSReadLine is loaded by every PowerShell session, so on any box with a shell open it failed every time. Confirmed on this host rather than guessed: Microsoft.PowerShell.PSReadLine.dll and its Polyfiller were held open, with six other pwsh processes running. The module was not out of date. Neither were the other three — all four already matched the gallery exactly, so the step was re-downloading four modules a day to achieve nothing, and failing on one of them for the privilege. It now looks up the gallery version and saves only when there is something newer. This removes the failure rather than hiding it: a genuinely new version installs into its own version directory and never touches the locked one, so the update path that matters is untouched. Find-Module failing (offline, gallery down) deliberately falls *through* to Save-Module rather than skipping — an unknown latest version must not read as \"up to date\", or the step would go quiet on exactly the days it cannot check. Test-DotModuleUpToDate (powershell/Dotfiles/Modules.Helpers.ps1) is the pure decision, conservative by construction: nothing installed, an unparseable version on either side, or an unknown gallery version all return \"save anyway\".",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Removed",
+      "kind": "fix",
+      "text": "The navi repo update maintenance step, which was never a real command. navi repo takes only add / browse / help, so the step exited 2 with *\"unrecognized subcommand 'update'\"* on every run it has ever made — invisible until the exit-code fix above made it reportable. Nothing is lost: navi has no \"refresh my repos\" verb to re-point it at, and updating imported cheatsheets means git-pulling each one under navi info cheats-path by hand. On this host that path does not exist at all, so there was nothing to refresh either way. Worth adding back the day cheat repos are actually imported (navi repo add). Removed from all four places that named it — the runner, its file header, its -Help block, and TERMINAL_WORKFLOW_GUIDE.md — with the step-documentation gate in tests/Maint.Tests.ps1 keeping those honest. Separately, and on the host rather than in the repo: the scoop install of navi was broken — navi.exe was absent from the app directory, leaving only config.yaml, install.json and manifest.json, so the shim reported *\"Could not create process\"*. Not a Redirection Guard problem; the junction traverses fine. A reinstall of the same version (2.24.0, matching the bucket, and navi is unpinned) restored it with the persisted config.yaml intact. Two independent faults were stacked behind one silently-passing step.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "The nvim maintenance step had never done anything, and the log was built so it could not say so. Found by reading maint.log to check whether the nvim wiring fix had taken effect, and discovering the log could never have answered that question. Three compounding bugs in maint/Maintenance.ps1, each hiding the next: 1. The arguments were mangled. Start-Process -ArgumentList @(...) JOINS the array with spaces and does not quote the elements, so `` @('--headless', '+Lazy! sync', '+silent! TSUpdateSync', '+silent! MasonUpdate', '+qa!') ` reached nvim as --headless +Lazy! sync +silent! TSUpdateSync …. nvim read sync, TSUpdateSync and MasonUpdate as filenames rather than as parts of the preceding +command, opened three empty buffers, hit +qa! and exited 0. Measured side by side on a real host: Start-Process 0.2s / 0 lines, ProcessStartInfo.ArgumentList (which quotes each element) 5.9s / 398 lines. Invoke-WithTimeout now uses ProcessStartInfo, reading both pipes concurrently so a child that fills one while the parent blocks on the other cannot deadlock. 2. The output was discarded. Step runs its body under & $Body *>> $Log, which holds the log open; Invoke-WithTimeout then appended the child's output to that same path with Add-Content and Windows refused — *\"The process cannot access the file … because it is being used by another process\"*. Non-terminating, so nothing failed. Reading the pipes directly retires the temp-file dance entirely and the output is emitted, letting Step's existing redirect capture it with one handle on the log instead of two. 3. Failure was unreportable. Step only ever caught *exceptions*, and a native command that exits non-zero does not throw in PowerShell — so every one of them was graded ok. Live example from the same run: navi repo update printed Shim: Could not create process and was recorded as a success. Step now checks $LASTEXITCODE, and Invoke-WithTimeout surfaces its child's code into it (neither Start-Process -PassThru nor [Process]::Start sets it). $LASTEXITCODE is nulled before each body on purpose: it is session state, not step state, so a cmdlet-only step would otherwise inherit the previous step's code and be blamed for it. Known limit, stated in the code: a body chaining several native commands only reports the last one's code. After the fix, on this host: the nvim step runs ~6s and lands 398 lines of real Lazy! sync output in the log, and navi repo update is correctly reported as FAIL … exited 1 — a genuinely broken scoop shim that had been passing silently. The tests lift Step and Invoke-WithTimeout` out of the AST and execute them — both are nested inside the runner's lock block and cannot be dot-sourced without triggering a real maintenance pass. Verified to be worth having: 6 of them fail against the pre-fix runner.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "psmux, jj and mise were all invisible over ssh too. The follow-up #225 named: every remaining config this repo wired was a symlink into the repo, and under Redirection Guard a Windows process cannot read any of them. Measured on this host before the change — jj config get ui.default-command answered *\"Value not found\"* and mise config ls outside a project listed nothing, so both tools had been silently running on their own defaults rather than erroring. Three different config systems needed three different answers, and finding out which was the actual work: - psmux turned out to already have an include directive. Its syntax is tmux-compatible, so source-file is the mechanism — the repo's own psmux.conf opens with one. Both psmux.conf and psmux.reset.conf become Kind = 'Stub', and the repo conf's existing source-file ~/.config/psmux/psmux.reset.conf line simply resolves to the second stub. No change to the config itself. - ~/.config/psmux/scripts is a *directory* of eight pwsh popup helpers, and a directory has no include form. New Kind = 'StubDir': a real directory of one-line forwarders, one per script, each &-invoking the repo copy with @args. That leaves psmux.conf's eight display-popup binds untouched — they still name ~/.config/psmux/scripts, which is real now — and & rather than dot-sourcing keeps $PSScriptRoot pointing at the repo, so a script that resolves a sibling still finds it. - jj and mise are TOML, which has no include directive at all. Neither can be stubbed, so they are not wired as files any more: Get-DotfilesEnvPlan sets JJ_CONFIG and MISE_GLOBAL_CONFIG_FILE as persistent User-scope variables pointing into the repo — both verified against the installed versions before being committed to. User scope is what reaches an ssh session and a scheduled task, the same mechanism DOTFILES_WIN already uses. A forwarder directory does not track the repo by itself, and the drift runs both ways. Checking only that every script has a forwarder let the other direction survive indefinitely: a script deleted upstream leaves a forwarder pointing at nothing, that forwarder is not *missing*, so install returned \"already wired\" and its own stale-sweep never ran — leaving a psmux bind that opens a popup and immediately errors. Test-StubDirIntoRepo now fails on both directions, which is what makes the sweep reachable. Two honesty problems came with the env-var mechanism, both handled rather than documented away. Nothing exists at ~/.config/mise/config.toml any more, so the wiring is invisible at the conventional path — hence explicit env: rows in dotfiles-doctor, because a variable that goes missing looks exactly like a tool with no config. And a shell already open when install.ps1 runs keeps the old environment block, so the doctor checks the process value as well as the registry and reports *\"set for new sessions, but missing from THIS one\"* instead of grading it ok — the same false-ok shape the nvim row taught us to look for. install.ps1 retires the superseded jj/mise symlinks (identified by Test-SymlinkCurrent against the plan's Target, so a link belonging to another checkout is left alone), and uninstall.ps1 clears the two variables — but only while they still point into this repo, and never DOTFILES_WIN, which is how bootstrap.ps1 finds an existing checkout. Still a symlink, and correctly so: .gitignore_global (global ignores reach ssh via the .gitconfig stub's core.excludesfile override) and the interactive-only desktop configs — Windows Terminal, GlazeWM, Zebar.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "nvim started bare over ssh — netrw and a black background. %LOCALAPPDATA%\\nvim was a directory symlink onto the repo's nvim/ tree, which is exactly the shape Redirection Guard refuses, so the editor never read its own init.lua. #215 fixed the three configs it named and wrote the rest off as \"a documented limitation with no fix at this layer\" — but nvim *does* have an include mechanism, and this is it: %LOCALAPPDATA%\\nvim is now a real directory holding a real init.lua that prepends <repo>/nvim to runtimepath and dofile()s it. Same single source of truth, no reparse point, no elevation. Confirmed on this host, where the reading was rtp=5 netrw=nil theme=nil and cat on the symlinked path returned *Permission denied*. This row is the one where the reparse point sits on the parent of the wired path, which has two consequences the rest of the change is about. dotfiles-doctor asked whether the wired path itself was a link, which for nvim resolved straight *through* the old symlink and graded a broken box ok; it now walks the whole path (Test-DotPathViaReparsePoint). And install.ps1 had to learn to retire such a parent *before* writing anything (Clear-StubParent) — otherwise every Test-Path and Move-Item in Write-StubItem resolves through the old link, the \"existing file\" backed up is the repo's own init.lua, and the shim lands inside the tree nvim-sync.ps1 mirrors byte-for-byte from Core. tests/Integration.Tests.ps1 drives the real Write-StubItem over a real symlink and asserts the repo comes out byte-identical. That retirement is gated on the plan row naming the directory as its LegacyLink, and the gate is the whole safety story: applied to whatever directory a stub happens to live in, the staleness test matched $HOME for ~/.gitconfig (which contains .gitignore_global, a real sibling of that row's target in the repo) and a -DryRun offered to retire the user's home directory. Caught before anything ran for real; a test now pins it. Prepending runtimepath turned out not to be enough, which is the part worth knowing before editing the shim: lazy.nvim's performance.rtp.reset defaults to true, so lazy.setup() replaces runtimepath wholesale from stdpath('config') — the shim directory — and the prepend is gone before an eagerly-loaded spec runs. It surfaced as a config that clearly loaded (netrw=1) and then died with Failed to run 'config' for tokyonight.nvim … module 'gerrrt.utils.ui-highlights' not found. performance.rtp.paths is the supported answer and is set in nvim/, which is Core-owned, so the shim survives the reset on its own: an appended package.loaders searcher for <repo>/nvim/lua (setting package.path does nothing — Neovim replaces the stock path searcher, and vim.loader inserts its cached loaders at 2 and 3, so it is never consulted), plus a re-prepend of runtimepath after the config returns, since a searcher only answers require() and runtime *file* lookups still need the path. Two knock-ons, both stated in docs/REMOTE-ACCESS.md: stdpath('config') is the shim directory now, so the shim seeds lazy.nvim's lockfile from the repo itself (Core's lazy.lua seeds from stdpath('config'), which no longer holds one) and <leader>rc opens the shim rather than the repo's init.lua — unfixable here, since nvim/ is Core-owned. And the daily dotfiles-maint task runs under the same enforcement, so nvim --headless +Lazy! sync had been doing nothing at all. uninstall.ps1 retires the legacy symlink and drops the shim's directory when the stub was its only occupant, so a box that changes shape is not left with a husk nothing owns. Re-wire with install.ps1 -SkipPackages.",
+      "core": false
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
@@ -2223,6 +2405,22 @@
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Changed",
+      "kind": "fix",
+      "text": "BREAKING — make core-sync no longer pulls; Core arrives by fan-out (dotfiles-core#676). scripts/sync-core.sh is now report-only: it says how far behind core/ is and how Core actually gets here, and writes nothing. This repo was the fleet's one sanctioned second writer into core/. That sanction rested on a specific property, spelled out in VENDORING.md: the pull stamped core.lock from *what it actually pulled* — core_sha from the squash commit's git-subtree-split trailer, core_version from the tree on disk — so the lock could not describe a commit its own core/ did not contain. A filtered vendor removes exactly that property. Core stopped vendoring its whole tree: core/ is now core.manifest ∪ core.vendor, roughly two thirds of it. A git subtree pull merges the whole upstream tree and has no way to apply that filter, so \"what it actually pulled\" is by construction no longer what a vendored core/ should contain. The first pull after this repo's lock moved to a filtering commit would land every upstream file against an expectation of the subset, and core-integrity would report TAMPERED — correctly, with no hand-edit anywhere. Teaching it to filter was the alternative and is worse: it would make this repo a second producer of Core's format, which the sanction never extended to. Two implementations of one filter is the failure dotfiles-core#556 exists to prevent. In practice this changes nothing about how Core actually arrives. Every one of the last ten core.lock writes in this repo came from the fan-out, not from make core-sync. The independent cadence being given up was already not in use. make core-sync and make core-lock survive as the place that explains this — they are what someone types when asking \"how do I move Core?\", and that question still has an answer. --check is accepted and ignored, since every run is now what it meant.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "offensive/companion/ is unaffected and still pulls. htpx vendors its whole tree and has no allowlist, so make companion-sync keeps working exactly as before. The asymmetry between the two subtrees is deliberate and is now stated in CONTRIBUTING.md, CLAUDE.md and the Makefile header — do not \"fix\" companion-sync to match.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
       "kind": "config",
       "text": "ptunnel-ng added beside ptunnel, not instead of it. ptunnel-ng (utoni/ptunnel-ng, redirected from lnslbrty) is the maintained fork and kali's 1.43-2 *is* its latest upstream release, so it is the one to reach for. The original ptunnel line stays for one mechanical reason: the corpus entry entries/red/icmp-tunnel-c2.md invokes the bare ptunnel binary, and test/check-corpus-commands.sh — offline and required — resolves that name against the manifest, so dropping the line reds a blocking gate. ptunnel-ng cannot cover for it either: it ships only /usr/bin/ptunnel-ng, with no ptunnel binary and no alternatives symlink. Retargeting the entry is an upstream change in htpx — entries/ is a vendored subtree — and it is a rewrite, not a rename: the two are not flag-compatible, -lp/-da/-dp having become -l/-r/-R.",
       "core": false
@@ -2529,6 +2727,14 @@
       "category": "Fixed",
       "kind": "config",
       "text": ".markdownlint.jsonc's header claimed this config was \"the local README check\" and that \"CI in this repo gates its own code, not its Markdown\". Both were true when written; dotgibson/dotfiles-core#592 made the markdown leg blocking and it covers all 21 repo-owned files, not just the README.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "\\pipe\\srvsvc and \\pipe\\epmapper are read at last; EfsPotato and RoguePotato are watched on the mechanism plane. srvsvc_epmapper_pipe_impersonation_sysmon_17.yml (id 563f2958-0d44-4138-884f-14d338d37cd9) selects EventType: CreatePipe on a PipeName whose name NESTS either endpoint, closing the telemetry-ahead-of-detection hole #225 closed for spoolss and #229 for atsvc/svcctl/efsrpc. Two names, one rule: they share the invariant, the EventType pin, the absence of an Image key, the technique and both its tactics, and the false-positive story, which is the svcctl/atsvc case rather than the efsrpc one, where the split existed because the invariant genuinely differed. With this, every name the shipped config collects is either read or declined in writing. The three questions #240 carried were re-derived, not inherited, and the sweep was re-run from scratch because the original figures lived only in a config comment — a rule resting on a number recorded nowhere a reader could check is the circularity fixture-provenance.tsv exists to make visible. docker/validation/labruns/2026-08-srvsvc-epmapper-pipe-creation.md is the record: all 278 EVTX of sbousseaden/EVTX-ATTACK-SAMPLES @4ceed2f4, chainsaw 2.16.4, 61 PipeEvent records — the figure reproduces exactly. *Creation, not connection*, and for a third distinct reason, so neither sibling's argument carries across. Every nested pipe in the corpus produces exactly one 17 and one 18, tens of milliseconds apart: the 17 carries the tool's own Image, the 18 is the coerced service binding back as Image=System ProcessId=4, naming the victim. Dropping the pin takes the rule from 2 matches to 4 and adds no attack it did not already see — only a misattributed second copy of each. So the pin buys deduplication and attribution and costs no coverage, where coercion_efsrpc_pipe_sysmon_18's identical-looking pin is load-bearing against *volume* because lsass creates \\efsrpc every boot. Both siblings now say so in their own descriptions. *The generic \\<x>\\pipe\\<y> shape is rejected*, and the decisive objection turned out to be measured rather than argued. It is expressible without regex (PipeName|contains: '\\pipe\\', since Sysmon renders one leading backslash and no \\Device\\NamedPipe\\ prefix) and on the create half it matches 3 of 61, all attacks — but the third is PrintSpoofer's nested spoolss pipe, which spoolss_pipe_impersonation_sysmon_17 already fires on, so its marginal coverage over this corpus is zero. The ingestion objection stands separately: it needs unfiltered PipeEvent collection, so under the shipped onmatch=\"include\" baseline it would see only the seven collected names — a much larger decision than a rule may make on the config's behalf. And 3-of-3 measures an attack-sample corpus, not an estate. It still misses GodPotato. Reopen condition recorded in the rule: if collection is ever widened past an include list, the generic form should *replace* this rule rather than sit beside it. For the same reason spoolss is deliberately absent from the name list — that rule's contains: 'spoolss' already matches the nested form, verified against the record, so adding it here would double-alert one attack. *No filter_* block, and the omission is the argument.* The legitimate creators make the bare \\srvsvc and \\epmapper, which the selection does not contain, so the narrowing does the work an exclusion would. #240's proposed filter_legit: Image|endswith: '\\svchost.exe' is confirmed dead: the one legitimate \\epmapper record is Image=System. A cosmetic filter would be that defect written twice. Consequently no check-splunk-precedence.sh row is needed — the compiled Splunk form is EventType=\"CreatePipe\" PipeName IN (\"*\\\\pipe\\\\srvsvc*\", \"*\\\\pipe\\\\epmapper*\"), an OR list with no NOT beside it. The fixtures are a provenance first for this repo. srvsvc_epmapper_pipe_17_tp.jsonl is the two real create records transcribed verbatim from the corpus — the first pipe fixtures here whose *values*, not merely whose key set, come from the provider. They stay vendor-documented, not captured: labruns/README.md reserves that for first-party capture, and these are 2020–2021 third-party builds. A true negative ships despite the rule having no filter_* — not required by any gate, but the \\pipe\\ narrowing is the rule's entire thesis and nothing else would prove it discriminates; it changes exactly one value per line, PipeName nested to bare, holding Image at the TP's so the nesting is isolated as the sole discriminator. Validation: sigma efficacy 84/84 passed (42 with a true-negative), run against the pinned zircolite v3.7.6 — the new row fires on the transcribed EfsPotato and RoguePotato records and stays silent on the near-miss. Two claims this repo was making are corrected. The bare-srvsvc traffic was described as \"five … ordinary share enumeration … from Image=System\" — four of the five are Image=System and the fifth is wmiprvse.exe, and they come from three different capture types plus a kekeo capture. And \"3 of 61 records\" for the nested shape counts *pipes*; it is 6 records over 3 pipes. The load-bearing half — that no legitimate bind takes the nested form — holds exactly. Drive-by: docker/validation/README.md said 81 manifest rows / 38 true negatives against a real 84 / 42, and runbook-sysmon18-remote-pipe.md said \"two things still need a host\" while listing three. What is not settled: volume on a live host, in either direction. No legitimate *create* of either name appears anywhere in the corpus and none of the captures spans a boot, so the claim that a legitimate create would carry the bare name is inference. That half carries to #235, whose runbook gains it as item 4 with a pre-committed prediction and EfsPotato/RoguePotato rows in its firing table. Closes dotgibson/dotfiles-Defense#248. Ledger: corpus 110 -> 111 rules, 128 -> 129 documents, techniques unchanged at 81. Privilege Escalation TA0004 9 | 14 -> 9 | 15, Stealth TA0005 3 | 5 -> 3 | 6, T1134.001 5 -> 6 rules. No new technique or tactic row, and no new Splunk precedence allowlist row.",
       "core": false
     },
     {
