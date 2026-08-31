@@ -121,11 +121,35 @@ export const footerNav = [
   { label: "Changelog", href: "/changelog" },
 ] as const;
 
+// One leaf link in the footer sitemap: a label and a root-relative path.
+//
+// Written as an explicit type rather than left to inference, because `as const`
+// could not do the job and quietly failed at it. That assertion applies to an
+// ARRAY LITERAL, asking TypeScript for a readonly tuple of literal types — but
+// these elements come from a flatMap whose two branches return differently shaped
+// arrays (a group's readonly children, or a one-element array built from a direct
+// link). There is no tuple to form, so the assertion did not narrow the type, it
+// ERRORED, and `footerLinks` degraded to a value Footer.astro could only see as
+// `unknown` — three type errors, one of them reported against site.ts and two
+// against a component that is not at fault.
+//
+// The annotation on the CALLBACK is the other half, and it is the half that
+// actually silences the error. `flatMap<U>` takes `(item) => U | ReadonlyArray<U>`,
+// and an unannotated callback here returns a UNION OF TWO ARRAY TYPES —
+// `A[] | B[]`, not `(A | B)[]` — which `U` cannot be inferred through. Naming the
+// return type collapses both branches to one array type before inference runs.
+//
+// Nothing here wanted literal types anyway: the single consumer renders
+// `.label` and `.href` as strings. `nav` and `footerNav` keep their `as const`,
+// which is load-bearing — Header.astro discriminates groups from direct links
+// with `"children" in item`, and that needs the literal member types.
+export type FooterLink = { readonly label: string; readonly href: string };
+
 // Flattened leaf links for the footer sitemap: every primary destination
 // (unwrapping groups into their children) followed by the meta links.
-export const footerLinks = [
-  ...nav.flatMap((item) =>
+export const footerLinks: readonly FooterLink[] = [
+  ...nav.flatMap((item): FooterLink[] =>
     "children" in item ? [...item.children] : [{ label: item.label, href: item.href }],
   ),
   ...footerNav,
-] as const;
+];
