@@ -5,72 +5,41 @@ and re-publish the Pages artifact**. `.github/workflows/deploy.yml` exposes a
 `repository_dispatch` (`refresh` / `release`) receiver for that, and each source
 repo ships a `.github/workflows/notify-web.yml` dispatcher that pings it on push.
 
-The dispatchers are inert until a `WEBHOOK_SECRET` secret is present — they
-log a warning and exit 0 otherwise. The two one-time steps below wire it up.
+> **The `WEBHOOK_SECRET` PAT flow this page used to describe is retired.**
+> It walked you through minting a fine-grained PAT and pasting it into eleven
+> repos. That credential was **deleted fleet-wide** when the GitHub App migration
+> (G2) finished — see dotgibson/dotfiles-core#683 — and every dispatcher now mints
+> its own short-lived token instead. Following the old steps would recreate exactly
+> the long-lived, hand-rotated credential the migration removed, so they are gone
+> rather than merely marked stale.
 
-## 1. Create the token (once)
+## How the dispatch authenticates now
 
-A single fine-grained PAT, scoped to do exactly one thing: trigger a rebuild of
-`dotfiles-web`.
+Each source repo's dispatcher mints a **GitHub App installation token at run
+time**, scoped to `dotfiles-web` and to `contents: write`, which expires in about
+an hour. The `Bearer` on the `repository_dispatch` POST is that token. Nothing
+long-lived is stored in any repo.
 
-1. **github.com → avatar → Settings → Developer settings**
-2. **Personal access tokens → Fine-grained tokens → Generate new token**
-3. Fill in:
-   - **Token name:** e.g. `dotfiles-web-refresh`
-   - **Expiration:** 90 days is the safe default (GitHub emails you before it
-     lapses; when it does, the dispatchers no-op — log a warning and exit 0 —
-     until you re-paste a new one). "No expiration" works but loses that safety
-     net.
-   - **Resource owner:** `dotgibson`
-4. **Repository access → Only select repositories →** `dotfiles-web`
-5. **Permissions → Repository permissions → Contents → Read and write**
-   (`contents:write`). Leave the rest; "Metadata: Read-only" is added
-   automatically and required.
-6. **Generate token** and **copy it now** — it's shown only once
-   (`github_pat_…`).
+It needs exactly two things to be visible to the dispatching repo, both set once
+at the **organization** level:
 
-Scoping to only `dotfiles-web` + only Contents keeps the blast radius to this one
-repo — a leaked token can't touch any other repo. Note that **Contents: write**
-still lets it modify `dotfiles-web`'s own contents (not just fire a dispatch), so
-treat it like any real credential: keep it in Actions secrets only, and rotate it
-if it's ever exposed.
+| Name | Kind | What it is |
+| --- | --- | --- |
+| `FLEET_APP_ID` | variable | the fleet App's ID (not sensitive — a variable so it can be read in a job `if:`) |
+| `FLEET_APP_PRIVATE_KEY` | secret | the App's `.pem`, in full |
 
-## 2. Add it as a secret in each source repo (11×)
+**The full runbook — registering the App, its permissions, which repos the
+installation must cover, and how to recover if it breaks — lives upstream in
+[dotfiles-core's `GITHUB-APP-AUTH.md`](https://github.com/dotgibson/dotfiles-core/blob/main/GITHUB-APP-AUTH.md).**
+That is the single source of truth for fleet auth; this page deliberately does not
+duplicate it, because two copies of a credential runbook is how the fleet ended up
+asserting contradictory things about these tokens in the first place.
 
-The same token value goes into all eleven repos, added per-repo below. (`dotgibson`
-is an org, so you could alternatively set a single organization-level secret and
-skip the repeat — the per-repo setup keeps each source repo self-contained.)
+There is **no PAT fallback**. If the App credentials are absent the dispatcher
+logs a warning and exits 0 — the site simply is not refreshed until the next push
+or the hourly poll.
 
-For each of `dotfiles-core`, `dotfiles-MacBook`, `dotfiles-Windows`,
-`dotfiles-Offense`, `dotfiles-Defense`, `dotfiles-Fedora`, `dotfiles-Arch`,
-`dotfiles-Debian`, `dotfiles-openSUSE`, `dotfiles-Alpine`, `dotfiles-Gentoo`:
-
-1. Repo → **Settings → Secrets and variables → Actions**
-2. **New repository secret**
-3. **Name:** `WEBHOOK_SECRET` (must match exactly) — **Value:** the token
-4. **Add secret**
-
-### Or do all eleven from the terminal with `gh`
-
-Run from a `dotfiles-web` checkout: the repo names come from
-`scripts/fleet-repos.txt`, the same list CI clones from, so this loop cannot fall
-behind a rename the way a hand-typed one did — it used to say `Kali`, and because
-github.com still redirects that name to `dotfiles-Offense`, the loop *succeeded*
-while telling you it had set the secret on a repo that no longer exists under that
-name. `htpx` is skipped: it is tagged `aux` in the manifest and is a corpus source,
-not one of the eleven that trigger a refresh.
-
-```bash
-read -rs TOKEN   # paste github_pat_..., press Enter — kept off-screen & out of history
-
-for r in $(awk '$1 !~ /^#/ && ($2 == "core" || $2 == "os") { print $1 }' scripts/fleet-repos.txt); do
-  printf '%s' "$TOKEN" | gh secret set WEBHOOK_SECRET --repo "dotgibson/$r" --body -
-  echo "set on $r"
-done
-unset TOKEN
-```
-
-## 3. Verify
+## Verify
 
 No commit required:
 
@@ -80,6 +49,10 @@ No commit required:
 3. In **`dotfiles-web` → Actions**, a **"Deploy to GitHub Pages"** run should
    start within a few seconds (triggered by `repository_dispatch: refresh`).
 
-A green dispatcher run that logs `WEBHOOK_SECRET not set — skipping
-showcase refresh` means the secret isn't being picked up — re-check the name and
-that it was added to that repo.
+A dispatcher run that logs `App auth not configured here` means the org variable
+or secret is not visible to that repo — check both, and check that the App's
+installation actually covers `dotfiles-web`.
+
+A dispatcher run that **fails** inside `Mint a scoped installation token` is the
+other case, and it is a different problem: the credentials were found but the App
+cannot reach `dotfiles-web`. Check the installation's repository list.

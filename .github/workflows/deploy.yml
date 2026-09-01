@@ -22,7 +22,7 @@ on:
   #     {"event_type":"refresh"}
   # The POST is authenticated by a short-lived fleet GitHub App token, minted by the
   # dispatching repo and scoped to this repo's contents:write (it replaced the
-  # WEBHOOK_SECRET PAT — dotfiles-core #683/#819). GitHub verifies the caller via that
+  # WEBHOOK_SECRET PAT — dotgibson/dotfiles-core#683). GitHub verifies the caller via that
   # token, so no HMAC signature layer is needed on this (static, server-less) side.
   repository_dispatch:
     types: [release, refresh]
