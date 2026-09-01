@@ -206,8 +206,9 @@ Bypass a single commit with `DOTFILES_ALLOW_DIRTY_DATA=1 git commit …` or
 `--no-verify`; the CI job is the one that can't be bypassed.
 
 Pushing to `main` triggers `.github/workflows/deploy.yml` (Astro build → GitHub
-Pages). A source repo can ping a rebuild via `repository_dispatch`; the token and
-secret walkthrough lives in [`docs/WEBHOOK-SETUP.md`](docs/WEBHOOK-SETUP.md).
+Pages). A source repo can ping a rebuild via `repository_dispatch`; how that dispatch
+authenticates (a short-lived GitHub App token — the old `WEBHOOK_SECRET` PAT is
+retired) is in [`docs/WEBHOOK-SETUP.md`](docs/WEBHOOK-SETUP.md).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

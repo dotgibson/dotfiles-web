@@ -21,9 +21,10 @@ name: fleet-sync
 # guard. So a refresh PR authored by GITHUB_TOKEN would sit forever with build + data-freshness
 # never running and mergeable_state "blocked". We therefore push the branch and open the PR
 # with the fleet GitHub App token (the same identity + pinned action as dotfiles-core's
-# sync-fanout.yml — see GITHUB-APP-AUTH.md), falling back to the legacy FLEET_SYNC_TOKEN PAT.
-# Both are non-GITHUB_TOKEN identities, so the PR's checks run and it can actually be merged.
-# If NEITHER is configured we fall back to GITHUB_TOKEN — the PR still opens (no hard failure),
+# sync-fanout.yml — see GITHUB-APP-AUTH.md). That is a non-GITHUB_TOKEN identity, so the PR's
+# checks run and it can actually be merged. (A legacy FLEET_SYNC_TOKEN PAT used to sit between
+# the two; it was deleted when G2 finished — dotfiles-core #683/#819 — so that rung is gone.)
+# If the App is NOT configured we fall back to GITHUB_TOKEN — the PR still opens (no hard failure),
 # it just won't auto-trigger CI until a human nudges it, exactly the old behaviour.
 # create-github-app-token is GitHub's own action, SHA-pinned (no untrusted marketplace action).
 # A fixed branch keeps it idempotent (update, don't stack).
@@ -415,10 +416,10 @@ jobs:
         id: refresh
         working-directory: dotfiles-web
         env:
-          # Prefer the App token, then the legacy PAT, then the built-in token. The first two
-          # trigger the PR's checks; the last opens the PR but won't (the documented fallback).
-          FLEET_TOKEN: ${{ steps.app.outputs.token || secrets.FLEET_SYNC_TOKEN || github.token }}
-          GH_TOKEN: ${{ steps.app.outputs.token || secrets.FLEET_SYNC_TOKEN || github.token }}
+          # Prefer the App token, then the built-in token. The App token triggers the PR's
+          # checks; GITHUB_TOKEN opens the PR but won't (the documented fallback).
+          FLEET_TOKEN: ${{ steps.app.outputs.token || github.token }}
+          GH_TOKEN: ${{ steps.app.outputs.token || github.token }}
           REPO: ${{ github.event.repository.name }}
           MIRROR: src/content/docs/reference/porting-matrix.md
           # The palette's CSS half. Like the mirror it is not JSON, so it is compared
