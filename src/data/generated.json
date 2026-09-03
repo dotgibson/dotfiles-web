@@ -4,67 +4,67 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "b7785365331c0fb9abf1956afddc858bace67532",
+        "commit": "efdda20018fbebc91adde42bb71d77378026c8ae",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "8e3920bf9fe8c944239c91377d0a49a96bd5e2ef",
+        "commit": "5c3e3d351dfe3c5e172141c14245617c9d47e127",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "2888e7ee7b2e3190a1e4b57855ab04c83b4855a0",
+        "commit": "082ade6377f0d8451912a52cd60cf4dbfff786e8",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "9a79da144317104bc2e22b29c85a24d03e036827",
+        "commit": "aac60bf6aace4c482dfc1115e596476a9321b7ec",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "1022133e52e5614c4adf1dcde31789b7169d5d68",
+        "commit": "d3b538ee4433a4376d010236c5bba1c260e51a3e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "fd48576786d50b6c0264fe8cb4c997712d9ef67c",
+        "commit": "78cbea81b6fdfcdb6d35c8aeca994376fd4e6fe6",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "f32005a0974c230093a3726318ba6257790454ba",
+        "commit": "1743882019f78e53c08a8cffa9c3fb52670d09a3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "3f42c92f73c141fc95c2d0ea1fe85ffc00cf0086",
+        "commit": "3109f336da3d6b03ba1668e767f153b923373e12",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "7150208b2ec2d48a40a523b3e80dd7d6fb918390",
+        "commit": "a16825bf84824c1f332184ee15b27c839bf917d5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "1da7dbef1c93389ff74a72658edb96d8473f3a9f",
+        "commit": "b42c96067ccac9fe02e5832189fa741517975830",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "9505dce6db07ac18196f1fa794079954f8c0dfcf",
+        "commit": "b78ee8d515cbf0adcc405cb413d54a727d400971",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -176,6 +176,15 @@
       "repo": "dotfiles-core",
       "version": "Unreleased",
       "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "One Makefile vocabulary for the fleet, and a test floor — declared once in Core, reported by the audit (#691). Nine repos had nine make dialects: \"dry run\" was dry-run in four repos and bootstrap-dry in four, \"verify core\" had five spellings, \"check packages\" two, and only help was common to every Makefile — a contributor re-learned the verbs in each repo and no gate noticed. scripts/make-vocabulary.txt declares the seven canonical verbs (help, lint, check, dry-run, packages-check, core-verify, test); scripts/fleet-vocabulary.sh (make fleet-vocabulary) reads each sibling's Makefile and renders a verb × repo register, and audit-core.sh §5h reports it beside the gate × repo register with the same advisory posture and the same absent-sibling environment skip. The requirement is that the canonical NAME resolves in every repo — a repo keeps its historical spelling as a two-line alias, and a verb it genuinely lacks is a two-line stub target that says so and exits 0, never declared away. The register's last column is the test floor, with no waiver line: a test/ (or tests/) directory with content, run from a run: step in a workflow GitHub loads — make test, the directory by path, or a make target whose recipe runs it, so make test-repo counts and a path filter or comment does not. Five of nine repos are under it today, dotfiles-Fedora — the template every Linux repo is copied from — among them; the first run reports 32 missing verb cells, which is the migration each OS repo now owes (aliases, not renames, so nothing calling the old targets breaks). The suite drives the script against a fake fleet root and pins that an alias alone does not fill a cell, that a stub target does, each rung of the floor, and that an unreadable vocabulary is a loud exit 2 rather than an empty register. Review of the same PR found scripts/fleet-coverage.sh's report mode exiting 1 whenever there were no footnotes to print (its last command was a [[ -n notes ]] && printf); fixed and pinned alongside. Dev tooling only — the OS repos receive nothing from this entry until they adopt the verbs.",
+              "kind": "fix"
+            }
+          ]
+        },
         {
           "category": "Changed",
           "items": [
@@ -392,6 +401,14 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "windows-terminal/settings.json's colour scheme is generated from theme/palette.toml (#230). The twenty hexes in the Tokyo Night scheme were the largest hand-typed colour block left after #228 — deliberately skipped that round, because the file is APP-OWNED: install.ps1 symlinks it into all three Windows Terminal flavours' LocalState, the app rewrites *this copy* on every settings change, and its JSON writer strips comments, so a // core:theme:gen marker would not survive the first toggle. gen-theme.ps1 therefore grew a second emitter kind. json-scheme finds the scheme object by its own \"name\" (the app re-sorts the array alphabetically, so an index is not stable), scoped to the schemes array so a profile sharing that name cannot be hit, and rewrites the hex values on the lines they already occupy — indentation, key order and trailing commas preserved byte for byte. Deliberately not a ConvertFrom-Json | ConvertTo-Json round trip, which would reformat all 227 lines every run and fight tests/Format-AppJson.ps1's no-re-indent rule. It emits UPPERCASE hex because the app does; lowercase would make every GUI round-trip a twenty-line colour diff. Registering the file also turns on the residual-hex scan over it for free, so a hex the palette does not define can no longer be dropped anywhere in that file.",
+              "kind": "config"
+            },
+            {
+              "text": "The last two night-style hexes are gone. background was #1A1B26 and selectionBackground #28344A — tokyonight *night* values in a palette pinned to *storm*, and the same pair #229 had already replaced twice elsewhere (ListPredictionSelected, Get-DotAnsiSgr's Black). They now resolve to color_bg #24283B and color_bg_visual #2E3C64, so the terminal's selection highlight finally matches PSReadLine's prediction bar and its canvas matches psmux's @tn_bg. The other eighteen already agreed with Core and did not move.",
+              "kind": "feature"
+            },
             {
               "text": "The core front door reaches the second family: core update check and core maint <install|run|log|status|uninstall> (dotgibson/dotfiles-core#684). Core's zsh dispatcher grew the same arms in the same change, and its PARITY.md pins them as aligned rows enforced by parity-check.sh — so this lands FIRST, or Core's gate would assert a pwsh half that did not exist yet. Additive only: up, update-check and the five maint-* verbs keep working exactly as before, and core update -y still belongs to up — only the literal word check in first position is intercepted. A bare core maint (or -h/--help) prints the family's usage line rather than erroring, the way a bare core is the index; an unknown sub-verb gets its own did-you-mean (core maint stauts → status). Every arm is an explicit call, never & \"maint-$v\", because the load contract is derived from literal command names and an indirect call would hide the dependency. Core.Tests.ps1 stubs the six new leaves and asserts routing, arg forwarding, the bare-namespace usage, and that a typo dispatches nothing.",
               "kind": "feature"
@@ -1490,6 +1507,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "The fleet make vocabulary, and a test/ suite (dotgibson/dotfiles-core#691, reported by dotgibson/dotfiles-core#846). Core declares one canonical set of verbs for every repo that vendors it — help, lint, check, dry-run, packages-check, core-verify, test — so the same word means the same thing in nine repos. This repo was missing three of them. - make dry-run is the canonical spelling of what was make bootstrap-dry. bootstrap-dry is kept as a .PHONY alias: the requirement is that the canonical name *exists*, not that the old one dies. - make check is the full local gate — lint + test + a bootstrap.sh --dry-run that proves the whole plan still builds, provision() included, which no workflow ever executes. Deliberately *not* the hermetic HOME=$(mktemp -d) --links-only run that Debian's and Fedora's check use: that is only hermetic in $HOME, since wire_links ends in blib_set_login_shell, which appends to /etc/shells and runs chsh under sudo. --dry-run reaches the same code with BLIB_DRY=1 and writes nothing. - make test runs test/*.sh, and refuses rather than passing when there is nothing to run — a test: that runs no suite renders as a no-op in the fleet register. - test/check-packages.sh is the suite, modelled on dotfiles-Debian/test/check-packages.sh. It is the old inline packages-check recipe promoted to a real script — same parser (blib_read_pkgs_into, so it reads exactly what bootstrap.sh feeds pacman), same pacman -Si resolution, now shellcheck-visible and invokable by path — plus a duplicate-name check, which needs no package manager and so runs off-Arch too, and a clean skip instead of a hard \"pacman not found\" failure. It carries no version floors: Debian needs them because a frozen archive resolves neovim at 0.9.5 and calls that healthy, while on a rolling release the repos carry current upstream by construction — the drift risk here is names *moving* (doggo went AUR→extra in 2025) or disappearing. - .github/workflows/packages.yml now runs make test rather than make packages-check, and its path filter gained test/**. The floor requires a workflow that runs the *suite*; a workflow pinned to one target inside it would silently skip the second script anyone adds. make packages-check still runs exactly that script for anyone who types the verb.",
+              "kind": "feature"
+            },
+            {
               "text": "make markdown, wired into make lint. lint-call.yml's markdown leg has been blocking since dotgibson/dotfiles-core#592, but this repo had no local target for it — a required check nobody could run before pushing, and a .markdownlint.jsonc only CI ever read. MD_FILES uses the gate's own pathspec (git ls-files '*.md' ':!:core/**'), so the local run scans exactly what CI scans, recursively — a '*.md' glob would be top-level only and miss pull_request_template.md. All seven files already pass, so nothing rides along. It skips when markdownlint-cli2 is absent rather than failing like the shellcheck arm: shellcheck is a pacman package, so missing means a box to fix, while markdownlint-cli2 is npm-only. Part of the fleet sweep in dotgibson/dotfiles-core#775.",
               "kind": "fix"
             },
@@ -1591,6 +1612,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "make test and make core-verify — the two canonical fleet verbs this repo was missing (dotgibson/dotfiles-core#691, reported by dotgibson/dotfiles-core#846's register). Core now declares one make vocabulary for every repo that vendors it — help, lint, check, dry-run, packages-check, core-verify, test — after nine repos turned out to speak nine dialects, with \"verify core\" alone spelled five ways. test runs the repo's own suite, which today is exactly test/check-packages.sh, so packages-check is its only prerequisite rather than a copied command line; it is declared .PHONY because it names the test/ directory it runs and an undeclared test: would report \"up to date\" and run nothing. The requirement is that the canonical name exists, not that the old one dies, so integrity stays as a .PHONY alias of core-verify and muscle memory survives. Verify from a Core checkout beside this one with make fleet-vocabulary.",
+              "kind": "feature"
+            },
+            {
               "text": "os/debian.capabilities and os/debian.kali.capabilities — this repo's Core v5 capability declarations (dotgibson/dotfiles-core#663, #667). Core's up, maint runner and core-doctor now dispatch through them. The apt verbs are identical on all three targets, so almost everything is shared; exactly one key differs, and it is why there are two files: Kali does not declare MAINT_UNATTENDED_UPGRADE, because engagement boxes are updated by hand between ops and a background full-upgrade mid-engagement destroys the reproducibility findings rest on. bootstrap.sh relinks the Kali file over the default, keyed on the same $OS_ID that scripts/pkg-filter.sh tiers install/packages.txt on — so the declaration and the package list agree by construction rather than by coincidence, and a future tier is one new file with no code change.",
               "kind": "config"
             },
@@ -1677,6 +1702,14 @@
     {
       "repo": "dotfiles-core",
       "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "One Makefile vocabulary for the fleet, and a test floor — declared once in Core, reported by the audit (#691). Nine repos had nine make dialects: \"dry run\" was dry-run in four repos and bootstrap-dry in four, \"verify core\" had five spellings, \"check packages\" two, and only help was common to every Makefile — a contributor re-learned the verbs in each repo and no gate noticed. scripts/make-vocabulary.txt declares the seven canonical verbs (help, lint, check, dry-run, packages-check, core-verify, test); scripts/fleet-vocabulary.sh (make fleet-vocabulary) reads each sibling's Makefile and renders a verb × repo register, and audit-core.sh §5h reports it beside the gate × repo register with the same advisory posture and the same absent-sibling environment skip. The requirement is that the canonical NAME resolves in every repo — a repo keeps its historical spelling as a two-line alias, and a verb it genuinely lacks is a two-line stub target that says so and exits 0, never declared away. The register's last column is the test floor, with no waiver line: a test/ (or tests/) directory with content, run from a run: step in a workflow GitHub loads — make test, the directory by path, or a make target whose recipe runs it, so make test-repo counts and a path filter or comment does not. Five of nine repos are under it today, dotfiles-Fedora — the template every Linux repo is copied from — among them; the first run reports 32 missing verb cells, which is the migration each OS repo now owes (aliases, not renames, so nothing calling the old targets breaks). The suite drives the script against a fake fleet root and pins that an alias alone does not fill a cell, that a stub target does, each rung of the floor, and that an unreadable vocabulary is a loud exit 2 rather than an empty register. Review of the same PR found scripts/fleet-coverage.sh's report mode exiting 1 whenever there were no footnotes to print (its last command was a [[ -n notes ]] && printf); fixed and pinned alongside. Dev tooling only — the OS repos receive nothing from this entry until they adopt the verbs.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
       "category": "Changed",
       "kind": "perf",
       "text": "The startup budget is ratcheted from 120 ms to a committed 48 ms — 2× the measured baseline — and CI reads it from scripts/bench-baseline.env (#688). The bench job's CORE_BENCH_BUDGET_MS=120 existed only in ci.yml, beside a comment guessing \"~25 ms\"; 194 runs of that job (2026-08-26 → 09-03, ubuntu-latest, 50 warmed runs each) actually measured 11.8–31.9 ms (bimodal by runner host; ordinary hosts ~24 ms, two runs above 30 ms, none above 36), so 120 was 5× the baseline and 3.8× the worst run ever seen, and a regression the size of the biggest win on record — re-sourcing the gh/uv/ty completions per shell, +35 ms — passed green. Three fixes. (1) scripts/bench-baseline.env commits CORE_BENCH_BASELINE_MS=24 and CORE_BENCH_BUDGET_MS=48 next to the script they govern, with the calibration, the 2× policy and the re-baseline recipe in its header; ci.yml carries no budget literal any more, and scripts/test-core.sh pins that, pins BUDGET == 2 × BASELINE (so widening the budget to green a run is a red audit), and proves the gate through a stub hyperfine: a 100 ms mean exits 1, a 20 ms mean passes, the env override wins and is labelled, report mode never fails. A budget nobody has seen fail is not known to work; this one fails in the suite on every audit. (2) bench-core.sh --gate (make bench-gate, what CI runs) reads the file FAIL-CLOSED — a missing or malformed file, a budget that does not exceed the baseline, or a missing zsh/hyperfine/python3 is exit 1, never a skip — and on a breach prints the per-module --profile breakdown so the red log names the module, not just the aggregate (single- sample module timings stay informational; a per-module ceiling would gate noise). That profile now runs its zsh child with NO_RCS: since the v4 sandbox, --profile had let the child source the sandbox .zshrc — and so the whole chain — before timing anything, so it measured a warm re-source and could name the wrong module; it now times a cold first sourcing, and it covers 02-capabilities, which the loader globs but the module list omitted. It is a gross-regression gate, not an additive threshold: runner hosts are bimodal, so the +35 ms that fails from an ordinary host's 24 ms can pass from a fast host's 12, and the re-baseline recipe therefore samples ~20 jobs and takes the ordinary-host mode, never one run. The mean is still the gated statistic (every recorded measurement is a mean); the median prints beside it, and a breach whose median is within budget is labelled as a skewed or intermittent slowdown, not diagnosed as noise. (3) The report and gate modes — plain make bench included — now print the mean against the committed baseline (CI baseline 24 ms, −1%), so a local run shows the trend — though the number that gates is CI's: a laptop or WSL2 box measures 1–3× ubuntu-latest, so compare before/after locally rather than reading a local make bench-gate red as a verdict. The trigger is unchanged: the issue asked to add starship/ and nvim/, but starship/ and tmux/ already sit in the classifier's shell bucket and bench today, and nothing on the zsh startup chain reads nvim/. Dev tooling only — the OS repos receive nothing from this entry.",
@@ -1689,6 +1722,22 @@
       "kind": "security",
       "text": "optoken no longer leaves a live TOTP in a tmux paste buffer; clip grows a --sensitive mode (CLIP_SENSITIVE=1) that it uses (#690). On a box with no real clipboard backend — the headless-over-ssh shelf that is the documented norm for part of the fleet — clip falls through to OSC 52, and under tmux with Core's own set-clipboard on that path left the code in a tmux paste buffer, readable by anything on the socket via tmux show-buffer, for as long as the buffer lived; the only warning was a source comment, and the user saw TOTP sent to the clipboard. The plain OSC 52 write is the leak, not just the load-buffer arm: with set-clipboard on tmux does not merely forward a pane's OSC 52, it also paste_adds the payload as an unnamed buffer — so the issue's \"write the escape straight to the tty\" idea would have left the secret exactly where the flag promises it will not be. --sensitive under tmux therefore never writes a plain OSC 52 to the pane: when the pane's allow-passthrough is on/all it wraps the sequence in a DCS passthrough, which tmux hands to the outer terminal without parsing, so no buffer ever exists; otherwise it loads a named buffer with -w and deletes that buffer in the same breath — a signal landing in that instant deletes it too, by trap — and says so on stderr at the moment it matters (with the allow-passthrough on line that closes the remaining instant). A transient buffer that survives delete-buffer is exit 1 naming the buffer to delete, never a \"sent\". Outside tmux the flag is a no-op on the wire, the real backends (clip.exe/pbcopy/wl-copy/xclip/xsel) ignore it, and the default path — nvim's provider, tmux copy-pipe, pbcopy — is byte-for-byte what it was; scripts/test-core.sh §C asserts each of those on the wire format, including that the default pane path under tmux (a writable tty) still never invokes tmux — the copy-pipe shape with no controlling terminal keeps its load-buffer -w arm, as before. One limit stays: under nested tmux the outer tmux parses whatever the inner one forwards, so the outer server can still hold a buffer. clip now refuses an unknown argument (exit 2) rather than hanging on stdin; nothing in Core passes one. clip-paste and opsecret are untouched: the first has no OSC 52 read path by design, the second prints via op read and never touches clip. Not tagged BREAKING: #690 assumed the default tmux path would change, and it does not — no host adapts.",
       "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "config",
+      "text": "windows-terminal/settings.json's colour scheme is generated from theme/palette.toml (#230). The twenty hexes in the Tokyo Night scheme were the largest hand-typed colour block left after #228 — deliberately skipped that round, because the file is APP-OWNED: install.ps1 symlinks it into all three Windows Terminal flavours' LocalState, the app rewrites *this copy* on every settings change, and its JSON writer strips comments, so a // core:theme:gen marker would not survive the first toggle. gen-theme.ps1 therefore grew a second emitter kind. json-scheme finds the scheme object by its own \"name\" (the app re-sorts the array alphabetically, so an index is not stable), scoped to the schemes array so a profile sharing that name cannot be hit, and rewrites the hex values on the lines they already occupy — indentation, key order and trailing commas preserved byte for byte. Deliberately not a ConvertFrom-Json | ConvertTo-Json round trip, which would reformat all 227 lines every run and fight tests/Format-AppJson.ps1's no-re-indent rule. It emits UPPERCASE hex because the app does; lowercase would make every GUI round-trip a twenty-line colour diff. Registering the file also turns on the residual-hex scan over it for free, so a hex the palette does not define can no longer be dropped anywhere in that file.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "The last two night-style hexes are gone. background was #1A1B26 and selectionBackground #28344A — tokyonight *night* values in a palette pinned to *storm*, and the same pair #229 had already replaced twice elsewhere (ListPredictionSelected, Get-DotAnsiSgr's Black). They now resolve to color_bg #24283B and color_bg_visual #2E3C64, so the terminal's selection highlight finally matches PSReadLine's prediction bar and its canvas matches psmux's @tn_bg. The other eighteen already agreed with Core and did not move.",
+      "core": false
     },
     {
       "repo": "dotfiles-Windows",
@@ -3198,6 +3247,14 @@
       "repo": "dotfiles-Arch",
       "version": "Unreleased",
       "category": "Added",
+      "kind": "feature",
+      "text": "The fleet make vocabulary, and a test/ suite (dotgibson/dotfiles-core#691, reported by dotgibson/dotfiles-core#846). Core declares one canonical set of verbs for every repo that vendors it — help, lint, check, dry-run, packages-check, core-verify, test — so the same word means the same thing in nine repos. This repo was missing three of them. - make dry-run is the canonical spelling of what was make bootstrap-dry. bootstrap-dry is kept as a .PHONY alias: the requirement is that the canonical name *exists*, not that the old one dies. - make check is the full local gate — lint + test + a bootstrap.sh --dry-run that proves the whole plan still builds, provision() included, which no workflow ever executes. Deliberately *not* the hermetic HOME=$(mktemp -d) --links-only run that Debian's and Fedora's check use: that is only hermetic in $HOME, since wire_links ends in blib_set_login_shell, which appends to /etc/shells and runs chsh under sudo. --dry-run reaches the same code with BLIB_DRY=1 and writes nothing. - make test runs test/*.sh, and refuses rather than passing when there is nothing to run — a test: that runs no suite renders as a no-op in the fleet register. - test/check-packages.sh is the suite, modelled on dotfiles-Debian/test/check-packages.sh. It is the old inline packages-check recipe promoted to a real script — same parser (blib_read_pkgs_into, so it reads exactly what bootstrap.sh feeds pacman), same pacman -Si resolution, now shellcheck-visible and invokable by path — plus a duplicate-name check, which needs no package manager and so runs off-Arch too, and a clean skip instead of a hard \"pacman not found\" failure. It carries no version floors: Debian needs them because a frozen archive resolves neovim at 0.9.5 and calls that healthy, while on a rolling release the repos carry current upstream by construction — the drift risk here is names *moving* (doggo went AUR→extra in 2025) or disappearing. - .github/workflows/packages.yml now runs make test rather than make packages-check, and its path filter gained test/**. The floor requires a workflow that runs the *suite*; a workflow pinned to one target inside it would silently skip the second script anyone adds. make packages-check still runs exactly that script for anyone who types the verb.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "fix",
       "text": "make markdown, wired into make lint. lint-call.yml's markdown leg has been blocking since dotgibson/dotfiles-core#592, but this repo had no local target for it — a required check nobody could run before pushing, and a .markdownlint.jsonc only CI ever read. MD_FILES uses the gate's own pathspec (git ls-files '*.md' ':!:core/**'), so the local run scans exactly what CI scans, recursively — a '*.md' glob would be top-level only and miss pull_request_template.md. All seven files already pass, so nothing rides along. It skips when markdownlint-cli2 is absent rather than failing like the shellcheck arm: shellcheck is a pacman package, so missing means a box to fix, while markdownlint-cli2 is npm-only. Part of the fleet sweep in dotgibson/dotfiles-core#775.",
       "core": false
@@ -3352,6 +3409,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "bootstrap.sh installs the local core/ pre-commit guard on a fresh clone (blib_install_core_guard), catching a hand-edit at commit time rather than waiting for core-integrity.yml at PR time.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "make test and make core-verify — the two canonical fleet verbs this repo was missing (dotgibson/dotfiles-core#691, reported by dotgibson/dotfiles-core#846's register). Core now declares one make vocabulary for every repo that vendors it — help, lint, check, dry-run, packages-check, core-verify, test — after nine repos turned out to speak nine dialects, with \"verify core\" alone spelled five ways. test runs the repo's own suite, which today is exactly test/check-packages.sh, so packages-check is its only prerequisite rather than a copied command line; it is declared .PHONY because it names the test/ directory it runs and an undeclared test: would report \"up to date\" and run nothing. The requirement is that the canonical name exists, not that the old one dies, so integrity stays as a .PHONY alias of core-verify and muscle memory survives. Verify from a Core checkout beside this one with make fleet-vocabulary.",
       "core": false
     },
     {
