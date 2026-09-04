@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "3b25d6d1202f90d1d83d7ddb0f722dfdfceaf868",
+        "commit": "818343a9cb3d10c797638c0094165411efafda12",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,7 +22,7 @@
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "5c3e3d351dfe3c5e172141c14245617c9d47e127",
+        "commit": "f131aab91995db2e91df50dc3603b09634b2c9f6",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
