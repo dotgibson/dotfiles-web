@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-03",
+  "generatedAt": "2026-09-04",
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "97728793666ec61b1ca25555963ef62bc18bafa8"
+    "commit": "6358a8df86616b1e633df00b8273a2f6fae356ed"
   },
-  "totalPairs": 102,
+  "totalPairs": 105,
   "groupCount": 16,
-  "techniqueCount": 72,
+  "techniqueCount": 75,
   "tacticCount": 13,
   "groups": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "label": "Cloud IAM (Entra · AWS · GCP)",
-      "count": 13
+      "count": 16
     },
     {
       "label": "Okta",
@@ -312,7 +312,7 @@
     {
       "id": "kerberoast-getuserspns",
       "attack": "Kerberoast SPNs (request + crack offline)",
-      "detection": "Detect Kerberoasting (4769 RC4 TGS)",
+      "detection": "Detect Kerberoasting (4769 TGS request)",
       "group": "On-prem AD / Windows",
       "phase": "Credential Access",
       "tactic": "TA0006",
@@ -620,6 +620,17 @@
       ]
     },
     {
+      "id": "aws-snapshot-share-exfil",
+      "attack": "AWS cross-account snapshot / AMI share (exfil without egress)",
+      "detection": "Detect cross-account snapshot / AMI sharing (CloudTrail management events)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Exfiltration",
+      "tactic": "TA0010",
+      "techniques": [
+        "T1537"
+      ]
+    },
+    {
       "id": "aws-iam-backdoor-key",
       "attack": "AWS IAM access-key backdoor (CreateAccessKey on another user)",
       "detection": "Detect IAM access-key backdoor (CloudTrail CreateAccessKey)",
@@ -650,6 +661,28 @@
       "tactic": "TA0009",
       "techniques": [
         "T1530"
+      ]
+    },
+    {
+      "id": "azure-keyvault-secret-dump",
+      "attack": "Azure Key Vault bulk secret read (drain the vault)",
+      "detection": "Detect Key Vault bulk secret read (AuditEvent diagnostic logs)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Credential Access",
+      "tactic": "TA0006",
+      "techniques": [
+        "T1555.006"
+      ]
+    },
+    {
+      "id": "azure-vm-runcommand",
+      "attack": "Azure VM Run Command (execute on the guest from ARM)",
+      "detection": "Detect Azure VM Run Command (Activity Log, runCommand action)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1651"
       ]
     },
     {
@@ -1117,8 +1150,8 @@
     },
     {
       "id": "npm-2fa-disable",
-      "attack": "npm publish-2FA disable (open the publish path)",
-      "detection": "Detect publish-2FA disable (npm audit log)",
+      "attack": "npm publish-2FA downgrade (open the publish path)",
+      "detection": "Detect publish-2FA downgrade (npm audit log)",
       "group": "npm registry",
       "phase": "Defense Impairment",
       "tactic": "TA0112",

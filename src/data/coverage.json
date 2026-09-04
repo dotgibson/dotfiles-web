@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-03",
+  "generatedAt": "2026-09-04",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "d3b538ee4433a4376d010236c5bba1c260e51a3e"
+    "commit": "273ae569a3c357e8b13d972ef5f4c72d3e16e258"
   },
-  "ruleCount": 111,
-  "documentCount": 129,
-  "techniqueCount": 81,
+  "ruleCount": 112,
+  "documentCount": 130,
+  "techniqueCount": 82,
   "tacticCount": 6,
   "logsourceCount": 24,
   "tactics": [
@@ -38,8 +38,8 @@
     {
       "id": "TA0010",
       "name": "Exfiltration",
-      "techniques": 2,
-      "rules": 2
+      "techniques": 3,
+      "rules": 3
     },
     {
       "id": "TA0040",
@@ -456,6 +456,13 @@
       ]
     },
     {
+      "id": "T1537",
+      "rules": 1,
+      "ruleNames": [
+        "aws_snapshot_share_external"
+      ]
+    },
+    {
       "id": "T1543",
       "rules": 3,
       "ruleNames": [
@@ -686,7 +693,7 @@
         "azure",
         "gcp"
       ],
-      "rules": 11
+      "rules": 12
     },
     {
       "dir": "cloudflare",
