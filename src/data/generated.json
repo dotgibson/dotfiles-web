@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "5d7696a7bc05fd22f6845cce30d94a1c07dfb82a",
+        "commit": "ba2c3447a89fafb89e4619bfbdf2a2282c9a88b1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "66e70030d41d167f00f2d3ae3cfaa36650a1a6f5",
+        "commit": "cb75260b2db2ec92df64a76ae8c210e3a9b58344",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "76440bfc6579112a059b785d59fc2bb80f89591d",
+        "commit": "91293573bcaadd8697de3932c6ffeeeaae40159e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "e4757ccf89a3fae59bac283a236927f2caff0193",
+        "commit": "0e77b7fb8d9b3630c68421ce10b755dcf59eb316",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "2c06b98372131f0c5d8b5fe50e801c273dfa3dee",
+        "commit": "7b6199881f19c81b5b3326d5d8661396cf4f2649",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "2da8de517214d783ba49985158e3311837f61ded",
+        "commit": "1d867562c2b2e65dc52595cf4900f76abbed1806",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "fa5571f4b781b3e1dca599493ec9a044dbb39c02",
+        "commit": "f094ad7f177b29ce8507121fe7e5d2371a3bb7df",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "58078bd2fcfbc66cb057e3ff807175f9411f5063",
+        "commit": "80ebed808118d55a0dee2d53bfff712476056e1d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "fae685bd4dff7f86ae2b6105c63f59237316fbc8",
+        "commit": "d676c9afdd44129a72622af2914f68204c397edc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "38c9a76347da59f0629b3e9d90ff7675870a2cf1",
+        "commit": "a3295b2052b3fe74770df93c38282d23787b2d3c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -220,6 +220,10 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "Two openSUSE claims in PORTING-MATRIX.md's footnotes, from the /os-package-availability routine (dotfiles-openSUSE#164). Both are footnote prose, not matrix cells, so nothing generated moved and no make gen-porting-matrix run is implied. Both were re-verified against OBS's anonymous API before editing — it answers on binary package names, which is what zypper in matches, so it is the index that decides these: .../_repository?binary=<name>, returning a <binary filename=\"…rpm\" size=\"…\"/> on a hit and a zero-size stub on a miss. Footnote ⁵ — the tree-sitter shared library is libtree-sitter0_26, not tree-sitter0_26. binary=tree-sitter0_26 resolves on none of the three openSUSE targets (Factory, and the Backports ∪ SLFO unions behind Leap 16.0 and 16.1); binary=libtree-sitter0_26 resolves on all three, at 0.26.8. Nothing installs the library, so nothing was broken — but that footnote exists precisely to stop the next reader reaching for a wrong name, with the dotfiles-openSUSE#113 autopsy (tree-sitter-cli, the Arch/Alpine split name, cargo-built on every box for want of the right one) two sentences above it. A signpost that hands the reader the same class of wrong name it is warning about is worse than no signpost. The same word was wrong in dotfiles-openSUSE's own install/packages.txt comment, fixed there in the same pass. Footnote ¹⁰ — difftastic's openSUSE is Tumbleweed-only. binary=difftastic resolves on openSUSE:Factory and on none of the four Leap 16 sources (Backports SLE-16.0 and SLE-16.1, SLFO 1.2 and 1.3), so on Leap the documented route is the footnote's own cargo install difftastic, not zypper. The cell is right as it stands — the column is Tumbleweed-named by the convention footnote ¹⁸ states — and the footnote is where the qualification belongs; its neighbour ²⁴ already does exactly this for lnav, which is Tumbleweed-only for the same reason and correctly labelled.",
+              "kind": "fix"
+            },
             {
               "text": "Two silent-failure shapes in the gate scripts, from #820's shell review (F2, F3). Both reproduced before fixing, because a report is a claim until it is run. F2 — gen-theme.sh's PARITY.md style guard anchored at column 0. CommonMark allows one to three leading spaces on a table row, so indenting PARITY.md's Theme row made grep -qE '^\\| (Theme|FZF palette) ' go false — and because the block only fires \"when PARITY.md exists AND names a style\", the cross-repo style contract stopped being checked with gen-theme --check still green. Silent-disable, not a false alarm, which is the worse direction. It is exactly the bug #682 fixed in parity-check.sh's own row parser, in a sibling that did not get the memo. Four cases now pin both directions: 0–3 spaces is a row, four is an indented code block and still ignored. F3 — parity-check.sh parsed every pipe table in the file. It took cap = $2 and status = $(NF - 1) from any row and skipped only separators, so tabulating PARITY.md's status vocabulary — prose today, valid Markdown, passes markdownlint — would parse aligned as a capability. Reproduced: the old parser reported `row aligned has status the , on a blocking, deliberately un-scope-guarded gate, with a message pointing nowhere near the cause. The header now arms the table rather than being skipped: a table whose first column is not Capability` is not a contract table. Worth recording that the first fix for F3 introduced a second bug of the same class — making a 4-space line clear the table state dropped every row after it, silently reducing coverage. The existing case 7 caught it, which is the argument for pinning both directions of a bound rather than only the one you are fixing.",
               "kind": "fix"
@@ -1951,6 +1955,14 @@
       "category": "Added",
       "kind": "fix",
       "text": "The README hero gif is dated against the tape that renders it (--check-render, #698). #862 rewrote assets/demo.tape to film a dotfiles-core checkout — #698's first finding, that the keystone repo's hero was shot inside a dotfiles-MacBook tree — and the tape has been right ever since. The gif was never re-rendered. assets/demo.gif at HEAD is byte-for-byte the blob committed on 2026-07-06, two months before that rewrite: it still walks ~/code/dotfiles/dotfiles-MacBook through z dotfiles and core help, commands the current tape does not contain. README.md's [product-screenshot] points at that file, so the defect #698 was filed about is still on the front page. Both gates were green over it, and correctly so — §9j compares the tape to assets/hero.tape.in, §9k weighs the gif's bytes and checks it exists, and nothing tied the gif to the tape. A generated script whose OUTPUT nobody dates is generated in name only: the property assets/README.md advertises — \"re-run the command after any prompt or tooling change and the hero updates\" — was the one thing neither gate checked. gen-hero-tape.sh --check-render (make check-hero-render) now checks it, and names both ends: assets/demo.gif is STALE — rendered 51b691b (2026-07-06), but assets/demo.tape was rewritten later 202d632 (2026-09-04). Git history is the clock, not mtime — mtime does not survive a clone, so on a fresh CI checkout every hero would date to the second it was written. The audit job already takes fetch-depth: 0, and a tree without usable history SKIPS LOUDLY (exit 3) instead of passing green because the evidence was absent, which is #821's standing lesson. The working tree outranks history in both directions: an uncommitted gif was just rendered here and passes, while a modified tape beside a clean gif is exactly the defect and fails. Deliberately not wired into audit-core.sh yet. The check is correct and red today, and greening it needs vhs on a host matching the row — so landing it as §9l is a one-block follow-up once assets/demo.gif is re-rendered, rather than blocking every unrelated make sync in the meantime.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Two openSUSE claims in PORTING-MATRIX.md's footnotes, from the /os-package-availability routine (dotfiles-openSUSE#164). Both are footnote prose, not matrix cells, so nothing generated moved and no make gen-porting-matrix run is implied. Both were re-verified against OBS's anonymous API before editing — it answers on binary package names, which is what zypper in matches, so it is the index that decides these: .../_repository?binary=<name>, returning a <binary filename=\"…rpm\" size=\"…\"/> on a hit and a zero-size stub on a miss. Footnote ⁵ — the tree-sitter shared library is libtree-sitter0_26, not tree-sitter0_26. binary=tree-sitter0_26 resolves on none of the three openSUSE targets (Factory, and the Backports ∪ SLFO unions behind Leap 16.0 and 16.1); binary=libtree-sitter0_26 resolves on all three, at 0.26.8. Nothing installs the library, so nothing was broken — but that footnote exists precisely to stop the next reader reaching for a wrong name, with the dotfiles-openSUSE#113 autopsy (tree-sitter-cli, the Arch/Alpine split name, cargo-built on every box for want of the right one) two sentences above it. A signpost that hands the reader the same class of wrong name it is warning about is worse than no signpost. The same word was wrong in dotfiles-openSUSE's own install/packages.txt comment, fixed there in the same pass. Footnote ¹⁰ — difftastic's openSUSE is Tumbleweed-only. binary=difftastic resolves on openSUSE:Factory and on none of the four Leap 16 sources (Backports SLE-16.0 and SLE-16.1, SLFO 1.2 and 1.3), so on Leap the documented route is the footnote's own cargo install difftastic, not zypper. The cell is right as it stands — the column is Tumbleweed-named by the convention footnote ¹⁸ states — and the footnote is where the qualification belongs; its neighbour ²⁴ already does exactly this for lnav, which is Tumbleweed-only for the same reason and correctly labelled.",
       "core": true
     },
     {
