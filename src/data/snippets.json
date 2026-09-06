@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-05",
+  "generatedAt": "2026-09-06",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "c0cd22b22819aa8113ce37e548757eeeb8736f77",
+        "commit": "d67fec7d90ebeea515b7b9a362274c8a10852453",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
