@@ -40,10 +40,10 @@ In the same commit, the script stamps **`core.lock`** at the repo root — outsi
 cannot clobber it:
 
 ```ini
-core_version=5.4.2
-core_sha=a8b8e6e4…            # the FULL Core commit that was vendored
-core_ref=v5.4.2-release       # the ref that was FOLLOWED
-core_tag=v5.4.2               # once Core carries a tag describing that commit
+core_version=7.1.2
+core_sha=3e2b2555…            # the FULL Core commit that was vendored
+core_ref=3e2b2555…            # the ref that was FOLLOWED, peeled to a commit
+core_tag=v7.1.2               # once Core carries a tag describing that commit
 ```
 
 That file is what makes "which Core is this box on?" answerable offline, and it is what
@@ -70,7 +70,7 @@ did anything wrong to. If you have already done it by hand, the fix is to re-run
 Core, not to patch the lock.
 
 The one `git subtree` still in play is the **one-time `git subtree add`** that creates a `core/`
-where none exists — greenfield only, from a released tag (`refs/tags/v5`), never `main`, and never
+where none exists — greenfield only, from a released tag (`refs/tags/v7`), never `main`, and never
 the update path. `dotfiles-core`'s `scripts/new-os-repo.sh` runs it for you when scaffolding a new
 OS repo.
 

@@ -8,6 +8,7 @@ import { withBase } from '../lib/url';
 // prefix. The NN is the real band number, so the gaps (05, 85) are intentional.
 const loadOrder = [
   ['00', 'tools', 'detection + single init point (zoxide/starship/atuin/mise) — loads first'],
+  ['02', 'capabilities', 'reads the OS layer’s capability declaration (os.capabilities) — extracted, never sourced'],
   ['05', 'ui', 'terminal-UX primitives (_core_err/ok/hint/confirm/spin), gum-aware'],
   ['10', 'options', 'setopts + completion system (compinit, cached under $XDG_CACHE_HOME) + zstyles'],
   ['15', 'history', 'HISTFILE (under $XDG_STATE_HOME) + history setopts + secret-ignore'],
@@ -197,7 +198,7 @@ const deepDives = [
       </p>
       <CommandBlock
         code={`# one-time, for a repo with no core/ yet — a RELEASED tag, never main:
-git subtree add --prefix=core https://github.com/dotgibson/dotfiles-core refs/tags/v5 --squash
+git subtree add --prefix=core https://github.com/dotgibson/dotfiles-core refs/tags/v7 --squash
 
 # every update after that, run from a dotfiles-core checkout:
 ./scripts/sync-core.sh dotfiles-<OS>`}
@@ -263,16 +264,11 @@ git subtree add --prefix=core https://github.com/dotgibson/dotfiles-core refs/ta
         }
       </ol>
       <p>
-        Two v4 refinements ride this loader. <strong>Profiles</strong> —
-        <code>CORE_PROFILE=minimal|standard|full</code> — gate the Core band
-        (<code>00</code>–<code>69</code>) by number: <code>minimal</code> stops after
-        <code>30-functions</code>, <code>standard</code> after <code>50-op</code>, and
-        <code>full</code> loads everything; the OS/role/host fragments (<code>≥ 70</code>)
-        always load, so a lean profile can never drop essential setup. And the
-        <strong>XDG split</strong> moves mutable state out of the symlinked config tree —
-        history to <code>$XDG_STATE_HOME</code>, the compdump to <code>$XDG_CACHE_HOME</code>,
-        plugins to <code>$XDG_DATA_HOME</code> — while each fragment’s byte-compiled
-        <code>.zwc</code> stays beside it for fast startup.
+        One v4 refinement rides this loader. The <strong>XDG split</strong> moves mutable
+        state out of the symlinked config tree — history to <code>$XDG_STATE_HOME</code>,
+        the compdump to <code>$XDG_CACHE_HOME</code>, plugins to <code>$XDG_DATA_HOME</code>
+        — while each fragment’s byte-compiled <code>.zwc</code> stays beside it for fast
+        startup.
       </p>
 
       <!-- kali note -->
