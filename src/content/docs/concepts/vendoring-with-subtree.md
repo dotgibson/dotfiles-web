@@ -40,10 +40,10 @@ In the same commit, the script stamps **`core.lock`** at the repo root — outsi
 cannot clobber it:
 
 ```ini
-core_version=7.0.0
-core_sha=c0cd22b2…            # the FULL Core commit that was vendored
-core_ref=c0cd22b2…            # the ref that was FOLLOWED, peeled to a commit
-core_tag=v7.0.0               # once Core carries a tag describing that commit
+core_version=7.1.2
+core_sha=3e2b2555…            # the FULL Core commit that was vendored
+core_ref=3e2b2555…            # the ref that was FOLLOWED, peeled to a commit
+core_tag=v7.1.2               # once Core carries a tag describing that commit
 ```
 
 That file is what makes "which Core is this box on?" answerable offline, and it is what
