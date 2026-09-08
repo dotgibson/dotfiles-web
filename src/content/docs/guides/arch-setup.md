@@ -92,7 +92,7 @@ git add -A
 git commit -m "Arch OS-native layer (stamped from Fedora template)"
 
 # 3. NOW vendor Core under core/ — a RELEASED tag, never main
-git subtree add --prefix=core https://github.com/<you>/dotfiles-core refs/tags/v5 --squash
+git subtree add --prefix=core https://github.com/<you>/dotfiles-core refs/tags/v7 --squash
 ```
 
 **The ref matters.** Vendoring from whatever `main` happened to be produces a tree
@@ -100,7 +100,7 @@ at a commit no `core.lock` records, and `core-integrity` then reports the fresh
 copy as `TAMPERED` before the repo has done anything wrong. Pin a released tag.
 
 If `dotfiles-core` lives only on disk (not yet pushed), step 3 takes a path just
-as happily: `git subtree add --prefix=core ~/dotfiles-core refs/tags/v5 --squash`.
+as happily: `git subtree add --prefix=core ~/dotfiles-core refs/tags/v7 --squash`.
 
 Core's `scripts/new-os-repo.sh` scaffolds all of this for you — including this add,
 with the same released-tag default.

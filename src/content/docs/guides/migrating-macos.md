@@ -56,7 +56,7 @@ cd ~/dotfiles-MacBook
 
 # one-time initial vendoring, never the update path (same as the other repos).
 # A RELEASED tag, never main — see the note below.
-git subtree add --prefix=core <REMOTE>/dotfiles-core refs/tags/v5 --squash
+git subtree add --prefix=core <REMOTE>/dotfiles-core refs/tags/v7 --squash
 
 # make the popup scripts executable (the outputs filesystem can't carry +x)
 chmod +x core/tmux/scripts/*.sh core/bin/clip core/bin/clip-paste
