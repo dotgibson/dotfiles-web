@@ -16,7 +16,7 @@
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "d55bb46df11ccdd6f145deb7a94d95e4fbf127a5",
+        "commit": "ec40e13e66a286c9bb48681ef838f60064495a01",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -95,7 +95,7 @@
       "dotfiles-Windows": {
         "ref": null,
         "carried": null,
-        "mirroredFrom": "v6.0.0",
+        "mirroredFrom": "v7.2.0",
         "status": "replicated"
       },
       "dotfiles-Offense": {
