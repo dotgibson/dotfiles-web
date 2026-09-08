@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-09-07",
+  "generatedAt": "2026-09-08",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "ea8ac3d26a74736bd704cd5e0bbf0ca48e0a5966"
+    "commit": "2ffa25f257fe7d980dbcc49b0eab1813390b03d5"
   },
-  "ruleCount": 112,
-  "documentCount": 130,
-  "techniqueCount": 82,
+  "ruleCount": 114,
+  "documentCount": 133,
+  "techniqueCount": 84,
   "tacticCount": 6,
   "logsourceCount": 24,
   "tactics": [
     {
       "id": "TA0002",
       "name": "Execution",
-      "techniques": 8,
-      "rules": 9
+      "techniques": 9,
+      "rules": 10
     },
     {
       "id": "TA0003",
@@ -536,6 +536,13 @@
       ]
     },
     {
+      "id": "T1555.006",
+      "rules": 1,
+      "ruleNames": [
+        "azure_keyvault_bulk_secret_read"
+      ]
+    },
+    {
       "id": "T1556",
       "rules": 2,
       "ruleNames": [
@@ -651,6 +658,13 @@
       ]
     },
     {
+      "id": "T1651",
+      "rules": 1,
+      "ruleNames": [
+        "azure_vm_run_command"
+      ]
+    },
+    {
       "id": "T1685",
       "rules": 5,
       "ruleNames": [
@@ -693,7 +707,7 @@
         "azure",
         "gcp"
       ],
-      "rules": 12
+      "rules": 14
     },
     {
       "dir": "cloudflare",
