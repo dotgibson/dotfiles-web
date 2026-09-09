@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "93ca3ad2a55cc2b17f79cb011798fb9cc615797b",
+        "commit": "691071f2b1ed004705abe14fbeb77323aba6c7bb",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "4150a81c06a6fe829753bcc57d7d3b6930f300d5",
+        "commit": "e88ca5b19da956ba54baf412d12c537167d973be",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "bbe2e20755a18a5a54800787faeeee23328b10bd",
+        "commit": "33ba7cc7453287f0cfa2426430024e1842a357c9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "4230ed665caecafff674caa26d8dfca2e55153ba",
+        "commit": "82b0dd8fca59b55a5cff96bce180aa8c56c2d826",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "5889e6a50697da9ceb5fc4da91ddea2af4878043",
+        "commit": "efe4958da3452362ea0f610f6c1e23048d20e9fd",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "44c276c74fb33574c47ab0a8e11680b602a88146",
+        "commit": "fe8c5120bbda21b7bd3505499f0e53a1249ae7f9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "2798bf7b7e7753a7b7374a7cccb442f741c7b536",
+        "commit": "cedc7ebbd949b8fda569119fb477c91b7eb0b90b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "3a6e25c98c4dc1baf475bcf6506de4b4763b8455",
+        "commit": "65ad8c3969efe2ffaa583d6204b124eacc107746",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "386712e136367af66cd3e949b87b40d536bfdd6c",
+        "commit": "0950a31bd98a68ee68b7f1f67f95803af81ab1c0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "dbc707c82f40642b1879a1a97d70917d44fbe519",
+        "commit": "4f4b325c89d4bee48000bc41f5bb0e53a8340d00",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -143,7 +143,7 @@
   "core": {
     "version": "7.2.0",
     "sourcedModules": 14,
-    "zshLoc": 6969,
+    "zshLoc": 6990,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 30
@@ -192,6 +192,18 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "up -n's spinner painted a healthy dry run red (found filming the nine OS/role README heroes, #948). The spinner reports the exit of _pkgup_list_to, which is the COUNT VERB's — and most archives overload it: dnf check-update exits 100 when updates exist, checkupdates exits 2 when there are none. The list path was documented to ignore that status (a partial list is still a better preview than none) but the spinner was not, so every OS repo's signature moment read x checking pacman for upgradable packages (exit 2) over a green \"nothing to upgrade\". The helper now answers 0 unless the archive declared its exit meaningful (PKG_COUNT_EXIT_TRUSTED, Gentoo's case), where it still propagates. Pinned both ways in scripts/test/70-detection.sh.",
+              "kind": "fix"
+            },
+            {
+              "text": "starship drew a lizard emoji on openSUSE (same hunt, #948). starship names SLES SUSE and Leap/Tumbleweed openSUSE; [os.symbols] declared only the first, so an openSUSE prompt fell through to starship's own default for the second — 🦎, which renders as tofu wherever no colour-emoji font is installed, which is every terminal this palette targets. openSUSE now gets the same Nerd Font glyph as SUSE.",
+              "kind": "config"
+            },
+            {
+              "text": "Every prompt on Debian 13 died with \"maximum nested function level reached\" (found filming dotfiles-Debian's README hero, #948). zsh-vi-mode's default is a lazy init from the first precmd — after every rc file, so after the transient prompt has registered zle-line-finish — at which point zvm wraps that widget, and zvm_reset_prompt reads the wrapper's dynamically-scoped $rawfunc and calls the widget straight back into itself. 45-plugins.zsh now sets ZVM_INIT_MODE=sourcing before loading zvm, so the load order means what its comments always said: zvm first, the transient prompt last, and last wins zle-line-finish. Late bindkeys (50+, OS, role layers) now also land after zvm's reset instead of under it. Pinned in scripts/test/60-loader.sh.",
+              "kind": "perf"
+            },
             {
               "text": "Rule 2 of the CI floor now sees the runs-on: mapping form. The matcher required the banned label on the same line as runs-on: or os:, so runs-on: alone on its line with the label on a nested labels: child — the runner-group syntax — walked straight through the ban. The alternation gains labels:; no baseline change, and a fixture pins the shape. Latent rather than live — the fleet uses no runner groups or self-hosted labels — and a matrix key named anything other than os: still escapes, deliberately: catching it means dropping the key prefix, which would then fire on every comment in the tree that names a label. (#816)",
               "kind": "fix"
@@ -1158,6 +1170,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: core status showing the role layer live over the OS layer. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on a Debian box with this role layered on top after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+              "kind": "perf"
+            },
+            {
               "text": "core-verify asks the integrity question again, and core-check gets the freshness one back (dotgibson/dotfiles-core#691). Adopting the fleet vocabulary pointed the canonical core-verify at test/check-core-freshness.sh and demoted core-check to an alias of it. Those are two different questions: freshness is *is there a NEWER Core upstream?*, integrity is *is THIS core/ the tree core.lock pins?* — and Core's scripts/make-vocabulary.txt defines the canonical verb as the second. So the register read green on a target answering something else, while this repo still had no local integrity check at all: core-integrity.yml ran one in CI and nothing ran one here. core-check is a real target again, with help text naming its question, and core-verify delegates to Core's own scripts/core-integrity.sh from a CORE_REPO checkout — the same invocation CI uses, and the only implementation that knows how the fan-out filters the vendored subtree. Verified both ways against a sibling clone at core v6.1.0: core-verify reports pristine, core-check reports current.",
               "kind": "feature"
             },
@@ -1457,6 +1473,10 @@
               "kind": "fix"
             },
             {
+              "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: core status showing the role layer live over the OS layer. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on a Debian box with this role layered on top after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+              "kind": "perf"
+            },
+            {
               "text": "T1555.006 Cloud Secrets Management Stores — Key Vault bulk secret read, closing the Azure resource plane (#280). detections/sigma/cloud/azure_keyvault_bulk_secret_read.yml is a base rule plus a value_count correlation: one identity reading many *distinct* secrets from a Key Vault inside a 15-minute bucket. The cloud twin of vault_bulk_secret_read, and the same argument holds — a healthy application re-reads its own small set, an attacker with a stolen token sweeps across unrelated ones. Breadth per identity, not read rate: a flat \"more than N reads\" is wrong in both directions at once, letting the automation principal that legitimately reads 200 secrets a run stay silent while a targeted grab of the ten highest-value secrets sails under the floor. It ships at the same threshold as its HashiCorp sibling so an analyst tuning one credential store starts from the same number in the other, and both say the flat floor is the starting point rather than the destination. The identity claims are the part worth reading. The correlation groups by identity_claim_oid_g, the objectidentifier claim, because it is the only caller field present for *both* a human and a service principal: identity_claim_upn_s is null for an SP, and identity_claim_appid_g is the APPLICATION — allowlist the Azure CLI's shared app id and you have exempted every CLI user in the tenant. The raw event from Microsoft's logging reference also shows why the resource-specific schema is a trap rather than a rename: in AZKVAuditLogs the flat columns collapse into one dynamic Identity, whose claims are keyed by their full XML-schema URIs (http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn), so Identity.claim.upn silently resolves to nothing. Only appid is a short key. The rule ships the AzureDiagnostics spelling — what the paired entry queries, and already flat enough for a correlation to group by — and names the translation. Scoped to SecretGet, and unfiltered on result. SecretList/SecretListVersions return names, not values; counting them into a breadth measure would let one legitimate inventory call inflate the score, so they stay out of the rule and stay in the triage guidance, where a List followed by a run of Gets is the drain in its clearest form. There is no ResultType filter for the same reason the Run Command rule carries no status arm: a burst of *denied* SecretGets across many secrets is a principal sweeping a vault it has no permission on, which is the sharper finding, and filtering to Success would drop exactly that. Counting requestUri_s is an approximation, and the direction of its error is stated. The paired entry's KQL recovers the secret name with split(requestUri_s, \"/\")[4]; Sigma has no such transform, so this counts distinct request URIs. The two differ when one caller reads the same secret at several explicit versions in a window — which inflates. It is sound because of the group-by: within one identity the client library and api-version are constant. The error runs toward more sensitivity, never less: it can produce a false positive, it cannot hide a sweep. Six fixture lines at vendor-documented, each verified individually — TP: two distinct secrets under one oid plus a Forbidden read; TN: the allowlisted oid, a SecretList, and a KeyGet. The Sentinel gap is named rather than papered over: the kusto backend cannot express a Sigma correlation, so rules.generated.kql carries this as UNSUPPORTED like its two siblings — and for this rule that points somewhere useful, because the paired htpx entry *is* the Sentinel implementation. The telemetry caveat is recorded too: unlike Activity Log, Key Vault AuditEvent is a diagnostic setting an estate has to switch on, so this rule is inert until it is, which is a collection gap rather than a detection one.",
               "kind": "security"
             },
@@ -1617,6 +1637,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo dnf upgrade --refresh. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re- render with vhs assets/demo.tape on a Fedora box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+              "kind": "perf"
+            },
+            {
               "text": "os/fedora.capabilities — this repo's Core v5 capability declaration (dotgibson/dotfiles-core#663, #667). Core's up, maint runner and core-doctor now dispatch through it rather than through package-manager branches inside portable Core modules. Fedora is the repo core/examples/os.capabilities.example was written from, so this is that example made real. MAINT_UNATTENDED_UPGRADE=1 — a versioned, non-rolling distro whose stable updates are what an unattended nightly is for, and what this box already did; the operator's MAINT_SYSTEM_UPGRADE=1 is still the first of the two gates.",
               "kind": "feature"
             },
@@ -1672,6 +1696,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo pacman -Syu. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on an Arch box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+              "kind": "perf"
+            },
             {
               "text": "The fleet make vocabulary, and a test/ suite (dotgibson/dotfiles-core#691, reported by dotgibson/dotfiles-core#846). Core declares one canonical set of verbs for every repo that vendors it — help, lint, check, dry-run, packages-check, core-verify, test — so the same word means the same thing in nine repos. This repo was missing three of them. - make dry-run is the canonical spelling of what was make bootstrap-dry. bootstrap-dry is kept as a .PHONY alias: the requirement is that the canonical name *exists*, not that the old one dies. - make check is the full local gate — lint + test + a bootstrap.sh --dry-run that proves the whole plan still builds, provision() included, which no workflow ever executes. Deliberately *not* the hermetic HOME=$(mktemp -d) --links-only run that Debian's and Fedora's check use: that is only hermetic in $HOME, since wire_links ends in blib_set_login_shell, which appends to /etc/shells and runs chsh under sudo. --dry-run reaches the same code with BLIB_DRY=1 and writes nothing. - make test runs test/*.sh, and refuses rather than passing when there is nothing to run — a test: that runs no suite renders as a no-op in the fleet register. - test/check-packages.sh is the suite, modelled on dotfiles-Debian/test/check-packages.sh. It is the old inline packages-check recipe promoted to a real script — same parser (blib_read_pkgs_into, so it reads exactly what bootstrap.sh feeds pacman), same pacman -Si resolution, now shellcheck-visible and invokable by path — plus a duplicate-name check, which needs no package manager and so runs off-Arch too, and a clean skip instead of a hard \"pacman not found\" failure. It carries no version floors: Debian needs them because a frozen archive resolves neovim at 0.9.5 and calls that healthy, while on a rolling release the repos carry current upstream by construction — the drift risk here is names *moving* (doggo went AUR→extra in 2025) or disappearing. - .github/workflows/packages.yml now runs make test rather than make packages-check, and its path filter gained test/**. The floor requires a workflow that runs the *suite*; a workflow pinned to one target inside it would silently skip the second script anyone adds. make packages-check still runs exactly that script for anyone who types the verb.",
               "kind": "feature"
@@ -1789,6 +1817,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo apt-get full-upgrade. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on a Debian box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+              "kind": "perf"
+            },
             {
               "text": "make test and make core-verify — the two canonical fleet verbs this repo was missing (dotgibson/dotfiles-core#691, reported by dotgibson/dotfiles-core#846's register). Core now declares one make vocabulary for every repo that vendors it — help, lint, check, dry-run, packages-check, core-verify, test — after nine repos turned out to speak nine dialects, with \"verify core\" alone spelled five ways. test runs the repo's own suite, which today is exactly test/check-packages.sh, so packages-check is its only prerequisite rather than a copied command line; it is declared .PHONY because it names the test/ directory it runs and an undeclared test: would report \"up to date\" and run nothing. The requirement is that the canonical name exists, not that the old one dies, so integrity stays as a .PHONY alias of core-verify and muscle memory survives. Verify from a Core checkout beside this one with make fleet-vocabulary.",
               "kind": "feature"
@@ -1915,6 +1947,30 @@
       "category": "Added",
       "kind": "fix",
       "text": "The CI floor now bans blanket permissions: grants — banned_permission_values. Rule 5 requires every workflow to declare a permissions: block but never looked at its value, so permissions: write-all — the maximal token grant, strictly worse than omitting the block — satisfied a rule named for least privilege. A new dimension (5b) in scripts/check-modern.sh reads the value: at any indent, so the job-level form is caught too (a job grant that widens to everything narrows nothing); bare or quoted; and with a trailing # comment tolerated, so a rationale beside the grant is not the way past the gate. It is anchored to the key and the line end, which is why it is its own dimension rather than a banned_patterns entry: that list is a blind grep -F, under which the word could never appear in a workflow comment at all — not even to explain why a grant is narrow. read-all is deliberately not banned; it is not a token-abuse vector, and banning it buys noise. Like rule 8, this is not deprecation-driven, and the baseline says so plainly. The fleet is at zero occurrences, so it is adopted at zero fix-first cost — and Core owns the *-call.yml@vN reusable workflows the OS repos actually execute. Both directions are covered by fixtures in the hermetic check-modern harness: the workflow-level, job-level and quoted-with-comment forms are each caught, while the word in a comment, read-all, and a named-scope write are not. (#816)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "up -n's spinner painted a healthy dry run red (found filming the nine OS/role README heroes, #948). The spinner reports the exit of _pkgup_list_to, which is the COUNT VERB's — and most archives overload it: dnf check-update exits 100 when updates exist, checkupdates exits 2 when there are none. The list path was documented to ignore that status (a partial list is still a better preview than none) but the spinner was not, so every OS repo's signature moment read x checking pacman for upgradable packages (exit 2) over a green \"nothing to upgrade\". The helper now answers 0 unless the archive declared its exit meaningful (PKG_COUNT_EXIT_TRUSTED, Gentoo's case), where it still propagates. Pinned both ways in scripts/test/70-detection.sh.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "starship drew a lizard emoji on openSUSE (same hunt, #948). starship names SLES SUSE and Leap/Tumbleweed openSUSE; [os.symbols] declared only the first, so an openSUSE prompt fell through to starship's own default for the second — 🦎, which renders as tofu wherever no colour-emoji font is installed, which is every terminal this palette targets. openSUSE now gets the same Nerd Font glyph as SUSE.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "Every prompt on Debian 13 died with \"maximum nested function level reached\" (found filming dotfiles-Debian's README hero, #948). zsh-vi-mode's default is a lazy init from the first precmd — after every rc file, so after the transient prompt has registered zle-line-finish — at which point zvm wraps that widget, and zvm_reset_prompt reads the wrapper's dynamically-scoped $rawfunc and calls the widget straight back into itself. 45-plugins.zsh now sets ZVM_INIT_MODE=sourcing before loading zvm, so the load order means what its comments always said: zvm first, the transient prompt last, and last wins zle-line-finish. Late bindkeys (50+, OS, role layers) now also land after zvm's reset instead of under it. Pinned in scripts/test/60-loader.sh.",
       "core": true
     },
     {
@@ -2625,6 +2681,14 @@
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Added",
+      "kind": "perf",
+      "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: core status showing the role layer live over the OS layer. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on a Debian box with this role layered on top after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "feature",
       "text": "core-verify asks the integrity question again, and core-check gets the freshness one back (dotgibson/dotfiles-core#691). Adopting the fleet vocabulary pointed the canonical core-verify at test/check-core-freshness.sh and demoted core-check to an alias of it. Those are two different questions: freshness is *is there a NEWER Core upstream?*, integrity is *is THIS core/ the tree core.lock pins?* — and Core's scripts/make-vocabulary.txt defines the canonical verb as the second. So the register read green on a target answering something else, while this repo still had no local integrity check at all: core-integrity.yml ran one in CI and nothing ran one here. core-check is a real target again, with help text naming its question, and core-verify delegates to Core's own scripts/core-integrity.sh from a CORE_REPO checkout — the same invocation CI uses, and the only implementation that knows how the fan-out filters the vendored subtree. Verified both ways against a sibling clone at core v6.1.0: core-verify reports pristine, core-check reports current.",
       "core": false
@@ -3161,6 +3225,14 @@
       "repo": "dotfiles-Defense",
       "version": "Unreleased",
       "category": "Added",
+      "kind": "perf",
+      "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: core status showing the role layer live over the OS layer. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on a Debian box with this role layered on top after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "security",
       "text": "T1555.006 Cloud Secrets Management Stores — Key Vault bulk secret read, closing the Azure resource plane (#280). detections/sigma/cloud/azure_keyvault_bulk_secret_read.yml is a base rule plus a value_count correlation: one identity reading many *distinct* secrets from a Key Vault inside a 15-minute bucket. The cloud twin of vault_bulk_secret_read, and the same argument holds — a healthy application re-reads its own small set, an attacker with a stolen token sweeps across unrelated ones. Breadth per identity, not read rate: a flat \"more than N reads\" is wrong in both directions at once, letting the automation principal that legitimately reads 200 secrets a run stay silent while a targeted grab of the ten highest-value secrets sails under the floor. It ships at the same threshold as its HashiCorp sibling so an analyst tuning one credential store starts from the same number in the other, and both say the flat floor is the starting point rather than the destination. The identity claims are the part worth reading. The correlation groups by identity_claim_oid_g, the objectidentifier claim, because it is the only caller field present for *both* a human and a service principal: identity_claim_upn_s is null for an SP, and identity_claim_appid_g is the APPLICATION — allowlist the Azure CLI's shared app id and you have exempted every CLI user in the tenant. The raw event from Microsoft's logging reference also shows why the resource-specific schema is a trap rather than a rename: in AZKVAuditLogs the flat columns collapse into one dynamic Identity, whose claims are keyed by their full XML-schema URIs (http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn), so Identity.claim.upn silently resolves to nothing. Only appid is a short key. The rule ships the AzureDiagnostics spelling — what the paired entry queries, and already flat enough for a correlation to group by — and names the translation. Scoped to SecretGet, and unfiltered on result. SecretList/SecretListVersions return names, not values; counting them into a breadth measure would let one legitimate inventory call inflate the score, so they stay out of the rule and stay in the triage guidance, where a List followed by a run of Gets is the drain in its clearest form. There is no ResultType filter for the same reason the Run Command rule carries no status arm: a burst of *denied* SecretGets across many secrets is a principal sweeping a vault it has no permission on, which is the sharper finding, and filtering to Success would drop exactly that. Counting requestUri_s is an approximation, and the direction of its error is stated. The paired entry's KQL recovers the secret name with split(requestUri_s, \"/\")[4]; Sigma has no such transform, so this counts distinct request URIs. The two differ when one caller reads the same secret at several explicit versions in a window — which inflates. It is sound because of the group-by: within one identity the client library and api-version are constant. The error runs toward more sensitivity, never less: it can produce a false positive, it cannot hide a sweep. Six fixture lines at vendor-documented, each verified individually — TP: two distinct secrets under one oid plus a Forbidden read; TN: the allowlisted oid, a SecretList, and a KeyGet. The Sentinel gap is named rather than papered over: the kusto backend cannot express a Sigma correlation, so rules.generated.kql carries this as UNSUPPORTED like its two siblings — and for this rule that points somewhere useful, because the paired htpx entry *is* the Sentinel implementation. The telemetry caveat is recorded too: unlike Activity Log, Key Vault AuditEvent is a diagnostic setting an estate has to switch on, so this rule is inert until it is, which is a collection gap rather than a detection one.",
       "core": false
@@ -3449,6 +3521,14 @@
       "repo": "dotfiles-Fedora",
       "version": "Unreleased",
       "category": "Added",
+      "kind": "perf",
+      "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo dnf upgrade --refresh. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re- render with vhs assets/demo.tape on a Fedora box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "feature",
       "text": "os/fedora.capabilities — this repo's Core v5 capability declaration (dotgibson/dotfiles-core#663, #667). Core's up, maint runner and core-doctor now dispatch through it rather than through package-manager branches inside portable Core modules. Fedora is the repo core/examples/os.capabilities.example was written from, so this is that example made real. MAINT_UNATTENDED_UPGRADE=1 — a versioned, non-rolling distro whose stable updates are what an unattended nightly is for, and what this box already did; the operator's MAINT_SYSTEM_UPGRADE=1 is still the first of the two gates.",
       "core": false
@@ -3523,6 +3603,14 @@
       "category": "Removed",
       "kind": "config",
       "text": "A stale 4.5 MB orphaned worktree copy under .claude/worktrees/, and the obsolete zsh/local.zsh ignore entry (host overrides have lived at ~/.config/zsh/99-local.zsh since v4).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo pacman -Syu. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on an Arch box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
       "core": false
     },
     {
@@ -3715,6 +3803,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "bootstrap.sh installs the local core/ pre-commit guard on a fresh clone (blib_install_core_guard), catching a hand-edit at commit time rather than waiting for core-integrity.yml at PR time.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo apt-get full-upgrade. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on a Debian box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
       "core": false
     },
     {
