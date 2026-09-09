@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "380e705b98b63f358379bb72aacc7dba4996ba8b",
+        "commit": "fdab9e9baf47e10232698ad3d148ba8a0c988567",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -180,6 +180,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "The vocabulary register reads dotfiles-Windows — the same seven verbs, spelled .\\task.ps1 <verb> (#855, a #691 follow-up). #691's promise is that a contributor moving between repos re-learns nothing, and the one repo still outside it was the fleet's most-tested: no Makefile, no runner, bare scripts, in exactly the place where \"reproduce the CI gate locally\" has the most to offer. Windows is deliberately absent from scripts/os-repos.txt (that list drives the fan-out, and Windows vendors no core/), so the register now names it the way fleet-drift.sh does — an outlier row read by name, last in the table, with task.ps1 beside the repo so the make <verb> headers stay the contract's names — and os-repos.txt stays Windows-free, which the suite pins. make is not a given on a Windows host and just would be a new dependency, so the shim is PowerShell: a dispatcher over the repo's existing entry points, landing in dotfiles-Windows as task.ps1. The read is static, like the Makefile read: a verb is a quoted key of Get-TaskVerbs alone at the start of its line — a key on a comment line or inside a string declares nothing — and test is credited only when its entry names the suite runner under the populated tests/ by path (either separator), else no-op; a Windows clone without the shim renders no task.ps1 across its row, the way a fleet repo without a Makefile renders no Makefile. The test-floor column is the same reader as everywhere else, which already credited a shell: pwsh step running ./tests/Invoke-Tests.ps1. The per-verb cell logic that was inline in the fleet loop is one function shared by both row kinds, so a label cannot drift between them.",
+              "kind": "feature"
+            },
+            {
               "text": "The CI floor now bans blanket permissions: grants — banned_permission_values. Rule 5 requires every workflow to declare a permissions: block but never looked at its value, so permissions: write-all — the maximal token grant, strictly worse than omitting the block — satisfied a rule named for least privilege. A new dimension (5b) in scripts/check-modern.sh reads the value: at any indent, so the job-level form is caught too (a job grant that widens to everything narrows nothing); bare or quoted; and with a trailing # comment tolerated, so a rationale beside the grant is not the way past the gate. It is anchored to the key and the line end, which is why it is its own dimension rather than a banned_patterns entry: that list is a blind grep -F, under which the word could never appear in a workflow comment at all — not even to explain why a grant is narrow. read-all is deliberately not banned; it is not a token-abuse vector, and banning it buys noise. Like rule 8, this is not deprecation-driven, and the baseline says so plainly. The fleet is at zero occurrences, so it is adopted at zero fix-first cost — and Core owns the *-call.yml@vN reusable workflows the OS repos actually execute. Both directions are covered by fixtures in the hermetic check-modern harness: the workflow-level, job-level and quoted-with-comment forms are each caught, while the word in a comment, read-all, and a named-scope write are not. (#816)",
               "kind": "fix"
             }
@@ -222,6 +226,22 @@
             },
             {
               "text": "Suite: the \"an unterminated /* is not treated as a marker\" case renders the fixture before appending the line, so its != 2 assertion can actually fail — on an unrendered stub --check was already 1, and the case passed whatever the parser did. Also dropped a duplicated 12-line comment paragraph in §9d (#933).",
+              "kind": "fix"
+            },
+            {
+              "text": "/doc-audit's 2026-09-01 fleet sweep (#811) — the Core-side drift that survived the v7 cut. The sweep was filed against 6.0.0 and most of its findings were overtaken by the v6→v7 release work (the refs/tags/v5 vendoring commands, the Fedora sudo dnf check-update and Gentoo gentoo-pkg-pending cells, the tree-sitter-cli orphaning hedge and the Offense repo-status row were all already right). What was not: CLAUDE.md and RELEASE-RUNBOOK.md still named @v5 as the fleet's current caller alias while every caller is @v7; PORTING-MATRIX.md said dotfiles-Gentoo cargo-installs ouch in two places while its own table cell, footnote ¹² and the repo's bootstrap.sh all say guru_extras_install app-arch/ouch (dotgibson/dotfiles-Gentoo#133); ARCHITECTURE.md and the matrix's Offense paragraph still described dotfiles-Offense as carrying its own apt OS layer (it ships no os/ at all — band 80 comes from dotfiles-Debian, which accepts ID=kali), and the paragraph quoted the pre-v4 loader chain (… os offensive local) for what is now 80-os → 85-offensive → 99-local.",
+              "kind": "fix"
+            },
+            {
+              "text": "core.vendor's line-number citations rotted a second time in a week, so the cross-repo ones are gone. The same-repo zsh/30-functions.zsh cite for the PORTING-MATRIX.md hint string had moved 1224 → 1382 (the sweep found it stale at 765 a week earlier), and 27 of the 43 cross-repo file:line cites — every one of the seven into dotfiles-MacBook's ci.yml, all seven check-capabilities.sh Makefile lines — pointed at the wrong line. Those files move independently of Core, so the numbers can never stay right; the annotations now name the consumer file and keep the exact line only for cites into this repo, which is what audit-core.sh §1e can hold to reality. (#811)",
+              "kind": "fix"
+            },
+            {
+              "text": "The README hero is re-rendered from the current tape, and the render-date check is wired in as audit-core.sh §9l (#877 items 1 and 2, the last of #698's original defect). assets/demo.gif on main was still the blob committed on 2026-07-06: a dotfiles-MacBook tree walked through z dotfiles and core help, two months before #862 rewrote the tape to film a dotfiles-core checkout, and two releases after #870 landed --check-render red and deliberately un-wired. The front page showed the very thing #698 was filed about the whole time. The gif is now the current tape's tour — ll, cat README.md, glog -8, core status, core-version — filmed on a Core host over a clean main checkout, then put through the gifsicle -O3 --lossy=80 --colors 64 pass assets/README.md documents. §9k's ceiling was never tested against this tape until now: assets/hero.tape.in's own comment records the first shortened cut at 2.46 MB, so the byte count is in the PR, not in prose. make check-hero-render flips green on the uncommitted gif and stays green once the gif and this entry land in the same commit, which is the only order §9l accepts. §9l is the one block #870's entry promised. It mirrors §9k's shape — exit 1 is a stale or missing gif with the script's own per-row remedy carried through fail_detail, exit 2 is \"could not run\", and exit 3 (no usable history: shallow, not a checkout, unrelated histories) is an environment skip in §9h's posture, never a pass, which is #821's lesson. Always on and not scope-guarded, for §9j's reason: a .tape and a .gif are both inert to ci-classify.sh. scripts/test/42-gen-hero-tape.sh pins the third leg as wired, exactly as it pins the first two. Item 3 — the nine sibling heroes — stays open on #877: the tapes are written by make gen-hero-tape-fleet today, but @@HOSTGUARD@@ requires each to be filmed on the distro its row is about, so that is nine boxes, not one.",
+              "kind": "fix"
+            },
+            {
+              "text": "The hero render can no longer be hijacked by the OS layer's tmux auto-attach (#877). The tape's hidden setup sources ~/.config/zsh/.zshrc from inside vhs — an interactive TTY — and every OS layer attaches (or creates) a main tmux session for one. The source then never returns: the rest of the tour is typed into the pane, the cd never lands, and the gif films a tmux status bar over the wrong directory, which is exactly how the first #877 render came out. The fleet already had an opt-out, spelled two ways — DOTFILES_NO_AUTOTMUX on MacBook, openSUSE and Gentoo, DEBIAN_NO_TMUX on Debian — and nothing at all on Alpine, Arch and Fedora. DOTFILES_NO_AUTOTMUX is now the one name: the template exports it before the source, the four repos that did not read it gain the guard (Debian keeps its own name working alongside), and gen-hero-tape.sh refuses to render a row whose shell layer auto-attaches without honouring it — exit 2, the cannot-run leg, scanning that repo's own os/ and zsh/ (never the vendored core/) with comment lines dropped in both directions, so Alpine's prose about an inline attach it does not do is not an attach, and a knob that is only mentioned guards nothing. The . row scans Core's own zsh/, so the check is never vacuous. Deliberately not an in-tape [[ -z $TMUX ]] || exit 1 after the source: on an unguarded host that line would be typed into the attached pane and exit 1 a shell in a real session. The tape changed, so the gif is re-rendered in the same commit — the only order §9l accepts.",
               "kind": "fix"
             }
           ]
@@ -1868,6 +1888,14 @@
       "repo": "dotfiles-core",
       "version": "Unreleased",
       "category": "Added",
+      "kind": "feature",
+      "text": "The vocabulary register reads dotfiles-Windows — the same seven verbs, spelled .\\task.ps1 <verb> (#855, a #691 follow-up). #691's promise is that a contributor moving between repos re-learns nothing, and the one repo still outside it was the fleet's most-tested: no Makefile, no runner, bare scripts, in exactly the place where \"reproduce the CI gate locally\" has the most to offer. Windows is deliberately absent from scripts/os-repos.txt (that list drives the fan-out, and Windows vendors no core/), so the register now names it the way fleet-drift.sh does — an outlier row read by name, last in the table, with task.ps1 beside the repo so the make <verb> headers stay the contract's names — and os-repos.txt stays Windows-free, which the suite pins. make is not a given on a Windows host and just would be a new dependency, so the shim is PowerShell: a dispatcher over the repo's existing entry points, landing in dotfiles-Windows as task.ps1. The read is static, like the Makefile read: a verb is a quoted key of Get-TaskVerbs alone at the start of its line — a key on a comment line or inside a string declares nothing — and test is credited only when its entry names the suite runner under the populated tests/ by path (either separator), else no-op; a Windows clone without the shim renders no task.ps1 across its row, the way a fleet repo without a Makefile renders no Makefile. The test-floor column is the same reader as everywhere else, which already credited a shell: pwsh step running ./tests/Invoke-Tests.ps1. The per-verb cell logic that was inline in the fleet loop is one function shared by both row kinds, so a label cannot drift between them.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "fix",
       "text": "The CI floor now bans blanket permissions: grants — banned_permission_values. Rule 5 requires every workflow to declare a permissions: block but never looked at its value, so permissions: write-all — the maximal token grant, strictly worse than omitting the block — satisfied a rule named for least privilege. A new dimension (5b) in scripts/check-modern.sh reads the value: at any indent, so the job-level form is caught too (a job grant that widens to everything narrows nothing); bare or quoted; and with a trailing # comment tolerated, so a rationale beside the grant is not the way past the gate. It is anchored to the key and the line end, which is why it is its own dimension rather than a banned_patterns entry: that list is a blind grep -F, under which the word could never appear in a workflow comment at all — not even to explain why a grant is narrow. read-all is deliberately not banned; it is not a token-abuse vector, and banning it buys noise. Like rule 8, this is not deprecation-driven, and the baseline says so plainly. The fleet is at zero occurrences, so it is adopted at zero fix-first cost — and Core owns the *-call.yml@vN reusable workflows the OS repos actually execute. Both directions are covered by fixtures in the hermetic check-modern harness: the workflow-level, job-level and quoted-with-comment forms are each caught, while the word in a comment, read-all, and a named-scope write are not. (#816)",
       "core": true
@@ -1942,6 +1970,38 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "Suite: the \"an unterminated /* is not treated as a marker\" case renders the fixture before appending the line, so its != 2 assertion can actually fail — on an unrendered stub --check was already 1, and the case passed whatever the parser did. Also dropped a duplicated 12-line comment paragraph in §9d (#933).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "/doc-audit's 2026-09-01 fleet sweep (#811) — the Core-side drift that survived the v7 cut. The sweep was filed against 6.0.0 and most of its findings were overtaken by the v6→v7 release work (the refs/tags/v5 vendoring commands, the Fedora sudo dnf check-update and Gentoo gentoo-pkg-pending cells, the tree-sitter-cli orphaning hedge and the Offense repo-status row were all already right). What was not: CLAUDE.md and RELEASE-RUNBOOK.md still named @v5 as the fleet's current caller alias while every caller is @v7; PORTING-MATRIX.md said dotfiles-Gentoo cargo-installs ouch in two places while its own table cell, footnote ¹² and the repo's bootstrap.sh all say guru_extras_install app-arch/ouch (dotgibson/dotfiles-Gentoo#133); ARCHITECTURE.md and the matrix's Offense paragraph still described dotfiles-Offense as carrying its own apt OS layer (it ships no os/ at all — band 80 comes from dotfiles-Debian, which accepts ID=kali), and the paragraph quoted the pre-v4 loader chain (… os offensive local) for what is now 80-os → 85-offensive → 99-local.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "core.vendor's line-number citations rotted a second time in a week, so the cross-repo ones are gone. The same-repo zsh/30-functions.zsh cite for the PORTING-MATRIX.md hint string had moved 1224 → 1382 (the sweep found it stale at 765 a week earlier), and 27 of the 43 cross-repo file:line cites — every one of the seven into dotfiles-MacBook's ci.yml, all seven check-capabilities.sh Makefile lines — pointed at the wrong line. Those files move independently of Core, so the numbers can never stay right; the annotations now name the consumer file and keep the exact line only for cites into this repo, which is what audit-core.sh §1e can hold to reality. (#811)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The README hero is re-rendered from the current tape, and the render-date check is wired in as audit-core.sh §9l (#877 items 1 and 2, the last of #698's original defect). assets/demo.gif on main was still the blob committed on 2026-07-06: a dotfiles-MacBook tree walked through z dotfiles and core help, two months before #862 rewrote the tape to film a dotfiles-core checkout, and two releases after #870 landed --check-render red and deliberately un-wired. The front page showed the very thing #698 was filed about the whole time. The gif is now the current tape's tour — ll, cat README.md, glog -8, core status, core-version — filmed on a Core host over a clean main checkout, then put through the gifsicle -O3 --lossy=80 --colors 64 pass assets/README.md documents. §9k's ceiling was never tested against this tape until now: assets/hero.tape.in's own comment records the first shortened cut at 2.46 MB, so the byte count is in the PR, not in prose. make check-hero-render flips green on the uncommitted gif and stays green once the gif and this entry land in the same commit, which is the only order §9l accepts. §9l is the one block #870's entry promised. It mirrors §9k's shape — exit 1 is a stale or missing gif with the script's own per-row remedy carried through fail_detail, exit 2 is \"could not run\", and exit 3 (no usable history: shallow, not a checkout, unrelated histories) is an environment skip in §9h's posture, never a pass, which is #821's lesson. Always on and not scope-guarded, for §9j's reason: a .tape and a .gif are both inert to ci-classify.sh. scripts/test/42-gen-hero-tape.sh pins the third leg as wired, exactly as it pins the first two. Item 3 — the nine sibling heroes — stays open on #877: the tapes are written by make gen-hero-tape-fleet today, but @@HOSTGUARD@@ requires each to be filmed on the distro its row is about, so that is nine boxes, not one.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The hero render can no longer be hijacked by the OS layer's tmux auto-attach (#877). The tape's hidden setup sources ~/.config/zsh/.zshrc from inside vhs — an interactive TTY — and every OS layer attaches (or creates) a main tmux session for one. The source then never returns: the rest of the tour is typed into the pane, the cd never lands, and the gif films a tmux status bar over the wrong directory, which is exactly how the first #877 render came out. The fleet already had an opt-out, spelled two ways — DOTFILES_NO_AUTOTMUX on MacBook, openSUSE and Gentoo, DEBIAN_NO_TMUX on Debian — and nothing at all on Alpine, Arch and Fedora. DOTFILES_NO_AUTOTMUX is now the one name: the template exports it before the source, the four repos that did not read it gain the guard (Debian keeps its own name working alongside), and gen-hero-tape.sh refuses to render a row whose shell layer auto-attaches without honouring it — exit 2, the cannot-run leg, scanning that repo's own os/ and zsh/ (never the vendored core/) with comment lines dropped in both directions, so Alpine's prose about an inline attach it does not do is not an attach, and a knob that is only mentioned guards nothing. The . row scans Core's own zsh/, so the check is never vacuous. Deliberately not an in-tape [[ -z $TMUX ]] || exit 1 after the source: on an unguarded host that line would be typed into the attached pane and exit 1 a shell in a real session. The tape changed, so the gif is re-rendered in the same commit — the only order §9l accepts.",
       "core": true
     },
     {
