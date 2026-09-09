@@ -4,19 +4,19 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "fdab9e9baf47e10232698ad3d148ba8a0c988567",
+        "commit": "93ca3ad2a55cc2b17f79cb011798fb9cc615797b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "7eab2876db3ba1bcdb84be353428a097a89a21fd",
+        "commit": "4150a81c06a6fe829753bcc57d7d3b6930f300d5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "ffc49480eba7a09d90666931498004991c0f54b3",
+        "commit": "2f1b8d4a6376a2dc0a2baaea92862c5777a133ff",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -28,7 +28,7 @@
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "2ffa25f257fe7d980dbcc49b0eab1813390b03d5",
+        "commit": "4230ed665caecafff674caa26d8dfca2e55153ba",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -46,7 +46,7 @@
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "13d4bf5e40d96eb5b7334780734c254bcccfecaa",
+        "commit": "2798bf7b7e7753a7b7374a7cccb442f741c7b536",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -64,7 +64,7 @@
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "a7dd5116418b28edb68822ac10421c6a47a260c9",
+        "commit": "dbc707c82f40642b1879a1a97d70917d44fbe519",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -249,6 +249,10 @@
         {
           "category": "Changed",
           "items": [
+            {
+              "text": "nvim plugin pins move forward for three plugins. friendly-snippets, gitsigns.nvim and nvim-lspconfig advance to upstream HEAD — the set a re-run of the fleet health board's signals (#794) found stale on 2026-09-09, the day after #938 and the freshness bot's Monday refresh (#946) had rolled the previous set. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all three), and each range was read before promotion: - friendly-snippets 30bfd47 → 6290e13, 6 commits: snippet data only — React className, Python async, Kubernetes kustomization/helm/namespace and Unity SerializeField/RequireComponent snippets, a Perl tabstop fix, and one package.json line mapping typescriptreact onto the HTML snippets. Core loads it only as blink.cmp's snippet source; no Lua API is involved. - gitsigns.nvim 5be654f → f2421c5, 6 commits: a new repository diff panel (an additive diff action with its own actions/diff.lua, git/diff.lua and git/commit.lua), a diffthis cleanup that ignores already-closed source windows, a show fix that reads the requested revision's path, and an attach guard for a buffer wiped while on_attach_pre yields. Core sets on_attach, not on_attach_pre, and the actions its keymaps call (nav_hunk, stage_hunk, reset_hunk, stage_buffer, preview_hunk, blame_line, diffthis, select_hunk via :Gitsigns) keep their signatures — the only new signature is the internal create_revision_buf helper. - nvim-lspconfig 19576de → 84b6b6c, 2 commits: a new laravel_lsp server config and its docs. Core does not configure it; nothing under Core's servers/ tree is affected. Nothing renames or removes an API Core calls. (nvim/lazy-lock.json, #794)",
+              "kind": "perf"
+            },
             {
               "text": "nvim plugin pins move forward for five plugins. friendly-snippets, nvim-lspconfig, nvim-tree.lua, nvim-treesitter and schemastore.nvim advance to upstream HEAD — the set the 2026-09-07 fleet health board (#794) reported as stale, one day after the freshness bot's Monday refresh (#916) had rolled the previous set. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all five), and each range was read before promotion: - friendly-snippets 6cd7280 → 30bfd47, 16 commits: snippet-data fixes and additions (markdown todo variants, django template tags, a Java class fix, zig 0.15 buildExe) plus a repo-wide Prettier/StyLua reformat that accounts for most of the 76 touched files. Core loads it only as blink.cmp's snippet source; no Lua API is involved. - nvim-lspconfig 615d7b2 → 19576de, 6 commits: fixes to robotcode, powershell_es and phpantom_lsp — none of which Core configures — and a plugin/lspconfig.lua refactor that moves legacy-only code below its version check. Nothing under Core's servers/ tree is affected. - nvim-tree.lua b2aadda → 882c54f, 1 commit: an \"invalid 'line'\" renderer fix for an empty tree with hidden_display set. Core calls setup() and api.tree.open(), both public and unchanged. - nvim-treesitter 32dbd2e → 5cb0114, 1 commit: type-annotation tightening in async.lua; the three install.lua lines it touches are ---@type comments, so the install() Core calls has the same signature. - schemastore.nvim 4a0e1b7 → 2224119, 2 commits: catalog refreshes only. Nothing renames or removes an API Core calls. (nvim/lazy-lock.json, #794)",
               "kind": "perf"
@@ -516,6 +520,15 @@
             {
               "text": "notify-web.yml passes client-id, not the deprecated app-id, and reads the new FLEET_APP_CLIENT_ID org variable (#251, dotfiles-core #831). The pinned create-github-app-token (v3.2.0) deprecates app-id, and this repo's inline notifier — it does not consume Core's reusable — passed it. The variable is a new one because FLEET_APP_ID holds the App ID and the new input wants the Client ID, a different value; the if: guard and the ::warning:: that is this repo's only signal of a silently skipped refresh move in the same commit. Precondition: the org variable must exist before this merges, or the mint skips and the showcase stops refreshing with only that warning to say so.",
               "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "**The package-freshness check now compares *directionally* — a lock that runs ahead of its source is no longer reported as behind (#234, #250). Check-PackageFreshness.ps1 gated every row on Test-PackageVersionMatch, which answers \"same release?\" and says nothing about which side is newer. So winget still advertising TranslucentTB 2026.1 under a 2026.2.0.0 lock filed as an update every week, and re-pinning (#241, #254) could never clear it. New pure helper Compare-PackageVersion in packages/PackageLock.ps1 orders the shapes the lock actually carries — dotted numerics, scoop's 8.22.0_1 / 25.0.2-10 / 10.0.0.0p2 suffixes, the 20260812 and 2026.08.19 date stamps, and pre-release words — and returns $null rather than guessing when it cannot. The checker's single verdict function (Get-FreshnessVerdict) routes each row: behind is the only finding; ahead becomes a one-line \"lock ahead of source\" note in the report, visible but not actionable; unordered** lands under \"Skipped (could not compare)\" with both versions and *still files a report*, so a shape the comparer does not read surfaces instead of vanishing into a green run. The padding tolerance (2.7.10.0 == 2.7.10) is unchanged. (packages/PackageLock.ps1, packages/Check-PackageFreshness.ps1, tests/Packages.Tests.ps1)",
+              "kind": "feature"
             }
           ]
         }
@@ -1440,6 +1453,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "Targeted LDAP recon has a detection (#284). T1087.002 / T1069.002 read as covered, but only through sharphound_ldap_sweep_4662.yml, a fan-out detector — a handful of revealing filters (servicePrincipalName=*, the userAccountControl bitfield match, adminCount=1) never trips it, and ldap-recon-4662 was the one htpx blue entry nothing here claimed and nothing in the methodology declined. Two rules close it: detections/sigma/discovery/ldap_recon_search_filter_1644.yml keys on the search-filter content, which only 1644 carries, and says that 1644 is off by default; ldap_recon_property_reads_4662.yml is the fallback where it is not collected, counting the SPN / UAC property GUIDs those filters read. They are two files because the Sentinel / Elastic deploy forms mark a whole file unsupported when it holds a correlation, which would have dropped the primary arm with the fallback. Both fire on their fixtures under zircolite, the 4662 arm with a true negative past its threshold.",
+              "kind": "fix"
+            },
+            {
               "text": "T1555.006 Cloud Secrets Management Stores — Key Vault bulk secret read, closing the Azure resource plane (#280). detections/sigma/cloud/azure_keyvault_bulk_secret_read.yml is a base rule plus a value_count correlation: one identity reading many *distinct* secrets from a Key Vault inside a 15-minute bucket. The cloud twin of vault_bulk_secret_read, and the same argument holds — a healthy application re-reads its own small set, an attacker with a stolen token sweeps across unrelated ones. Breadth per identity, not read rate: a flat \"more than N reads\" is wrong in both directions at once, letting the automation principal that legitimately reads 200 secrets a run stay silent while a targeted grab of the ten highest-value secrets sails under the floor. It ships at the same threshold as its HashiCorp sibling so an analyst tuning one credential store starts from the same number in the other, and both say the flat floor is the starting point rather than the destination. The identity claims are the part worth reading. The correlation groups by identity_claim_oid_g, the objectidentifier claim, because it is the only caller field present for *both* a human and a service principal: identity_claim_upn_s is null for an SP, and identity_claim_appid_g is the APPLICATION — allowlist the Azure CLI's shared app id and you have exempted every CLI user in the tenant. The raw event from Microsoft's logging reference also shows why the resource-specific schema is a trap rather than a rename: in AZKVAuditLogs the flat columns collapse into one dynamic Identity, whose claims are keyed by their full XML-schema URIs (http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn), so Identity.claim.upn silently resolves to nothing. Only appid is a short key. The rule ships the AzureDiagnostics spelling — what the paired entry queries, and already flat enough for a correlation to group by — and names the translation. Scoped to SecretGet, and unfiltered on result. SecretList/SecretListVersions return names, not values; counting them into a breadth measure would let one legitimate inventory call inflate the score, so they stay out of the rule and stay in the triage guidance, where a List followed by a run of Gets is the drain in its clearest form. There is no ResultType filter for the same reason the Run Command rule carries no status arm: a burst of *denied* SecretGets across many secrets is a principal sweeping a vault it has no permission on, which is the sharper finding, and filtering to Success would drop exactly that. Counting requestUri_s is an approximation, and the direction of its error is stated. The paired entry's KQL recovers the secret name with split(requestUri_s, \"/\")[4]; Sigma has no such transform, so this counts distinct request URIs. The two differ when one caller reads the same secret at several explicit versions in a window — which inflates. It is sound because of the group-by: within one identity the client library and api-version are constant. The error runs toward more sensitivity, never less: it can produce a false positive, it cannot hide a sweep. Six fixture lines at vendor-documented, each verified individually — TP: two distinct secrets under one oid plus a Forbidden read; TN: the allowlisted oid, a SecretList, and a KeyGet. The Sentinel gap is named rather than papered over: the kusto backend cannot express a Sigma correlation, so rules.generated.kql carries this as UNSUPPORTED like its two siblings — and for this rule that points somewhere useful, because the paired htpx entry *is* the Sentinel implementation. The telemetry caveat is recorded too: unlike Activity Log, Key Vault AuditEvent is a diagnostic setting an estate has to switch on, so this rule is inert until it is, which is a collection gap rather than a detection one.",
               "kind": "security"
             },
@@ -2009,6 +2026,14 @@
       "version": "Unreleased",
       "category": "Changed",
       "kind": "perf",
+      "text": "nvim plugin pins move forward for three plugins. friendly-snippets, gitsigns.nvim and nvim-lspconfig advance to upstream HEAD — the set a re-run of the fleet health board's signals (#794) found stale on 2026-09-09, the day after #938 and the freshness bot's Monday refresh (#946) had rolled the previous set. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all three), and each range was read before promotion: - friendly-snippets 30bfd47 → 6290e13, 6 commits: snippet data only — React className, Python async, Kubernetes kustomization/helm/namespace and Unity SerializeField/RequireComponent snippets, a Perl tabstop fix, and one package.json line mapping typescriptreact onto the HTML snippets. Core loads it only as blink.cmp's snippet source; no Lua API is involved. - gitsigns.nvim 5be654f → f2421c5, 6 commits: a new repository diff panel (an additive diff action with its own actions/diff.lua, git/diff.lua and git/commit.lua), a diffthis cleanup that ignores already-closed source windows, a show fix that reads the requested revision's path, and an attach guard for a buffer wiped while on_attach_pre yields. Core sets on_attach, not on_attach_pre, and the actions its keymaps call (nav_hunk, stage_hunk, reset_hunk, stage_buffer, preview_hunk, blame_line, diffthis, select_hunk via :Gitsigns) keep their signatures — the only new signature is the internal create_revision_buf helper. - nvim-lspconfig 19576de → 84b6b6c, 2 commits: a new laravel_lsp server config and its docs. Core does not configure it; nothing under Core's servers/ tree is affected. Nothing renames or removes an API Core calls. (nvim/lazy-lock.json, #794)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
       "text": "nvim plugin pins move forward for five plugins. friendly-snippets, nvim-lspconfig, nvim-tree.lua, nvim-treesitter and schemastore.nvim advance to upstream HEAD — the set the 2026-09-07 fleet health board (#794) reported as stale, one day after the freshness bot's Monday refresh (#916) had rolled the previous set. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all five), and each range was read before promotion: - friendly-snippets 6cd7280 → 30bfd47, 16 commits: snippet-data fixes and additions (markdown todo variants, django template tags, a Java class fix, zig 0.15 buildExe) plus a repo-wide Prettier/StyLua reformat that accounts for most of the 76 touched files. Core loads it only as blink.cmp's snippet source; no Lua API is involved. - nvim-lspconfig 615d7b2 → 19576de, 6 commits: fixes to robotcode, powershell_es and phpantom_lsp — none of which Core configures — and a plugin/lspconfig.lua refactor that moves legacy-only code below its version check. Nothing under Core's servers/ tree is affected. - nvim-tree.lua b2aadda → 882c54f, 1 commit: an \"invalid 'line'\" renderer fix for an empty tree with hidden_display set. Core calls setup() and api.tree.open(), both public and unchanged. - nvim-treesitter 32dbd2e → 5cb0114, 1 commit: type-annotation tightening in async.lua; the three install.lua lines it touches are ---@type comments, so the install() Core calls has the same signature. - schemastore.nvim 4a0e1b7 → 2224119, 2 commits: catalog refreshes only. Nothing renames or removes an API Core calls. (nvim/lazy-lock.json, #794)",
       "core": true
     },
@@ -2050,6 +2075,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "notify-web.yml passes client-id, not the deprecated app-id, and reads the new FLEET_APP_CLIENT_ID org variable (#251, dotfiles-core #831). The pinned create-github-app-token (v3.2.0) deprecates app-id, and this repo's inline notifier — it does not consume Core's reusable — passed it. The variable is a new one because FLEET_APP_ID holds the App ID and the new input wants the Client ID, a different value; the if: guard and the ::warning:: that is this repo's only signal of a silently skipped refresh move in the same commit. Precondition: the org variable must exist before this merges, or the mint skips and the showcase stops refreshing with only that warning to say so.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "**The package-freshness check now compares *directionally* — a lock that runs ahead of its source is no longer reported as behind (#234, #250). Check-PackageFreshness.ps1 gated every row on Test-PackageVersionMatch, which answers \"same release?\" and says nothing about which side is newer. So winget still advertising TranslucentTB 2026.1 under a 2026.2.0.0 lock filed as an update every week, and re-pinning (#241, #254) could never clear it. New pure helper Compare-PackageVersion in packages/PackageLock.ps1 orders the shapes the lock actually carries — dotted numerics, scoop's 8.22.0_1 / 25.0.2-10 / 10.0.0.0p2 suffixes, the 20260812 and 2026.08.19 date stamps, and pre-release words — and returns $null rather than guessing when it cannot. The checker's single verdict function (Get-FreshnessVerdict) routes each row: behind is the only finding; ahead becomes a one-line \"lock ahead of source\" note in the report, visible but not actionable; unordered** lands under \"Skipped (could not compare)\" with both versions and *still files a report*, so a shape the comparer does not read surfaces instead of vanishing into a green run. The padding tolerance (2.7.10.0 == 2.7.10) is unchanged. (packages/PackageLock.ps1, packages/Check-PackageFreshness.ps1, tests/Packages.Tests.ps1)",
       "core": false
     },
     {
@@ -3114,6 +3147,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "Four proposals from the same review were declined, in the rules themselves. A decline that lives only in an issue gets re-proposed next cycle. sudo_root_shell keeps comm and its interpreter list: exe resolves symlinks, so an exe|endswith list silently loses hosts where /bin/sh is dash or python3 is python3.14, and dropping the list turns a detection into a log of every command run through sudo — the GTFOBins escapes it is accused of missing exec a listed shell as a child and are caught there. k8s_clusteradmin_binding does not gain verb: [escalate, bind]: those are RBAC authorization verbs, never the verb of an audit event, so the selection would match nothing while reading as coverage. jenkins_job_backdoor does not add config.xml: the Audit Trail plugin's default pattern does not log it, and the logged line carries no HTTP method, so the branch could not separate the malicious POST from the routine GET. jenkins_api_token_created keeps no filter block: this corpus has no verified Jenkins actor field, and inventing one produces a filter that passes its own fixture and matches nothing in production — the hazard fixture-provenance.tsv exists to expose.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "Targeted LDAP recon has a detection (#284). T1087.002 / T1069.002 read as covered, but only through sharphound_ldap_sweep_4662.yml, a fan-out detector — a handful of revealing filters (servicePrincipalName=*, the userAccountControl bitfield match, adminCount=1) never trips it, and ldap-recon-4662 was the one htpx blue entry nothing here claimed and nothing in the methodology declined. Two rules close it: detections/sigma/discovery/ldap_recon_search_filter_1644.yml keys on the search-filter content, which only 1644 carries, and says that 1644 is off by default; ldap_recon_property_reads_4662.yml is the fallback where it is not collected, counting the SPN / UAC property GUIDs those filters read. They are two files because the Sentinel / Elastic deploy forms mark a whole file unsupported when it holds a correlation, which would have dropped the primary arm with the fallback. Both fire on their fixtures under zircolite, the 4662 arm with a true negative past its threshold.",
       "core": false
     },
     {
