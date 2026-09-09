@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-08",
+  "generatedAt": "2026-09-09",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "f431e8ac9ccf942077051602884216705ef79c9b",
+        "commit": "380e705b98b63f358379bb72aacc7dba4996ba8b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -16,7 +16,7 @@
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "ec40e13e66a286c9bb48681ef838f60064495a01",
+        "commit": "ffc49480eba7a09d90666931498004991c0f54b3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -34,19 +34,19 @@
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "684b7e8f846e734770ecb218c289f583aae0df70",
+        "commit": "5889e6a50697da9ceb5fc4da91ddea2af4878043",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "ac47caa710443e1a194eea0c394ffc3beb423f37",
+        "commit": "44c276c74fb33574c47ab0a8e11680b602a88146",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "45d0c7a160efa775d7bd7c5eaf2a10d33dddd188",
+        "commit": "13d4bf5e40d96eb5b7334780734c254bcccfecaa",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -58,7 +58,7 @@
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "e2f68a30080f30c9554075547f5736cec9b45802",
+        "commit": "386712e136367af66cd3e949b87b40d536bfdd6c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -143,7 +143,7 @@
   "core": {
     "version": "7.2.0",
     "sourcedModules": 14,
-    "zshLoc": 6934,
+    "zshLoc": 6969,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 30
@@ -172,6 +172,83 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "The CI floor now bans blanket permissions: grants — banned_permission_values. Rule 5 requires every workflow to declare a permissions: block but never looked at its value, so permissions: write-all — the maximal token grant, strictly worse than omitting the block — satisfied a rule named for least privilege. A new dimension (5b) in scripts/check-modern.sh reads the value: at any indent, so the job-level form is caught too (a job grant that widens to everything narrows nothing); bare or quoted; and with a trailing # comment tolerated, so a rationale beside the grant is not the way past the gate. It is anchored to the key and the line end, which is why it is its own dimension rather than a banned_patterns entry: that list is a blind grep -F, under which the word could never appear in a workflow comment at all — not even to explain why a grant is narrow. read-all is deliberately not banned; it is not a token-abuse vector, and banning it buys noise. Like rule 8, this is not deprecation-driven, and the baseline says so plainly. The fleet is at zero occurrences, so it is adopted at zero fix-first cost — and Core owns the *-call.yml@vN reusable workflows the OS repos actually execute. Both directions are covered by fixtures in the hermetic check-modern harness: the workflow-level, job-level and quoted-with-comment forms are each caught, while the word in a comment, read-all, and a named-scope write are not. (#816)",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "Rule 2 of the CI floor now sees the runs-on: mapping form. The matcher required the banned label on the same line as runs-on: or os:, so runs-on: alone on its line with the label on a nested labels: child — the runner-group syntax — walked straight through the ban. The alternation gains labels:; no baseline change, and a fixture pins the shape. Latent rather than live — the fleet uses no runner groups or self-hosted labels — and a matrix key named anything other than os: still escapes, deliberately: catching it means dropping the key prefix, which would then fire on every comment in the tree that names a label. (#816)",
+              "kind": "fix"
+            },
+            {
+              "text": "The atuin daemon guard probes the /tmp socket the 18.21.0 client gained (#941). Upstream PR atuinsh/atuin#4036 (merged 2026-08-31, in 18.21.0) makes the client try $TMPDIR/atuin-$UID/atuin.sock and then /tmp/atuin-$UID/atuin.sock even when $TMPDIR is set, because the daemon and the shell need not agree on $TMPDIR: a systemd user unit starts without one and binds /tmp, while a shell that exports one — a 99-local, a tmux server started under a different environment, a unit with PrivateTmp= — resolved only its own. _core_atuin_daemon_guard probed that path, found nothing, exported ATUIN_DAEMON__ENABLED=false at the first precmd and unhooked for the life of the shell with no warning, because _CORE_ATUIN_DAEMON_WAS_UP is never set on that path — one candidate short of where atuin's own client would have connected. The candidate list now appends the /tmp path whenever $TMPDIR is set and is not /tmp, in upstream's order, still by parameter expansion alone; the common case pays one connect as before. The suite gained the case, which skips rather than clobbers when a real daemon already owns that inode on the box running it. The finding came from the 2026-09-01 /tool-scout run, whose report was lost to a filing error (#932). Both VERIFIED_AGAINST anchors in zsh/00-tools.zsh move from 18.19.0 to 18.21.0 in the same change — a claim of re-measurement, not a version bump: atuin-guard-verify was dispatched three times on 2026-09-03 against upstream's then-latest and reported holds on both premises.",
+              "kind": "fix"
+            },
+            {
+              "text": "The weekly routines no longer file a stub as the report when their subagent outlives the main turn (#932). Headless claude -p prints only the final turn, and it waits for background work for a bounded 600 s before killing it and emitting whatever text it has. /tool-scout delegates its research to a subagent; on 2026-09-08 that delegate was still researching when the main turn ended, the ceiling fired, and file-routine-issue.sh filed the \"I'll relay its proposal when it lands\" preamble as the scan — a report that reads as \"nothing found\" to anyone who does not open the run log. claude-routines.yml now sets CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0 for every job, so each job's timeout-minutes is the only ceiling and overrunning it is a red job that notify-failure reports, not a green one with a hollow issue. The two delegating routines (/tool-scout, /doc-audit) also now say to wait for the delegate in the foreground, so the fix does not rest on one env var. /tool-scout additionally learns how to check for an open atuin-guard-verify: verdict without Bash — WebFetch the issue search — instead of reporting gh as unavailable every week, which it always will be in that job.",
+              "kind": "fix"
+            },
+            {
+              "text": "gen-theme.sh --check passed green over a sibling that was checked out but missing its registered file (#933). The sibling arm decided \"can I reach this row?\" on the directory, so when dotfiles-MacBook/ existed without sketchybar/colors.sh — the sibling has not landed the palette yet, the zebar path moved, someone deleted it — no SKIPPED line was printed, preflight and the render loop each took their partial-tree continue, and §9d recorded a pass over a file nobody opened: coverage loss reading as health, in the gate whose own comment says it exists to prevent exactly that. Both CI legs that clone the fleet reliably have the directory, so that was the shape the failure would have taken there. The row is now tested on the file; a present-but-incomplete sibling is reported on its own SKIPPED — line, by file, and exits 3 like an absent one (Core-relative rows keep the documented partial-tree continue — a different fact). §9d collects its skip label from every SKIPPED — line rather than stripping at the first phrase, and the suite gained the case the old one lacked: repo present, file absent.",
+              "kind": "fix"
+            },
+            {
+              "text": "Alt+C could not reach hidden directories, and was a second, weaker copy of fcd (#933). _fzf_cd_dir re-implemented fd | fzf inline without --hidden, so the widget skipped .config, .github, .claude and .ssh — the interesting directories in a dotfiles tree, which fcd reached — and refused outright without fd where fcd falls back to find. Its --exclude .git was dead config too: without --hidden, fd already skips .git for being hidden, while the comment above it claimed the flag kept the object store out of the list. The widget now delegates to fcd, which carries the prompt and preview the widget used to have alone, so \"cd into a subdirectory\" has one definition on both entry points. The widget's guard needs only fzf now.",
+              "kind": "fix"
+            },
+            {
+              "text": "Alt+C's collision with vi's change operator is stated (#933). In viins ^[ is vi-cmd-mode and c is vi-change, and a terminal sends Alt+C as exactly those two bytes. The binding is kept — Core loads zsh-vi-mode, whose NEX engine disambiguates Esc with ZVM_ESCAPE_KEYTIMEOUT (30 ms, not the 0.4 s ZVM_KEYTIMEOUT), which a terminal's chord lands inside and a human's Esc cw almost never does; and the parity row that justifies the key has no such problem, since PSReadLine is not in vi mode. The widget's comment now owns that tradeoff instead of omitting it.",
+              "kind": "fix"
+            },
+            {
+              "text": "freshness.yml's apply step could not take the exit 3 the updater grew for it (#933). update-fleet-versions.sh exits 3 so an absent fleet stops reading as a defect (#917), but its only caller ran it bare under set -euo pipefail, where 3 reds the step exactly as 2 did — the check-mode step forty lines above already branched on the code, which made the omission visible by contrast. The apply step now branches too: 3 is a summary line and exit 0. The fleet-clone loop above it is tolerant as well: one repo that cannot be cloned anonymously is warned by name and skipped, rather than aborting the loop before either graceful path downstream could run.",
+              "kind": "fix"
+            },
+            {
+              "text": "render_fleet_versions ran TSV data through printf '%b' (#933). Rows were accumulated with a literal \\t and emitted with %b, which reinterprets escapes in the fields as well as the separators — a backslash in any field would have been rewritten, and a \\c would have truncated the rest of the table silently. It now joins with the $TAB the script already defines and emits with %s, removing the class.",
+              "kind": "fix"
+            },
+            {
+              "text": "Suite: the \"an unterminated /* is not treated as a marker\" case renders the fixture before appending the line, so its != 2 assertion can actually fail — on an unrendered stub --check was already 1, and the case passed whatever the parser did. Also dropped a duplicated 12-line comment paragraph in §9d (#933).",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "nvim plugin pins move forward for five plugins. friendly-snippets, nvim-lspconfig, nvim-tree.lua, nvim-treesitter and schemastore.nvim advance to upstream HEAD — the set the 2026-09-07 fleet health board (#794) reported as stale, one day after the freshness bot's Monday refresh (#916) had rolled the previous set. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all five), and each range was read before promotion: - friendly-snippets 6cd7280 → 30bfd47, 16 commits: snippet-data fixes and additions (markdown todo variants, django template tags, a Java class fix, zig 0.15 buildExe) plus a repo-wide Prettier/StyLua reformat that accounts for most of the 76 touched files. Core loads it only as blink.cmp's snippet source; no Lua API is involved. - nvim-lspconfig 615d7b2 → 19576de, 6 commits: fixes to robotcode, powershell_es and phpantom_lsp — none of which Core configures — and a plugin/lspconfig.lua refactor that moves legacy-only code below its version check. Nothing under Core's servers/ tree is affected. - nvim-tree.lua b2aadda → 882c54f, 1 commit: an \"invalid 'line'\" renderer fix for an empty tree with hidden_display set. Core calls setup() and api.tree.open(), both public and unchanged. - nvim-treesitter 32dbd2e → 5cb0114, 1 commit: type-annotation tightening in async.lua; the three install.lua lines it touches are ---@type comments, so the install() Core calls has the same signature. - schemastore.nvim 4a0e1b7 → 2224119, 2 commits: catalog refreshes only. Nothing renames or removes an API Core calls. (nvim/lazy-lock.json, #794)",
+              "kind": "perf"
+            },
+            {
+              "text": "Bumped two pins in scripts/tool-versions.env on the weekly freshness review; held the third (#813). This is the class no bot covers — the CLI gate pins sit between /freshness-triage's plugin locks and Renovate's manifests — so the routine re-audited all ten against upstream and found seven still current: | Pin | Was | Now | | | --- | --- | --- | --- | | NVIM_VERSION | 0.12.4 | 0.12.5 | one patch on the 0.12 line | | CLAUDE_CODE_VERSION | 2.1.222 | 2.1.265 | the routine bots' own CLI | | SHFMT_VERSION | 3.13.1 | 3.13.1 | held — 3.14.x changes formatting output, see below | nvim 0.12.5 is fixes-plus-features on a line whose breaking changes (diagnostic sign config, vim.diagnostic.disable(), vim.diff → vim.text.diff, the 'shelltemp' default) all landed at 0.12.0 and were absorbed by the 0.12.4 pin; nothing new to adapt to. NVIM_SHA256 recomputed with make update-tool-checksums and cross-checked against the digest GitHub reports for the release asset rather than trusted from our own download — the four unbumped hashes re-derived byte-identical, which is its own integrity signal. shfmt stays at 3.13.1 deliberately. 3.14.0 changed output, not just behaviour — a space after ! in arithmetic, nested closing parens spaced like the opening ones, no ;-joined then/do when a heredoc is pending — and 3.14.1 followed a week later with heredoc indentation fixes. Core's own audit does not gate shfmt, so a green tick here proves nothing about it; the pin exists only so setup-core-tools installs one verified shfmt for MacBook and the distro/role lint workflows, where a bump can newly flag files that pass today with no diff in this repo to warn you. The consumer step is advisory (::warning::, not red), so it would not break them — but it would start nagging on every run until each repo reformats. Bump it alongside a reformat pass across the consumers, not on its own.",
+              "kind": "fix"
+            },
+            {
+              "text": "Every mint step passes client-id, not the deprecated app-id, and reads a new FLEET_APP_CLIENT_ID org variable (#831). Our pinned create-github-app-token (v3.2.0) carries deprecationMessage: \"Use 'client-id' instead.\" on app-id, and all five mints here — notify-web.yml, the reusable notify-web-call.yml, sync-fanout.yml and freshness.yml's three — passed it. It is not a one-line swap, which is why it needed its own change. FLEET_APP_ID holds the App ID; the new input wants the App's Client ID, a different value on the same settings page (and a public one: gh api /apps/dotgibson-fleet-sync --jq .client_id). So the variable is a new one rather than a repurposed one — the two names never hold different meanings mid-rollout — and the if: guards move in the same commit as the input, because a guard still testing vars.FLEET_APP_ID against a step reading FLEET_APP_CLIENT_ID would keep gating on a variable the mint no longer uses. Precondition, not a follow-up: the org variable must exist before this merges. With it unset, every guard is false, sync-fanout's preflight goes red (the loud half) and the notify-web dispatch degrades to a ::warning:: and skips (the quiet half) — the exact failure shape #831 was written to avoid. FLEET_APP_ID is retired here but must not be deleted yet. The nine OS-repo callers execute notify-web-call.yml at the @v7 alias, which reads the old variable until the next release advances it; htpx's fan-out and dotfiles-Windows' inline notifier still pass app-id and are tracked in their own repos. GITHUB-APP-AUTH.md carries the retirement note with the grep that derives the remaining readers, its Re-creating or re-keying section now tells you to collect the Client ID, and the known-gaps callout shrinks to the one gap left (scope the verbs).",
+              "kind": "fix"
+            },
+            {
+              "text": "Rule 1's node20 rationale carries the final date. The ban was already correct; the comment said \"fall 2026\". Node 20 leaves the runners on 2026-09-23 — the 2025-09-19 deprecation changelog, its date fixed by an editor's note of 2026-08-25. No fix-first work: every external action in the tree (actions/checkout, actions/cache, actions/create-github-app-token) already resolves to using: node24 at its pinned SHA. (#816)",
+              "kind": "perf"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.2.0",
@@ -395,6 +472,30 @@
             {
               "text": "MasonUpdate had never actually run in that step (#829). mason.nvim is a dependency of nvim-lspconfig / conform / nvim-lint, every one of which loads on a buffer event that never fires in a headless session — so :MasonUpdate did not exist there and +silent! MasonUpdate swallowed the E492 on every single run since the step was written. Found while making the arms loud: with the failure recorded instead of silenced, the arm reds immediately. The step now require(\"mason\") first, pulling the plugin in through lazy's require shim so the command exists; a live run confirms Successfully updated 1 registry. Same class as the :TSUpdateSync note already in that block — a silent! that outlived the command it was protecting. test/73-maint-runner.sh covers both directions against the shipped argv (extracted by sourcing the real step invocation with nvim stubbed, so a hand-written copy cannot drift): every arm runnable → 0, the :Lazy command absent → non-zero.",
               "kind": "perf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "task.ps1 — the fleet's make verbs, for a host without make (dotfiles-core#855). dotfiles-core declares the seven canonical verbs once (help lint check dry-run packages-check core-verify test, its scripts/make-vocabulary.txt, dotfiles-core#691) so a contributor moving between repos re-learns nothing — and this repo was the one that still answered to none of them: no Makefile, no runner, only bare scripts, in the fleet's most-tested repo, where \"reproduce the CI gate locally\" has the most to offer. make is not a given on a Windows host and just would be a new dependency, so the verbs are spelled in the language the repo is written in: .\\task.ps1 <verb>. It is a dispatcher, not a second implementation: lint is tests/Invoke-Validation.ps1 plus gen-theme.ps1 -Check (ci.yml's dependency-free legs), test is tests/Invoke-Tests.ps1 (the gated suite, exactly as CI runs it), dry-run is install.ps1 -DryRun, check is lint plus the links-only bootstrap previewed (Windows has no throwaway HOME to run it in), packages-check is packages/Check-PackageFreshness.ps1 and core-verify is the three tests/Assert-*Parity.ps1 gates over the mirrored assets. Each step runs in a child pwsh -File, so a script's exit ends its own process and the first failing step's code is the verb's. Anything after a single-step verb passes through (.\\task.ps1 test -NoGate). Core's fleet-vocabulary.sh register reads the verb table statically — the quoted keys of Get-TaskVerbs, and whether test names the suite runner by path — so tests/Task.Tests.ps1 pins that shape, the exact verb set in the contract's order, and that every step names a script that exists.",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "notify-web.yml passes client-id, not the deprecated app-id, and reads the new FLEET_APP_CLIENT_ID org variable (#251, dotfiles-core #831). The pinned create-github-app-token (v3.2.0) deprecates app-id, and this repo's inline notifier — it does not consume Core's reusable — passed it. The variable is a new one because FLEET_APP_ID holds the App ID and the new input wants the Client ID, a different value; the if: guard and the ::warning:: that is this repo's only signal of a silently skipped refresh move in the same commit. Precondition: the org variable must exist before this merges, or the mint skips and the showcase stops refreshing with only that warning to say so.",
+              "kind": "fix"
             }
           ]
         }
@@ -1398,6 +1499,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
+              "kind": "fix"
+            },
+            {
               "text": "make markdown probed for a global, unpinned markdownlint-cli2 — so on a normal box it never linted anything (dotgibson/dotfiles-core#873). Nothing in this repo's bootstrap installs markdownlint-cli2 globally; it is npm-only. So unless the operator had separately run npm i -g markdownlint-cli2, the guard fired on every invocation and the target skipped, cleanly and with exit 0, forever. That is a correct guard doing exactly what it says — and a local mirror of a blocking CI gate that has never mirrored anything. dotgibson/dotfiles-core#775 fixed this target's skip guard and its file scope; neither defect could bite while the target never ran at all. And where the binary *was* installed it was whatever version npm last put there, while lint-call.yml installs the pinned MARKDOWNLINT_VERSION — so a rule that changes across a bump reds a required check against a green local run. It now runs the pinned version through npx, reading the number from the vendored core/scripts/tool-versions.env rather than restating it, and refuses rather than guess if that pin is unreadable — a silently-unpinned lint being the thing this fixes. npx needs only node, which is far likelier present than a global markdownlint install, and still self-skips without it so make lint works on a bare box. Converges on the shape dotfiles-Offense and dotfiles-Defense already run.",
               "kind": "fix"
             },
@@ -1572,6 +1677,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
+              "kind": "fix"
+            },
+            {
               "text": "make markdown probed for a global, unpinned markdownlint-cli2 — so on a normal box it never linted anything (dotgibson/dotfiles-core#873). Nothing in this repo's bootstrap installs markdownlint-cli2 globally; it is npm-only. So unless the operator had separately run npm i -g markdownlint-cli2, the guard fired on every invocation and the target skipped, cleanly and with exit 0, forever. That is a correct guard doing exactly what it says — and a local mirror of a blocking CI gate that has never mirrored anything. dotgibson/dotfiles-core#775 fixed this target's skip guard and its file scope; neither defect could bite while the target never ran at all. And where the binary *was* installed it was whatever version npm last put there, while lint-call.yml installs the pinned MARKDOWNLINT_VERSION — so a rule that changes across a bump reds a required check against a green local run. It now runs the pinned version through npx, reading the number from the vendored core/scripts/tool-versions.env rather than restating it, and refuses rather than guess if that pin is unreadable — a silently-unpinned lint being the thing this fixes. npx needs only node, which is far likelier present than a global markdownlint install, and still self-skips without it so make lint works on a bare box. Converges on the shape dotfiles-Offense and dotfiles-Defense already run.",
               "kind": "fix"
             },
@@ -1710,6 +1819,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux. DEBIAN_NO_TMUX keeps working alongside it.",
+              "kind": "fix"
+            },
+            {
               "text": "make markdown probed for a global, unpinned markdownlint-cli2 — so on a normal box it never linted anything (dotgibson/dotfiles-core#873). Nothing in this repo's bootstrap installs markdownlint-cli2 globally; it is npm-only. So unless the operator had separately run npm i -g markdownlint-cli2, the guard fired on every invocation and the target skipped, cleanly and with exit 0, forever. That is a correct guard doing exactly what it says — and a local mirror of a blocking CI gate that has never mirrored anything. dotgibson/dotfiles-core#775 fixed this target's skip guard and its file scope; neither defect could bite while the target never ran at all. And where the binary *was* installed it was whatever version npm last put there, while lint-call.yml installs the pinned MARKDOWNLINT_VERSION — so a rule that changes across a bump reds a required check against a green local run. It now runs the pinned version through npx, reading the number from the vendored core/scripts/tool-versions.env rather than restating it, and refuses rather than guess if that pin is unreadable — a silently-unpinned lint being the thing this fixes. npx needs only node, which is far likelier present than a global markdownlint install, and still self-skips without it so make lint works on a bare box. Converges on the shape dotfiles-Offense and dotfiles-Defense already run.",
               "kind": "fix"
             },
@@ -1751,6 +1864,134 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "The CI floor now bans blanket permissions: grants — banned_permission_values. Rule 5 requires every workflow to declare a permissions: block but never looked at its value, so permissions: write-all — the maximal token grant, strictly worse than omitting the block — satisfied a rule named for least privilege. A new dimension (5b) in scripts/check-modern.sh reads the value: at any indent, so the job-level form is caught too (a job grant that widens to everything narrows nothing); bare or quoted; and with a trailing # comment tolerated, so a rationale beside the grant is not the way past the gate. It is anchored to the key and the line end, which is why it is its own dimension rather than a banned_patterns entry: that list is a blind grep -F, under which the word could never appear in a workflow comment at all — not even to explain why a grant is narrow. read-all is deliberately not banned; it is not a token-abuse vector, and banning it buys noise. Like rule 8, this is not deprecation-driven, and the baseline says so plainly. The fleet is at zero occurrences, so it is adopted at zero fix-first cost — and Core owns the *-call.yml@vN reusable workflows the OS repos actually execute. Both directions are covered by fixtures in the hermetic check-modern harness: the workflow-level, job-level and quoted-with-comment forms are each caught, while the word in a comment, read-all, and a named-scope write are not. (#816)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Rule 2 of the CI floor now sees the runs-on: mapping form. The matcher required the banned label on the same line as runs-on: or os:, so runs-on: alone on its line with the label on a nested labels: child — the runner-group syntax — walked straight through the ban. The alternation gains labels:; no baseline change, and a fixture pins the shape. Latent rather than live — the fleet uses no runner groups or self-hosted labels — and a matrix key named anything other than os: still escapes, deliberately: catching it means dropping the key prefix, which would then fire on every comment in the tree that names a label. (#816)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The atuin daemon guard probes the /tmp socket the 18.21.0 client gained (#941). Upstream PR atuinsh/atuin#4036 (merged 2026-08-31, in 18.21.0) makes the client try $TMPDIR/atuin-$UID/atuin.sock and then /tmp/atuin-$UID/atuin.sock even when $TMPDIR is set, because the daemon and the shell need not agree on $TMPDIR: a systemd user unit starts without one and binds /tmp, while a shell that exports one — a 99-local, a tmux server started under a different environment, a unit with PrivateTmp= — resolved only its own. _core_atuin_daemon_guard probed that path, found nothing, exported ATUIN_DAEMON__ENABLED=false at the first precmd and unhooked for the life of the shell with no warning, because _CORE_ATUIN_DAEMON_WAS_UP is never set on that path — one candidate short of where atuin's own client would have connected. The candidate list now appends the /tmp path whenever $TMPDIR is set and is not /tmp, in upstream's order, still by parameter expansion alone; the common case pays one connect as before. The suite gained the case, which skips rather than clobbers when a real daemon already owns that inode on the box running it. The finding came from the 2026-09-01 /tool-scout run, whose report was lost to a filing error (#932). Both VERIFIED_AGAINST anchors in zsh/00-tools.zsh move from 18.19.0 to 18.21.0 in the same change — a claim of re-measurement, not a version bump: atuin-guard-verify was dispatched three times on 2026-09-03 against upstream's then-latest and reported holds on both premises.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The weekly routines no longer file a stub as the report when their subagent outlives the main turn (#932). Headless claude -p prints only the final turn, and it waits for background work for a bounded 600 s before killing it and emitting whatever text it has. /tool-scout delegates its research to a subagent; on 2026-09-08 that delegate was still researching when the main turn ended, the ceiling fired, and file-routine-issue.sh filed the \"I'll relay its proposal when it lands\" preamble as the scan — a report that reads as \"nothing found\" to anyone who does not open the run log. claude-routines.yml now sets CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0 for every job, so each job's timeout-minutes is the only ceiling and overrunning it is a red job that notify-failure reports, not a green one with a hollow issue. The two delegating routines (/tool-scout, /doc-audit) also now say to wait for the delegate in the foreground, so the fix does not rest on one env var. /tool-scout additionally learns how to check for an open atuin-guard-verify: verdict without Bash — WebFetch the issue search — instead of reporting gh as unavailable every week, which it always will be in that job.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "gen-theme.sh --check passed green over a sibling that was checked out but missing its registered file (#933). The sibling arm decided \"can I reach this row?\" on the directory, so when dotfiles-MacBook/ existed without sketchybar/colors.sh — the sibling has not landed the palette yet, the zebar path moved, someone deleted it — no SKIPPED line was printed, preflight and the render loop each took their partial-tree continue, and §9d recorded a pass over a file nobody opened: coverage loss reading as health, in the gate whose own comment says it exists to prevent exactly that. Both CI legs that clone the fleet reliably have the directory, so that was the shape the failure would have taken there. The row is now tested on the file; a present-but-incomplete sibling is reported on its own SKIPPED — line, by file, and exits 3 like an absent one (Core-relative rows keep the documented partial-tree continue — a different fact). §9d collects its skip label from every SKIPPED — line rather than stripping at the first phrase, and the suite gained the case the old one lacked: repo present, file absent.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Alt+C could not reach hidden directories, and was a second, weaker copy of fcd (#933). _fzf_cd_dir re-implemented fd | fzf inline without --hidden, so the widget skipped .config, .github, .claude and .ssh — the interesting directories in a dotfiles tree, which fcd reached — and refused outright without fd where fcd falls back to find. Its --exclude .git was dead config too: without --hidden, fd already skips .git for being hidden, while the comment above it claimed the flag kept the object store out of the list. The widget now delegates to fcd, which carries the prompt and preview the widget used to have alone, so \"cd into a subdirectory\" has one definition on both entry points. The widget's guard needs only fzf now.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Alt+C's collision with vi's change operator is stated (#933). In viins ^[ is vi-cmd-mode and c is vi-change, and a terminal sends Alt+C as exactly those two bytes. The binding is kept — Core loads zsh-vi-mode, whose NEX engine disambiguates Esc with ZVM_ESCAPE_KEYTIMEOUT (30 ms, not the 0.4 s ZVM_KEYTIMEOUT), which a terminal's chord lands inside and a human's Esc cw almost never does; and the parity row that justifies the key has no such problem, since PSReadLine is not in vi mode. The widget's comment now owns that tradeoff instead of omitting it.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "freshness.yml's apply step could not take the exit 3 the updater grew for it (#933). update-fleet-versions.sh exits 3 so an absent fleet stops reading as a defect (#917), but its only caller ran it bare under set -euo pipefail, where 3 reds the step exactly as 2 did — the check-mode step forty lines above already branched on the code, which made the omission visible by contrast. The apply step now branches too: 3 is a summary line and exit 0. The fleet-clone loop above it is tolerant as well: one repo that cannot be cloned anonymously is warned by name and skipped, rather than aborting the loop before either graceful path downstream could run.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "render_fleet_versions ran TSV data through printf '%b' (#933). Rows were accumulated with a literal \\t and emitted with %b, which reinterprets escapes in the fields as well as the separators — a backslash in any field would have been rewritten, and a \\c would have truncated the rest of the table silently. It now joins with the $TAB the script already defines and emits with %s, removing the class.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Suite: the \"an unterminated /* is not treated as a marker\" case renders the fixture before appending the line, so its != 2 assertion can actually fail — on an unrendered stub --check was already 1, and the case passed whatever the parser did. Also dropped a duplicated 12-line comment paragraph in §9d (#933).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "nvim plugin pins move forward for five plugins. friendly-snippets, nvim-lspconfig, nvim-tree.lua, nvim-treesitter and schemastore.nvim advance to upstream HEAD — the set the 2026-09-07 fleet health board (#794) reported as stale, one day after the freshness bot's Monday refresh (#916) had rolled the previous set. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all five), and each range was read before promotion: - friendly-snippets 6cd7280 → 30bfd47, 16 commits: snippet-data fixes and additions (markdown todo variants, django template tags, a Java class fix, zig 0.15 buildExe) plus a repo-wide Prettier/StyLua reformat that accounts for most of the 76 touched files. Core loads it only as blink.cmp's snippet source; no Lua API is involved. - nvim-lspconfig 615d7b2 → 19576de, 6 commits: fixes to robotcode, powershell_es and phpantom_lsp — none of which Core configures — and a plugin/lspconfig.lua refactor that moves legacy-only code below its version check. Nothing under Core's servers/ tree is affected. - nvim-tree.lua b2aadda → 882c54f, 1 commit: an \"invalid 'line'\" renderer fix for an empty tree with hidden_display set. Core calls setup() and api.tree.open(), both public and unchanged. - nvim-treesitter 32dbd2e → 5cb0114, 1 commit: type-annotation tightening in async.lua; the three install.lua lines it touches are ---@type comments, so the install() Core calls has the same signature. - schemastore.nvim 4a0e1b7 → 2224119, 2 commits: catalog refreshes only. Nothing renames or removes an API Core calls. (nvim/lazy-lock.json, #794)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "Bumped two pins in scripts/tool-versions.env on the weekly freshness review; held the third (#813). This is the class no bot covers — the CLI gate pins sit between /freshness-triage's plugin locks and Renovate's manifests — so the routine re-audited all ten against upstream and found seven still current: | Pin | Was | Now | | | --- | --- | --- | --- | | NVIM_VERSION | 0.12.4 | 0.12.5 | one patch on the 0.12 line | | CLAUDE_CODE_VERSION | 2.1.222 | 2.1.265 | the routine bots' own CLI | | SHFMT_VERSION | 3.13.1 | 3.13.1 | held — 3.14.x changes formatting output, see below | nvim 0.12.5 is fixes-plus-features on a line whose breaking changes (diagnostic sign config, vim.diagnostic.disable(), vim.diff → vim.text.diff, the 'shelltemp' default) all landed at 0.12.0 and were absorbed by the 0.12.4 pin; nothing new to adapt to. NVIM_SHA256 recomputed with make update-tool-checksums and cross-checked against the digest GitHub reports for the release asset rather than trusted from our own download — the four unbumped hashes re-derived byte-identical, which is its own integrity signal. shfmt stays at 3.13.1 deliberately. 3.14.0 changed output, not just behaviour — a space after ! in arithmetic, nested closing parens spaced like the opening ones, no ;-joined then/do when a heredoc is pending — and 3.14.1 followed a week later with heredoc indentation fixes. Core's own audit does not gate shfmt, so a green tick here proves nothing about it; the pin exists only so setup-core-tools installs one verified shfmt for MacBook and the distro/role lint workflows, where a bump can newly flag files that pass today with no diff in this repo to warn you. The consumer step is advisory (::warning::, not red), so it would not break them — but it would start nagging on every run until each repo reformats. Bump it alongside a reformat pass across the consumers, not on its own.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "Every mint step passes client-id, not the deprecated app-id, and reads a new FLEET_APP_CLIENT_ID org variable (#831). Our pinned create-github-app-token (v3.2.0) carries deprecationMessage: \"Use 'client-id' instead.\" on app-id, and all five mints here — notify-web.yml, the reusable notify-web-call.yml, sync-fanout.yml and freshness.yml's three — passed it. It is not a one-line swap, which is why it needed its own change. FLEET_APP_ID holds the App ID; the new input wants the App's Client ID, a different value on the same settings page (and a public one: gh api /apps/dotgibson-fleet-sync --jq .client_id). So the variable is a new one rather than a repurposed one — the two names never hold different meanings mid-rollout — and the if: guards move in the same commit as the input, because a guard still testing vars.FLEET_APP_ID against a step reading FLEET_APP_CLIENT_ID would keep gating on a variable the mint no longer uses. Precondition, not a follow-up: the org variable must exist before this merges. With it unset, every guard is false, sync-fanout's preflight goes red (the loud half) and the notify-web dispatch degrades to a ::warning:: and skips (the quiet half) — the exact failure shape #831 was written to avoid. FLEET_APP_ID is retired here but must not be deleted yet. The nine OS-repo callers execute notify-web-call.yml at the @v7 alias, which reads the old variable until the next release advances it; htpx's fan-out and dotfiles-Windows' inline notifier still pass app-id and are tracked in their own repos. GITHUB-APP-AUTH.md carries the retirement note with the grep that derives the remaining readers, its Re-creating or re-keying section now tells you to collect the Client ID, and the known-gaps callout shrinks to the one gap left (scope the verbs).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "Rule 1's node20 rationale carries the final date. The ban was already correct; the comment said \"fall 2026\". Node 20 leaves the runners on 2026-09-23 — the 2025-09-19 deprecation changelog, its date fixed by an editor's note of 2026-08-25. No fix-first work: every external action in the tree (actions/checkout, actions/cache, actions/create-github-app-token) already resolves to using: node24 at its pinned SHA. (#816)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "task.ps1 — the fleet's make verbs, for a host without make (dotfiles-core#855). dotfiles-core declares the seven canonical verbs once (help lint check dry-run packages-check core-verify test, its scripts/make-vocabulary.txt, dotfiles-core#691) so a contributor moving between repos re-learns nothing — and this repo was the one that still answered to none of them: no Makefile, no runner, only bare scripts, in the fleet's most-tested repo, where \"reproduce the CI gate locally\" has the most to offer. make is not a given on a Windows host and just would be a new dependency, so the verbs are spelled in the language the repo is written in: .\\task.ps1 <verb>. It is a dispatcher, not a second implementation: lint is tests/Invoke-Validation.ps1 plus gen-theme.ps1 -Check (ci.yml's dependency-free legs), test is tests/Invoke-Tests.ps1 (the gated suite, exactly as CI runs it), dry-run is install.ps1 -DryRun, check is lint plus the links-only bootstrap previewed (Windows has no throwaway HOME to run it in), packages-check is packages/Check-PackageFreshness.ps1 and core-verify is the three tests/Assert-*Parity.ps1 gates over the mirrored assets. Each step runs in a child pwsh -File, so a script's exit ends its own process and the first failing step's code is the verb's. Anything after a single-step verb passes through (.\\task.ps1 test -NoGate). Core's fleet-vocabulary.sh register reads the verb table statically — the quoted keys of Get-TaskVerbs, and whether test names the suite runner by path — so tests/Task.Tests.ps1 pins that shape, the exact verb set in the contract's order, and that every step names a script that exists.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "notify-web.yml passes client-id, not the deprecated app-id, and reads the new FLEET_APP_CLIENT_ID org variable (#251, dotfiles-core #831). The pinned create-github-app-token (v3.2.0) deprecates app-id, and this repo's inline notifier — it does not consume Core's reusable — passed it. The variable is a new one because FLEET_APP_ID holds the App ID and the new input wants the Client ID, a different value; the if: guard and the ::warning:: that is this repo's only signal of a silently skipped refresh move in the same commit. Precondition: the org variable must exist before this merges, or the mint skips and the showcase stops refreshing with only that warning to say so.",
+      "core": false
+    },
     {
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
@@ -2956,6 +3197,14 @@
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
+      "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
       "text": "make markdown probed for a global, unpinned markdownlint-cli2 — so on a normal box it never linted anything (dotgibson/dotfiles-core#873). Nothing in this repo's bootstrap installs markdownlint-cli2 globally; it is npm-only. So unless the operator had separately run npm i -g markdownlint-cli2, the guard fired on every invocation and the target skipped, cleanly and with exit 0, forever. That is a correct guard doing exactly what it says — and a local mirror of a blocking CI gate that has never mirrored anything. dotgibson/dotfiles-core#775 fixed this target's skip guard and its file scope; neither defect could bite while the target never ran at all. And where the binary *was* installed it was whatever version npm last put there, while lint-call.yml installs the pinned MARKDOWNLINT_VERSION — so a rule that changes across a bump reds a required check against a green local run. It now runs the pinned version through npx, reading the number from the vendored core/scripts/tool-versions.env rather than restating it, and refuses rather than guess if that pin is unreadable — a silently-unpinned lint being the thing this fixes. npx needs only node, which is far likelier present than a global markdownlint install, and still self-skips without it so make lint works on a bare box. Converges on the shape dotfiles-Offense and dotfiles-Defense already run.",
       "core": false
     },
@@ -3252,6 +3501,14 @@
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
+      "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
       "text": "make markdown probed for a global, unpinned markdownlint-cli2 — so on a normal box it never linted anything (dotgibson/dotfiles-core#873). Nothing in this repo's bootstrap installs markdownlint-cli2 globally; it is npm-only. So unless the operator had separately run npm i -g markdownlint-cli2, the guard fired on every invocation and the target skipped, cleanly and with exit 0, forever. That is a correct guard doing exactly what it says — and a local mirror of a blocking CI gate that has never mirrored anything. dotgibson/dotfiles-core#775 fixed this target's skip guard and its file scope; neither defect could bite while the target never ran at all. And where the binary *was* installed it was whatever version npm last put there, while lint-call.yml installs the pinned MARKDOWNLINT_VERSION — so a rule that changes across a bump reds a required check against a green local run. It now runs the pinned version through npx, reading the number from the vendored core/scripts/tool-versions.env rather than restating it, and refuses rather than guess if that pin is unreadable — a silently-unpinned lint being the thing this fixes. npx needs only node, which is far likelier present than a global markdownlint install, and still self-skips without it so make lint works on a bare box. Converges on the shape dotfiles-Offense and dotfiles-Defense already run.",
       "core": false
     },
@@ -3469,6 +3726,14 @@
       "category": "Notes on what is deliberately absent",
       "kind": "other",
       "text": "PPAs, in any form. They are keyed to an Ubuntu series and would break the Debian lane; vendor-signed apt repos (Charm, 1Password) are used instead.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux. DEBIAN_NO_TMUX keeps working alongside it.",
       "core": false
     },
     {
