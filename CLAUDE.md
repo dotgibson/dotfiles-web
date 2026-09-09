@@ -58,7 +58,10 @@ Two caveats worth knowing, because neither is fixable from inside this repo:
    repaired: editing it straight after creation strips the footer and it does not come
    back, so create then edit. Issue comments and review replies have no edit tool here,
    so their footers survive until someone deletes them by hand in the GitHub UI. Where
-   the choice exists, say it in the PR body rather than in a comment.
+   the choice exists, say it in the PR body rather than in a comment. The injection is
+   specific to the routine's GitHub App identity: a comment posted through the user's own
+   `gh` credentials (e.g. `gh issue close --comment`, `gh issue comment`) arrives clean,
+   confirmed on #250.
 2. **The starting branch name is assigned before the session begins**, so it cannot be
    prevented here — only renamed after the fact. The durable fix lives in the
    settings that spawn the sessions.
