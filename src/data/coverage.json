@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-09-09",
+  "generatedAt": "2026-09-12",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "2ffa25f257fe7d980dbcc49b0eab1813390b03d5"
+    "commit": "a0cc0f0b6810f0a5fbf7321202f1cd799362057b"
   },
-  "ruleCount": 114,
-  "documentCount": 133,
+  "ruleCount": 116,
+  "documentCount": 136,
   "techniqueCount": 84,
   "tacticCount": 6,
   "logsourceCount": 24,
@@ -27,7 +27,7 @@
       "id": "TA0007",
       "name": "Discovery",
       "techniques": 14,
-      "rules": 6
+      "rules": 8
     },
     {
       "id": "TA0009",
@@ -193,8 +193,10 @@
     },
     {
       "id": "T1069.002",
-      "rules": 1,
+      "rules": 3,
       "ruleNames": [
+        "ldap_recon_property_reads_4662",
+        "ldap_recon_search_filter_1644",
         "sharphound_ldap_sweep_4662"
       ]
     },
@@ -246,9 +248,11 @@
     },
     {
       "id": "T1087.002",
-      "rules": 2,
+      "rules": 4,
       "ruleNames": [
         "ldap_recon_explicit_creds_4648",
+        "ldap_recon_property_reads_4662",
+        "ldap_recon_search_filter_1644",
         "sharphound_ldap_sweep_4662"
       ]
     },
@@ -742,7 +746,7 @@
       "products": [
         "windows"
       ],
-      "rules": 6
+      "rules": 8
     },
     {
       "dir": "github",
