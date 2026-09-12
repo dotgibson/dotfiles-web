@@ -85,7 +85,7 @@ export const repos: Repo[] = [
       {
         label: 'Load order is load-bearing',
         detail:
-          'The zsh chain is tools → ui → options → history → aliases → git → functions → fzf → bindings → plugins → op → maint → update → os → role → local. Reordering it breaks detection and completion.',
+          'The zsh chain is tools → capabilities → ui → options → history → aliases → git → functions → fzf → bindings → plugins → op → maint → update → os → role → local. Reordering it breaks detection and completion.',
       },
       {
         label: 'Modern-CLI swaps are guarded',
@@ -170,7 +170,7 @@ cd dotfiles-Windows
       {
         label: 'No vendored core/ here',
         detail:
-          'Unlike every OS repo, Windows does NOT vendor Core at all — host config is replicated natively in PowerShell. Only nvim/ and starship.toml are mirrored from Core (via nvim-sync.ps1 / starship-sync.ps1).',
+          'Unlike every OS repo, Windows does NOT vendor Core at all — host config is replicated natively in PowerShell. Only nvim/, starship.toml and theme/palette.toml are mirrored from Core (via nvim-sync.ps1 / starship-sync.ps1 / theme-sync.ps1).',
       },
       {
         label: 'A pwsh loader that mirrors the zsh one',
@@ -258,7 +258,7 @@ exec zsh`,
       {
         label: 'Pinned assets, never curl | sh',
         detail:
-          'Twelve tools apt cannot supply come from GitHub release assets pinned by version AND SHA-256 in install/tool-versions.env. It is fail-closed: a missing pin, failed download, or hash mismatch skips that tool loudly rather than installing anything unverified. Neovim needs a tree install (bin/ + share/nvim/runtime), not a lone binary.',
+          'The tools apt cannot supply come from GitHub release assets pinned by version AND SHA-256 in install/tool-versions.env. It is fail-closed: a missing pin, failed download, or hash mismatch skips that tool loudly rather than installing anything unverified. Neovim needs a tree install (bin/ + share/nvim/runtime), not a lone binary.',
       },
       {
         label: 'Vendor apt repos yes, PPAs no',
