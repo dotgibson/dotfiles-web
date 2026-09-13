@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "4303c99e28b6ba71d77ca83785dd7dc8bc64fba9",
+        "commit": "350bf199a6403185fcdf0eb05feaa660ea13e7a8",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "f85728e8a6eb53c67746758efa5ea2edcfd5bfa7",
+        "commit": "dd243ecfe2a28b3d010f8a194595ec59469c04ef",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,7 +22,7 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "2f2c45a0344114e9bf21022095d12078f388b909",
+        "commit": "cbeaae9c60d507a861e3178e5d1f9381d04d0899",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -34,37 +34,37 @@
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "513d1a3422175d854fff7c5993b21198ce13cd88",
+        "commit": "b1a12936dacbac56e5606cc1bedcded6e3815445",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "b2ad2cfa744832274e27303f4fafa07d5345a720",
+        "commit": "9febf0638aaeb3ea2c765a9553090ef62286ea22",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "d45451e99e396f86163c4cde7a75522ba411d4fe",
+        "commit": "ac8a2b4ba37961fd653d16528181b12616e2f159",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "fa3044e6e251f8119b7f8ff1bb8c7423a0a6b150",
+        "commit": "4e48324c298434459885cbb5d229ac791307ed33",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "5161aeab8136ec80b7fa8d6ac59ebf947671dc1a",
+        "commit": "2fb984434819189258954e0c3b297e95d793f4a1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "c479f9e5ae36c4045a619a9b7f487f0b6dbbf924",
+        "commit": "0879c9867ad718ec51e605ec0c23c3738b4bd8f4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -209,6 +209,26 @@
         {
           "category": "Changed",
           "items": [
+            {
+              "text": "Offense adopted the four bootstrap-lib helpers — the §5f rows read 7/9, and its keepalive exemption is gone (#973; dotgibson/dotfiles-Offense#326). The role repo had been exempt from blib_sudo_keepalive_start on the reasoning that a role layer installs no long package sets. Its own --install says otherwise: the Kali route runs the whole offensive apt list — \"go get coffee\", the comment reads — behind a one-shot sudo -v that primed once and expired mid-run, the exact hang the helper exists for. That is the second time the \"installs no packages\" claim was wrong for this repo (#748 was the first, for blib_user_bindirs_on_path), so the exemption is retired and the rationale comment now says why an exemption is a claim the repo's own file can contradict. Defense keeps both of its exemptions: it installs nothing and probes nothing. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-Offense, the header figures move to 7/9, and MacBook is the one repo left. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+              "kind": "feature"
+            },
+            {
+              "text": "Arch adopted the four bootstrap-lib helpers — the §5f rows read 6/9 (#973; dotgibson/dotfiles-Arch#171). The repo with no root check at all: it leaned on the lib's default of sudo through _blib_priv, an underscore-private symbol, which is the shape the fleet's HAVE_* and owned-block legs exist to catch in zsh and nothing caught in bash. blib_resolve_su now pins the escalator up front, the five calls go through the lib's public blib_priv, the keepalive pair spans the go builds, and blib_note_fail records the per-package misses, the go installs and the Flathub remote where PROVISION_FAILED held one kind of miss and || true swallowed the rest. Arch's exit-1-on-any-miss contract is kept around blib_failures_report. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-Arch and the header figures move to 6/9; the two repos left are Offense (exempt from the keepalive) and MacBook. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+              "kind": "config"
+            },
+            {
+              "text": "Alpine adopted the four bootstrap-lib helpers — the §5f rows read 5/9 (#973; dotgibson/dotfiles-Alpine#191). The repo #879 was written for: its bootstrap.sh had kept a hand-rolled doas-first probe with a comment explaining that blib_resolve_su resolved sudo before doas and naming --prefer as the unblocker, and this is the adoption that comment promised. It is also the first repo in the ratchet that had no failure ledger at all — every best-effort install was || true or an indented echo, and the script exited 0 regardless — so blib_note_fail now records the apk per-package misses, the three upstream installers, seven musl cargo builds, the go installs and op, blib_failures_report prints the tally, and a new --strict turns it into exit 1 like Debian, Fedora and Gentoo. Its test/check-root-probe.sh gate, which extracted the root condition from bootstrap.sh and evaluated it with id stubbed, now extracts it from the vendored lib's blib_resolve_su instead — a Core sync that changed the rule changes what it evaluates — and pins that bootstrap.sh delegates doas-first. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-Alpine and the header figures move to 5/9. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+              "kind": "feature"
+            },
+            {
+              "text": "openSUSE adopted the four bootstrap-lib helpers — the §5f rows read 4/9 (#973; dotgibson/dotfiles-openSUSE#183). The third repo in the ratchet, and the first whose ledger had its own contract to keep: _report_failures exits 2 (documented in --help and the README as \"completed but optional tools failed\") and honours --tolerate-failures, so it now wraps blib_failures_report instead of being replaced by it — the lib's return decides whether there is anything to report, the repo decides what that costs. Its old _priv_preflight was the fleet's clearest case for blib_sudo_keepalive_start: a one-shot sudo -v 2>/dev/null || true that primed the cache once and let it expire mid-cargo-build, the invisible-prompt hang the helper exists to prevent. _note_fail was silent until the closing tally; as a shim over blib_note_fail it now warns at the moment of the miss as well. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-openSUSE and the header figures move to 4/9. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+              "kind": "perf"
+            },
+            {
+              "text": "Debian and Fedora adopted the four bootstrap-lib helpers the §5f ledger had reported at 1/9 since #748 (#867, #973; dotgibson/dotfiles-Debian#75, dotgibson/dotfiles-Fedora#178). #867 closed as completed on 2026-09-06 when #879 (blib_resolve_su --prefer) merged — but #879 was the unblocker, not the adoption, and measured on every sibling's origin/main a week later all four rows still read Gentoo only. V8-PROPOSAL.md §4.2(1) names the ratchet as \"the whole of the change that is ready\"; the two lowest-friction repos took it first: both carried the same hand-rolled root/sudo/doas probe, a note_fail/FAILED_STEPS ledger and a private sudo-keepalive loop with its own EXIT trap. Each bootstrap.sh now calls blib_resolve_su (--require only on the provisioning path, so --dry-run needs no escalator), blib_sudo_keepalive_start/_stop with provision() owning the trap, a one-line note_fail() { blib_note_fail \"$@\"; } shim over the untouched call sites, and blib_failures_report for the closing tally — which also surfaces the failures the shared lib records itself (the tpm clone, blib_install_system_file) that both scripts used to drop. Output and --strict semantics are unchanged. The four _ha_ledger lines in §5f (scripts/audit/40-fleet-registers.sh since #970) now read dotfiles-Debian dotfiles-Fedora dotfiles-Gentoo and the header's measured figures say 3/9; landing order was sibling-first, ledger-second, because _core_helper_verdict fails regressed the other way round and sync-fanout.yml is where §5f meets real siblings. #973 tracks the remaining five repos with each one's measured friction (openSUSE exits 2, Alpine needs --prefer doas, Arch calls the underscore-private _blib_priv, Offense hardcodes sudo, MacBook has a warn_note channel and exits 3); #975 (check-links.sh vendored with zero callers across all nine repos, §10 Q3) and #976 (the per-repo hook, §4.2(3)) carry the rest of what the proposal still owed, none of which was tracked anywhere — the split (§5) was filed as #974 the same afternoon #970 shipped it, and closed as superseded. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+              "kind": "config"
+            },
             {
               "text": "The audit is 48 named sections in scripts/audit/, not one 3,064-line file (#970). The gate got the #699 treatment, for the reasons #699 gave. ShellCheck's cost is superlinear in file length: linting this one file cost 2.50 s of CPU / 3.1–3.4 s wall on every CI leg for any PR touching any shell file; the dispatcher plus sixteen fragments, linted the way §5 lints them — one process per file — cost 1.47 s / 1.65 s, the same lines and the same rule set. About 2×, and stated as measured rather than as the 3.4× the proposal estimated from four equal parts without process startup. The sections now live in scripts/audit/NN-name.sh, one numbered fragment per subject, and audit-core.sh is a 579-line dispatcher that globs them in NN order and sources them into its own shell — one set of PASS/SKIP/FAIL counters, one summary, one exit code, one EXIT trap. --quiet, --json, --scope, --changed, --strict, --require-siblings, the exit codes, the audit-core pre-commit hook, make audit and every script that calls the path (sync-core.sh, tag-release.sh, release.sh, setup.sh) are untouched. A move, not a rewrite. The fragments rejoin to the old file's lines 399–2912 byte for byte — the whole cut is two hunks, the renamed banner and one case arm — and the 251 pass/skip/fail label strings come back identical in text and order, with only the shape gate's seventeen added at the head. The comments travel with their sections: the file was 48% comment and that prose carries the issue numbers, the measurements and the \"why it blocks vs reports\" policy that exists nowhere else, so none of it was summarised away. Section 10 — the wait on the behavioral suite the dispatcher backgrounds at the top — stays in the dispatcher, because it is the collect half of that launch and the EXIT trap that reaps it, and because \"last\" has to be structural rather than a matter of NN. The §-ids are the stable part and did not move. The proposal said the NN- prefix would replace the letters; it carries run order instead, and §5c is still §5c. Some 330 prose references in 67 files cite gates by id — CLAUDE.md, CONTRIBUTING.md, VENDORING.md, PORTABILITY.md, lint-call.yml, common.sh, the doc-audit routine — and two of those files are vendored to nine repos (core.vendor's comments and the generated CHANGELOG.recent.md header), so renaming would have been a fleet-wide churn for no gate value. The ids had drifted because letters are addition order within a family and were never meant to sort: 1b ran fifth, 5k between 5e and 5f, 9c before 9b, and the file's own header indexed 23 of the 48. Filenames fix the ordering by construction. One id had to change: 1c named two unrelated gates — the core.vendor existence check (#676) and the unreferenced-.claude/-files scanner (#700, #905) — and the second is now §1f, the next free letter in its family. The shipped release notes for #700 and #905 still say §1c; they are history and were left alone, which is why this sentence exists. scripts/audit/05-shape.sh keeps it from recurring. It runs first and fails the run if any two fragments share a banner id, if a *.sh lands there without the NN- prefix (the glob would skip it in silence while the audit reported OK), if a fragment is executable, untracked, or carries no section banner at all. The empty-glob refusal — exit 2 rather than an audit OK over zero gates — is driven rather than believed, from the new scripts/test/23-audit-shape.sh, because the audit has no sandbox of its own to stage a tree in and a fragment must never install a second EXIT trap. That test also asserts the suite's own view of the audit resolved: scripts/test-core.sh now assembles _audit_src — the dispatcher plus every fragment — once, and the fifteen static assertions that used to grep one file (36-bootstrap-lib.sh, 20-scanners.sh, 21-guards.sh, 42-gen-hero-tape.sh, 56-fleet-vocabulary.sh, 58-fleet-release-triggers.sh, 90-policy-gates.sh) grep that set through _audit_grep / _audit_cat / _audit_frag. Widening them is not cosmetic: the _tool_skips binding's sharpest assertion is a must-NOT-match, and a narrow file list passes it by looking away. Three of those tests needed design rather than a rename. The --json guard in 36-bootstrap-lib.sh scans a line range between the 5f. and 5i. banners, so §5f–§5i are kept contiguous in 40-fleet-registers.sh and the guard now fails, naming both files, if they ever separate. 22-ci-classify.sh's enumeration tripwire held audit-core.sh:11:5 exactly; it now holds the dispatcher at 0:1 and the fragments as a globbed sum of 11:4 — a per-fragment table would be a second registry that never counts a new fragment and reds on a pure move, while a sum keeps the exactness the rule defends and is invariant to regrouping. And 90-policy-gates.sh's gitleaks self-check, which looped over a hand-named file list, would have gone green over files that no longer call gitleaks; it sweeps the audit's source set and now also asserts the set contains an invocation. §2 learns that scripts/audit/*.sh are sourced libraries (100644), the same arm scripts/test/*.sh got in #699. scripts/ was already a META_PREFIXES entry, so the new directory needed no allowlist edit; META_ALLOWLIST itself stays in the dispatcher because five citations, two in vendored files, name it there. scripts/lib/common.sh did not move — it is in core.vendor and dotfiles-MacBook sources it directly. Nothing outside this repo changes: audit-core.sh is in neither core.manifest nor core.vendor and ships to no machine, which is why this is a minor and why V8-PROPOSAL.md §5 carries a status note rather than a breaking bullet. Four stale references found on the way are fixed in the same change: CONTRIBUTING.md cited audit-core.sh:583 for a sentence at :907, gen-theme.sh cited audit-core.sh:80 for a note at :101, the audit's own note cited \"line 48\" for a cd on line 74, and .gitattributes credited the changelog-digest gate to §9c (it is §9e). (scripts/audit-core.sh, scripts/audit/, scripts/test-core.sh, scripts/test/, scripts/lib/common.sh, CLAUDE.md, ARCHITECTURE.md, CONTRIBUTING.md, V8-PROPOSAL.md, .gitattributes, scripts/gen-theme.sh)",
               "kind": "perf"
@@ -1187,6 +1207,10 @@
           "category": "Changed",
           "items": [
             {
+              "text": "bootstrap.sh --install runs on Core's escalation, sudo-keepalive and failure-tally helpers instead of bare sudo (dotgibson/dotfiles-core#973). The Kali apt route hard-coded sudo three times and primed it with a one-shot sudo -v whose own comment promised to \"keep the timestamp warm\" — one line before \"go get coffee\". It now resolves the escalator once with blib_resolve_su (root runs directly, else sudo, else doas, by absolute path), runs the three apt calls through blib_priv, and keeps the timestamp warm for real with blib_sudo_keepalive_start / _stop. Every best-effort install — the apt per-package fallback, each pipx install, each go install — now records a miss via blib_note_fail instead of an indented echo, blib_failures_report prints them together after the wiring, and a new --strict turns a non-empty tally into exit 1. Without it the exit code is unchanged: the offensive tools are optional; zsh is not. Closes this repo's rows in Core's audit-core.sh §5f ledger, including the keepalive row it had been exempt from on the theory that a role repo installs no long package sets — the apt route is that set.",
+              "kind": "feature"
+            },
+            {
               "text": "BREAKING — make core-sync no longer pulls; Core arrives by fan-out (dotfiles-core#676). scripts/sync-core.sh is now report-only: it says how far behind core/ is and how Core actually gets here, and writes nothing. This repo was the fleet's one sanctioned second writer into core/. That sanction rested on a specific property, spelled out in VENDORING.md: the pull stamped core.lock from *what it actually pulled* — core_sha from the squash commit's git-subtree-split trailer, core_version from the tree on disk — so the lock could not describe a commit its own core/ did not contain. A filtered vendor removes exactly that property. Core stopped vendoring its whole tree: core/ is now core.manifest ∪ core.vendor, roughly two thirds of it. A git subtree pull merges the whole upstream tree and has no way to apply that filter, so \"what it actually pulled\" is by construction no longer what a vendored core/ should contain. The first pull after this repo's lock moved to a filtering commit would land every upstream file against an expectation of the subset, and core-integrity would report TAMPERED — correctly, with no hand-edit anywhere. Teaching it to filter was the alternative and is worse: it would make this repo a second producer of Core's format, which the sanction never extended to. Two implementations of one filter is the failure dotfiles-core#556 exists to prevent. In practice this changes nothing about how Core actually arrives. Every one of the last ten core.lock writes in this repo came from the fan-out, not from make core-sync. The independent cadence being given up was already not in use. make core-sync and make core-lock survive as the place that explains this — they are what someone types when asking \"how do I move Core?\", and that question still has an answer. --check is accepted and ignored, since every run is now what it meant.",
               "kind": "fix"
             },
@@ -1619,6 +1643,15 @@
           ]
         },
         {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "bootstrap.sh runs on Core's escalation, sudo-keepalive and failure-tally helpers instead of private copies (dotgibson/dotfiles-core#867). blib_resolve_su replaces the hand-rolled root/sudo/doas probe — the same $EUID string compare, plus an absolute path for the escalator, and --require only when packages will actually be installed, so --dry-run no longer demands one. blib_sudo_keepalive_start / _stop replace the private refresher loop and its trap. note_fail is now a one-line shim over blib_note_fail, and the closing report comes from blib_failures_report — which means the failures the shared lib records itself (the tpm clone, blib_install_system_file) finally appear in it instead of being dropped. Output and --strict semantics are unchanged; the one visible difference is that hint lines print the escalator's full path (/usr/bin/sudo dnf remove …). Closes this repo's four rows in Core's audit-core.sh §5f ledger, which had read 1/9 (Gentoo only) since dotgibson/dotfiles-core#748.",
+              "kind": "config"
+            }
+          ]
+        },
+        {
           "category": "Removed",
           "items": [
             {
@@ -1723,6 +1756,10 @@
           "category": "Changed",
           "items": [
             {
+              "text": "bootstrap.sh runs on Core's escalation, sudo-keepalive and failure-tally helpers (dotgibson/dotfiles-core#973). It had no root check at all — it leaned on the lib's default of sudo through _blib_priv, an underscore-private symbol — and its ledger held one kind of miss (a pacman package). Now blib_resolve_su pins the escalator up front (root runs directly, else sudo, else doas; an explicit BLIB_SU= still wins, which is what CI sets), every privileged line goes through the lib's public blib_priv, blib_sudo_keepalive_start / _stop keep the timestamp warm across the go builds, and blib_note_fail records the per-package misses, the go installs and the Flathub remote alongside what the shared lib records itself. blib_failures_report prints the tally and the exit code stays 1 when there was anything in it — Arch's contract, unchanged. The carapace / viddy / op lines stay as the deliberate manual-step hints they are. Closes this repo's four rows in Core's audit-core.sh §5f ledger.",
+              "kind": "config"
+            },
+            {
               "text": "make core-lock no longer regenerates core.lock; it explains why and points at the fan-out. (dotgibson/dotfiles-core#593) The target was added here to satisfy core.lock's own header instruction, “Regenerate … with: make core-lock”. That instruction was the bug — Core removed it in dotfiles-core#454, because core.lock is written by sync-core.sh in the same commit as the subtree pull and was never meant to have a second writer. Keeping the generator meant this repo owned a second definition of a format Core owns, and it had already drifted from it in three ways: it hardcoded core_branch=main, so regenerating a lock that had been pinned to a released commit silently replaced that provenance with a branch name; it re-emitted the removed header line, reintroducing the very instruction it existed to satisfy; and it predates dotfiles-core#453, which renamed the field to core_ref — so running it now would emit a lock the rest of the fleet disagrees with. core-verify is unchanged and remains the way to check this repo's vendored core/.",
               "kind": "fix"
             },
@@ -1796,6 +1833,15 @@
             {
               "text": "verified_install handles all three shapes upstreams actually ship — .tar.gz, plain .gz (tree-sitter) and .zip (procs) — and takes an optional inner-binary name for assets whose executable is named differently from the command.",
               "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "bootstrap.sh runs on Core's escalation, sudo-keepalive and failure-tally helpers instead of private copies (dotgibson/dotfiles-core#867). blib_resolve_su replaces the hand-rolled root/sudo/doas probe — the same $EUID string compare, plus an absolute path for the escalator, and --require only when packages will actually be installed, so --dry-run no longer demands one. blib_sudo_keepalive_start / _stop replace the private refresher loop and its trap. note_fail is now a one-line shim over blib_note_fail, and the closing report comes from blib_failures_report — which means the failures the shared lib records itself (the tpm clone, blib_install_system_file) finally appear in it instead of being dropped. Output and --strict semantics are unchanged; the one visible difference is that hint lines print the escalator's full path (/usr/bin/sudo apt-get purge …). Closes this repo's four rows in Core's audit-core.sh §5f ledger, which had read 1/9 (Gentoo only) since dotgibson/dotfiles-core#748.",
+              "kind": "config"
             }
           ]
         },
@@ -1911,6 +1957,46 @@
       "category": "Added",
       "kind": "perf",
       "text": "V8-PROPOSAL.md — the design record for the next major. Core is at 7.3.0 with an empty backlog, no open PRs, and a Breaking Backlog milestone holding zero issues, so a major had no content to find. Same situation V5-PROPOSAL.md was written into, and the same answer: write the content down where it can be argued with. The thesis is the OS repo stops carrying code Core owns — v5 made the OS layer declare, v6 made the vendored payload only Core, v7 deleted the last fallbacks, and what is left is the other direction: portable logic stranded OUTSIDE Core, hand-maintained N times, which no gate has ever been allowed to fail on. What earns the major is the one thing neither the roadmap nor V5-PROPOSAL.md names: three legs of lint-call.yml ship advisory with a promise to flip, two of them printing This warning becomes a BLOCKING failure in the next Core release to users since 2026-08-21 and 2026-09-06 — and three releases have passed without flipping them. Not neglect. Callers pin @v7, a MOVING major tag, so a flip on a minor turns every OS repo red the moment auto-tag advances it, before a maintainer could act; lint-call.yml:297 calls that \"red-on-arrival by construction\". A MAJOR is the only mechanism the fleet owns that dissolves it: RELEASE-RUNBOOK.md §1.1 step 5 mints v8 fresh and leaves v7 frozen, so one simultaneous fleet-wide break becomes nine independent opt-ins, each repo adopting on the day it merges its own bump PR. Two claims the release was expected to rest on did not survive contact, and the proposal records both rather than quietly correcting them. The roadmap asserts that consolidating bootstrap.sh \"changes the symlink contract, so every host re-bootstraps\"; it does not — that contract IS blib_link_core / blib_link_os_layer / blib_link_role_layer (lib/bootstrap-lib.sh:558,718,826), which already live in Core and which every repo already calls. v5 earned its major there because #663 added a NEW overlay, and absent one this is a large refactor of OS-repo-owned code, which the bump table calls MINOR however many lines it touches. Whether the per-repo hook becomes an overlay is left OPEN, as §4.4, with the smaller claim recommended. The second: the audit-core.sh split was expected to change what a consumer receives in the #676 mould, and scripts/audit-core.sh is absent from core.vendor — it ships to nobody, so it rides along and earns nothing. Measurements the proposal is built on, all re-derived rather than inherited: §5f's ledger has four helpers at 1/9, every one adopted by dotfiles-Gentoo alone, and dotfiles-MacBook — the reference implementation — is absent from four of eight rows while being the size outlier at 1,604 lines against Arch's 418 (it was 1,505 when V5-PROPOSAL.md §11 deferred this; nothing was done and it grew). audit-core.sh is 3,059 lines over 47 sections that run 1 1c 1d 1e 1b 1c … — 1c is defined twice, 1b runs after 1e, 5l is deliberately skipped — which is verbatim the condition test-core.sh's header cites for the #699 split, one file later; splitting it four ways costs 698 ms against the whole file's 2,405 ms of ShellCheck on identical content. And dotfiles-MacBook calls no lint-call.yml at all, so the canary cannot canary the gates this release flips. Recorded as a proposal, not a plan: nothing here has shipped, and §10 carries the non-goals (the non-mutable host as the right NEXT major, the nvim split needing its own) plus the finding that the \"one source, generated outward\" milestone has already shipped as minors and should be closed rather than scheduled.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "Offense adopted the four bootstrap-lib helpers — the §5f rows read 7/9, and its keepalive exemption is gone (#973; dotgibson/dotfiles-Offense#326). The role repo had been exempt from blib_sudo_keepalive_start on the reasoning that a role layer installs no long package sets. Its own --install says otherwise: the Kali route runs the whole offensive apt list — \"go get coffee\", the comment reads — behind a one-shot sudo -v that primed once and expired mid-run, the exact hang the helper exists for. That is the second time the \"installs no packages\" claim was wrong for this repo (#748 was the first, for blib_user_bindirs_on_path), so the exemption is retired and the rationale comment now says why an exemption is a claim the repo's own file can contradict. Defense keeps both of its exemptions: it installs nothing and probes nothing. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-Offense, the header figures move to 7/9, and MacBook is the one repo left. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Arch adopted the four bootstrap-lib helpers — the §5f rows read 6/9 (#973; dotgibson/dotfiles-Arch#171). The repo with no root check at all: it leaned on the lib's default of sudo through _blib_priv, an underscore-private symbol, which is the shape the fleet's HAVE_* and owned-block legs exist to catch in zsh and nothing caught in bash. blib_resolve_su now pins the escalator up front, the five calls go through the lib's public blib_priv, the keepalive pair spans the go builds, and blib_note_fail records the per-package misses, the go installs and the Flathub remote where PROVISION_FAILED held one kind of miss and || true swallowed the rest. Arch's exit-1-on-any-miss contract is kept around blib_failures_report. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-Arch and the header figures move to 6/9; the two repos left are Offense (exempt from the keepalive) and MacBook. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "Alpine adopted the four bootstrap-lib helpers — the §5f rows read 5/9 (#973; dotgibson/dotfiles-Alpine#191). The repo #879 was written for: its bootstrap.sh had kept a hand-rolled doas-first probe with a comment explaining that blib_resolve_su resolved sudo before doas and naming --prefer as the unblocker, and this is the adoption that comment promised. It is also the first repo in the ratchet that had no failure ledger at all — every best-effort install was || true or an indented echo, and the script exited 0 regardless — so blib_note_fail now records the apk per-package misses, the three upstream installers, seven musl cargo builds, the go installs and op, blib_failures_report prints the tally, and a new --strict turns it into exit 1 like Debian, Fedora and Gentoo. Its test/check-root-probe.sh gate, which extracted the root condition from bootstrap.sh and evaluated it with id stubbed, now extracts it from the vendored lib's blib_resolve_su instead — a Core sync that changed the rule changes what it evaluates — and pins that bootstrap.sh delegates doas-first. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-Alpine and the header figures move to 5/9. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "openSUSE adopted the four bootstrap-lib helpers — the §5f rows read 4/9 (#973; dotgibson/dotfiles-openSUSE#183). The third repo in the ratchet, and the first whose ledger had its own contract to keep: _report_failures exits 2 (documented in --help and the README as \"completed but optional tools failed\") and honours --tolerate-failures, so it now wraps blib_failures_report instead of being replaced by it — the lib's return decides whether there is anything to report, the repo decides what that costs. Its old _priv_preflight was the fleet's clearest case for blib_sudo_keepalive_start: a one-shot sudo -v 2>/dev/null || true that primed the cache once and let it expire mid-cargo-build, the invisible-prompt hang the helper exists to prevent. _note_fail was silent until the closing tally; as a shim over blib_note_fail it now warns at the moment of the miss as well. The ledger lines in scripts/audit/40-fleet-registers.sh add dotfiles-openSUSE and the header figures move to 4/9. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Debian and Fedora adopted the four bootstrap-lib helpers the §5f ledger had reported at 1/9 since #748 (#867, #973; dotgibson/dotfiles-Debian#75, dotgibson/dotfiles-Fedora#178). #867 closed as completed on 2026-09-06 when #879 (blib_resolve_su --prefer) merged — but #879 was the unblocker, not the adoption, and measured on every sibling's origin/main a week later all four rows still read Gentoo only. V8-PROPOSAL.md §4.2(1) names the ratchet as \"the whole of the change that is ready\"; the two lowest-friction repos took it first: both carried the same hand-rolled root/sudo/doas probe, a note_fail/FAILED_STEPS ledger and a private sudo-keepalive loop with its own EXIT trap. Each bootstrap.sh now calls blib_resolve_su (--require only on the provisioning path, so --dry-run needs no escalator), blib_sudo_keepalive_start/_stop with provision() owning the trap, a one-line note_fail() { blib_note_fail \"$@\"; } shim over the untouched call sites, and blib_failures_report for the closing tally — which also surfaces the failures the shared lib records itself (the tpm clone, blib_install_system_file) that both scripts used to drop. Output and --strict semantics are unchanged. The four _ha_ledger lines in §5f (scripts/audit/40-fleet-registers.sh since #970) now read dotfiles-Debian dotfiles-Fedora dotfiles-Gentoo and the header's measured figures say 3/9; landing order was sibling-first, ledger-second, because _core_helper_verdict fails regressed the other way round and sync-fanout.yml is where §5f meets real siblings. #973 tracks the remaining five repos with each one's measured friction (openSUSE exits 2, Alpine needs --prefer doas, Arch calls the underscore-private _blib_priv, Offense hardcodes sudo, MacBook has a warn_note channel and exits 3); #975 (check-links.sh vendored with zero callers across all nine repos, §10 Q3) and #976 (the per-repo hook, §4.2(3)) carry the rest of what the proposal still owed, none of which was tracked anywhere — the split (§5) was filed as #974 the same afternoon #970 shipped it, and closed as superseded. (scripts/audit/40-fleet-registers.sh, V8-PROPOSAL.md)",
       "core": true
     },
     {
@@ -2709,6 +2795,14 @@
       "repo": "dotfiles-Offense",
       "version": "Unreleased",
       "category": "Changed",
+      "kind": "feature",
+      "text": "bootstrap.sh --install runs on Core's escalation, sudo-keepalive and failure-tally helpers instead of bare sudo (dotgibson/dotfiles-core#973). The Kali apt route hard-coded sudo three times and primed it with a one-shot sudo -v whose own comment promised to \"keep the timestamp warm\" — one line before \"go get coffee\". It now resolves the escalator once with blib_resolve_su (root runs directly, else sudo, else doas, by absolute path), runs the three apt calls through blib_priv, and keeps the timestamp warm for real with blib_sudo_keepalive_start / _stop. Every best-effort install — the apt per-package fallback, each pipx install, each go install — now records a miss via blib_note_fail instead of an indented echo, blib_failures_report prints them together after the wiring, and a new --strict turns a non-empty tally into exit 1. Without it the exit code is unchanged: the offensive tools are optional; zsh is not. Closes this repo's rows in Core's audit-core.sh §5f ledger, including the keepalive row it had been exempt from on the theory that a role repo installs no long package sets — the apt route is that set.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
       "kind": "fix",
       "text": "BREAKING — make core-sync no longer pulls; Core arrives by fan-out (dotfiles-core#676). scripts/sync-core.sh is now report-only: it says how far behind core/ is and how Core actually gets here, and writes nothing. This repo was the fleet's one sanctioned second writer into core/. That sanction rested on a specific property, spelled out in VENDORING.md: the pull stamped core.lock from *what it actually pulled* — core_sha from the squash commit's git-subtree-split trailer, core_version from the tree on disk — so the lock could not describe a commit its own core/ did not contain. A filtered vendor removes exactly that property. Core stopped vendoring its whole tree: core/ is now core.manifest ∪ core.vendor, roughly two thirds of it. A git subtree pull merges the whole upstream tree and has no way to apply that filter, so \"what it actually pulled\" is by construction no longer what a vendored core/ should contain. The first pull after this repo's lock moved to a filtering commit would land every upstream file against an expectation of the subset, and core-integrity would report TAMPERED — correctly, with no hand-edit anywhere. Teaching it to filter was the alternative and is worse: it would make this repo a second producer of Core's format, which the sanction never extended to. Two implementations of one filter is the failure dotfiles-core#556 exists to prevent. In practice this changes nothing about how Core actually arrives. Every one of the last ten core.lock writes in this repo came from the fan-out, not from make core-sync. The independent cadence being given up was already not in use. make core-sync and make core-lock survive as the place that explains this — they are what someone types when asking \"how do I move Core?\", and that question still has an answer. --check is accepted and ignored, since every run is now what it meant.",
       "core": false
@@ -3484,6 +3578,14 @@
     {
       "repo": "dotfiles-Fedora",
       "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "bootstrap.sh runs on Core's escalation, sudo-keepalive and failure-tally helpers instead of private copies (dotgibson/dotfiles-core#867). blib_resolve_su replaces the hand-rolled root/sudo/doas probe — the same $EUID string compare, plus an absolute path for the escalator, and --require only when packages will actually be installed, so --dry-run no longer demands one. blib_sudo_keepalive_start / _stop replace the private refresher loop and its trap. note_fail is now a one-line shim over blib_note_fail, and the closing report comes from blib_failures_report — which means the failures the shared lib records itself (the tpm clone, blib_install_system_file) finally appear in it instead of being dropped. Output and --strict semantics are unchanged; the one visible difference is that hint lines print the escalator's full path (/usr/bin/sudo dnf remove …). Closes this repo's four rows in Core's audit-core.sh §5f ledger, which had read 1/9 (Gentoo only) since dotgibson/dotfiles-core#748.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
       "category": "Removed",
       "kind": "config",
       "text": "A stale 4.5 MB orphaned worktree copy under .claude/worktrees/, and the obsolete zsh/local.zsh ignore entry (host overrides have lived at ~/.config/zsh/99-local.zsh since v4).",
@@ -3645,6 +3747,14 @@
       "repo": "dotfiles-Arch",
       "version": "Unreleased",
       "category": "Changed",
+      "kind": "config",
+      "text": "bootstrap.sh runs on Core's escalation, sudo-keepalive and failure-tally helpers (dotgibson/dotfiles-core#973). It had no root check at all — it leaned on the lib's default of sudo through _blib_priv, an underscore-private symbol — and its ledger held one kind of miss (a pacman package). Now blib_resolve_su pins the escalator up front (root runs directly, else sudo, else doas; an explicit BLIB_SU= still wins, which is what CI sets), every privileged line goes through the lib's public blib_priv, blib_sudo_keepalive_start / _stop keep the timestamp warm across the go builds, and blib_note_fail records the per-package misses, the go installs and the Flathub remote alongside what the shared lib records itself. blib_failures_report prints the tally and the exit code stays 1 when there was anything in it — Arch's contract, unchanged. The carapace / viddy / op lines stay as the deliberate manual-step hints they are. Closes this repo's four rows in Core's audit-core.sh §5f ledger.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Changed",
       "kind": "fix",
       "text": "make core-lock no longer regenerates core.lock; it explains why and points at the fan-out. (dotgibson/dotfiles-core#593) The target was added here to satisfy core.lock's own header instruction, “Regenerate … with: make core-lock”. That instruction was the bug — Core removed it in dotfiles-core#454, because core.lock is written by sync-core.sh in the same commit as the subtree pull and was never meant to have a second writer. Keeping the generator meant this repo owned a second definition of a format Core owns, and it had already drifted from it in three ways: it hardcoded core_branch=main, so regenerating a lock that had been pinned to a released commit silently replaced that provenance with a branch name; it re-emitted the removed header line, reintroducing the very instruction it existed to satisfy; and it predates dotfiles-core#453, which renamed the field to core_ref — so running it now would emit a lock the rest of the fleet disagrees with. core-verify is unchanged and remains the way to check this repo's vendored core/.",
       "core": false
@@ -3767,6 +3877,14 @@
       "category": "Added",
       "kind": "feature",
       "text": "verified_install handles all three shapes upstreams actually ship — .tar.gz, plain .gz (tree-sitter) and .zip (procs) — and takes an optional inner-binary name for assets whose executable is named differently from the command.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "bootstrap.sh runs on Core's escalation, sudo-keepalive and failure-tally helpers instead of private copies (dotgibson/dotfiles-core#867). blib_resolve_su replaces the hand-rolled root/sudo/doas probe — the same $EUID string compare, plus an absolute path for the escalator, and --require only when packages will actually be installed, so --dry-run no longer demands one. blib_sudo_keepalive_start / _stop replace the private refresher loop and its trap. note_fail is now a one-line shim over blib_note_fail, and the closing report comes from blib_failures_report — which means the failures the shared lib records itself (the tpm clone, blib_install_system_file) finally appear in it instead of being dropped. Output and --strict semantics are unchanged; the one visible difference is that hint lines print the escalator's full path (/usr/bin/sudo apt-get purge …). Closes this repo's four rows in Core's audit-core.sh §5f ledger, which had read 1/9 (Gentoo only) since dotgibson/dotfiles-core#748.",
       "core": false
     },
     {
