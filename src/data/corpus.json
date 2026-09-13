@@ -3,9 +3,9 @@
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "56b6611551cfd48e385e6bc31944f0bc7fc06484"
+    "commit": "6b659bbfd34ec4cd0bf177e52f43189dcb69ed99"
   },
-  "totalPairs": 105,
+  "totalPairs": 107,
   "groupCount": 16,
   "techniqueCount": 75,
   "tacticCount": 13,
@@ -16,7 +16,7 @@
     },
     {
       "label": "Cloud IAM (Entra · AWS · GCP)",
-      "count": 16
+      "count": 18
     },
     {
       "label": "Okta",
@@ -708,6 +708,17 @@
       ]
     },
     {
+      "id": "gcp-gce-startup-script-exec",
+      "attack": "GCE guest code exec via metadata startup-script (control-plane → root)",
+      "detection": "Detect GCE metadata exec (GCP audit, setMetadata startup-script + reset)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Execution",
+      "tactic": "TA0002",
+      "techniques": [
+        "T1651"
+      ]
+    },
+    {
       "id": "gcp-audit-log-disable",
       "attack": "GCP Cloud Audit log tamper (delete sink / strip auditConfigs)",
       "detection": "Detect audit-log tamper (GCP, DeleteSink / auditConfig strip)",
@@ -738,6 +749,17 @@
       "tactic": "TA0003",
       "techniques": [
         "T1098.001"
+      ]
+    },
+    {
+      "id": "gcp-gcs-mass-exfil",
+      "attack": "GCS bulk object exfil (mass storage.objects.get / rewrite)",
+      "detection": "Detect GCS bulk exfil (GCP Data Access, storage.objects.get volume)",
+      "group": "Cloud IAM (Entra · AWS · GCP)",
+      "phase": "Collection",
+      "tactic": "TA0009",
+      "techniques": [
+        "T1530"
       ]
     },
     {
