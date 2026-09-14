@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "da94de7358d2e086d0cf9c1dfeb95eb849767bc5",
+        "commit": "1c2dd5ce993d22f61d34fa3bfd2d263bcfec38d3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "8830717d1d26a2864c4080557051133afdeb922e",
+        "commit": "7a31dedf23e3ba34c4af3982598a6205cb7bffe1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "429cd6d6d4627b2468cc4806656ff628c50f7f2c",
+        "commit": "934107c7f96f4874d40f508eaa2a10c5e73b6df7",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "8c244def86acf1d6f9df9e0e7f520a0e4804cb40",
+        "commit": "8e42d01b27ad1413481bbd08c2e69107cdedcd58",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "6e14de3559bd736d0357acb440a2c3384f912a6b",
+        "commit": "c62e55c0c37e494d888eded922dec48d0ee9f40d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "dd2704c8ebf751452e9cd25dba004f9e44e7f054",
+        "commit": "3f6d87482e43ba641c70b035e3f7a4ef2c796bb6",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "3780002e2a11bfb5c9cb5922b006448f4203ebc1",
+        "commit": "e3b51e58830e97c16dd2b971c81c01fd2944e486",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "7fdfd2796bafbf5ff3c98bc4c882c066e6844a8d",
+        "commit": "0bd63626b258fddf64c005ed51c484416c7e9754",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "46991fd025d7b2d5d03e4023659f95b5ed62b8f1",
+        "commit": "46bc2592181f80f0b6e10eb566ed29678da2e12e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "7ee365bbc97f1480fcef3f4891fe6b75cafcded9",
+        "commit": "0c29001bc3ccad69215cfe22487f3034b7df1dd6",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,20 +76,20 @@
     "layers": 3
   },
   "releases": {
-    "current": "v7.4.3",
+    "current": "v7.4.4",
     "channels": [
+      "v7.4.4",
       "v7.4.3",
       "v7.4.2",
-      "v7.4.1",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "7.4.3",
+    "coreVersion": "7.4.4",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.4.0",
-        "carried": "7.4.0",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-Windows": {
@@ -99,49 +99,49 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.4.2",
-        "carried": "7.4.2",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-Defense": {
-        "ref": "v7.4.0",
-        "carried": "7.4.0",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.4.0",
-        "carried": "7.4.0",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-Arch": {
-        "ref": "v7.4.2",
-        "carried": "7.4.2",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-Debian": {
-        "ref": "v7.4.0",
-        "carried": "7.4.0",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.4.0",
-        "carried": "7.4.0",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.4.2",
-        "carried": "7.4.2",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.4.2",
-        "carried": "7.4.2",
+        "ref": "v7.4.3",
+        "carried": "7.4.3",
         "status": "behind"
       }
     }
   },
   "core": {
-    "version": "7.4.3",
+    "version": "7.4.4",
     "sourcedModules": 14,
     "zshLoc": 6990,
     "gitAliases": 57,
@@ -172,6 +172,31 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.4.4",
+      "date": "2026-09-13",
+      "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "new-os-repo.sh scaffolds the starter bootstrap in the driver form (#999). A repo born from the generator declares what it is (BOOTSTRAP_NAME, BOOTSTRAP_OS, BOOTSTRAP_LOGIN_SHELL=0 — a starter must not chsh), links its ZDOTDIR entry pair in bootstrap_wire_post_loader, and hands over to blib_main — the shape all eight fleet repos on the driver have (#986) rather than the one they just left. The starter's hand copy of the link step (and of blib_link's backup suffix, \"keep the two in step\") goes, and so does its zsh/zshrc.zsh copy of the loader: the driver writes the managed ~/.zshrc and seeds $ZDOTDIR/.zshrc as a symlink to it, one definition for the fleet. The generated test/check-links.sh asserts that shape, stands a placeholder in for the tpm clone (the one network fetch in the wiring; the suite tests links, not GitHub), and keeps its three idempotency witnesses — which now hold the driver to the same bar. (scripts/new-os-repo.sh, scripts/test/35-new-os-repo.sh)",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "A second bootstrap run invokes no mutating command (#999, found by holding the driver to the scaffold's idempotency witness). blib_link_core ran chmod +x on Core's tmux scripts and bin/ tools and mkdir -p/chmod 700 on ~/.ssh on EVERY run, and blib_install_core_guard rewrote an identical pre-commit hook every time — no-ops on disk, but a witness that logs every mkdir/chmod reads each as a change. Every one now asks first (_blib_ensure_exec, _blib_private_dir, a byte compare against the hook text held in _blib_core_guard_hook) and the hook's bytes are unchanged. (lib/bootstrap-lib.sh)",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.4.3",
@@ -206,39 +231,6 @@
           "items": [
             {
               "text": "openSUSE is recorded on the blib_install_core_guard row — the row closes at 9/9 (#986; follow-up to #992). A blib_main caller is credited with the whole helper contract, and the driver installs the Core guard openSUSE's own bootstrap never had, so §5f read the repo as advanced on that row the moment dotgibson/dotfiles-openSUSE#186 merged — the state the v7.4.1 fan-out audit meets. Same shape as Defense in #988. (scripts/audit/40-fleet-registers.sh)",
-              "kind": "fix"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.4.1",
-      "date": "2026-09-13",
-      "groups": [
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "blib_main always exports BLIB_DRY as 0 or 1, and BOOTSTRAP_SU=lazy also skips the driver's sudo keepalive (#990, #991 — two defects in #985, each found by the next adopter). The driver exported BLIB_DRY only on a dry run, so a hook written ((BLIB_DRY)) || return 0 — valid bash, clean under every linter — died with unbound variable under set -u on the first REAL run: the stubbed full-provision CI leg, the one path a dry-run test cannot cover (dotgibson/dotfiles-Debian#78's first run). And lazy told the driver not to resolve an escalator but still wrapped bootstrap_provision in the keepalive, which would prime sudo on a repo whose run may never need it (Offense without --install) and fail outright where the escalator is not sudo. Both knobs are now always 0/1 and lazy means the hook owns escalation end to end; the fixture in scripts/test/37-bootstrap-driver.sh reads BLIB_DRY bare on purpose and runs a lazy case with BLIB_SU unset. (lib/bootstrap-lib.sh)",
-              "kind": "perf"
-            }
-          ]
-        },
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "openSUSE is on the bootstrap driver — the blib_main row reads 4/9 (#986; dotgibson/dotfiles-openSUSE#186). The repo whose closing report exits 2 whenever an optional install did not complete now declares that contract (BOOTSTRAP_STRICT_DEFAULT=1, BOOTSTRAP_FAIL_EXIT=2, --tolerate-failures flipping the default off through bootstrap_flag) instead of wrapping the driver's report in a private one; its OS check, the --only/--skip exclusion and the links-only WSL note are bootstrap_guard, zypper provisioning is bootstrap_provision with the body unchanged, and the Leap capability re-link takes the pre-loader slot. 716 → 657 lines. (scripts/audit/40-fleet-registers.sh)",
-              "kind": "config"
-            },
-            {
-              "text": "Fedora and Debian are on the bootstrap driver — the blib_main row reads 3/9 (#986; dotgibson/dotfiles-Fedora#181, dotgibson/dotfiles-Debian#78). The two the survey called the driver's shape verbatim: each keeps its OS guard and preflight as bootstrap_guard, its package phase as bootstrap_provision with the body unchanged, its dry-run preview as bootstrap_check, and its own flags through bootstrap_flag; Debian also uses the pre-loader slot for the distro tier's capability re-link and the closing hook for its shadowed-tools report — the two slots the survey said had to exist. Fedora's make check ran the vendored links gate through the driver on a Fedora box and a real --dry-run printed the 38-package plan and wrote nothing. Together with Defense that is 753 + 962 + 270 → 660 + 876 + 205 lines. (scripts/audit/40-fleet-registers.sh)",
-              "kind": "fix"
-            },
-            {
-              "text": "Defense is the first repo on the bootstrap driver — the §5f ledger records it (#986; dotgibson/dotfiles-Defense#292, after v7.4.0 vendored blib_main there). Its bootstrap.sh now declares what it is and hands over to the driver, so blib_main gets its first ledger entry and blib_install_core_guard, the row Defense had always been short on, is satisfied by the driver installing the guard on a fresh clone. The scanner credits a blib_main caller with the whole helper contract, so every other row it held stays ok with the names gone from the file. (scripts/audit/40-fleet-registers.sh)",
               "kind": "fix"
             }
           ]
@@ -3721,6 +3713,24 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v7.4.4",
+      "date": "2026-09-13",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "new-os-repo.sh scaffolds the starter bootstrap in the driver form (#999). A repo born from the generator declares what it is (BOOTSTRAP_NAME, BOOTSTRAP_OS, BOOTSTRAP_LOGIN_SHELL=0 — a starter must not chsh), links its ZDOTDIR entry pair in bootstrap_wire_post_loader, and hands over to blib_main — the shape all eight fleet repos on the driver have (#986) rather than the one they just left. The starter's hand copy of the link step (and of blib_link's backup suffix, \"keep the two in step\") goes, and so does its zsh/zshrc.zsh copy of the loader: the driver writes the managed ~/.zshrc and seeds $ZDOTDIR/.zshrc as a symlink to it, one definition for the fleet. The generated test/check-links.sh asserts that shape, stands a placeholder in for the tpm clone (the one network fetch in the wiring; the suite tests links, not GitHub), and keeps its three idempotency witnesses — which now hold the driver to the same bar. (scripts/new-os-repo.sh, scripts/test/35-new-os-repo.sh)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.4.4",
+      "date": "2026-09-13",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "A second bootstrap run invokes no mutating command (#999, found by holding the driver to the scaffold's idempotency witness). blib_link_core ran chmod +x on Core's tmux scripts and bin/ tools and mkdir -p/chmod 700 on ~/.ssh on EVERY run, and blib_install_core_guard rewrote an identical pre-commit hook every time — no-ops on disk, but a witness that logs every mkdir/chmod reads each as a change. Every one now asks first (_blib_ensure_exec, _blib_private_dir, a byte compare against the hook text held in _blib_core_guard_hook) and the hook's bytes are unchanged. (lib/bootstrap-lib.sh)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v7.4.3",
       "date": "2026-09-13",
       "category": "Changed",
@@ -3753,42 +3763,6 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "openSUSE is recorded on the blib_install_core_guard row — the row closes at 9/9 (#986; follow-up to #992). A blib_main caller is credited with the whole helper contract, and the driver installs the Core guard openSUSE's own bootstrap never had, so §5f read the repo as advanced on that row the moment dotgibson/dotfiles-openSUSE#186 merged — the state the v7.4.1 fan-out audit meets. Same shape as Defense in #988. (scripts/audit/40-fleet-registers.sh)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.4.1",
-      "date": "2026-09-13",
-      "category": "Fixed",
-      "kind": "perf",
-      "text": "blib_main always exports BLIB_DRY as 0 or 1, and BOOTSTRAP_SU=lazy also skips the driver's sudo keepalive (#990, #991 — two defects in #985, each found by the next adopter). The driver exported BLIB_DRY only on a dry run, so a hook written ((BLIB_DRY)) || return 0 — valid bash, clean under every linter — died with unbound variable under set -u on the first REAL run: the stubbed full-provision CI leg, the one path a dry-run test cannot cover (dotgibson/dotfiles-Debian#78's first run). And lazy told the driver not to resolve an escalator but still wrapped bootstrap_provision in the keepalive, which would prime sudo on a repo whose run may never need it (Offense without --install) and fail outright where the escalator is not sudo. Both knobs are now always 0/1 and lazy means the hook owns escalation end to end; the fixture in scripts/test/37-bootstrap-driver.sh reads BLIB_DRY bare on purpose and runs a lazy case with BLIB_SU unset. (lib/bootstrap-lib.sh)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.4.1",
-      "date": "2026-09-13",
-      "category": "Changed",
-      "kind": "config",
-      "text": "openSUSE is on the bootstrap driver — the blib_main row reads 4/9 (#986; dotgibson/dotfiles-openSUSE#186). The repo whose closing report exits 2 whenever an optional install did not complete now declares that contract (BOOTSTRAP_STRICT_DEFAULT=1, BOOTSTRAP_FAIL_EXIT=2, --tolerate-failures flipping the default off through bootstrap_flag) instead of wrapping the driver's report in a private one; its OS check, the --only/--skip exclusion and the links-only WSL note are bootstrap_guard, zypper provisioning is bootstrap_provision with the body unchanged, and the Leap capability re-link takes the pre-loader slot. 716 → 657 lines. (scripts/audit/40-fleet-registers.sh)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.4.1",
-      "date": "2026-09-13",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "Fedora and Debian are on the bootstrap driver — the blib_main row reads 3/9 (#986; dotgibson/dotfiles-Fedora#181, dotgibson/dotfiles-Debian#78). The two the survey called the driver's shape verbatim: each keeps its OS guard and preflight as bootstrap_guard, its package phase as bootstrap_provision with the body unchanged, its dry-run preview as bootstrap_check, and its own flags through bootstrap_flag; Debian also uses the pre-loader slot for the distro tier's capability re-link and the closing hook for its shadowed-tools report — the two slots the survey said had to exist. Fedora's make check ran the vendored links gate through the driver on a Fedora box and a real --dry-run printed the 38-package plan and wrote nothing. Together with Defense that is 753 + 962 + 270 → 660 + 876 + 205 lines. (scripts/audit/40-fleet-registers.sh)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.4.1",
-      "date": "2026-09-13",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "Defense is the first repo on the bootstrap driver — the §5f ledger records it (#986; dotgibson/dotfiles-Defense#292, after v7.4.0 vendored blib_main there). Its bootstrap.sh now declares what it is and hands over to the driver, so blib_main gets its first ledger entry and blib_install_core_guard, the row Defense had always been short on, is satisfied by the driver installing the guard on a fresh clone. The scanner credits a blib_main caller with the whole helper contract, so every other row it held stays ok with the names gone from the file. (scripts/audit/40-fleet-registers.sh)",
       "core": true
     },
     {
