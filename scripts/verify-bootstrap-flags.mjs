@@ -25,14 +25,16 @@
 // (e.g. the Pages CI runner only clones dotfiles-web), it can't verify anything, so
 // it warns and exits 0 rather than failing a build it has no data for.
 
-import { readFileSync, existsSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import vm from 'node:vm';
+import { readFileSync, existsSync } from "node:fs";
+import { join, dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import vm from "node:vm";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const webRepo = resolve(__dirname, '..');
-const root = process.env.DOTFILES_ROOT ? resolve(process.env.DOTFILES_ROOT) : resolve(webRepo, '..');
+const webRepo = resolve(__dirname, "..");
+const root = process.env.DOTFILES_ROOT
+  ? resolve(process.env.DOTFILES_ROOT)
+  : resolve(webRepo, "..");
 const repoPath = (name) => join(root, name);
 
 // Evaluate a DATA-ONLY JS literal (the type-stripped bootstrap.ts body, or the inline
@@ -59,24 +61,26 @@ function evalDataLiteral(code, what) {
 // literal — this gives the EXACT resolved data (shared flag consts included) without
 // reimplementing a TS parser. Fails loud if the shape changes unexpectedly.
 function loadTargets() {
-  const file = join(webRepo, 'src', 'data', 'bootstrap.ts');
+  const file = join(webRepo, "src", "data", "bootstrap.ts");
   // Normalise CRLF → LF so the type-strip regexes match on a Windows checkout
   // (git may have converted line endings), not just an LF working tree.
-  const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  const src = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
   const js =
     src
-      .replace(/export type \w+ =[^\n]*\n/g, '')
-      .replace(/export interface \w+ \{[\s\S]*?\n\}\n/g, '')
-      .replace(/:\s*BootstrapFlag\b/g, '')
-      .replace(/:\s*BootstrapTarget\[\]/g, '')
-      .replace(/:\s*ModuleGroup\[\]/g, '')
-      .replace(/^export const /gm, 'const ') + '\ntargets;';
+      .replace(/export type \w+ =[^\n]*\n/g, "")
+      .replace(/export interface \w+ \{[\s\S]*?\n\}\n/g, "")
+      .replace(/:\s*BootstrapFlag\b/g, "")
+      .replace(/:\s*BootstrapTarget\[\]/g, "")
+      .replace(/:\s*ModuleGroup\[\]/g, "")
+      .replace(/^export const /gm, "const ") + "\ntargets;";
   const targets = evalDataLiteral(
     js,
-    'src/data/bootstrap.ts (the type-strip in loadTargets() may need updating for a new annotation)'
+    "src/data/bootstrap.ts (the type-strip in loadTargets() may need updating for a new annotation)",
   );
   if (!Array.isArray(targets) || !targets.length) {
-    console.error('[verify-flags] parsed bootstrap.ts but found no targets — aborting.');
+    console.error(
+      "[verify-flags] parsed bootstrap.ts but found no targets — aborting.",
+    );
     process.exit(1);
   }
   return targets;
@@ -90,29 +94,38 @@ function loadTargets() {
 // flatten to {repo, isPs, flags[]} rows, fanning the Linux platform out per distro
 // (base flags + that distro's `extra`). Returns null if the component is absent.
 function loadInstallBuilderRows() {
-  const file = join(webRepo, 'src', 'components', 'InstallBuilder.astro');
+  const file = join(webRepo, "src", "components", "InstallBuilder.astro");
   if (!existsSync(file)) return null;
-  const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  const src = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
   // The top-level array is the only `]` that starts a line then closes with `;`
   // (inner arrays are indented and end with `],`), so this lazily captures the whole
   // literal without a JS parser — matching loadTargets()'s approach.
   const m = src.match(/const platforms = (\[[\s\S]*?\n\]);/);
   if (!m) {
-    console.error('[verify-flags] could not locate the `platforms` array in InstallBuilder.astro.');
-    console.error('[verify-flags] its shape may have changed — update loadInstallBuilderRows().');
+    console.error(
+      "[verify-flags] could not locate the `platforms` array in InstallBuilder.astro.",
+    );
+    console.error(
+      "[verify-flags] its shape may have changed — update loadInstallBuilderRows().",
+    );
     process.exit(1);
   }
   const platforms = evalDataLiteral(
-    '(' + m[1] + ')',
-    'InstallBuilder.astro platforms (its shape may have changed — update loadInstallBuilderRows())'
+    "(" + m[1] + ")",
+    "InstallBuilder.astro platforms (its shape may have changed — update loadInstallBuilderRows())",
   );
   const rows = [];
   for (const p of platforms) {
-    const isPs = p.shell === 'powershell';
+    const isPs = p.shell === "powershell";
     const base = (p.flags || []).map((f) => f.flag);
     if (p.distros) {
       for (const d of p.distros) {
-        rows.push({ id: `${p.id}:${d.id}`, repo: d.repo, isPs, flags: [...base, ...(d.extra || []).map((f) => f.flag)] });
+        rows.push({
+          id: `${p.id}:${d.id}`,
+          repo: d.repo,
+          isPs,
+          flags: [...base, ...(d.extra || []).map((f) => f.flag)],
+        });
       }
     } else {
       rows.push({ id: p.id, repo: p.repo, isPs, flags: base });
@@ -124,18 +137,52 @@ function loadInstallBuilderRows() {
 // ── parse a repo's real flag surface ─────────────────────────────────────────
 // sh bootstrap: every `case` arm token, e.g. `--links-only)`, `--dry-run | -n)`,
 // `-h|--help)`, plus macOS's authoritative `KNOWN_FLAGS=( ... )` allowlist.
-function shAcceptedFlags(src) {
-  const flags = new Set();
-  const armRe = /^\s*((?:-{1,2}[A-Za-z][\w-]*\s*\|\s*)*-{1,2}[A-Za-z][\w-]*)\)/gm;
+function shCaseArmFlags(src, flags) {
+  const armRe =
+    /^\s*((?:-{1,2}[A-Za-z][\w-]*\s*\|\s*)*-{1,2}[A-Za-z][\w-]*)\)/gm;
   let m;
   while ((m = armRe.exec(src))) {
-    for (let t of m[1].split('|')) {
+    for (let t of m[1].split("|")) {
       t = t.trim();
       if (/^-{1,2}[A-Za-z]/.test(t)) flags.add(t);
     }
   }
+  return flags;
+}
+
+// The DRIVER FORM (dotfiles-core#976/#986): since Core v7.4.0 a repo's bootstrap.sh may
+// declare what it is, define its hooks, and hand over with `blib_main "$@"` — in which
+// case the shared flags (--links-only, --dry-run/-n, --strict, --only/--skip, -h/--help)
+// live in the VENDORED driver, core/lib/bootstrap-lib.sh :: blib_main, and only the
+// repo's own flags (via bootstrap_flag()) are case arms in bootstrap.sh. Eight of nine
+// repos are on it (MacBook stays outside by design), so parsing bootstrap.sh alone reads
+// every shared flag as "not accepted" and fails all eight (dotfiles-web#283's
+// derived-data leg). Parse the driver's case arms from the repo's OWN vendored copy —
+// the flags a real user's clone accepts, at the Core that clone carries — and union.
+// A repo that hands over but has no vendored lib (a --no-vendor scaffold) is left with
+// what its own file says; the note names the gap.
+function shHandsOverToDriver(src) {
+  return /^\s*blib_main\s+"\$@"/m.test(src);
+}
+function shDriverFlags(repoDir, flags) {
+  const lib = join(repoDir, "core", "lib", "bootstrap-lib.sh");
+  if (!existsSync(lib)) return flags;
+  const src = readFileSync(lib, "utf8").replace(/\r\n/g, "\n");
+  // Only blib_main's own body: the lib defines other case statements (blib_select's
+  // --only/--skip, the escalator's --prefer/--require) whose arms are NOT user flags.
+  const start = src.search(/^blib_main\(\)\s*\{/m);
+  if (start < 0) return flags;
+  const body = src.slice(start);
+  const end = body.search(/^\}/m);
+  return shCaseArmFlags(end >= 0 ? body.slice(0, end) : body, flags);
+}
+function shAcceptedFlags(src, repoDir) {
+  const flags = shCaseArmFlags(src, new Set());
   const kf = src.match(/KNOWN_FLAGS=\(([^)]*)\)/);
-  if (kf) for (const t of kf[1].split(/\s+/)) if (/^-{1,2}[A-Za-z]/.test(t.trim())) flags.add(t.trim());
+  if (kf)
+    for (const t of kf[1].split(/\s+/))
+      if (/^-{1,2}[A-Za-z]/.test(t.trim())) flags.add(t.trim());
+  if (repoDir && shHandsOverToDriver(src)) shDriverFlags(repoDir, flags);
   return flags;
 }
 
@@ -154,7 +201,7 @@ function psAcceptedFlags(src) {
   const block = end >= 0 ? after.slice(0, end) : after;
   const re = /\[(?:switch|string|int|bool|object(?:\[\])?)\]\s*\$(\w+)/gi;
   let m;
-  while ((m = re.exec(block))) flags.add('-' + m[1]);
+  while ((m = re.exec(block))) flags.add("-" + m[1]);
   return flags;
 }
 
@@ -166,23 +213,27 @@ let verified = 0;
 let skipped = 0;
 
 for (const t of targets) {
-  const isPs = t.dialect === 'ps';
-  const file = join(repoPath(t.repo), isPs ? 'install.ps1' : 'bootstrap.sh');
+  const isPs = t.dialect === "ps";
+  const file = join(repoPath(t.repo), isPs ? "install.ps1" : "bootstrap.sh");
   if (!existsSync(file)) {
     skipped++;
-    notes.push(`${t.repo}: ${isPs ? 'install.ps1' : 'bootstrap.sh'} not found — skipped (repo not checked out).`);
+    notes.push(
+      `${t.repo}: ${isPs ? "install.ps1" : "bootstrap.sh"} not found — skipped (repo not checked out).`,
+    );
     continue;
   }
   verified++;
-  const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
-  const accepted = isPs ? psAcceptedFlags(src) : shAcceptedFlags(src);
+  const src = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+  const accepted = isPs
+    ? psAcceptedFlags(src)
+    : shAcceptedFlags(src, repoPath(t.repo));
   const surfaced = t.flags.map((f) => f.flag);
 
   for (const flag of surfaced) {
     if (!accepted.has(flag)) {
       errors.push(
-        `${t.repo} (${t.id}): bootstrap.ts surfaces "${flag}" but ${isPs ? 'install.ps1' : 'bootstrap.sh'} ` +
-          `does not accept it. Accepted: ${[...accepted].sort().join(' ') || '(none parsed)'}`
+        `${t.repo} (${t.id}): bootstrap.ts surfaces "${flag}" but ${isPs ? "install.ps1" : "bootstrap.sh"} ` +
+          `does not accept it. Accepted: ${[...accepted].sort().join(" ") || "(none parsed)"}`,
       );
     }
   }
@@ -190,11 +241,11 @@ for (const t of targets) {
   // A `modules: true` target's generator emits --only/--skip (the module multi-select).
   // These aren't BootstrapFlag entries, so assert acceptance explicitly here.
   if (t.modules) {
-    for (const flag of ['--only', '--skip']) {
+    for (const flag of ["--only", "--skip"]) {
       if (!accepted.has(flag)) {
         errors.push(
-          `${t.repo} (${t.id}): bootstrap.ts sets modules:true but ${isPs ? 'install.ps1' : 'bootstrap.sh'} ` +
-            `does not accept "${flag}". Accepted: ${[...accepted].sort().join(' ') || '(none parsed)'}`
+          `${t.repo} (${t.id}): bootstrap.ts sets modules:true but ${isPs ? "install.ps1" : "bootstrap.sh"} ` +
+            `does not accept "${flag}". Accepted: ${[...accepted].sort().join(" ") || "(none parsed)"}`,
         );
       }
     }
@@ -203,9 +254,23 @@ for (const t of targets) {
   // Informational: repo flags the generator chooses not to surface (help/automation/
   // destructive are expected omissions — never an error). --only/--skip are surfaced
   // via the module selector, not as flags, so they belong here too.
-  const ignore = new Set(['-h', '--help', '-q', '--quiet', '--json', '-Help', '--only', '--skip']);
-  const notSurfaced = [...accepted].filter((f) => !surfaced.includes(f) && !ignore.has(f));
-  if (notSurfaced.length) notes.push(`${t.repo} (${t.id}): not surfaced — ${notSurfaced.sort().join(' ')}`);
+  const ignore = new Set([
+    "-h",
+    "--help",
+    "-q",
+    "--quiet",
+    "--json",
+    "-Help",
+    "--only",
+    "--skip",
+  ]);
+  const notSurfaced = [...accepted].filter(
+    (f) => !surfaced.includes(f) && !ignore.has(f),
+  );
+  if (notSurfaced.length)
+    notes.push(
+      `${t.repo} (${t.id}): not surfaced — ${notSurfaced.sort().join(" ")}`,
+    );
 }
 
 // ── also hold the landing-page builder to the same check ──────────────────────
@@ -215,20 +280,27 @@ for (const t of targets) {
 const ibRows = loadInstallBuilderRows();
 if (ibRows) {
   for (const r of ibRows) {
-    const file = join(repoPath(r.repo), r.isPs ? 'install.ps1' : 'bootstrap.sh');
+    const file = join(
+      repoPath(r.repo),
+      r.isPs ? "install.ps1" : "bootstrap.sh",
+    );
     if (!existsSync(file)) {
       skipped++;
-      notes.push(`InstallBuilder ${r.id}: ${r.repo} ${r.isPs ? 'install.ps1' : 'bootstrap.sh'} not found — skipped (repo not checked out).`);
+      notes.push(
+        `InstallBuilder ${r.id}: ${r.repo} ${r.isPs ? "install.ps1" : "bootstrap.sh"} not found — skipped (repo not checked out).`,
+      );
       continue;
     }
     verified++;
-    const src = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
-    const accepted = r.isPs ? psAcceptedFlags(src) : shAcceptedFlags(src);
+    const src = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+    const accepted = r.isPs
+      ? psAcceptedFlags(src)
+      : shAcceptedFlags(src, repoPath(r.repo));
     for (const flag of r.flags) {
       if (!accepted.has(flag)) {
         errors.push(
-          `InstallBuilder.astro (${r.id}): surfaces "${flag}" but ${r.repo}'s ${r.isPs ? 'install.ps1' : 'bootstrap.sh'} ` +
-            `does not accept it. Accepted: ${[...accepted].sort().join(' ') || '(none parsed)'}`
+          `InstallBuilder.astro (${r.id}): surfaces "${flag}" but ${r.repo}'s ${r.isPs ? "install.ps1" : "bootstrap.sh"} ` +
+            `does not accept it. Accepted: ${[...accepted].sort().join(" ") || "(none parsed)"}`,
         );
       }
     }
@@ -239,25 +311,30 @@ if (ibRows) {
 if (verified === 0) {
   console.warn(
     `[verify-flags] no repo bootstraps found under ${root} — nothing to verify. Check out the ` +
-      `full fleet beside this repo, or set DOTFILES_ROOT to point at it.`
+      `full fleet beside this repo, or set DOTFILES_ROOT to point at it.`,
   );
   process.exit(0);
 }
 
 if (notes.length) {
-  console.log('[verify-flags] notes (informational):');
+  console.log("[verify-flags] notes (informational):");
   for (const n of notes) console.log(`  · ${n}`);
 }
 
 if (errors.length) {
-  console.error(`\n[verify-flags] ✗ ${errors.length} drift error(s) — a command builder is out of sync with the repos:`);
+  console.error(
+    `\n[verify-flags] ✗ ${errors.length} drift error(s) — a command builder is out of sync with the repos:`,
+  );
   for (const e of errors) console.error(`  ✗ ${e}`);
   // Each error above names its own source; fix the flag there (or the repo bootstrap).
-  console.error('\nFix the flag in the source named in each error — src/data/bootstrap.ts or ' + 'src/components/InstallBuilder.astro — (or the repo bootstrap), then re-run.');
+  console.error(
+    "\nFix the flag in the source named in each error — src/data/bootstrap.ts or " +
+      "src/components/InstallBuilder.astro — (or the repo bootstrap), then re-run.",
+  );
   process.exit(1);
 }
 
 console.log(
   `\n[verify-flags] ✓ all surfaced flags are accepted by their repos ` +
-    `(${verified} verified${skipped ? `, ${skipped} skipped` : ''}).`
+    `(${verified} verified${skipped ? `, ${skipped} skipped` : ""}).`,
 );
