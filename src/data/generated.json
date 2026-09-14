@@ -4,67 +4,67 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "1c2dd5ce993d22f61d34fa3bfd2d263bcfec38d3",
+        "commit": "fc9c2026ab3a888c048805ea73a40ae55efb6662",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "7a31dedf23e3ba34c4af3982598a6205cb7bffe1",
+        "commit": "9be2ceb199ae35c0f180d08ab482f9e730104f5b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "3b7c1dbfcacbf3c919a8238bb20b190e1ab87e1f",
+        "commit": "75e4f52dce2e69b8f9a5416d238afd1e52d86d93",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "934107c7f96f4874d40f508eaa2a10c5e73b6df7",
+        "commit": "b9ce1e65e3f332fd85d2d3a2c4d226b8f80c4284",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "8e42d01b27ad1413481bbd08c2e69107cdedcd58",
+        "commit": "eee00c0ef1af45d778b8a3057a9b801da0772910",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "c62e55c0c37e494d888eded922dec48d0ee9f40d",
+        "commit": "0a7da103298f9fdbd10d20f45f0e2aa0f99f9fea",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "3f6d87482e43ba641c70b035e3f7a4ef2c796bb6",
+        "commit": "9786a2e8bda1e6c30a5afca8ae51b92d2e7a76b4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "e3b51e58830e97c16dd2b971c81c01fd2944e486",
+        "commit": "3da45ba8fbfb1630bc583c2033a3294c96824b38",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "0bd63626b258fddf64c005ed51c484416c7e9754",
+        "commit": "14a0eb9240e99ba9a25922c4e482919fc4809370",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "46bc2592181f80f0b6e10eb566ed29678da2e12e",
+        "commit": "6dcf9225b11a2671af4c419a38bd67049a2c8607",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "0c29001bc3ccad69215cfe22487f3034b7df1dd6",
+        "commit": "b1cbc4b3def67a01b55f16fbc6fb9ccfb79375ee",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -76,72 +76,72 @@
     "layers": 3
   },
   "releases": {
-    "current": "v7.4.4",
+    "current": "v7.5.0",
     "channels": [
+      "v7.5.0",
       "v7.4.4",
       "v7.4.3",
-      "v7.4.2",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "7.4.4",
+    "coreVersion": "7.5.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-Windows": {
         "ref": null,
         "carried": null,
-        "mirroredFrom": "v7.3.0",
+        "mirroredFrom": "v7.4.4",
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-Defense": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-Arch": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-Debian": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.4.3",
-        "carried": "7.4.3",
+        "ref": "v7.4.4",
+        "carried": "7.4.4",
         "status": "behind"
       }
     }
   },
   "core": {
-    "version": "7.4.4",
+    "version": "7.5.0",
     "sourcedModules": 14,
     "zshLoc": 6990,
     "gitAliases": 57,
@@ -172,6 +172,35 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.5.0",
+      "date": "2026-09-14",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "Four prototype os.capabilities keys, for the non-mutable host research (R2 of NON-MUTABLE-HOST-PROPOSAL.md, #1004). scripts/check-capabilities.sh accepts PROVISIONER (mutable | atomic | transactional | declarative), PKG_APPLY (the verb that makes a staged change live), and PKG_PENDING_EXIT_SOME / _NONE (a count verb whose answer is its exit status) — all optional, all read by no consumer yet — and lets PKG_COUNT_PENDING be absent under PROVISIONER=declarative. Every existing declaration validates unchanged. The three prototype declarations they were written for live under scripts/research/nonmutable/, each validated, with the R2 verdict (additive — no schema version, no re-author) in their README. (scripts/check-capabilities.sh, examples/os.capabilities.example, scripts/test/55-capabilities.sh)",
+              "kind": "feature"
+            },
+            {
+              "text": "The R3 harness for the non-mutable host research, and its answer (#1004). scripts/research/nonmutable/home.nix is a home-manager module that tries to own everything the driver wires as out-of-store links into the vendored core/; scripts/research/nonmutable-home-manager.sh applies it, runs the repo's bootstrap.sh --links-only over the result, switches again and records who owns each path. research-nonmutable.yml gained a homemanager leg (Fedora 42, standalone) and research-nonmutable-vm.yml's NixOS guest applies it as a NixOS module. Measured verdict, in NON-MUTABLE-HOST-PROPOSAL.md §5: coexist — the driver overwrites home-manager's links silently, home-manager tolerates the driver's links but refuses to activate over its zsh entry, so a fleet home.nix owns packages, the shell declaration, tpm and PATH and declares no files.",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "The sudo keepalive no longer dies on a non-interactive run whose sudo needs no password (#1018, found by the non-mutable-host research on a booted bootc guest). The prime was a bare sudo -v, and sudoers' default verifypw=all makes -v prompt unless every rule matching the user is NOPASSWD — Fedora's stock wheel rule beside a NOPASSWD drop-in is one passworded rule too many, so a run with no terminal ended \"authentication failed\" on a host where every command was passwordless. blib_sudo_keepalive_start now primes by how the run can answer: -v at a terminal; -A -v when SUDO_ASKPASS is set; otherwise -n -v, then -n true, then a warning that names the actual problem (no terminal and a password required) before the driver's \"cannot provision packages\" line. (lib/bootstrap-lib.sh, scripts/test/85-escalation.sh)",
+              "kind": "config"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.4.4",
@@ -216,22 +245,6 @@
             {
               "text": "Offense and Gentoo are on the bootstrap driver — the blib_main row reads 6/9 (#986; dotgibson/dotfiles-Offense#328, dotgibson/dotfiles-Gentoo#187, both on v7.4.2). The two lazy-escalation repos: Offense declares BOOTSTRAP_ROLE=offensive, no login shell and BOOTSTRAP_SU=lazy, so only --install escalates, inside its own hook; Gentoo declares lazy too and keeps its --user fallback — the guard resolves an escalator and downgrades to user mode when there is none, the provision hook primes the keepalive itself, and provision_user folds into bootstrap_provision. Both keep their package bodies verbatim. 619 + 1316 → 551 + 1236 lines. (scripts/audit/40-fleet-registers.sh)",
               "kind": "perf"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.4.2",
-      "date": "2026-09-13",
-      "groups": [
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "openSUSE is recorded on the blib_install_core_guard row — the row closes at 9/9 (#986; follow-up to #992). A blib_main caller is credited with the whole helper contract, and the driver installs the Core guard openSUSE's own bootstrap never had, so §5f read the repo as advanced on that row the moment dotgibson/dotfiles-openSUSE#186 merged — the state the v7.4.1 fan-out audit meets. Same shape as Defense in #988. (scripts/audit/40-fleet-registers.sh)",
-              "kind": "fix"
             }
           ]
         }
@@ -3713,6 +3726,33 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v7.5.0",
+      "date": "2026-09-14",
+      "category": "Added",
+      "kind": "feature",
+      "text": "Four prototype os.capabilities keys, for the non-mutable host research (R2 of NON-MUTABLE-HOST-PROPOSAL.md, #1004). scripts/check-capabilities.sh accepts PROVISIONER (mutable | atomic | transactional | declarative), PKG_APPLY (the verb that makes a staged change live), and PKG_PENDING_EXIT_SOME / _NONE (a count verb whose answer is its exit status) — all optional, all read by no consumer yet — and lets PKG_COUNT_PENDING be absent under PROVISIONER=declarative. Every existing declaration validates unchanged. The three prototype declarations they were written for live under scripts/research/nonmutable/, each validated, with the R2 verdict (additive — no schema version, no re-author) in their README. (scripts/check-capabilities.sh, examples/os.capabilities.example, scripts/test/55-capabilities.sh)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.5.0",
+      "date": "2026-09-14",
+      "category": "Added",
+      "kind": "feature",
+      "text": "The R3 harness for the non-mutable host research, and its answer (#1004). scripts/research/nonmutable/home.nix is a home-manager module that tries to own everything the driver wires as out-of-store links into the vendored core/; scripts/research/nonmutable-home-manager.sh applies it, runs the repo's bootstrap.sh --links-only over the result, switches again and records who owns each path. research-nonmutable.yml gained a homemanager leg (Fedora 42, standalone) and research-nonmutable-vm.yml's NixOS guest applies it as a NixOS module. Measured verdict, in NON-MUTABLE-HOST-PROPOSAL.md §5: coexist — the driver overwrites home-manager's links silently, home-manager tolerates the driver's links but refuses to activate over its zsh entry, so a fleet home.nix owns packages, the shell declaration, tpm and PATH and declares no files.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.5.0",
+      "date": "2026-09-14",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "The sudo keepalive no longer dies on a non-interactive run whose sudo needs no password (#1018, found by the non-mutable-host research on a booted bootc guest). The prime was a bare sudo -v, and sudoers' default verifypw=all makes -v prompt unless every rule matching the user is NOPASSWD — Fedora's stock wheel rule beside a NOPASSWD drop-in is one passworded rule too many, so a run with no terminal ended \"authentication failed\" on a host where every command was passwordless. blib_sudo_keepalive_start now primes by how the run can answer: -v at a terminal; -A -v when SUDO_ASKPASS is set; otherwise -n -v, then -n true, then a warning that names the actual problem (no terminal and a password required) before the driver's \"cannot provision packages\" line. (lib/bootstrap-lib.sh, scripts/test/85-escalation.sh)",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v7.4.4",
       "date": "2026-09-13",
       "category": "Changed",
@@ -3754,15 +3794,6 @@
       "category": "Changed",
       "kind": "perf",
       "text": "Offense and Gentoo are on the bootstrap driver — the blib_main row reads 6/9 (#986; dotgibson/dotfiles-Offense#328, dotgibson/dotfiles-Gentoo#187, both on v7.4.2). The two lazy-escalation repos: Offense declares BOOTSTRAP_ROLE=offensive, no login shell and BOOTSTRAP_SU=lazy, so only --install escalates, inside its own hook; Gentoo declares lazy too and keeps its --user fallback — the guard resolves an escalator and downgrades to user mode when there is none, the provision hook primes the keepalive itself, and provision_user folds into bootstrap_provision. Both keep their package bodies verbatim. 619 + 1316 → 551 + 1236 lines. (scripts/audit/40-fleet-registers.sh)",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.4.2",
-      "date": "2026-09-13",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "openSUSE is recorded on the blib_install_core_guard row — the row closes at 9/9 (#986; follow-up to #992). A blib_main caller is credited with the whole helper contract, and the driver installs the Core guard openSUSE's own bootstrap never had, so §5f read the repo as advanced on that row the moment dotgibson/dotfiles-openSUSE#186 merged — the state the v7.4.1 fan-out audit meets. Same shape as Defense in #988. (scripts/audit/40-fleet-registers.sh)",
       "core": true
     },
     {
