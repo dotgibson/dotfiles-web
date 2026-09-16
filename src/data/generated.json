@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "58a6633ea153804b7c10d9402cceb3ebfccd262e",
+        "commit": "deb130b7bb9a825f4554f4c801176fa35b4df731",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "c0ce660129c9af05a88bf105487a757e39340e7f",
+        "commit": "272a48504cbd555ce88c83035275bbeb849367bf",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "bc7696e6d53b97ee6aeff0d2ceca125c3c47075c",
+        "commit": "842b3fa8a19694136ca7c84140a3883e797135d0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "0592bb0862ba038ed7fa1b95923baa1b759e6e3d",
+        "commit": "26f6348dee0ce03128cbd7b8b6ec1a4557c5fdd4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "0b1af9ee23316c8434958bca2387256db8d93962",
+        "commit": "8f4cdb7e287c844445ccb030135eaaed4941e6e5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "4d615fcd99c08ca54410d4b72d9252f9d88a0620",
+        "commit": "e3568dc332c3c0994aac5caecc235ab2ec90b775",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "641ae8ac082e7e2eb231d01b7afe3967490e9de3",
+        "commit": "8cfc3d9c2016acc8852dd951c3e66c89e681f5b2",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "20cded1c3e756bfb67ee3a6613e2d67598f289c6",
+        "commit": "12138fc63fa34c22bdfb24528471d171cdce5252",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "3df4bd2f9b215c8c87a4897f36ee0f02930778ef",
+        "commit": "fd9aed5fa6ffef5db5e4d9f5a22b840a54770b13",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "6f6db5f097ee2b36f71f5d193a5e89851fcb5c69",
+        "commit": "02897c01fe813f61c0a05dfd39923fcddaeef025",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,9 +88,9 @@
     "coreVersion": "7.9.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -99,44 +99,44 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.8.0",
-        "carried": "7.8.0",
-        "status": "behind"
+        "ref": "v7.9.0",
+        "carried": "7.9.0",
+        "status": "current"
       }
     }
   },
@@ -172,6 +172,66 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "The fan-out proves the App installation covers its targets, and a register asks the same question between releases (#1071). The fan-out's write scope is the GitHub App's installation, deliberately — hardcoding a repository list on the mint would be a second copy of scripts/os-repos.txt that could drift. But that installation is repository_selection=selected and nothing compared the two lists, so registering a repo in os-repos.txt left half the registration undone with no gate to say so.",
+              "kind": "feature"
+            },
+            {
+              "text": "The bash 3.2 floor gate learns the half that never runs at all. §5k has covered the features 3.2 does not have since #874 — they parse, then fail at run time. #1075 found the other half: syntax 3.2's parser refuses, where bash -n rejects the file and nothing in it executes. scripts/lib/common.sh :: _core_bash32_parse_hits is the new scanner, called from §5k beside _core_bash4_hits over the same files, and kept a separate helper because the older one's contract explicitly promises \"a builtin or a syntax bash 3.2 does not have\", which this is not. The entry is a case opening a command substitution with bare patterns, and it is a trap rather than a hazard. Measured against a bash 3.2.0 built for the purpose, not inferred from the CI red — all four parse on bash 5: ``text x=$(case $v in a) echo A;; esac) 3.2: syntax error near ;;', ALWAYS x=\"$(case $v in a) echo A;; esac)\" 3.2: fine — until an arm contains a ' x=\"$(case $v in a) echo \"it's\";; esac)\" 3.2: unexpected EOF looking for matching ' x=\"$(case $v in (a) echo \"it's\";; esac)\" 3.2: FINE — the leading ( is the fix `` So the double quotes are what make it work, and the construct can sit in the tree parsing perfectly until somebody edits English prose in a case arm. That is how it arrived: a research script's verdict string came to read the snapshot's copy won, went green on bash 5 through bash -n, ShellCheck and three Linux legs, and reddened only on macos-latest, eleven minutes in. The needle is therefore the bare pattern and not the apostrophe — a leading ( on every pattern fixes both shapes, so the rule has one fix and no judgement call. while, if and until bodies inside a substitution are unaffected, and so are backticks; it is case alone. Green on arrival over all 121 tracked shell files, which is the property #748's ledger asks of a new gate. Seven arms in the scanner suite pin it, and the two fixtures the scanner flags are exactly the two a real 3.2 refuses while the three it passes are exactly the three a real 3.2 accepts. Both documented gaps are named in the helper: a case appearing later inside a multi-command substitution, and a substitution whose subject holds parentheses — the latter excluded deliberately, because without that clamp a prose arm reading echo \"built in place\" supplies a second in ` and the rule fires on correct code.",
+              "kind": "perf"
+            },
+            {
+              "text": "A harness for R1's last three unmeasured cells (NON-MUTABLE-HOST-PROPOSAL.md §5, #1052). scripts/research/nonmutable-r1-cells.sh, behind a new r1cells input on research-nonmutable-vm.yml. Two of the three are claims a shipped declaration already makes, which no run has asked a host to confirm. dnf search on a booted bootc host — dotfiles-Fedora/os/fedora.atomic.capabilities declares PKG_SEARCH=dnf search; R1 probed only dnf install there (a refusal that arrives after resolving 317 packages) and only dnf -q provides in a container. It is asked before the leg's bootstrap passes, because R6 measured that a provision run writes a COPR repo file and breaks every later dnf, and as the user, because the key is declared with no escalator. makecache goes first: against a cold cache every query is a false miss, which is a fact about the harness, not the target. chsh across a NixOS switch — the cell was open because a build-vm guest carries no /etc/nixos/configuration.nix. So the workflow builds a second generation on the runner and the guest activates it over the shared /nix/store — no evaluation, no network, no store write of its own. It is built as -A vm and its system closure read back out of the runner script, not as -A system: that attribute builds a real machine and asserts a root filesystem and a bootloader this configuration never declares, because the vm variant supplies both implicitly — and hand-declaring them would leave gen2's fstab disagreeing with the machine actually running, which switch-to-configuration acts on. The whole gen2 step is best-effort with the probe outside it, after the first dispatch showed the failure mode that matters: an optional fidelity upgrade running under set -e took the required measurement down with it. Without a store path the script replays the current generation's activation and says so in the report. The action is test, not switch: switch also installs a boot loader, which a guest booted from QEMU's -kernel has none of, and the activation half is where users-groups runs. The full verb runs afterwards anyway, so the run records why it fails rather than the bare exit status. Both a declared user (root) and an imperative one (useradd, which users.mutableUsers permits) are chsh'd, because reverting only the declared one would be a narrower boundary than dotfiles-NixOS/bootstrap.sh claims. An /etc edit across transactional-update dup — the loss case transactional-update(8) documents (a file changed both during the update and afterwards in the running system) cannot be waited for, so it is forced: the snapshot is opened first with run, both halves are written, and the dup closes it with --continue. Opening first is what makes a no-op dup harmless — there is already a dirty snapshot to close. Four markers separate carried from shadowed from absent, and the payload rides beside them: the two writes blib_set_login_shell makes. Phase 2 fills in its own table and leads with the guard that matters — the booted subvolume did not change, so this round measured nothing — because a failed transaction deletes its own snapshot and every row would otherwise read as \"carried\".",
+              "kind": "perf"
+            },
+            {
+              "text": "sync-fanout checks that the fleet App installation covers every target before it clones anything (#1071). The fan-out's write scope is the GitHub App's installation, deliberately — hardcoding a repository list on the mint would be a second copy of scripts/os-repos.txt that could drift. But that installation is repository_selection=selected and nothing compared the two lists, so registering a repo in os-repos.txt left half the registration undone with no gate to say so. It shipped exactly once. dotfiles-NixOS joined the fleet in #1064; the v7.9.0 fan-out cloned, audited and synced all ten repos and then failed on the tenth push — Permission to dotgibson/dotfiles-NixOS.git denied to dotgibson-fleet-sync[bot] — after every expensive step had already run (#1070). A pre-flight in sync-fanout.yml now reads the installation with the token it has just minted and fails before the first clone, naming the repo and the Organization-Owner fix. A check_only: true dispatch runs the pre-flights and stops, so the scope can be checked before a release instead of discovered at the end of one. The comparison itself lives in scripts/fleet-app-scope.sh, the App-installation register, rather than inline in the workflow: the same question is worth asking on a schedule, and a second spelling of it is how a gate ends up covering a different list than the thing it gates. The register derives the expected set the way every fleet gate derives the fleet (os-repos.txt through load_os_repos, plus the two exceptions GITHUB-APP-AUTH.md names — no second copy of the list) and reports both directions: a push target the App cannot reach, and a repo installed that nothing writes to. The two halves of the question are readable from opposite environments, which shapes the whole change. The grant half (installation present, un-suspended, holding exactly the documented verbs) needs an org-admin token, so it runs on a maintainer box via make fleet-app-scope. The reach half (which repos does it cover?) needs an installation token no local environment can mint, so it runs in CI — which a scheduled job can do, and .github/workflows/fleet-app-scope.yml now does every Monday, red plus a deduplicated issue. Each half reports its own coverage, an unread half is never a pass, and a real finding outranks one, so the bare reporter stays green locally while --check exits 3 there. The fan-out's pre-flight warns rather than blocking when it cannot read: a blind check must not deny every repo its PR, which is the failure the fan-out loop already exists to avoid. Its mint now names permission-metadata: read, the verb that read spends. Not a fix for a live defect — a narrowed mint turns out to keep the mandatory grant, verified against the live API — but a mint that does not say what it spends is one nobody can audit.",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "R1's three remaining cells are measured, and the research phase's last open question is closed (NON-MUTABLE-HOST-PROPOSAL.md §5, #1052, runs 35130669056 and 35133704599). Two of the three were claims a shipped declaration already made. dnf search on a booted bootc host holds as declared. A hit is exit 0 in 1.2 s as the user, and an unprivileged dnf -q makecache populates the cache first — so dotfiles-Fedora/os/fedora.atomic.capabilities's PKG_SEARCH=dnf search needs no escalator on an atomic host any more than on a mutable one. The read-only half of dnf is untouched by the read-only root; only the transaction is refused. The new fact is that a miss is also exit 0, so hit and miss are indistinguishable by status on dnf5 and a consumer has to read the output. Nothing reads that status today, which is why this changes no code — but it is what a future \"is it available?\" reader would get wrong. The /etc loss case on a transactional host is confirmed, and it lands on the driver's own writes. A file changed both inside a staged snapshot and afterwards in the running system keeps only the snapshot's copy on the next boot; a running-only edit made after the snapshot opened does carry forward, exactly as transactional-update(8) documents. Measured with markers written at three distinguishable moments, plus the real pair: /etc/shells lost its post-snapshot append, and the chsh'd login shell kept the snapshot's value. That matters because PKG_INSTALL on that host is a staging verb, so every provisioning run leaves a snapshot open behind it and blib_set_login_shell writes into a copy of /etc the next boot discards, silently. The remedy belongs in dotfiles-openSUSE's transactional arm, not in a declaration key, and is tracked as dotgibson/dotfiles-openSUSE#199. Two transactional-update facts fell out of the same run: dup refuses outright when any enabled repo fails to refresh (zypper exit 4) and deletes its own snapshot on the way out. So the transition those markers crossed was the preceding run snapshot rather than a completed dup — recorded as the weaker claim it is. Opening the snapshot before the update is the only reason the experiment survived the failure. chsh across a NixOS activation reverts — but only for a user the configuration declares. Measured across a real second generation, with two users chsh'd to the same path: root, which users.users.root.shell declares, came back with the declared shell; an imperative useradd account kept its hand-set one. So users.mutableUsers = true does not mean hand edits stick — it means the merge leaves undeclared users alone while rewriting every declared user's shell on each activation. The hand edit survives exactly where nobody needs it to, and is reverted on the operator's own account, which is the measurement dotfiles-NixOS/bootstrap.sh's \"would work here … and is still wrong\" has been asserting without. /etc/shells is not regenerated to include the new shell either. Two things that would mislead a future reader, recorded with it: chsh warns \"invalid shell\" for a path outside /etc/shells and takes anyway (exit 0, a warning not a refusal); and switch-to-configuration test exited 4 while activation ran normally — the non-zero was home-manager-root.service failing, not the activation. And R1's oldest loose end is tied off: nixos-rebuild has exited 1 on these guests since iteration 3 with no recorded cause. Running the full switch after the verdict names it — the bootloader half, grub-install refusing an ext2 VM disk (\"will not proceed with blocklists\"). The activation half had already completed, so a build-vm guest can be activated but never switched; no future harness should read a switch failure there as a fact about NixOS.",
+              "kind": "perf"
+            },
+            {
+              "text": "scripts/os-repos.txt no longer claims to be the only step. Its header said \"THIS FILE IS THE ONLY EDIT\", which is why #1064 stopped there; it now names the App installation as the second registration, with the Organization-Owner path to add it. The same correction lands in VENDORING.md's onboarding section (with why this is not a return of the four-copies problem #669 removed: those were four copies of one fact, this is one fact in each of two systems that cannot read each other) and in the guidance scripts/new-os-repo.sh prints after scaffolding a repo.",
+              "kind": "fix"
+            },
+            {
+              "text": "GITHUB-APP-AUTH.md documents Metadata: read, the fourth permission the installation API actually returns. GitHub grants it mandatorily and offers no way to switch it off, so a doc naming three verbs against an API returning four is how the new grant assertion would have been \"corrected\" into permanent red. Also: fleet-app-scope.yml joins the per-mint consumer table, and freshness.yml's row said ×2 for three mint steps.",
+              "kind": "fix"
+            },
+            {
+              "text": "RELEASE-RUNBOOK.md stops asserting the App is \"installed on every target repo\" and says what now checks it, plus a troubleshooting row for the symptom itself — nine pushes and a 403 on the tenth.",
+              "kind": "config"
+            },
+            {
+              "text": "scripts/freshness-dashboard.sh said of the fleet App that there is \"nothing to probe here\". There was: its reach. The board now links the register that probes it rather than recomputing it (it holds no App mint, deliberately).",
+              "kind": "config"
+            },
+            {
+              "text": "§3 keeps the parser's message instead of discarding it. bash -n and zsh -n ran under 2>/dev/null, so a syntax failure reported bash syntax error: <file> and nothing else — no line, no reason. When the only leg that disagrees is macOS's bash 3.2, that is the entire question, and #1075 spent a CI round trip bisecting a file by hand for want of a line number that was sitting in the stderr the check was throwing away. Both now pass the message to fail_detail. §5k's new rule above catches one construct locally; this covers every other way a parser can refuse, including the gaps that rule names.",
+              "kind": "feature"
+            },
+            {
+              "text": "nvim plugin pins move forward for five plugins. fzf-lua, gitsigns.nvim, nvim-tree.lua, render-markdown.nvim and schemastore.nvim advance to upstream HEAD — the set a 2026-09-16 re-run of the fleet health board's signals (#794) found stale, four days after #965 rolled the previous one. The other three signals were green on the same run: all ten vendored core/ trees pristine at v7.9.0 (the tables count dotfiles-NixOS for the first time, #1064); every repo current except dotfiles-Windows, whose 28-commit gap is its Tuesday nvim-sync cron rather than drift — the one Core commit in the range that touches nvim/ landed after this week's run; and all eight zsh plugin pins current. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all five), and each range was read before promotion: - fzf-lua 05e44d3 → 02bc882, 3 commits: a keymap_edit action fix in path.lua, emmylua 0.25.1 type-lint fixes, CI vimdoc autogen. The fix lands on a picker Core binds (require(\"fzf-lua\").keymaps) — editing a mapping from that picker now resolves its source location. - gitsigns.nvim f2421c5 → 8d79f24, 9 commits: a unified diff panel (staging, cursor preservation, --diff=none), nowait blame bindings, and refactor(compat)!: drop support for Neovim 0.10. The breaking commit is inert here — the fleet floor is Neovim 0.12.0 (scripts/tool-versions.env, PORTING-MATRIX.md). M.diff gained an opts parameter ahead of its callback, with an @overload for the old arity; Core does not call it. All eight entry points Core does bind are byte-identical across the range: nav_hunk, stage_hunk, reset_hunk, stage_buffer, preview_hunk, blame_line, diffthis and :Gitsigns select_hunk. - nvim-tree.lua 882c54f → 8d81449, 1 commit: experimental.session_restore_nvim flips to true by default. It requires Neovim 0.13+, so it is inert at the fleet's floor; when the floor crosses it, it restores tree buffers for the sessions persistence.nvim already saves rather than competing with them. Core sets no experimental key, so it takes the default either way. - render-markdown.nvim a778444 → 640a3ec, 1 commit: the 8.14.0 release commit alone — changelog, doc date, M.version string, tests. Its headline feature (multiline table cells) was already at the pin this replaces. - schemastore.nvim 72d144a → 71cd030, 3 commits: two catalog refreshes plus a workflow change that drops a PAT. Data and .github/ only. Nothing renames or removes an API Core calls.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.9.0",
@@ -1735,6 +1795,94 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "The fan-out proves the App installation covers its targets, and a register asks the same question between releases (#1071). The fan-out's write scope is the GitHub App's installation, deliberately — hardcoding a repository list on the mint would be a second copy of scripts/os-repos.txt that could drift. But that installation is repository_selection=selected and nothing compared the two lists, so registering a repo in os-repos.txt left half the registration undone with no gate to say so.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "The bash 3.2 floor gate learns the half that never runs at all. §5k has covered the features 3.2 does not have since #874 — they parse, then fail at run time. #1075 found the other half: syntax 3.2's parser refuses, where bash -n rejects the file and nothing in it executes. scripts/lib/common.sh :: _core_bash32_parse_hits is the new scanner, called from §5k beside _core_bash4_hits over the same files, and kept a separate helper because the older one's contract explicitly promises \"a builtin or a syntax bash 3.2 does not have\", which this is not. The entry is a case opening a command substitution with bare patterns, and it is a trap rather than a hazard. Measured against a bash 3.2.0 built for the purpose, not inferred from the CI red — all four parse on bash 5: ``text x=$(case $v in a) echo A;; esac) 3.2: syntax error near ;;', ALWAYS x=\"$(case $v in a) echo A;; esac)\" 3.2: fine — until an arm contains a ' x=\"$(case $v in a) echo \"it's\";; esac)\" 3.2: unexpected EOF looking for matching ' x=\"$(case $v in (a) echo \"it's\";; esac)\" 3.2: FINE — the leading ( is the fix `` So the double quotes are what make it work, and the construct can sit in the tree parsing perfectly until somebody edits English prose in a case arm. That is how it arrived: a research script's verdict string came to read the snapshot's copy won, went green on bash 5 through bash -n, ShellCheck and three Linux legs, and reddened only on macos-latest, eleven minutes in. The needle is therefore the bare pattern and not the apostrophe — a leading ( on every pattern fixes both shapes, so the rule has one fix and no judgement call. while, if and until bodies inside a substitution are unaffected, and so are backticks; it is case alone. Green on arrival over all 121 tracked shell files, which is the property #748's ledger asks of a new gate. Seven arms in the scanner suite pin it, and the two fixtures the scanner flags are exactly the two a real 3.2 refuses while the three it passes are exactly the three a real 3.2 accepts. Both documented gaps are named in the helper: a case appearing later inside a multi-command substitution, and a substitution whose subject holds parentheses — the latter excluded deliberately, because without that clamp a prose arm reading echo \"built in place\" supplies a second in ` and the rule fires on correct code.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "A harness for R1's last three unmeasured cells (NON-MUTABLE-HOST-PROPOSAL.md §5, #1052). scripts/research/nonmutable-r1-cells.sh, behind a new r1cells input on research-nonmutable-vm.yml. Two of the three are claims a shipped declaration already makes, which no run has asked a host to confirm. dnf search on a booted bootc host — dotfiles-Fedora/os/fedora.atomic.capabilities declares PKG_SEARCH=dnf search; R1 probed only dnf install there (a refusal that arrives after resolving 317 packages) and only dnf -q provides in a container. It is asked before the leg's bootstrap passes, because R6 measured that a provision run writes a COPR repo file and breaks every later dnf, and as the user, because the key is declared with no escalator. makecache goes first: against a cold cache every query is a false miss, which is a fact about the harness, not the target. chsh across a NixOS switch — the cell was open because a build-vm guest carries no /etc/nixos/configuration.nix. So the workflow builds a second generation on the runner and the guest activates it over the shared /nix/store — no evaluation, no network, no store write of its own. It is built as -A vm and its system closure read back out of the runner script, not as -A system: that attribute builds a real machine and asserts a root filesystem and a bootloader this configuration never declares, because the vm variant supplies both implicitly — and hand-declaring them would leave gen2's fstab disagreeing with the machine actually running, which switch-to-configuration acts on. The whole gen2 step is best-effort with the probe outside it, after the first dispatch showed the failure mode that matters: an optional fidelity upgrade running under set -e took the required measurement down with it. Without a store path the script replays the current generation's activation and says so in the report. The action is test, not switch: switch also installs a boot loader, which a guest booted from QEMU's -kernel has none of, and the activation half is where users-groups runs. The full verb runs afterwards anyway, so the run records why it fails rather than the bare exit status. Both a declared user (root) and an imperative one (useradd, which users.mutableUsers permits) are chsh'd, because reverting only the declared one would be a narrower boundary than dotfiles-NixOS/bootstrap.sh claims. An /etc edit across transactional-update dup — the loss case transactional-update(8) documents (a file changed both during the update and afterwards in the running system) cannot be waited for, so it is forced: the snapshot is opened first with run, both halves are written, and the dup closes it with --continue. Opening first is what makes a no-op dup harmless — there is already a dirty snapshot to close. Four markers separate carried from shadowed from absent, and the payload rides beside them: the two writes blib_set_login_shell makes. Phase 2 fills in its own table and leads with the guard that matters — the booted subvolume did not change, so this round measured nothing — because a failed transaction deletes its own snapshot and every row would otherwise read as \"carried\".",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "sync-fanout checks that the fleet App installation covers every target before it clones anything (#1071). The fan-out's write scope is the GitHub App's installation, deliberately — hardcoding a repository list on the mint would be a second copy of scripts/os-repos.txt that could drift. But that installation is repository_selection=selected and nothing compared the two lists, so registering a repo in os-repos.txt left half the registration undone with no gate to say so. It shipped exactly once. dotfiles-NixOS joined the fleet in #1064; the v7.9.0 fan-out cloned, audited and synced all ten repos and then failed on the tenth push — Permission to dotgibson/dotfiles-NixOS.git denied to dotgibson-fleet-sync[bot] — after every expensive step had already run (#1070). A pre-flight in sync-fanout.yml now reads the installation with the token it has just minted and fails before the first clone, naming the repo and the Organization-Owner fix. A check_only: true dispatch runs the pre-flights and stops, so the scope can be checked before a release instead of discovered at the end of one. The comparison itself lives in scripts/fleet-app-scope.sh, the App-installation register, rather than inline in the workflow: the same question is worth asking on a schedule, and a second spelling of it is how a gate ends up covering a different list than the thing it gates. The register derives the expected set the way every fleet gate derives the fleet (os-repos.txt through load_os_repos, plus the two exceptions GITHUB-APP-AUTH.md names — no second copy of the list) and reports both directions: a push target the App cannot reach, and a repo installed that nothing writes to. The two halves of the question are readable from opposite environments, which shapes the whole change. The grant half (installation present, un-suspended, holding exactly the documented verbs) needs an org-admin token, so it runs on a maintainer box via make fleet-app-scope. The reach half (which repos does it cover?) needs an installation token no local environment can mint, so it runs in CI — which a scheduled job can do, and .github/workflows/fleet-app-scope.yml now does every Monday, red plus a deduplicated issue. Each half reports its own coverage, an unread half is never a pass, and a real finding outranks one, so the bare reporter stays green locally while --check exits 3 there. The fan-out's pre-flight warns rather than blocking when it cannot read: a blind check must not deny every repo its PR, which is the failure the fan-out loop already exists to avoid. Its mint now names permission-metadata: read, the verb that read spends. Not a fix for a live defect — a narrowed mint turns out to keep the mandatory grant, verified against the live API — but a mint that does not say what it spends is one nobody can audit.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "R1's three remaining cells are measured, and the research phase's last open question is closed (NON-MUTABLE-HOST-PROPOSAL.md §5, #1052, runs 35130669056 and 35133704599). Two of the three were claims a shipped declaration already made. dnf search on a booted bootc host holds as declared. A hit is exit 0 in 1.2 s as the user, and an unprivileged dnf -q makecache populates the cache first — so dotfiles-Fedora/os/fedora.atomic.capabilities's PKG_SEARCH=dnf search needs no escalator on an atomic host any more than on a mutable one. The read-only half of dnf is untouched by the read-only root; only the transaction is refused. The new fact is that a miss is also exit 0, so hit and miss are indistinguishable by status on dnf5 and a consumer has to read the output. Nothing reads that status today, which is why this changes no code — but it is what a future \"is it available?\" reader would get wrong. The /etc loss case on a transactional host is confirmed, and it lands on the driver's own writes. A file changed both inside a staged snapshot and afterwards in the running system keeps only the snapshot's copy on the next boot; a running-only edit made after the snapshot opened does carry forward, exactly as transactional-update(8) documents. Measured with markers written at three distinguishable moments, plus the real pair: /etc/shells lost its post-snapshot append, and the chsh'd login shell kept the snapshot's value. That matters because PKG_INSTALL on that host is a staging verb, so every provisioning run leaves a snapshot open behind it and blib_set_login_shell writes into a copy of /etc the next boot discards, silently. The remedy belongs in dotfiles-openSUSE's transactional arm, not in a declaration key, and is tracked as dotgibson/dotfiles-openSUSE#199. Two transactional-update facts fell out of the same run: dup refuses outright when any enabled repo fails to refresh (zypper exit 4) and deletes its own snapshot on the way out. So the transition those markers crossed was the preceding run snapshot rather than a completed dup — recorded as the weaker claim it is. Opening the snapshot before the update is the only reason the experiment survived the failure. chsh across a NixOS activation reverts — but only for a user the configuration declares. Measured across a real second generation, with two users chsh'd to the same path: root, which users.users.root.shell declares, came back with the declared shell; an imperative useradd account kept its hand-set one. So users.mutableUsers = true does not mean hand edits stick — it means the merge leaves undeclared users alone while rewriting every declared user's shell on each activation. The hand edit survives exactly where nobody needs it to, and is reverted on the operator's own account, which is the measurement dotfiles-NixOS/bootstrap.sh's \"would work here … and is still wrong\" has been asserting without. /etc/shells is not regenerated to include the new shell either. Two things that would mislead a future reader, recorded with it: chsh warns \"invalid shell\" for a path outside /etc/shells and takes anyway (exit 0, a warning not a refusal); and switch-to-configuration test exited 4 while activation ran normally — the non-zero was home-manager-root.service failing, not the activation. And R1's oldest loose end is tied off: nixos-rebuild has exited 1 on these guests since iteration 3 with no recorded cause. Running the full switch after the verdict names it — the bootloader half, grub-install refusing an ext2 VM disk (\"will not proceed with blocklists\"). The activation half had already completed, so a build-vm guest can be activated but never switched; no future harness should read a switch failure there as a fact about NixOS.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "scripts/os-repos.txt no longer claims to be the only step. Its header said \"THIS FILE IS THE ONLY EDIT\", which is why #1064 stopped there; it now names the App installation as the second registration, with the Organization-Owner path to add it. The same correction lands in VENDORING.md's onboarding section (with why this is not a return of the four-copies problem #669 removed: those were four copies of one fact, this is one fact in each of two systems that cannot read each other) and in the guidance scripts/new-os-repo.sh prints after scaffolding a repo.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "GITHUB-APP-AUTH.md documents Metadata: read, the fourth permission the installation API actually returns. GitHub grants it mandatorily and offers no way to switch it off, so a doc naming three verbs against an API returning four is how the new grant assertion would have been \"corrected\" into permanent red. Also: fleet-app-scope.yml joins the per-mint consumer table, and freshness.yml's row said ×2 for three mint steps.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "RELEASE-RUNBOOK.md stops asserting the App is \"installed on every target repo\" and says what now checks it, plus a troubleshooting row for the symptom itself — nine pushes and a 403 on the tenth.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "scripts/freshness-dashboard.sh said of the fleet App that there is \"nothing to probe here\". There was: its reach. The board now links the register that probes it rather than recomputing it (it holds no App mint, deliberately).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "§3 keeps the parser's message instead of discarding it. bash -n and zsh -n ran under 2>/dev/null, so a syntax failure reported bash syntax error: <file> and nothing else — no line, no reason. When the only leg that disagrees is macOS's bash 3.2, that is the entire question, and #1075 spent a CI round trip bisecting a file by hand for want of a line number that was sitting in the stderr the check was throwing away. Both now pass the message to fail_detail. §5k's new rule above catches one construct locally; this covers every other way a parser can refuse, including the gaps that rule names.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "nvim plugin pins move forward for five plugins. fzf-lua, gitsigns.nvim, nvim-tree.lua, render-markdown.nvim and schemastore.nvim advance to upstream HEAD — the set a 2026-09-16 re-run of the fleet health board's signals (#794) found stale, four days after #965 rolled the previous one. The other three signals were green on the same run: all ten vendored core/ trees pristine at v7.9.0 (the tables count dotfiles-NixOS for the first time, #1064); every repo current except dotfiles-Windows, whose 28-commit gap is its Tuesday nvim-sync cron rather than drift — the one Core commit in the range that touches nvim/ landed after this week's run; and all eight zsh plugin pins current. Every new SHA is a strict fast-forward of the one it replaces (status=ahead, behind_by=0 in all five), and each range was read before promotion: - fzf-lua 05e44d3 → 02bc882, 3 commits: a keymap_edit action fix in path.lua, emmylua 0.25.1 type-lint fixes, CI vimdoc autogen. The fix lands on a picker Core binds (require(\"fzf-lua\").keymaps) — editing a mapping from that picker now resolves its source location. - gitsigns.nvim f2421c5 → 8d79f24, 9 commits: a unified diff panel (staging, cursor preservation, --diff=none), nowait blame bindings, and refactor(compat)!: drop support for Neovim 0.10. The breaking commit is inert here — the fleet floor is Neovim 0.12.0 (scripts/tool-versions.env, PORTING-MATRIX.md). M.diff gained an opts parameter ahead of its callback, with an @overload for the old arity; Core does not call it. All eight entry points Core does bind are byte-identical across the range: nav_hunk, stage_hunk, reset_hunk, stage_buffer, preview_hunk, blame_line, diffthis and :Gitsigns select_hunk. - nvim-tree.lua 882c54f → 8d81449, 1 commit: experimental.session_restore_nvim flips to true by default. It requires Neovim 0.13+, so it is inert at the fleet's floor; when the floor crosses it, it restores tree buffers for the sessions persistence.nvim already saves rather than competing with them. Core sets no experimental key, so it takes the default either way. - render-markdown.nvim a778444 → 640a3ec, 1 commit: the 8.14.0 release commit alone — changelog, doc date, M.version string, tests. Its headline feature (multiline table cells) was already at the pin this replaces. - schemastore.nvim 72d144a → 71cd030, 3 commits: two catalog refreshes plus a workflow change that drops a PAT. Data and .github/ only. Nothing renames or removes an API Core calls.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
