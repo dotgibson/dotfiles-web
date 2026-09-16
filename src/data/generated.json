@@ -16,7 +16,7 @@
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "75e4f52dce2e69b8f9a5416d238afd1e52d86d93",
+        "commit": "5a9c7b9aed79d39dd92beb455384a06947937562",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -28,7 +28,7 @@
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "26f6348dee0ce03128cbd7b8b6ec1a4557c5fdd4",
+        "commit": "bc5b08d0c0de8f64f4231a73ee5c36ace5032127",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -52,7 +52,7 @@
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "12138fc63fa34c22bdfb24528471d171cdce5252",
+        "commit": "feb84748503d73289f48a5552a2a1231fa2bf94f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -95,7 +95,7 @@
       "dotfiles-Windows": {
         "ref": null,
         "carried": null,
-        "mirroredFrom": "v7.4.4",
+        "mirroredFrom": "v7.9.0",
         "status": "replicated"
       },
       "dotfiles-Offense": {
@@ -1178,6 +1178,14 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "htpx pin bumped to 7f369ee37ee5 (3.2.0+3), the first pin on an untagged commit (#297). Upstream's four new entries are two GCP pairs — gcp-gce-startup-script-exec ↔ gcp-gce-metadata-audit (T1651, Compute Admin Activity) and gcp-gcs-mass-exfil ↔ gcp-gcs-exfil-audit (T1530, GCS Data Access) — and no release tag has reached them, so version/tag now record 3.2.0+3 and say \"none\" in words rather than naming a ref that does not exist. The pin file documents that shape for the next time. Nothing was renamed or retired upstream, so every claim still resolves and the gate was green either side: 103 reference URLs, 99 blue entries named, back-refs intact. The report diff is the whole content of the bump — 105 blue entries to 107, with the 99 claimed here unchanged and both new entries landing in \"htpx blue entries nothing here claims\". That GCP resource-plane gap is recorded, not accepted by default: filed separately so this bump's diff stays the pin and the generated report, the same split #277/#280 used for Azure.",
+              "kind": "perf"
+            },
+            {
+              "text": "systemd_unit_persistence allowlisted the binary an attacker writes units with (#302). filter_provisioning carried /systemd and /systemctl by exe|endswith under a comment claiming it was the \"same list as cron_persistence, same reason\" — and cron's list has neither. The claim was false and the two entries were an evasion: systemctl edit --force --full evil.service and systemctl link /tmp/evil.service both attribute the unit-file write to /systemctl, so the rule was silent on two first-class variants of the T1543.002 it exists to catch. Neither entry was justified anywhere — #210 folded them into the package-manager list without a measured reason. Dropping them outright would have reintroduced the systemctl enable symlink noise they were presumably there for, so the suppression is now scoped by path instead of by binary: filter_systemctl_wants matches only the <target>.wants/ symlink farm that carries the volume, and filter_systemd_runtime only PID 1 writing under /run. A unit written at the top level of a watched directory alerts again, whoever wrote it. filter_provisioning is now cron's eleven entries exactly, so the comment is true. Proved rather than asserted: the two new manifest rows (linux-systemd-persist-systemctl-edit, linux-systemd-persist-runtime-generated) fail on the pre-change rule and pass on this one, and each carries the near-miss true negative showing the narrowed suppression still suppresses. The transient-unit path (systemd-run, StartTransientUnit) is written by PID 1 under /run and is therefore still suppressed — recorded in the rule as the accepted cost of not muting it on every reboot's generator output.",
+              "kind": "config"
+            },
             {
               "text": "core-verify asks the integrity question again, and core-check gets the freshness one back (dotgibson/dotfiles-core#691). Adopting the fleet vocabulary pointed the canonical core-verify at this repo's upstream-tag query and demoted core-check to an alias of it. Those are two different questions: freshness is *is there a NEWER Core upstream?*, integrity is *is THIS core/ the tree core.lock pins?* — and Core's scripts/make-vocabulary.txt defines the canonical verb as the second. So the register read green on a target answering something else, while this repo still had no local integrity check at all: core-integrity.yml ran one in CI and nothing ran one here. core-check is a real target again, with help text naming its question, and core-verify delegates to Core's own scripts/core-integrity.sh from a CORE_REPO checkout — the same invocation CI uses, and the only implementation that knows how the fan-out filters the vendored subtree. It probes with -f plus bash … rather than -x, so a checkout that lost the exec bit does not fail it spuriously. Verified both ways against a sibling clone at core v6.1.0: core-verify reports pristine, core-check reports current.",
               "kind": "feature"
@@ -2849,6 +2857,22 @@
       "category": "Known gaps",
       "kind": "security",
       "text": "The WSL Git-Credential-Manager note that lived in os/kali.gitconfig (how to point credential.helper at the Windows host's GCM) did not travel with the file. It belongs in dotfiles-Debian's git overlay now that that repo owns WSL.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "htpx pin bumped to 7f369ee37ee5 (3.2.0+3), the first pin on an untagged commit (#297). Upstream's four new entries are two GCP pairs — gcp-gce-startup-script-exec ↔ gcp-gce-metadata-audit (T1651, Compute Admin Activity) and gcp-gcs-mass-exfil ↔ gcp-gcs-exfil-audit (T1530, GCS Data Access) — and no release tag has reached them, so version/tag now record 3.2.0+3 and say \"none\" in words rather than naming a ref that does not exist. The pin file documents that shape for the next time. Nothing was renamed or retired upstream, so every claim still resolves and the gate was green either side: 103 reference URLs, 99 blue entries named, back-refs intact. The report diff is the whole content of the bump — 105 blue entries to 107, with the 99 claimed here unchanged and both new entries landing in \"htpx blue entries nothing here claims\". That GCP resource-plane gap is recorded, not accepted by default: filed separately so this bump's diff stays the pin and the generated report, the same split #277/#280 used for Azure.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "systemd_unit_persistence allowlisted the binary an attacker writes units with (#302). filter_provisioning carried /systemd and /systemctl by exe|endswith under a comment claiming it was the \"same list as cron_persistence, same reason\" — and cron's list has neither. The claim was false and the two entries were an evasion: systemctl edit --force --full evil.service and systemctl link /tmp/evil.service both attribute the unit-file write to /systemctl, so the rule was silent on two first-class variants of the T1543.002 it exists to catch. Neither entry was justified anywhere — #210 folded them into the package-manager list without a measured reason. Dropping them outright would have reintroduced the systemctl enable symlink noise they were presumably there for, so the suppression is now scoped by path instead of by binary: filter_systemctl_wants matches only the <target>.wants/ symlink farm that carries the volume, and filter_systemd_runtime only PID 1 writing under /run. A unit written at the top level of a watched directory alerts again, whoever wrote it. filter_provisioning is now cron's eleven entries exactly, so the comment is true. Proved rather than asserted: the two new manifest rows (linux-systemd-persist-systemctl-edit, linux-systemd-persist-runtime-generated) fail on the pre-change rule and pass on this one, and each carries the near-miss true negative showing the narrowed suppression still suppresses. The transient-unit path (systemd-run, StartTransientUnit) is written by PID 1 under /run and is therefore still suppressed — recorded in the rule as the accepted cost of not muting it on every reboot's generator output.",
       "core": false
     },
     {
