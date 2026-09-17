@@ -10,7 +10,7 @@
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "272a48504cbd555ce88c83035275bbeb849367bf",
+        "commit": "32a85182bd06d53713c4374c09de3860fb500bc8",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,49 +22,49 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "842b3fa8a19694136ca7c84140a3883e797135d0",
+        "commit": "92beb4a301948b12b79dd488710adcacb8640a44",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "ee69e461de6b11753d92b6777d066d44d21a57fa",
+        "commit": "3453577f6b2523a4fa97456453287d0c5bbb58e3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "50ab14ff61ff3058a3a538b602d066c2a2591ed4",
+        "commit": "470c4d311e524b444113159dafa40b6fb9f37e5c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "e3568dc332c3c0994aac5caecc235ab2ec90b775",
+        "commit": "af5b974efa9f106ea821b4ef661ab3c4048c84cf",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "8cfc3d9c2016acc8852dd951c3e66c89e681f5b2",
+        "commit": "2846bf8550b9b59078e3b83ff869f86fb8d7d3ae",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "feb84748503d73289f48a5552a2a1231fa2bf94f",
+        "commit": "d7e0a93c172bfd552dc19c9d62a32a148b6894b8",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "fd9aed5fa6ffef5db5e4d9f5a22b840a54770b13",
+        "commit": "4c79fbed47a0cecd8a6b7dee25b45c519920eeae",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "8a7b15a42ba1f1f989f8690e84c385c29700d8a8",
+        "commit": "8af7e703aa4049ab66672f584a2e7fa07ca54fe1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,9 +88,9 @@
     "coreVersion": "7.10.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -99,44 +99,44 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.9.0",
-        "carried": "7.9.0",
-        "status": "behind"
+        "ref": "v7.10.0",
+        "carried": "7.10.0",
+        "status": "current"
       }
     }
   },
@@ -1603,6 +1603,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "make lint stops warning about dnf on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt. Both declarations here run base-system binaries the list deliberately does not name — that file records what this repo ADDS to a box — so the check fired on 8 verbs in each, burying the one case it exists to catch: a verb naming a tool nothing installs. PKG_UNLISTED_TOOLS declares the exceptions (dnf on the workstation edition, rpm-ostree dnf rpm systemctl on the atomic one) and both declarations now validate with zero warnings. Kept honest from both ends, so it cannot rot into a blanket silencer: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
+              "kind": "feature"
+            },
+            {
               "text": "The atomic edition — Silverblue, Kinoite, any bootc host — as a variant of the same bootstrap (#186; runbook step 3 of dotgibson/dotfiles-core's NON-MUTABLE-HOST-PROPOSAL.md §4.6, the R4 patch measured end to end on a booted fedora-bootc:42 guest, runs 34893435585 and 34895922848). On a booted ostree image dnf install resolves the whole transaction and then refuses (\"configured to be read-only\"), rpm --import cannot lock the rpmdb, and nothing installed is live until a reboot — so the old script died at its first dnf line there. The marker is /run/ostree-booted, not VARIANT_ID (the bootc image reports ID=fedora and no variant), and everything hangs off that one flag: the RPM Fusion release RPMs, the package list, the lazygit COPR (a repo file into /etc/yum.repos.d — dnf copr needs a plugin that is not live until a reboot), the carapace RPM and 1password-cli all layer with rpm-ostree install --idempotent into the next deployment; the package list is filtered to the names dnf repoquery resolves and rpm -q does not already answer, because one base-provided name refuses the whole layer even under --idempotent (measured — it took the first 38-package layer down); 1Password's fingerprint-verified key is installed under /etc/pki/rpm-gpg and the repo's gpgkey points at it. A second declaration, os/fedora.atomic.capabilities (PROVISIONER=atomic, the rpm-ostree verbs, PKG_APPLY_PENDING=rpm-ostree status --pending-exit-77, PKG_APPLY=sudo systemctl reboot, no count verb — that question is root-only there), is relinked by bootstrap_wire_pre_loader the way dotfiles-openSUSE selects Leap's, so Core's up, nudge and maint runner (Core v7.6.0) see the staged host. The closing line says \"N package(s) layered — reboot to apply, then re-run once\": the cargo/go tools behind command -v cargo guards are skipped on the first run and picked up on the second, which is the edition's measured cost (a full second deployment plus the from-source builds). 118 code lines in bootstrap.sh, an 18-line declaration delta, no install/ fork and no os/*.zsh fork — the atomic edition's packages *are* Fedora's packages. BOOTSTRAP_PROVISIONER=atomic forces the marker, which is how a container reaches the staging path at all.",
               "kind": "config"
             },
@@ -1695,6 +1699,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "make lint stops warning about pacman and checkupdates on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt, and it fired on 7 verbs here for two different reasons. pacman is base-system, and that file records what this repo ADDS to a box. checkupdates is installed — just under another name, from pacman-contrib, which the list does carry; the check matches package names, not the binaries inside them. PKG_UNLISTED_TOOLS=pacman checkupdates declares both, and the declaration now validates with zero warnings. Kept honest from both ends: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
+              "kind": "feature"
+            },
             {
               "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo pacman -Syu. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on an Arch box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
               "kind": "perf"
@@ -1824,6 +1832,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "make lint stops warning about apt-get, apt-cache and dpkg on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt. All three are base-system on any Debian box, and that file records what this repo ADDS — so the check fired on 10 verbs per declaration, the loudest in the fleet, because the verbs here split across three binaries rather than one. That buried the one case it exists to catch: a verb naming a tool nothing installs. PKG_UNLISTED_TOOLS=apt-get apt-cache dpkg declares the exceptions in both the Debian and Kali declarations, and both now validate with zero warnings. Kept honest from both ends: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
+              "kind": "perf"
+            },
             {
               "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). assets/demo.gif is filmed from assets/demo.tape, which dotfiles-core generates from one shared template for all nine OS and role repos — the same tour everywhere, plus the one command that is this repo's own: up -n resolving to sudo apt-get full-upgrade. The tape is generated (edit dotfiles-core's assets/hero.tape.in, not the tape); re-render with vhs assets/demo.tape on a Debian box after a prompt or tooling change, then gifsicle -O3 --lossy=80 --colors 64 — the raw render is over Core's 2 MiB ceiling, the optimised one is not.",
               "kind": "perf"
@@ -3481,6 +3493,14 @@
       "repo": "dotfiles-Fedora",
       "version": "Unreleased",
       "category": "Added",
+      "kind": "feature",
+      "text": "make lint stops warning about dnf on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt. Both declarations here run base-system binaries the list deliberately does not name — that file records what this repo ADDS to a box — so the check fired on 8 verbs in each, burying the one case it exists to catch: a verb naming a tool nothing installs. PKG_UNLISTED_TOOLS declares the exceptions (dnf on the workstation edition, rpm-ostree dnf rpm systemctl on the atomic one) and both declarations now validate with zero warnings. Kept honest from both ends, so it cannot rot into a blanket silencer: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Added",
       "kind": "config",
       "text": "The atomic edition — Silverblue, Kinoite, any bootc host — as a variant of the same bootstrap (#186; runbook step 3 of dotgibson/dotfiles-core's NON-MUTABLE-HOST-PROPOSAL.md §4.6, the R4 patch measured end to end on a booted fedora-bootc:42 guest, runs 34893435585 and 34895922848). On a booted ostree image dnf install resolves the whole transaction and then refuses (\"configured to be read-only\"), rpm --import cannot lock the rpmdb, and nothing installed is live until a reboot — so the old script died at its first dnf line there. The marker is /run/ostree-booted, not VARIANT_ID (the bootc image reports ID=fedora and no variant), and everything hangs off that one flag: the RPM Fusion release RPMs, the package list, the lazygit COPR (a repo file into /etc/yum.repos.d — dnf copr needs a plugin that is not live until a reboot), the carapace RPM and 1password-cli all layer with rpm-ostree install --idempotent into the next deployment; the package list is filtered to the names dnf repoquery resolves and rpm -q does not already answer, because one base-provided name refuses the whole layer even under --idempotent (measured — it took the first 38-package layer down); 1Password's fingerprint-verified key is installed under /etc/pki/rpm-gpg and the repo's gpgkey points at it. A second declaration, os/fedora.atomic.capabilities (PROVISIONER=atomic, the rpm-ostree verbs, PKG_APPLY_PENDING=rpm-ostree status --pending-exit-77, PKG_APPLY=sudo systemctl reboot, no count verb — that question is root-only there), is relinked by bootstrap_wire_pre_loader the way dotfiles-openSUSE selects Leap's, so Core's up, nudge and maint runner (Core v7.6.0) see the staged host. The closing line says \"N package(s) layered — reboot to apply, then re-run once\": the cargo/go tools behind command -v cargo guards are skipped on the first run and picked up on the second, which is the edition's measured cost (a full second deployment plus the from-source builds). 118 code lines in bootstrap.sh, an 18-line declaration delta, no install/ fork and no os/*.zsh fork — the atomic edition's packages *are* Fedora's packages. BOOTSTRAP_PROVISIONER=atomic forces the marker, which is how a container reaches the staging path at all.",
       "core": false
@@ -3619,6 +3639,14 @@
       "category": "Removed",
       "kind": "config",
       "text": "A stale 4.5 MB orphaned worktree copy under .claude/worktrees/, and the obsolete zsh/local.zsh ignore entry (host overrides have lived at ~/.config/zsh/99-local.zsh since v4).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "make lint stops warning about pacman and checkupdates on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt, and it fired on 7 verbs here for two different reasons. pacman is base-system, and that file records what this repo ADDS to a box. checkupdates is installed — just under another name, from pacman-contrib, which the list does carry; the check matches package names, not the binaries inside them. PKG_UNLISTED_TOOLS=pacman checkupdates declares both, and the declaration now validates with zero warnings. Kept honest from both ends: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
       "core": false
     },
     {
@@ -3835,6 +3863,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "bootstrap.sh installs the local core/ pre-commit guard on a fresh clone (blib_install_core_guard), catching a hand-edit at commit time rather than waiting for core-integrity.yml at PR time.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "perf",
+      "text": "make lint stops warning about apt-get, apt-cache and dpkg on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt. All three are base-system on any Debian box, and that file records what this repo ADDS — so the check fired on 10 verbs per declaration, the loudest in the fleet, because the verbs here split across three binaries rather than one. That buried the one case it exists to catch: a verb naming a tool nothing installs. PKG_UNLISTED_TOOLS=apt-get apt-cache dpkg declares the exceptions in both the Debian and Kali declarations, and both now validate with zero warnings. Kept honest from both ends: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
       "core": false
     },
     {
