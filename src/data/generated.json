@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "b40bb479f8c0db36e26dd76b2c3e5e575b6d580d",
+        "commit": "7c7ad399350ce74964baac0cc7941abad59feaa1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -16,7 +16,7 @@
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "8f8fe2a3de38ab197df67887424dfa1602e44619",
+        "commit": "783ec7da478c52ac3a2c851e867180e2028b9b0c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -172,6 +172,38 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "The next major is policy now: triggered by a non-empty Breaking Backlog, never scheduled — and the cost of cutting one lives beside the commands that cut it (#1118). Scoping v8.0.0 at v7.10.0 found nothing to scope: no open PRs, nothing breaking under [Unreleased], and every milestone at open_issues = 0 — the Breaking Backlog included. That is the third time. V8-PROPOSAL.md was written in exactly this state at 7.3.0 and closed DECIDED — no major comes out of this proposal; NON-MUTABLE-HOST-PROPOSAL.md was then named the right next major until R2 measured the os.capabilities schema additive, and shipped as four minors instead. Each time the answer was re-derived from scratch, because it was recorded in a closed proposal rather than in policy. RELEASE-STRATEGY.md now states the rule the repo has been following without saying so: a major is cut when the Breaking Backlog is non-empty and a release is due, and an empty backlog means there is no major to scope — a healthy state, not a gap. The three dissolved themes are cited as the record. What settles it every time is the second tiebreaker in RELEASE-RUNBOOK.md §1.0 — if nothing a host already uses changes meaning, it is at most a MINOR — and a candidate that dissolves under it was never major content. RELEASE-RUNBOOK.md gains the other half: the five costs of actually cutting one, promoted out of V8-PROPOSAL.md §7, which says outright that they belong to any major and which has been stranded inside a closed record for a release that never happened. The @vN sweep and why it goes first; the dotfiles-Windows hand bump no gate catches, where forgetting cost a full major behind for five releases; Core's own in-tree vN strings behind §8a, §8a-bis and §8a-ter — the entry counts them with a snippet rather than a frozen number, because §7's \"roughly thirty\" is 52 across 13 files today; the core_lock_expected_tree ordering rule measured at v6.0.0; and the fleet App installation list that is not in git, which 403'd at the end of v7.9.0. Neither file is in core.manifest or core.vendor, so none of this ships to a host.",
+              "kind": "config"
+            },
+            {
+              "text": "The nvim split is decided: A2 — extract into dotfiles-nvim, Core keeps vendoring it (#1120). NVIM-SPLIT-PROPOSAL.md had sat at DECISION PENDING since 2026-09-14, after three earlier deferrals (v4, V5-PROPOSAL.md §11, V8-PROPOSAL.md §10), and its own gate said the author picks A2 or B on the file. Nothing downstream could be filed until that happened — the milestone's issue queue did not exist yet, by design. A2 is picked, and none of the three conditions §5 named as recommendation-flipping fired: the editor has not settled, the drift check needs no second integrity model, and §7(1) resolves cleanly. The four open questions are answered rather than left to the migration, because they were the conditions on the recommendation. The theme block is the one that mattered: dotfiles-nvim vendors theme/palette.toml and runs its own generator, so \"colour is generated, not typed\" stays true on both sides of the vendor boundary. Generating into the vendored copy only was rejected twice over — it leaves the source tree's colours hand-typed, the exact state §9d exists to prevent, and it makes the copy differ from its source by construction, so the byte-identical assertion in §3.5 could never hold again after the first sync. luacheck stays in Core over the vendored copy as an integrity check; Core bumps nvim.lock with the next Core release, never on every nvim release, or the churn returns through the lock. Deciding is not shipping: nothing has moved, §3.5 is now the runbook, and the file flips to SHIPPED when it has. A2 is a minor — core/nvim keeps its path, core.manifest keeps its entry and blib_link_core is untouched (§3.4), which per RELEASE-STRATEGY.md is the whole test. One consequence recorded up front: dotfiles-nvim is a repo Core vendors from, not one Core fans out to, so it does not belong in scripts/os-repos.txt.",
+              "kind": "perf"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "V8-PROPOSAL.md §7 said where its cost list went, instead of quietly disagreeing with it (#1130). Promoting the MAJOR cost list into RELEASE-RUNBOOK.md §1.1 left §7 a frozen duplicate of a living checklist — the worse failure mode, because a reader who finds §7 first gets numbers that were already wrong. It had drifted twice over: \"roughly thirty\" in-tree v7 strings were 52 across 13 files by v7.10.0, and it predates the fleet App installation cost altogether. §7's status note now points at the runbook and names its own drift, rather than promising a sync a closed record cannot keep — the lesson GITHUB-APP-MIGRATION.md already draws about frozen files that track live state.",
+              "kind": "fix"
+            },
+            {
+              "text": "The App-installation register named the wrong failure for a missing self-PR install (#1116). scripts/fleet-app-scope.sh printed one sentence over every fatal MISSING row — \"is a push target and the App cannot reach it — this is the v7.9.0 403\" — and fleet-app-scope.yml's job summary and the issue it files said the same. That is true of the fan-out targets and false of the three installs that exist for a repo's own self-PRs. It went wrong the first time it mattered. PR #1111 added dotfiles-Windows to the expected set on the strength of an install that, it turns out, had never existed, and the register then told its reader that a release was about to 403 on a repo the fan-out has never pushed to. The row now classifies against the fan-out list before it composes. A fan-out target keeps the 403, said precisely: it lands on the push, at the end of a release. A self-PR install reports its own failure instead — the mint inside that repo answers 404 on /repos/<owner>/<repo>/installation, its bots fall back to GITHUB_TOKEN, and their PRs go back to sitting BLOCKED, while every one of those jobs stays green. That is the shape issue #1110 predicted, and the shape that had been running unwatched since dotgibson/dotfiles-Windows#268. The non-fatal ! arm carries the class too, and scripts/test/90-policy-gates.sh holds the derivation — matched on the CORE_OS_REPOS[*] membership test, not on the English — so the two kinds cannot be collapsed back into one sentence by a later edit. GITHUB-APP-AUTH.md takes the general lesson under A new fleet repo is TWO registrations: it is a rule about this whole install list, not only about fan-out targets, and the org half goes first. Either order leaves the register red for a while; only one of them leaves real machinery quietly broken while it is.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.10.0",
@@ -448,6 +480,10 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "A sync bot that loses its App token now says so, instead of quietly reverting to a PR nobody can merge (#269). The mint step added in #268 carries continue-on-error: true, which is right — a fork, or a repo the App was never installed on, must not go red — and was also silent. When the mint *failed* rather than being skipped (the installation pulled, so create-github-app-token 404s on /installation) the token came back empty, ${{ steps.app.outputs.token || github.token }} fell back to GITHUB_TOKEN, and the job still concluded success. That is the #265 failure re-entering through its own fallback: the PR opens, ci.yml never fires on it, no required context arrives, and it sits BLOCKED until a human closes and reopens it. It happened the day #268 landed — theme-sync run 35223874896, all three bots degraded for most of a day — and what noticed was a *different* repo's weekly sweep (dotgibson/dotfiles-core#1116), not this one's own green run. All three bots now carry an identical step between the mint and the checkout, gated on steps.app.outputs.token == '', which is the one test that covers both branches: a skipped step and a continue-on-error failure leave the output empty for the same reason, where steps.app.outcome == 'failure' would miss the skip and steps.app.conclusion is success in both. It raises a ::warning:: and a $GITHUB_STEP_SUMMARY note that name the *consequence* rather than the cause — the cause is the part a reader can already see — and pass steps.app.outcome through, so skipped (no variable or secret reached the run) reads differently from failure (the App could not mint for this repo; go look at the installation). Deliberately still not a failure: a fork must not go red, and a real drift from Core is worth landing behind a manual nudge rather than not landing at all. New tests/SyncWorkflows.Tests.ps1 pins the block byte-identical across the three files and ordered *before* the checkout (a bare if: implicitly ANDs success(), so after it a checkout failure would swallow the warning) — nothing else read these workflows at all, which is how a fix applied to two of three would have shipped green. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml, tests/SyncWorkflows.Tests.ps1)",
+              "kind": "security"
+            },
             {
               "text": "The three sync bots open their PRs as the fleet App, so CI actually runs on them (#265). nvim-sync, starship-sync and theme-sync all pushed the branch and opened the PR with GH_TOKEN: ${{ github.token }}, and GitHub deliberately starts no workflow run from an event the default GITHUB_TOKEN created. So ci.yml's pull_request trigger never fired, not one of the six contexts the main ruleset requires ever arrived, and every sync PR sat BLOCKED indefinitely — #260 and #264 were each unblocked by a human closing and reopening them, which re-fires pull_request, and both merged minutes later. That manual step was being paid weekly, and it was not merely an annoyance: Core's fleet-drift.yml sweeps Mondays while these bots run Tue/Wed/Thu, so a sync PR waiting on a human reads as a Core drift red that is nothing of the kind (dotgibson/dotfiles-core#1058). Each bot now mints a short-lived, repo-scoped token from the dotgibson-fleet-sync App (actions/create-github-app-token, at the same SHA pin notify-web.yml already carries) and both pushes and opens the PR with it, so the PR is App-authored and its CI runs unattended — the same problem, and the same fix, as dotfiles-core's freshness.yml on its own self-PRs. Narrow on both axes: no owner:/repositories:, which is what scopes the token to *this* repository, and only contents + pull-requests: write — deliberately not workflows: write, so a bot that ever tried to rewrite CI fails loudly instead of having quietly been able to all along. It degrades rather than fails: with no App configured the mint is skipped and the bot falls back to GITHUB_TOKEN, so the PR still opens and merely needs the old manual nudge. GH_TOKEN moves from the job env: to the PR step's, because a job-level env: cannot read the steps context. The two App-free options weighed in #265 do not actually work — the recursion guard covers a push and a bot's own close+reopen exactly as it covers pull_request, so neither would have produced a single check. Depends on live infrastructure: the App is installed on this repo today, but Core's GITHUB-APP-AUTH.md still lists it under \"does not need installing\" and scripts/fleet-app-scope.sh reports it as an install nothing writes to; a Core-side issue moves it to a justified entry beside dotfiles-core's own. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml)",
               "kind": "fix"
@@ -1970,6 +2006,38 @@
   ],
   "feed": [
     {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "The next major is policy now: triggered by a non-empty Breaking Backlog, never scheduled — and the cost of cutting one lives beside the commands that cut it (#1118). Scoping v8.0.0 at v7.10.0 found nothing to scope: no open PRs, nothing breaking under [Unreleased], and every milestone at open_issues = 0 — the Breaking Backlog included. That is the third time. V8-PROPOSAL.md was written in exactly this state at 7.3.0 and closed DECIDED — no major comes out of this proposal; NON-MUTABLE-HOST-PROPOSAL.md was then named the right next major until R2 measured the os.capabilities schema additive, and shipped as four minors instead. Each time the answer was re-derived from scratch, because it was recorded in a closed proposal rather than in policy. RELEASE-STRATEGY.md now states the rule the repo has been following without saying so: a major is cut when the Breaking Backlog is non-empty and a release is due, and an empty backlog means there is no major to scope — a healthy state, not a gap. The three dissolved themes are cited as the record. What settles it every time is the second tiebreaker in RELEASE-RUNBOOK.md §1.0 — if nothing a host already uses changes meaning, it is at most a MINOR — and a candidate that dissolves under it was never major content. RELEASE-RUNBOOK.md gains the other half: the five costs of actually cutting one, promoted out of V8-PROPOSAL.md §7, which says outright that they belong to any major and which has been stranded inside a closed record for a release that never happened. The @vN sweep and why it goes first; the dotfiles-Windows hand bump no gate catches, where forgetting cost a full major behind for five releases; Core's own in-tree vN strings behind §8a, §8a-bis and §8a-ter — the entry counts them with a snippet rather than a frozen number, because §7's \"roughly thirty\" is 52 across 13 files today; the core_lock_expected_tree ordering rule measured at v6.0.0; and the fleet App installation list that is not in git, which 403'd at the end of v7.9.0. Neither file is in core.manifest or core.vendor, so none of this ships to a host.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "The nvim split is decided: A2 — extract into dotfiles-nvim, Core keeps vendoring it (#1120). NVIM-SPLIT-PROPOSAL.md had sat at DECISION PENDING since 2026-09-14, after three earlier deferrals (v4, V5-PROPOSAL.md §11, V8-PROPOSAL.md §10), and its own gate said the author picks A2 or B on the file. Nothing downstream could be filed until that happened — the milestone's issue queue did not exist yet, by design. A2 is picked, and none of the three conditions §5 named as recommendation-flipping fired: the editor has not settled, the drift check needs no second integrity model, and §7(1) resolves cleanly. The four open questions are answered rather than left to the migration, because they were the conditions on the recommendation. The theme block is the one that mattered: dotfiles-nvim vendors theme/palette.toml and runs its own generator, so \"colour is generated, not typed\" stays true on both sides of the vendor boundary. Generating into the vendored copy only was rejected twice over — it leaves the source tree's colours hand-typed, the exact state §9d exists to prevent, and it makes the copy differ from its source by construction, so the byte-identical assertion in §3.5 could never hold again after the first sync. luacheck stays in Core over the vendored copy as an integrity check; Core bumps nvim.lock with the next Core release, never on every nvim release, or the churn returns through the lock. Deciding is not shipping: nothing has moved, §3.5 is now the runbook, and the file flips to SHIPPED when it has. A2 is a minor — core/nvim keeps its path, core.manifest keeps its entry and blib_link_core is untouched (§3.4), which per RELEASE-STRATEGY.md is the whole test. One consequence recorded up front: dotfiles-nvim is a repo Core vendors from, not one Core fans out to, so it does not belong in scripts/os-repos.txt.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "V8-PROPOSAL.md §7 said where its cost list went, instead of quietly disagreeing with it (#1130). Promoting the MAJOR cost list into RELEASE-RUNBOOK.md §1.1 left §7 a frozen duplicate of a living checklist — the worse failure mode, because a reader who finds §7 first gets numbers that were already wrong. It had drifted twice over: \"roughly thirty\" in-tree v7 strings were 52 across 13 files by v7.10.0, and it predates the fleet App installation cost altogether. §7's status note now points at the runbook and names its own drift, rather than promising a sync a closed record cannot keep — the lesson GITHUB-APP-MIGRATION.md already draws about frozen files that track live state.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The App-installation register named the wrong failure for a missing self-PR install (#1116). scripts/fleet-app-scope.sh printed one sentence over every fatal MISSING row — \"is a push target and the App cannot reach it — this is the v7.9.0 403\" — and fleet-app-scope.yml's job summary and the issue it files said the same. That is true of the fan-out targets and false of the three installs that exist for a repo's own self-PRs. It went wrong the first time it mattered. PR #1111 added dotfiles-Windows to the expected set on the strength of an install that, it turns out, had never existed, and the register then told its reader that a release was about to 403 on a repo the fan-out has never pushed to. The row now classifies against the fan-out list before it composes. A fan-out target keeps the 403, said precisely: it lands on the push, at the end of a release. A self-PR install reports its own failure instead — the mint inside that repo answers 404 on /repos/<owner>/<repo>/installation, its bots fall back to GITHUB_TOKEN, and their PRs go back to sitting BLOCKED, while every one of those jobs stays green. That is the shape issue #1110 predicted, and the shape that had been running unwatched since dotgibson/dotfiles-Windows#268. The non-fatal ! arm carries the class too, and scripts/test/90-policy-gates.sh holds the derivation — matched on the CORE_OS_REPOS[*] membership test, not on the English — so the two kinds cannot be collapsed back into one sentence by a later edit. GITHUB-APP-AUTH.md takes the general lesson under A new fleet repo is TWO registrations: it is a rule about this whole install list, not only about fan-out targets, and the org half goes first. Either order leaves the register red for a while; only one of them leaves real machinery quietly broken while it is.",
+      "core": true
+    },
+    {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
       "category": "Added",
@@ -1991,6 +2059,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "notify-web.yml passes client-id, not the deprecated app-id, and reads the new FLEET_APP_CLIENT_ID org variable (#251, dotfiles-core #831). The pinned create-github-app-token (v3.2.0) deprecates app-id, and this repo's inline notifier — it does not consume Core's reusable — passed it. The variable is a new one because FLEET_APP_ID holds the App ID and the new input wants the Client ID, a different value; the if: guard and the ::warning:: that is this repo's only signal of a silently skipped refresh move in the same commit. Precondition: the org variable must exist before this merges, or the mint skips and the showcase stops refreshing with only that warning to say so.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "A sync bot that loses its App token now says so, instead of quietly reverting to a PR nobody can merge (#269). The mint step added in #268 carries continue-on-error: true, which is right — a fork, or a repo the App was never installed on, must not go red — and was also silent. When the mint *failed* rather than being skipped (the installation pulled, so create-github-app-token 404s on /installation) the token came back empty, ${{ steps.app.outputs.token || github.token }} fell back to GITHUB_TOKEN, and the job still concluded success. That is the #265 failure re-entering through its own fallback: the PR opens, ci.yml never fires on it, no required context arrives, and it sits BLOCKED until a human closes and reopens it. It happened the day #268 landed — theme-sync run 35223874896, all three bots degraded for most of a day — and what noticed was a *different* repo's weekly sweep (dotgibson/dotfiles-core#1116), not this one's own green run. All three bots now carry an identical step between the mint and the checkout, gated on steps.app.outputs.token == '', which is the one test that covers both branches: a skipped step and a continue-on-error failure leave the output empty for the same reason, where steps.app.outcome == 'failure' would miss the skip and steps.app.conclusion is success in both. It raises a ::warning:: and a $GITHUB_STEP_SUMMARY note that name the *consequence* rather than the cause — the cause is the part a reader can already see — and pass steps.app.outcome through, so skipped (no variable or secret reached the run) reads differently from failure (the App could not mint for this repo; go look at the installation). Deliberately still not a failure: a fork must not go red, and a real drift from Core is worth landing behind a manual nudge rather than not landing at all. New tests/SyncWorkflows.Tests.ps1 pins the block byte-identical across the three files and ordered *before* the checkout (a bare if: implicitly ANDs success(), so after it a checkout failure would swallow the warning) — nothing else read these workflows at all, which is how a fix applied to two of three would have shipped green. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml, tests/SyncWorkflows.Tests.ps1)",
       "core": false
     },
     {
