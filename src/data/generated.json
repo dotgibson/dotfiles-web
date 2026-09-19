@@ -1,70 +1,70 @@
 {
-  "generatedAt": "2026-09-18",
+  "generatedAt": "2026-09-19",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "3ab9c385e4a6b411556cf3ed2efeeb71b038b536",
+        "commit": "89887e8408afe69037909762e4dd8d0182bccd86",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "aa7cc5bbaae558083042ecfc2445e1b649aa46ca",
+        "commit": "a574011b37369f5a97dc6fae70c72d155b704015",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "0375e8318a72cdd938e57ef17fa1d58b5dd16902",
+        "commit": "dc264cd4c5127b8dbaf59093289721e889545d61",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "c60e88d98ac5b3fe70747ec31d40211c5f631640",
+        "commit": "dda10c09d2edb1fbb788076fb08bfaec4a29b160",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "3453577f6b2523a4fa97456453287d0c5bbb58e3",
+        "commit": "f57d60211971a1e46bb16449701daa982047daae",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "470c4d311e524b444113159dafa40b6fb9f37e5c",
+        "commit": "1d8a34cf1c2d7e1e1bb98f8c7cf0e68527cada9a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "143ec58c426f7a2bf8a41392fd2f282053215982",
+        "commit": "e3e259f89c89ac89df7fad597a066e291343f862",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "2846bf8550b9b59078e3b83ff869f86fb8d7d3ae",
+        "commit": "b6575312147f0835f4fc73e745ad6791e6b9a152",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "315b1e50880c2bb8c9c01f4eaa5d411eb6cf86db",
+        "commit": "149f369f46341d31ac14da4b15a65db8e2ef7d2f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "459ea676ad56470283dd48118ce4338c4012a207",
+        "commit": "f7ab747de53b15c59c6e052fa260c1864264d807",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "8af7e703aa4049ab66672f584a2e7fa07ca54fe1",
+        "commit": "ab0b2691ce35dc3582908fc3c2e5b37d7d7b66c1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -88,9 +88,9 @@
     "coreVersion": "7.11.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -99,44 +99,44 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.10.0",
-        "carried": "7.10.0",
-        "status": "behind"
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       }
     }
   },
@@ -172,6 +172,21 @@
     "dotfiles-Gentoo": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Documentation",
+          "items": [
+            {
+              "text": "Every registered README hero is now filmed — the tenth, dotfiles-NixOS's, landed as dotfiles-NixOS#8, so the \"still to be filmed\" prose in CLAUDE.md, assets/hero-repos.txt and assets/README.md is retired. It was the one row no rootless chroot could film — its host guard asserts sudo nixos-rebuild switch --upgrade and up -n probes $PATH for it — so it was filmed on NixOS-WSL, and assets/README.md gains \"Filming the NixOS hero\": the two-rebuild install, nixpkgs' own render kit (vhs 0.11.0, not the 0.12.0 that writes no gif), the Adwaita Mono rejection the ❖ fallback needs, and the trap that is NixOS-WSL's alone — a nixos-rebuild switch resets the kernel-global binfmt_misc table, which every distro on the machine shares, so the distro you drive from loses wsl.exe until it is re-registered (the recipe is there). The install also surfaced dotfiles-NixOS#6: home.nix named two attributes nixpkgs does not have, invisible to that repo's parse-only gate. §9k's rule stands: a registered tape with no gif is a skip, so a re-render that has not landed never blocks the gate.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.11.0",
@@ -2063,6 +2078,14 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "fix",
+      "text": "Every registered README hero is now filmed — the tenth, dotfiles-NixOS's, landed as dotfiles-NixOS#8, so the \"still to be filmed\" prose in CLAUDE.md, assets/hero-repos.txt and assets/README.md is retired. It was the one row no rootless chroot could film — its host guard asserts sudo nixos-rebuild switch --upgrade and up -n probes $PATH for it — so it was filmed on NixOS-WSL, and assets/README.md gains \"Filming the NixOS hero\": the two-rebuild install, nixpkgs' own render kit (vhs 0.11.0, not the 0.12.0 that writes no gif), the Adwaita Mono rejection the ❖ fallback needs, and the trap that is NixOS-WSL's alone — a nixos-rebuild switch resets the kernel-global binfmt_misc table, which every distro on the machine shares, so the distro you drive from loses wsl.exe until it is re-registered (the recipe is there). The install also surfaced dotfiles-NixOS#6: home.nix named two attributes nixpkgs does not have, invisible to that repo's parse-only gate. §9k's rule stands: a registered tape with no gif is a skip, so a re-render that has not landed never blocks the gate.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
