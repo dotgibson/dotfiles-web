@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-19",
+  "generatedAt": "2026-09-22",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "89887e8408afe69037909762e4dd8d0182bccd86",
+        "commit": "9f3616031b81e7bc86c8789b670c3f2730d18a7a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -40,7 +40,7 @@
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "e3e259f89c89ac89df7fad597a066e291343f862",
+        "commit": "16069b8519fdbccd2a1e984c7c28a9584bb4fafc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -52,7 +52,7 @@
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "149f369f46341d31ac14da4b15a65db8e2ef7d2f",
+        "commit": "4be8b519d71b69cb8cd97252ed26857b91671c6c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -176,6 +176,15 @@
       "repo": "dotfiles-core",
       "version": "Unreleased",
       "groups": [
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "new-os-repo.sh writes the fleet's shield row into the README it scaffolds. A checkup that fetched every badge and link target across the fifteen public READMEs found the two newest repos opening with no shield row at all — dotfiles-NixOS because this scaffold wrote none, and its generated .markdownlint.jsonc deliberately left out the MD033 allowance the row needs (\"a fresh OS repo has no showcase page\"). The scaffold now writes the eight-badge row above the title, the link definitions at the end, the CI badge pointing at the lint.yml it also writes, and the scoped MD033 allowed_elements stanza the siblings carry — so the next repo starts where dotfiles-NixOS had to be brought to by hand (dotfiles-NixOS#11). The same checkup fixed a dead bash link here (#1151), two logo slugs simple-icons no longer ships in each of dotfiles-Windows and dotfiles-Defense, and dotfiles-Offense's Python badge, which read CPython's GitHub releases — it publishes tags — and rendered \"no releases or repo not found\".",
+              "kind": "fix"
+            }
+          ]
+        },
         {
           "category": "Documentation",
           "items": [
@@ -2078,6 +2087,14 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "new-os-repo.sh writes the fleet's shield row into the README it scaffolds. A checkup that fetched every badge and link target across the fifteen public READMEs found the two newest repos opening with no shield row at all — dotfiles-NixOS because this scaffold wrote none, and its generated .markdownlint.jsonc deliberately left out the MD033 allowance the row needs (\"a fresh OS repo has no showcase page\"). The scaffold now writes the eight-badge row above the title, the link definitions at the end, the CI badge pointing at the lint.yml it also writes, and the scoped MD033 allowed_elements stanza the siblings carry — so the next repo starts where dotfiles-NixOS had to be brought to by hand (dotfiles-NixOS#11). The same checkup fixed a dead bash link here (#1151), two logo slugs simple-icons no longer ships in each of dotfiles-Windows and dotfiles-Defense, and dotfiles-Offense's Python badge, which read CPython's GitHub releases — it publishes tags — and rendered \"no releases or repo not found\".",
+      "core": true
+    },
     {
       "repo": "dotfiles-core",
       "version": "Unreleased",

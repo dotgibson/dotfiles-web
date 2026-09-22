@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-19",
+  "generatedAt": "2026-09-22",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "89887e8408afe69037909762e4dd8d0182bccd86",
+        "commit": "9f3616031b81e7bc86c8789b670c3f2730d18a7a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -16,7 +16,7 @@
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "e3e259f89c89ac89df7fad597a066e291343f862",
+        "commit": "16069b8519fdbccd2a1e984c7c28a9584bb4fafc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
