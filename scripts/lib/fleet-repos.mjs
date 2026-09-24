@@ -28,7 +28,7 @@ export const FLEET_MANIFEST = resolve(__dirname, '..', 'fleet-repos.txt');
  * Format is `<repo-name> <role>` per line, `#` comments and blank lines ignored
  * — the same shape as dotfiles-core's scripts/os-repos.txt, plus the role column
  * this repo needs because its consumers want different slices: the workflows
- * clone everything, collect-metrics.mjs wants Core separated from the ten it
+ * clone everything, collect-metrics.mjs wants Core separated from the eleven it
  * counts, and htpx must stay out of that count entirely.
  *
  * Order is preserved, and for the `os` rows that matters: it is the order

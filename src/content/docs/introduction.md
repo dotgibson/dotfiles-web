@@ -7,7 +7,7 @@ order: 0
 
 # Introduction
 
-**dotgibson** is a cross-platform terminal environment shipped as an **eleven-repo, three-layer**
+**dotgibson** is a cross-platform terminal environment shipped as an **twelve-repo, three-layer**
 dotfiles system. The goal is a single, opinionated setup — shell, editor, multiplexer, prompt,
 git — that stays **identical on every machine you touch**, with no productivity gaps when you
 hop between them and no per-host drift creeping in over time.
@@ -24,7 +24,7 @@ into a Core that is authored once, and let each machine layer only its own diffe
 | Layer | Lives in | Owns |
 | --- | --- | --- |
 | **Core** | `dotfiles-core`, vendored into every OS repo's `core/` | zsh, tmux, nvim, git, starship — identical everywhere |
-| **OS-native** | `dotfiles-{MacBook,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
+| **OS-native** | `dotfiles-{MacBook,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo,NixOS}` | package manager, clipboard, paths |
 | **Role** | `dotfiles-Offense` (offensive), `dotfiles-Defense` (defensive) | engagement / detection tooling on top of the OS layer |
 | *Native host* | `dotfiles-Windows` | the Windows host: pwsh, Terminal, the WSL bridge |
 

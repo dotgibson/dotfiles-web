@@ -61,7 +61,7 @@
 ## About The Project
 
 **`dotfiles-web` is the public showcase + documentation hub** for the
-[dotgibson](https://github.com/dotgibson/) dotfiles system — an eleven-repo,
+[dotgibson](https://github.com/dotgibson/) dotfiles system — a twelve-repo,
 three-layer terminal environment (Core → OS-native → Role). It **documents** the
 system rather than configuring a machine, so it is **not** itself one of the three
 layers. Built with [Astro](https://astro.build), themed in **Tokyo Night**, and
@@ -139,7 +139,7 @@ repos into `src/data/`:
 
 | file | collector | source repo |
 | --- | --- | --- |
-| `generated.json` | `collect-metrics.mjs` | the eleven dotfiles repos |
+| `generated.json` | `collect-metrics.mjs` | the twelve dotfiles repos |
 | `snippets.json` | `collect-snippets.mjs` | eight curated files across six of them |
 | `corpus.json` | `collect-corpus.mjs` | `htpx` |
 | `coverage.json` | `collect-coverage.mjs` | `dotfiles-Defense` |

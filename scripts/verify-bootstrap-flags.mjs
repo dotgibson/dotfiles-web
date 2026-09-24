@@ -154,9 +154,9 @@ function shCaseArmFlags(src, flags) {
 // declare what it is, define its hooks, and hand over with `blib_main "$@"` — in which
 // case the shared flags (--links-only, --dry-run/-n, --strict, --only/--skip, -h/--help)
 // live in the VENDORED driver, core/lib/bootstrap-lib.sh :: blib_main, and only the
-// repo's own flags (via bootstrap_flag()) are case arms in bootstrap.sh. Eight of nine
+// repo's own flags (via bootstrap_flag()) are case arms in bootstrap.sh. Nine of ten
 // repos are on it (MacBook stays outside by design), so parsing bootstrap.sh alone reads
-// every shared flag as "not accepted" and fails all eight (dotfiles-web#283's
+// every shared flag as "not accepted" and fails all nine (dotfiles-web#283's
 // derived-data leg). Parse the driver's case arms from the repo's OWN vendored copy —
 // the flags a real user's clone accepts, at the Core that clone carries — and union.
 // A repo that hands over but has no vendored lib (a --no-vendor scaffold) is left with

@@ -12,8 +12,7 @@
 // complete set its repo accepts. The generator omits automation and destructive flags
 // (--uninstall, --json, --quiet, --strict, -Yes, …), and several repos take more than is
 // listed here: Fedora's --force-os, openSUSE's --tolerate-failures, Gentoo's --no-extras
-// / --no-portage-config / --user, and the -n alias for --dry-run on all but Gentoo,
-// openSUSE and Defense.
+// / --no-portage-config / --user, and the -n alias for --dry-run on every Unix repo.
 //
 // So do NOT read a target's `flags` as "everything this bootstrap accepts". This header
 // used to carry a per-repo inventory that was read exactly that way, and it went stale:
@@ -23,8 +22,8 @@
 //
 // Every repo that vendors core/lib/bootstrap-lib.sh accepts --only/--skip module
 // selection (Track B); `modules: true` opts a target into the UI. Windows has no
-// vendored Core, so it carries no module groups, and dotfiles-Defense parses only the
-// `--only=`/`--skip=` equals form — see the note on its target below.
+// vendored Core, so it carries no module groups. Every other target hands its argv to
+// Core's blib_main, which takes both the `--only zsh,git` and `--only=zsh,git` forms.
 // Re-verify after any bootstrap change — scripts/verify-bootstrap-flags.mjs guards it,
 // and CI runs it in data-freshness.yml's derived-data job.
 
@@ -244,20 +243,19 @@ export const targets: BootstrapTarget[] = [
     // whatever OS-native layer the box runs and installs nothing. Genuinely
     // distro-agnostic — the detection stack is containers, so no blue-team distro.
     //
-    // NO `modules: true`, and that is deliberate. dotfiles-Defense/bootstrap.sh parses
-    // args with `for a in "$@"; do case "$a" in`, so it accepts --only/--skip ONLY in the
-    // `--only=zsh,git` equals form. The generator emits the space-separated form
-    // (generator.astro's moduleClause), which Defense's `*)` arm would reject with
-    // `exit 1` — a broken copy-paste command. Opting out is the honest fix here; making
-    // the generator emit `=` per target would be the alternative if this ever matters.
-    // scripts/verify-bootstrap-flags.mjs asserts --only/--skip acceptance for any
-    // `modules: true` target, so it would catch a regression on this.
+    // `modules: true` since Defense moved onto the shared driver: its bootstrap.sh ends in
+    // `blib_main "$@"`, which parses --only/--skip in both the space form the generator
+    // emits and the `=` form. (It used to parse its own argv and took only `--only=`, which
+    // is why this target once opted out.) Its one private flag, --no-check, arrives through
+    // the bootstrap_flag hook. scripts/verify-bootstrap-flags.mjs reads the vendored driver
+    // and asserts --only/--skip acceptance for any `modules: true` target.
     id: 'defense',
     label: 'Defense (role layer)',
     repo: 'dotfiles-Defense',
     dialect: 'sh',
     entry: './bootstrap.sh',
     cloneDir: '~/dotfiles-Defense',
+    modules: true,
     blurb:
       'The defensive role layer — detection engineering and investigation, stacked on an OS-native layer you install first. Distro-agnostic: the heavy stack runs in containers, so no dedicated blue-team distro.',
     flags: [linksOnly, noCheck, dryRun],
@@ -329,16 +327,7 @@ export const targets: BootstrapTarget[] = [
     cloneDir: '~/dotfiles-Alpine',
     modules: true,
     blurb: 'The lean outlier: musl libc, busybox, doas. Run as root or with doas; enable the community repo.',
-    flags: [
-      linksOnly,
-      {
-        key: 'dry-run',
-        label: 'Dry run — preview, change nothing',
-        flag: '--dry-run',
-        help: 'Print every planned action and mutate nothing. On Alpine this also implies --links-only, because provisioning installs packages and touches the system.',
-        kind: 'safety',
-      },
-    ],
+    flags: [linksOnly, dryRun],
     notes: ['Run as root or with doas, and make sure the community apk repo is enabled.'],
   },
   {
@@ -362,5 +351,32 @@ export const targets: BootstrapTarget[] = [
       dryRun,
     ],
     notes: ['First build compiles from source — expect it to take a while.'],
+  },
+  {
+    // The one declarative host. nix owns the package set, PATH and the login-shell
+    // declaration (nix/nixos.nix + nix/home.nix); bootstrap.sh installs nothing, never
+    // escalates, and only wires the links — so it runs LAST, after nixos-rebuild and
+    // home-manager. It hands over to blib_main with no private flags.
+    id: 'nixos',
+    label: 'NixOS',
+    repo: 'dotfiles-NixOS',
+    dialect: 'sh',
+    entry: './bootstrap.sh',
+    cloneDir: '~/dotfiles-NixOS',
+    modules: true,
+    blurb:
+      'The one declarative host. Packages, PATH and the login shell are declared in nix/nixos.nix + nix/home.nix; bootstrap.sh installs nothing and only wires the links.',
+    flags: [
+      {
+        ...linksOnly,
+        label: 'Links only — skip the host probe',
+        help: 'Re-wire the dotfile symlinks and skip the report-only check for nix, home-manager and the profile. Nothing is ever installed here either way.',
+      },
+      dryRun,
+    ],
+    notes: [
+      'Run nix FIRST: import nix/nixos.nix from configuration.nix, `sudo nixos-rebuild switch`, then `home-manager switch` — only then run the bootstrap.',
+      'It never runs chsh. Declare the login shell in nix/nixos.nix (users.users.<you>.shell = pkgs.zsh — the bootstrap prints the line), rebuild, then log in again.',
+    ],
   },
 ];

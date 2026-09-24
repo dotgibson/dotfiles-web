@@ -23,13 +23,13 @@ snapshot. What CI actually guarantees:
 
 | file | source | what CI verifies |
 | --- | --- | --- |
-| `generated.json` | the eleven dotfiles repos | full content, regenerated and diffed (+ the Core version string) |
+| `generated.json` | the twelve dotfiles repos | full content, regenerated and diffed (+ the Core version string) |
 | `corpus.json` | `htpx/entries/{red,blue}/*.md` | full content, regenerated and diffed |
 | `coverage.json` | `dotfiles-Defense/detections/sigma/**/*.yml` | full content, regenerated and diffed |
 | `snippets.json` | six repos' config files (Core, four OS, Offense) | full content, regenerated and diffed |
 
 - **All four are content-gated** by `data-freshness`'s `derived-data` job — it clones the
-  twelve source repos, re-runs all four collectors, and fails on any difference — and are
+  thirteen source repos, re-runs all four collectors, and fails on any difference — and are
   refreshed by `fleet-sync`. Which commit of each repo it clones depends on the event; see
   the bullet on that below before leaning on a green tick. All four carry a `generatedAt` date; **read the stamp**, and
   if it predates recent activity in the source repo say so rather than certifying the
@@ -38,7 +38,7 @@ snapshot. What CI actually guarantees:
   never outside a gate — `check` has always compared `.releases.current` /
   `.drift.coreVersion` against the latest `dotfiles-core` release — but that is one string
   out of ~2200 lines, so package counts, CI flags, the changelog, `fleet.publicRepos`,
-  every `core.*` metric and all ten per-repo `drift` entries went unvalidated. That is
+  every `core.*` metric and all eleven per-repo `drift` entries went unvalidated. That is
   exactly how a bogus `dotfiles-Windows` drift entry once sat in a file CI called fresh.
   Those fields are now gated, so a value here is a fact rather than a lead — **but only in
   a snapshot generated after #150/#160**. In anything older, treat every non-version field
@@ -60,7 +60,7 @@ snapshot. What CI actually guarantees:
   was reported as stale.)
 - The stamp shapes differ. `corpus.json` / `coverage.json` carry a flat
   `generatedFrom.commit` for their single source. `snippets.json` spans six repos and
-  `generated.json` eleven, so both put their SHAs per-repo under
+  `generated.json` twelve, so both put their SHAs per-repo under
   `generatedFrom.repos.<name>.commit` alongside a `generatedFrom.clean` verdict (the two
   stamps were deliberately unified in #148) — looking for a top-level `.commit` in either
   finds nothing and proves nothing.

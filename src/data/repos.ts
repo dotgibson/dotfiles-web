@@ -286,7 +286,7 @@ cd ~/dotfiles-Defense
 ./bootstrap.sh                 # symlinks Core + defense; checks docker
 exec zsh`,
     installNote:
-      'Distro-agnostic: host tools come from your OS-native layer; the heavy detection stack comes up in containers via docker/ (siemup / siemdown). Flags: --dry-run (preview, change nothing), --links-only, --no-check (skip the host-tool + Docker probe). Module selection uses the equals form here: --only=zsh,git.',
+      'Distro-agnostic: host tools come from your OS-native layer; the heavy detection stack comes up in containers via docker/ (siemup / siemdown). Flags: --dry-run (preview, change nothing), --links-only, --no-check (skip the host-tool + Docker probe). Module selection: --only zsh,git (or --only=zsh,git), and likewise --skip.',
     specifics: [
       {
         label: 'A defense stage on the loader',
@@ -493,6 +493,47 @@ exec zsh`,
         label: 'Living with Portage',
         detail:
           'After a world update Portage often wants @preserved-rebuild and dispatch-conf; actually read eselect news (gnews) — that is how breaking changes are announced.',
+      },
+    ],
+    docs: [{ label: 'Porting matrix', slug: 'reference/porting-matrix' }],
+  },
+  {
+    name: 'dotfiles-NixOS',
+    layer: 'os',
+    status: 'beta',
+    icon: 'λ',
+    blurb:
+      'The one declarative host. nix owns the packages, PATH and the login-shell declaration (nixos-rebuild + home-manager); bootstrap.sh installs nothing and only wires the links.',
+    highlights: ['nixos-rebuild', 'home-manager', 'declarative', 'installs nothing'],
+    install: `git clone https://github.com/dotgibson/dotfiles-NixOS ~/dotfiles-NixOS
+# import ~/dotfiles-NixOS/nix/nixos.nix from configuration.nix, then:
+sudo nixos-rebuild switch
+home-manager switch            # the package set, PATH and tpm
+cd ~/dotfiles-NixOS
+./bootstrap.sh                 # only now, the links
+exec zsh`,
+    installNote:
+      'Order matters: nix first, bootstrap last. bootstrap.sh never escalates and never runs chsh. Flags: --dry-run (preview, change nothing), --links-only (skip the report-only host probe), --only / --skip module selection.',
+    specifics: [
+      {
+        label: 'Two owners, one boundary',
+        detail:
+          'nix/ owns the package set, PATH, tpm and the login-shell declaration; bootstrap.sh owns every link and the zsh entry. The fleet\'s only PROVISIONER=declarative host — packages-check is a stub by design.',
+      },
+      {
+        label: "Don't let home-manager claim the links",
+        detail:
+          'nix/home.nix must not declare home.file or programs.zsh for anything the driver links — two owners of one path and home-manager activation deadlocks.',
+      },
+      {
+        label: 'The shell is declared, not chsh\'d',
+        detail:
+          'nix/nixos.nix enables programs.zsh (which puts zsh in /etc/shells) and carries the users.users.<you>.shell = pkgs.zsh line for you to set; the bootstrap prints that declaration at the end instead of changing the shell itself.',
+      },
+      {
+        label: 'Channels or flakes',
+        detail:
+          'nix/README.md tracks the nixos-25.05 and home-manager release-25.05 channels; flake users skip the channel step and import the same modules.',
       },
     ],
     docs: [{ label: 'Porting matrix', slug: 'reference/porting-matrix' }],

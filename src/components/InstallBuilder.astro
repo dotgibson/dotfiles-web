@@ -61,12 +61,16 @@ const platforms = [
       { id: 'openSUSE', repo: 'dotfiles-openSUSE', extra: [{ flag: '--no-flatpak', label: 'Skip Flatpak apps' }] },
       { id: 'Alpine', repo: 'dotfiles-Alpine', extra: [] },
       { id: 'Gentoo', repo: 'dotfiles-Gentoo', extra: [{ flag: '--no-sync', label: 'Skip emerge --sync on re-runs' }] },
+      // dotfiles-NixOS is deliberately NOT here. This picker emits a one-shot
+      // clone-and-bootstrap, but on NixOS the bootstrap runs LAST, after nixos-rebuild and
+      // home-manager, and the "skip package install" framing below is meaningless on a
+      // host that installs nothing. It has its own guide in src/data/install.ts instead.
     ],
     flags: [
       // Every Linux bootstrap parses --dry-run (most also take -n). An earlier comment here
       // claimed the opposite and withheld the flag; scripts/verify-bootstrap-flags.mjs
       // reads each repo's real case-arms, so re-run `npm run verify:flags` before trusting
-      // a claim like that again. On Alpine --dry-run also implies --links-only.
+      // a claim like that again.
       { flag: '--dry-run', label: 'Dry run — preview, change nothing' },
       { flag: '--links-only', label: 'Links only — skip package install' },
     ],

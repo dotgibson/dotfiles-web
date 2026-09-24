@@ -33,7 +33,7 @@ description: >-
 # it. A shallow clone that stopped setting it would stamp defaultBranch null
 # against "main" in the committed files, turning that job red over clone
 # mechanics rather than drift. The default-branch clone does set it — verified
-# across all twelve, and fleet-sync has been proving the same thing weekly.
+# across all thirteen, and fleet-sync has been proving the same thing weekly.
 #
 # A `ref`-PINNED clone does NOT: `git clone --branch <tag>` leaves origin/HEAD
 # unset, so defaultBranch stamps null. That is fine and long-standing, because
@@ -76,7 +76,7 @@ inputs:
     default: ""
   token:
     description: >-
-      Optional token. When set, clones via x-access-token. All twelve repos are
+      Optional token. When set, clones via x-access-token. All thirteen repos are
       public, so this is never required — deploy.yml passes github.token only
       because its pinned-release build already holds one.
     required: false

@@ -19,7 +19,7 @@
 #     del(.generatedAt, .generatedFrom.commit) it used to say.
 #   • snippets.json carries generatedFrom.{clean,repos{}} — six SHAs, each moving
 #     on every unrelated commit to its own repo — and generated.json carries that
-#     same shape over eleven.
+#     same shape over twelve.
 #   • snippets.json's generatedFrom has ALSO been the bare STRING "sibling
 #     repos", and `del(.x.commit)` against a string is a hard jq error (exit 5),
 #     which under `set -e` would break the bot outright. Guarding on the type
