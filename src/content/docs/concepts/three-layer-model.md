@@ -14,14 +14,22 @@ put something in is decided by **one question: what does it change with?**
 
 | Layer | Lives in | Owns |
 | --- | --- | --- |
-| **Core** | `dotfiles-core`, vendored into every OS repo's `core/` | zsh modules, tmux, nvim, git, starship |
+| **Core** | `dotfiles-core`, vendored into every OS repo's `core/` | zsh modules, tmux, git, starship, and the editor it vendors in |
 | **OS-native** | `dotfiles-{MacBook,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo,NixOS}` | package manager, clipboard, paths |
 | **Role** | `dotfiles-Offense`, `dotfiles-Defense` | offensive / defensive tooling on the OS layer |
 | *Native host* | `dotfiles-Windows` | the Windows host: pwsh, Terminal, the WSL bridge |
+| *Editor* | `dotfiles-nvim`, vendored into Core's `nvim/` and into `dotfiles-Windows` | the Neovim config |
 
 `dotfiles-Windows` is the model's one named exception rather than a fourth layer: it vendors no
 Core at all, replicating it natively in PowerShell, so it sits beside the three rather than inside
 the OS-native row.
+
+`dotfiles-nvim` is the other exception, and its arrow points the other way. The editor is still
+identical on every machine, so it ships as part of Core. But it is **authored** in `dotfiles-nvim`,
+whose gate can do what Core's cannot: start a real Neovim, install the pinned plugins and run
+`:checkhealth`. Core vendors a tagged release into `nvim/`, pinned by `nvim.lock`, and a hand-edit
+there fails Core's audit. Editor changes go upstream, and the pin moves with a Core release.
+`dotfiles-Windows` vendors the same release through its own `nvim.lock`.
 
 ## The rule for where a change belongs
 
