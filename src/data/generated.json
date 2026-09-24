@@ -4,67 +4,67 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "9f3616031b81e7bc86c8789b670c3f2730d18a7a",
+        "commit": "fd201458a7b68c6a4f98e5c8f59acb799b4b9482",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "a574011b37369f5a97dc6fae70c72d155b704015",
+        "commit": "761be3557f35567016b0624f5629238383c6a642",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "dc264cd4c5127b8dbaf59093289721e889545d61",
+        "commit": "71f7f1a18d933344e6abcb3f3facf399562da551",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "5f8075493f69a0ef2367a89180e7a65622fe2cfe",
+        "commit": "cf6be786329d2d4a5c282439508a062df3354915",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "449523855b821609365bfe7e5d3679900f72a835",
+        "commit": "e67414e130c987bd59997d4dfe6f5f7f45f6b687",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "1d8a34cf1c2d7e1e1bb98f8c7cf0e68527cada9a",
+        "commit": "66fe02caa4be3acb266b0b2826b6ac728527b03c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "16069b8519fdbccd2a1e984c7c28a9584bb4fafc",
+        "commit": "381e93ec3a1cf7984003d61dd8244b841b6dcefc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "b6575312147f0835f4fc73e745ad6791e6b9a152",
+        "commit": "fe1d2703a8a90802c92ec95b4a4dd3bfe6500c08",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "4be8b519d71b69cb8cd97252ed26857b91671c6c",
+        "commit": "0accbbe1082b7f08d16107022b3ad5285269f85c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "f7ab747de53b15c59c6e052fa260c1864264d807",
+        "commit": "d035d488d931b92232eba1be2bebf57bfdaeee0a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "870d8612c89989967042e1d5a73bbc462673b0da",
+        "commit": "87f7eb1e247a4c4b6304b95ddd6c7baca14a73c4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -154,13 +154,13 @@
   "core": {
     "version": "7.11.0",
     "sourcedModules": 14,
-    "zshLoc": 7302,
+    "zshLoc": 7310,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 30
   },
   "packages": {
-    "dotfiles-MacBook": 77,
+    "dotfiles-MacBook": 76,
     "dotfiles-Fedora": 38,
     "dotfiles-Arch": 46,
     "dotfiles-Debian": 46,
@@ -189,10 +189,31 @@
       "version": "Unreleased",
       "groups": [
         {
+          "category": "Security",
+          "items": [
+            {
+              "text": "The CI floor's template-injection rule now covers push-trigger ref names and workflow inputs. Rule 7 of scripts/modern-baseline.yml bans an attacker-influenced ${{ }} expression inside a run: body, and it named github.head_ref — the fork branch on a pull request — but not github.ref_name, which on a push or tag event is the same attacker-chosen string by another trigger (git refnames allow $ ; & | ( ) { }). It now bans github.ref_name and, for uniformity, github.base_ref. And its inputs. exemption, earned by the composite setup-core-tools/action.yml, was applied to every gated file, which left bare inputs.* ungated in the workflows — where it is workflow_dispatch free text or a value a sibling repo feeds one of Core's *-call.yml@vN workflows. A new rule 7b (banned_run_interpolation_contexts_workflow_only) bans it under .github/workflows/ alone. Both were free: every occurrence in the tree was already routed through env: (#1160).",
+              "kind": "feature"
+            }
+          ]
+        },
+        {
           "category": "Changed",
           "items": [
             {
+              "text": "Two zsh plugin pins roll forward in zsh/45-plugins.zsh (#1156, the freshness bot): zsh-history-substring-search 14c8d2e0ffae → a0bdb0d47dba and zsh-syntax-highlighting 2fc57d63067c → 0bfcb582e71d. This is the one change in the release that reaches a host, so it is recorded here even though a bot landed it — CONTRIBUTING.md has no carve-out for automation. Both ranges were read against the upstream compare: the first is two commits touching only README.md (+2/-2, a zplug snippet fix), the second one commit adding an Arch install path to INSTALL.md (+8/-0). So the pins move and no plugin code does; the other six pins were already current.",
+              "kind": "fix"
+            },
+            {
               "text": "new-os-repo.sh writes the fleet's shield row into the README it scaffolds. A checkup that fetched every badge and link target across the fifteen public READMEs found the two newest repos opening with no shield row at all — dotfiles-NixOS because this scaffold wrote none, and its generated .markdownlint.jsonc deliberately left out the MD033 allowance the row needs (\"a fresh OS repo has no showcase page\"). The scaffold now writes the eight-badge row above the title, the link definitions at the end, the CI badge pointing at the lint.yml it also writes, and the scoped MD033 allowed_elements stanza the siblings carry — so the next repo starts where dotfiles-NixOS had to be brought to by hand (dotfiles-NixOS#11). The same checkup fixed a dead bash link here (#1151), two logo slugs simple-icons no longer ships in each of dotfiles-Windows and dotfiles-Defense, and dotfiles-Offense's Python badge, which read CPython's GitHub releases — it publishes tags — and rendered \"no releases or repo not found\".",
+              "kind": "fix"
+            },
+            {
+              "text": "Two tool pins roll forward: markdownlint-cli2 0.23.2 → 0.23.3 and the maintenance bots' Claude Code CLI 2.1.273 → 2.1.281. The weekly freshness review (#1159) found them the only pins behind upstream that are not deliberately held. markdownlint-cli2 0.23.3 only updates dependencies, and both versions pin the markdownlint library at 0.41.1, so no rule is added, renamed or given a new default in Core or in the lint-call.yml consumers. The pre-commit hook's rev moves with it, because §9 keeps the two in step. Both are registry installs, so there is no *_SHA256 to refresh. shfmt stays held at 3.13.1 (#813).",
+              "kind": "config"
+            },
+            {
+              "text": "Both atuin guard premises re-measured against 18.23.0; both VERIFIED_AGAINST anchors move (#1158, run 35956975589). Upstream released 18.23.0 on 2026-09-22, one minor past the 18.22.0 the anchors in zsh/00-tools.zsh carried. One atuin-guard-verify dispatch, checksum and build-provenance verified: silent discard holds (its report job skipped), and autostart self-healing is moved exactly as it was on 18.22.0. absent and stale spawn a daemon and land their row, and wedged blocks on the pidfile lock and loses it (upstream atuinsh/atuin#4114, still open). That is the shape #1102 already answers by probing and warning rather than standing down, so the auto-filed #1177 asks nothing new of Core. Editing an anchor is a claim that the premise was re-measured at that version, so this is that claim and not a version bump. 18.23.0 continues 18.22.0's direction, and the block now says so: an FTS index over captured command output and a sync engine replacing the event bus both sit behind the socket, with no client-side spool or direct-write fallback (the one PR that would have changed the client's connect shape, atuin #4168, closed unmerged). A dead socket still discards, and atuinsh/atuin#3382 (accept-but-silent) is still open, so the steer away from socket activation stays.",
               "kind": "fix"
             }
           ]
@@ -201,8 +222,16 @@
           "category": "Documentation",
           "items": [
             {
+              "text": "PORTING-MATRIX.md and the README stop contradicting the fleet (#1174, from the #1157 sweep). The sesh row's Arch cell asserted AUR⁹, but dotfiles-Arch go-installs sesh and says the AUR sesh-bin is not needed; it is now go⁹, and footnote ⁹ names Arch among the go-install consumers. Footnote ³³ gave Gentoo's ~arch neovim range two ways eleven lines apart (0.12.5 and 0.12.3); both now read 0.12.5, as the TSV does. Footnote ³⁴ said jq 1.8.2 reached \"all three\" supported Alpine stable branches; Alpine carries four, and 3.21 is still on 1.7.1. The README's install steps gain the Defense clone and name Debian and NixOS among the Linux distros, matching the \"all ten bootstraps\" line beneath them.",
+              "kind": "other"
+            },
+            {
               "text": "Every registered README hero is now filmed — the tenth, dotfiles-NixOS's, landed as dotfiles-NixOS#8, so the \"still to be filmed\" prose in CLAUDE.md, assets/hero-repos.txt and assets/README.md is retired. It was the one row no rootless chroot could film — its host guard asserts sudo nixos-rebuild switch --upgrade and up -n probes $PATH for it — so it was filmed on NixOS-WSL, and assets/README.md gains \"Filming the NixOS hero\": the two-rebuild install, nixpkgs' own render kit (vhs 0.11.0, not the 0.12.0 that writes no gif), the Adwaita Mono rejection the ❖ fallback needs, and the trap that is NixOS-WSL's alone — a nixos-rebuild switch resets the kernel-global binfmt_misc table, which every distro on the machine shares, so the distro you drive from loses wsl.exe until it is re-registered (the recipe is there). The install also surfaced dotfiles-NixOS#6: home.nix named two attributes nixpkgs does not have, invisible to that repo's parse-only gate. §9k's rule stands: a registered tape with no gif is a skip, so a re-render that has not landed never blocks the gate.",
               "kind": "fix"
+            },
+            {
+              "text": "PORTING-MATRIX.md gains an eza fleet-version table (footnote ³⁹), against a 0.23.5 floor. 0.23.5 added --hyperlink=auto and lines-of-code counting, and an older eza rejects the flag outright. The /tool-scout scan in #1158 held it on a watch that ends only when every lane is at or above that version, and until now nothing recorded where the lanes sit. scripts/fleet-package-versions.tsv now carries seventeen rows, each read from the distro's own index. Seven are at or above; Alpine edge/3.24/3.23 and Gentoo stable are one patch short on 0.23.4; Ubuntu 24.04 (0.18.2), both Leap backports (0.20.4), Debian 13 (0.21.0) and Alpine 3.22/3.21 are further back. gen-porting-matrix.sh registers the block and marks the eza row. Core enforces no eza floor, and zsh/ passes no flag that needs one.",
+              "kind": "feature"
             }
           ]
         }
@@ -969,6 +998,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "aliases.md now gives an override location that works (#348). It told you to override $ENGAGEMENTS_DIR and the other data paths in 99-local.zsh. But this stage applies their := defaults at band 85, and 99-local.zsh loads at band 95, so the override came too late for anything the stage had already used. The doc now names ~/.zshenv or the environment. It also offered hethttp as its example of an unguarded helper, yet hethttp checks for python3 and refuses to serve from inside a git work tree unless HETHTTP_FORCE=1 is set. Its row now says so, and the example is lhost/ttyup. CLAUDE.md says twelve repos, not eleven.",
+              "kind": "config"
+            },
+            {
               "text": "Four manifest annotations and redup's ledger caught up with a fast-moving week — the act-on-it half of #339. All comment-only; no package added or removed, so the parsed manifest is byte-identical. - chisel's premise flipped. apt moved to 1.12.1-0kali2 (migrated 2026-09-16), so the \"apt ships a pre-release, two RCs ahead of stable\" reading is dead — apt is level with, or a step past, upstream's newest tag (a v1.12.1 tag exists but no release object yet, so releases/latest still reads v1.12.0). The breaking-flag list is now framed as live on the installed binary rather than hypothetical. - evil-winrm's gap closed, and one sub-note became a trap. apt is 4.1-0kali1 (migrated 2026-09-14), at upstream's v4.1 head. The old note told operators to expect the apt build to drop idle shells; v4.1's keepalive and download path-traversal fix are now present, so a dropped idle shell now *is* a real network signal. Kept as a closed gap, not deleted (the ffuf shape). - BloodHound CE lost its named head. The 9.7.0~rc4 head rotted in eight days (upstream cut v9.7.1); currency is now stated purely as a habit — check the server's own version against SpecterOps' releases — with no number left to rot. The 9.6.0 migration fact and the bloodhound-ce-python \"going quiet\" note are re-verified and unchanged. - AdaptixC2's branch ledger dropped a dead branch. dev-v1.3 no longer exists; the note now names the live branches (a v1.2 branch and testing-v2.0). - redup's ledger records pipx as the third evaluated-and-deferred candidate. roadrecon/roadtx/bbot are pipx-owned and apt cannot touch them, but adopting pipx upgrade would widen redup's contract from \"run each tool's own updater\" to \"drive a package manager\" — the ownership line redup exists to respect. go_fast_movers stays empty by reason.",
               "kind": "perf"
             },
@@ -1435,6 +1468,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "Weekly detection review (#324): one rule contradicted its own description, five scoping fixes, two status corrections. The review found no coverage holes and no unpaired red attacks. Each change below that has a new near-miss fixture was checked against the pre-change rule first, so the fixtures are regression tests, not assertions. - ccache_theft_staging claimed tool-name independence it did not have. Its description said it keyed on the handling process \"not a tool name\", but the condition ANDed an Image|endswith list of 25 tools. A copied or renamed cp, or any static exfil binary not on the list, walked past it. The ccache path in argv is now the whole signal. The only exclusion is filter_krb5_clients, the six krb5 utilities that name a ccache legitimately with -c. The description no longer says those never do. The trade is stated in the rule: a binary renamed to klist evades an Image filter, which is one attacker-chosen name out of six where the old gate let through every name not among 25. The renamed-binary TP did not fire on the old rule. - jenkins_script_console paged on /scriptApproval. uri|contains: '/script' also matched the In-Process Script Approval page, which is routine admin activity, and it fired at high. That page is now excluded with filter_script_approval, not by anchoring with endswith: nothing pins whether uri holds a parsed path or the Audit Trail line it came from, and an anchored match silently dies on the second shape. The redundant /scriptText entry is gone, since /script is its prefix. - service_stop_burst had nowhere to put the allowlist its prose asked for. The base event gains filter_maintenance_parent (DEPLOY-REQUIRED), with a comment saying never to list a deployment agent (ccmexec, PSEXESVC, gpscript, RMM) or a host, because that is how the real teardown gets pushed. Its TN is six distinct stops from the allowlisted parent, past the gte: 5 threshold. The generated Splunk search mixes OR and NOT the same way the BitLocker rule's does, and is recorded in the precedence allowlist with the same reading. - ntds_dump_ntdsutil_vss_4688: selection_shadow put the binary name inside its CommandLine tokens ('vssadmin create shadow'), so C:\\Windows\\System32\\vssadmin.exe create shadow did not match. It now uses the verbs alone, with a new regression fixture. The bare-Image selection_diskshadow branch is kept on purpose and now says why: diskshadow runs from a .dsh script, so a verb gate would miss the real attack. - wmi_event_subscription_consumer: the bare -enc keyword also matched -encoding. It is now anchored as '-enc ', '-ec ' and -EncodedCommand. - entra_sp_credential_backdoor gains filter_app_automation (DEPLOY-REQUIRED), keyed on the rotation principal's object id via InitiatedBy|contains. That is the entra_directory_role_grant shape, for the same reasons. Its own top false positive is CI/CD secret rotation, and it was the one credential-backdoor rule with neither a filter nor a reason for lacking one. The hand-written Sentinel form is unchanged, matching its entra_illicit_consent_grant sibling, which also leaves the allowlist to the Sigma rule. - asrep_roast_4768 and kerberoasting_rc4_tgs are now status: test. Both are invariant tripwires with committed TP and TN fixtures and no placeholder, which is what test means here.",
+              "kind": "security"
+            },
+            {
               "text": "detections/README.md's tables had drifted from the corpus (#314). Adds the ten missing substitution rows — aws_snapshot_share_external, azure_vm_run_command, azure_keyvault_bulk_secret_read, both remaining gcp_* rules, host_enum_srvsvc_wkssvc_5145, local_group_enum_sweep_4798_4799, gws_illicit_oauth_grant, k8s_pod_exec_attach, harbor_image_pushed_trusted_tag — and the three missing rule-table rows: gcp_iam_policy_backdoor, gcp_audit_log_sink_deleted, asrep_roast_4768. The last of those is easy to miss because a differently-named sibling is listed (asrep_roast_probing_4771, the correlation); they are separate rules. Two of the twelve markers were not substitutions at all, which is why they had no home and is recorded as its own finding rather than papered over. k8s_privileged_pod_created's marker is about how your backend expands JSON arrays; slack_2fa_enforcement_disabled's is about writing a collector mapping so the rule can tell an enable from a disable. Neither has a placeholder to replace, so neither fits a table headed *Substitutions* with Substitute / Until you do columns. They get a second table — Deploy-time backend work — rather than a marker of their own, because deploy-required.sh is the one checklist an operator runs before deploying and both belong on it: skip either and the rule ships subtly wrong rather than merely noisy, which is the harder failure to notice.",
               "kind": "feature"
             },
@@ -1523,6 +1560,10 @@
         {
           "category": "Changed",
           "items": [
+            {
+              "text": "The Sigma toolchain pins moved where Renovate can see them (#322). pySigma, pyparsing, sigma-cli and the three backends were strings inside sigma.yml's run: line, so nothing noticed when they aged. They now live in detections/requirements.txt, which the sigma gate installs with -r, the cloud validation plane with -c, and the README's local block with -r. check-readme-gates.sh gains a fourth assertion that the block reads the same file as CI, because the block no longer shows versions inline. renovate.json also watches docker/validation/zircolite-constraints.txt and groups every bump into one ci(deps) PR, since the packages are coupled. A bump that turns the hard gate red is that PR's intended outcome.",
+              "kind": "config"
+            },
             {
               "text": "bootstrap.sh is the fleet's pilot of Core's bootstrap driver, blib_main (dotgibson/dotfiles-core#976). The shared half of every bootstrap — the flag loop, the escalator, the Core symlink surface, the band-85 role stage, the managed ~/.zshrc, the closing report — now runs from one definition in core/lib/bootstrap-lib.sh; this file declares what it is (BOOTSTRAP_ROLE=defense, BOOTSTRAP_LOGIN_SHELL=0) and keeps only what is genuinely Defense's: the forensics host-tool probe (bootstrap_check, behind --no-check via bootstrap_flag) and the closing case-data note plus the login-shell guard, which is now Core's blib_login_shell_hint (Offense carried the same one). The hand-rolled band-85 stage is gone — blib_link_role_layer wires 85-defense.zsh and defense/templates and drops the stale pre-v4 link, exactly as before. Three things the driver gives this repo for free: --only zsh,git in the space form (the old for a in \"$@\" loop could only parse --only=zsh,git), -n for --dry-run, and the local core/ pre-commit guard on a fresh clone. One convention change: an unknown flag exits 2 (usage error), not 1, which stays for real failures. Everything else on the box is byte-identical: same links, same loader, same closing lines, same exit codes.",
               "kind": "fix"
@@ -2102,6 +2143,22 @@
     {
       "repo": "dotfiles-core",
       "version": "Unreleased",
+      "category": "Security",
+      "kind": "feature",
+      "text": "The CI floor's template-injection rule now covers push-trigger ref names and workflow inputs. Rule 7 of scripts/modern-baseline.yml bans an attacker-influenced ${{ }} expression inside a run: body, and it named github.head_ref — the fork branch on a pull request — but not github.ref_name, which on a push or tag event is the same attacker-chosen string by another trigger (git refnames allow $ ; & | ( ) { }). It now bans github.ref_name and, for uniformity, github.base_ref. And its inputs. exemption, earned by the composite setup-core-tools/action.yml, was applied to every gated file, which left bare inputs.* ungated in the workflows — where it is workflow_dispatch free text or a value a sibling repo feeds one of Core's *-call.yml@vN workflows. A new rule 7b (banned_run_interpolation_contexts_workflow_only) bans it under .github/workflows/ alone. Both were free: every occurrence in the tree was already routed through env: (#1160).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "Two zsh plugin pins roll forward in zsh/45-plugins.zsh (#1156, the freshness bot): zsh-history-substring-search 14c8d2e0ffae → a0bdb0d47dba and zsh-syntax-highlighting 2fc57d63067c → 0bfcb582e71d. This is the one change in the release that reaches a host, so it is recorded here even though a bot landed it — CONTRIBUTING.md has no carve-out for automation. Both ranges were read against the upstream compare: the first is two commits touching only README.md (+2/-2, a zplug snippet fix), the second one commit adding an Arch install path to INSTALL.md (+8/-0). So the pins move and no plugin code does; the other six pins were already current.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
       "category": "Changed",
       "kind": "fix",
       "text": "new-os-repo.sh writes the fleet's shield row into the README it scaffolds. A checkup that fetched every badge and link target across the fifteen public READMEs found the two newest repos opening with no shield row at all — dotfiles-NixOS because this scaffold wrote none, and its generated .markdownlint.jsonc deliberately left out the MD033 allowance the row needs (\"a fresh OS repo has no showcase page\"). The scaffold now writes the eight-badge row above the title, the link definitions at the end, the CI badge pointing at the lint.yml it also writes, and the scoped MD033 allowed_elements stanza the siblings carry — so the next repo starts where dotfiles-NixOS had to be brought to by hand (dotfiles-NixOS#11). The same checkup fixed a dead bash link here (#1151), two logo slugs simple-icons no longer ships in each of dotfiles-Windows and dotfiles-Defense, and dotfiles-Offense's Python badge, which read CPython's GitHub releases — it publishes tags — and rendered \"no releases or repo not found\".",
@@ -2110,9 +2167,41 @@
     {
       "repo": "dotfiles-core",
       "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "Two tool pins roll forward: markdownlint-cli2 0.23.2 → 0.23.3 and the maintenance bots' Claude Code CLI 2.1.273 → 2.1.281. The weekly freshness review (#1159) found them the only pins behind upstream that are not deliberately held. markdownlint-cli2 0.23.3 only updates dependencies, and both versions pin the markdownlint library at 0.41.1, so no rule is added, renamed or given a new default in Core or in the lint-call.yml consumers. The pre-commit hook's rev moves with it, because §9 keeps the two in step. Both are registry installs, so there is no *_SHA256 to refresh. shfmt stays held at 3.13.1 (#813).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "Both atuin guard premises re-measured against 18.23.0; both VERIFIED_AGAINST anchors move (#1158, run 35956975589). Upstream released 18.23.0 on 2026-09-22, one minor past the 18.22.0 the anchors in zsh/00-tools.zsh carried. One atuin-guard-verify dispatch, checksum and build-provenance verified: silent discard holds (its report job skipped), and autostart self-healing is moved exactly as it was on 18.22.0. absent and stale spawn a daemon and land their row, and wedged blocks on the pidfile lock and loses it (upstream atuinsh/atuin#4114, still open). That is the shape #1102 already answers by probing and warning rather than standing down, so the auto-filed #1177 asks nothing new of Core. Editing an anchor is a claim that the premise was re-measured at that version, so this is that claim and not a version bump. 18.23.0 continues 18.22.0's direction, and the block now says so: an FTS index over captured command output and a sync engine replacing the event bus both sit behind the socket, with no client-side spool or direct-write fallback (the one PR that would have changed the client's connect shape, atuin #4168, closed unmerged). A dead socket still discards, and atuinsh/atuin#3382 (accept-but-silent) is still open, so the steer away from socket activation stays.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "other",
+      "text": "PORTING-MATRIX.md and the README stop contradicting the fleet (#1174, from the #1157 sweep). The sesh row's Arch cell asserted AUR⁹, but dotfiles-Arch go-installs sesh and says the AUR sesh-bin is not needed; it is now go⁹, and footnote ⁹ names Arch among the go-install consumers. Footnote ³³ gave Gentoo's ~arch neovim range two ways eleven lines apart (0.12.5 and 0.12.3); both now read 0.12.5, as the TSV does. Footnote ³⁴ said jq 1.8.2 reached \"all three\" supported Alpine stable branches; Alpine carries four, and 3.21 is still on 1.7.1. The README's install steps gain the Defense clone and name Debian and NixOS among the Linux distros, matching the \"all ten bootstraps\" line beneath them.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
       "category": "Documentation",
       "kind": "fix",
       "text": "Every registered README hero is now filmed — the tenth, dotfiles-NixOS's, landed as dotfiles-NixOS#8, so the \"still to be filmed\" prose in CLAUDE.md, assets/hero-repos.txt and assets/README.md is retired. It was the one row no rootless chroot could film — its host guard asserts sudo nixos-rebuild switch --upgrade and up -n probes $PATH for it — so it was filmed on NixOS-WSL, and assets/README.md gains \"Filming the NixOS hero\": the two-rebuild install, nixpkgs' own render kit (vhs 0.11.0, not the 0.12.0 that writes no gif), the Adwaita Mono rejection the ❖ fallback needs, and the trap that is NixOS-WSL's alone — a nixos-rebuild switch resets the kernel-global binfmt_misc table, which every distro on the machine shares, so the distro you drive from loses wsl.exe until it is re-registered (the recipe is there). The install also surfaced dotfiles-NixOS#6: home.nix named two attributes nixpkgs does not have, invisible to that repo's parse-only gate. §9k's rule stands: a registered tape with no gif is a skip, so a re-render that has not landed never blocks the gate.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "feature",
+      "text": "PORTING-MATRIX.md gains an eza fleet-version table (footnote ³⁹), against a 0.23.5 floor. 0.23.5 added --hyperlink=auto and lines-of-code counting, and an older eza rejects the flag outright. The /tool-scout scan in #1158 held it on a watch that ends only when every lane is at or above that version, and until now nothing recorded where the lanes sit. scripts/fleet-package-versions.tsv now carries seventeen rows, each read from the distro's own index. Seven are at or above; Alpine edge/3.24/3.23 and Gentoo stable are one patch short on 0.23.4; Ubuntu 24.04 (0.18.2), both Leap backports (0.20.4), Debian 13 (0.21.0) and Alpine 3.22/3.21 are further back. gen-porting-matrix.sh registers the block and marks the eza row. Core enforces no eza floor, and zsh/ passes no flag that needs one.",
       "core": true
     },
     {
@@ -2241,6 +2330,14 @@
       "category": "Removed",
       "kind": "fix",
       "text": "The core_branch fallback in the two core.lock readers. core_branch was renamed core_ref in dotfiles-core#453, and reading both names was correct while it shipped: this repo vendors Core on its own schedule, so locks of both vintages existed in the wild and reading only the new name would have killed sync-core.sh on any repo that had not yet synced. That window is closed — Core declares the field gone as of v5 in VENDORING.md, and no core.lock in the fleet carries it, this repo's included. Gone with it: migrate_branch_to_ref, which rewrote the old key in place so set_field (which replaces, never inserts) would have a line to hit. Nothing needs that any more — sync-core.sh now dies naming core_ref alone, before the pull, if the lock has no such line, which is what licenses the never-insert rule downstream. test/check-core-freshness.sh keeps its soft branch=main default: it is a watcher, not a writer. The CORE_BRANCH env override is untouched — it is that script's own knob, not a lock field (#271).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "config",
+      "text": "aliases.md now gives an override location that works (#348). It told you to override $ENGAGEMENTS_DIR and the other data paths in 99-local.zsh. But this stage applies their := defaults at band 85, and 99-local.zsh loads at band 95, so the override came too late for anything the stage had already used. The doc now names ~/.zshenv or the environment. It also offered hethttp as its example of an unguarded helper, yet hethttp checks for python3 and refuses to serve from inside a git work tree unless HETHTTP_FORCE=1 is set. Its row now says so, and the example is lhost/ttyup. CLAUDE.md says twelve repos, not eleven.",
       "core": false
     },
     {
@@ -3127,6 +3224,14 @@
       "repo": "dotfiles-Defense",
       "version": "Unreleased",
       "category": "Fixed",
+      "kind": "security",
+      "text": "Weekly detection review (#324): one rule contradicted its own description, five scoping fixes, two status corrections. The review found no coverage holes and no unpaired red attacks. Each change below that has a new near-miss fixture was checked against the pre-change rule first, so the fixtures are regression tests, not assertions. - ccache_theft_staging claimed tool-name independence it did not have. Its description said it keyed on the handling process \"not a tool name\", but the condition ANDed an Image|endswith list of 25 tools. A copied or renamed cp, or any static exfil binary not on the list, walked past it. The ccache path in argv is now the whole signal. The only exclusion is filter_krb5_clients, the six krb5 utilities that name a ccache legitimately with -c. The description no longer says those never do. The trade is stated in the rule: a binary renamed to klist evades an Image filter, which is one attacker-chosen name out of six where the old gate let through every name not among 25. The renamed-binary TP did not fire on the old rule. - jenkins_script_console paged on /scriptApproval. uri|contains: '/script' also matched the In-Process Script Approval page, which is routine admin activity, and it fired at high. That page is now excluded with filter_script_approval, not by anchoring with endswith: nothing pins whether uri holds a parsed path or the Audit Trail line it came from, and an anchored match silently dies on the second shape. The redundant /scriptText entry is gone, since /script is its prefix. - service_stop_burst had nowhere to put the allowlist its prose asked for. The base event gains filter_maintenance_parent (DEPLOY-REQUIRED), with a comment saying never to list a deployment agent (ccmexec, PSEXESVC, gpscript, RMM) or a host, because that is how the real teardown gets pushed. Its TN is six distinct stops from the allowlisted parent, past the gte: 5 threshold. The generated Splunk search mixes OR and NOT the same way the BitLocker rule's does, and is recorded in the precedence allowlist with the same reading. - ntds_dump_ntdsutil_vss_4688: selection_shadow put the binary name inside its CommandLine tokens ('vssadmin create shadow'), so C:\\Windows\\System32\\vssadmin.exe create shadow did not match. It now uses the verbs alone, with a new regression fixture. The bare-Image selection_diskshadow branch is kept on purpose and now says why: diskshadow runs from a .dsh script, so a verb gate would miss the real attack. - wmi_event_subscription_consumer: the bare -enc keyword also matched -encoding. It is now anchored as '-enc ', '-ec ' and -EncodedCommand. - entra_sp_credential_backdoor gains filter_app_automation (DEPLOY-REQUIRED), keyed on the rotation principal's object id via InitiatedBy|contains. That is the entra_directory_role_grant shape, for the same reasons. Its own top false positive is CI/CD secret rotation, and it was the one credential-backdoor rule with neither a filter nor a reason for lacking one. The hand-written Sentinel form is unchanged, matching its entra_illicit_consent_grant sibling, which also leaves the allowlist to the Sigma rule. - asrep_roast_4768 and kerberoasting_rc4_tgs are now status: test. Both are invariant tripwires with committed TP and TN fixtures and no placeholder, which is what test means here.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "feature",
       "text": "detections/README.md's tables had drifted from the corpus (#314). Adds the ten missing substitution rows — aws_snapshot_share_external, azure_vm_run_command, azure_keyvault_bulk_secret_read, both remaining gcp_* rules, host_enum_srvsvc_wkssvc_5145, local_group_enum_sweep_4798_4799, gws_illicit_oauth_grant, k8s_pod_exec_attach, harbor_image_pushed_trusted_tag — and the three missing rule-table rows: gcp_iam_policy_backdoor, gcp_audit_log_sink_deleted, asrep_roast_4768. The last of those is easy to miss because a differently-named sibling is listed (asrep_roast_probing_4771, the correlation); they are separate rules. Two of the twelve markers were not substitutions at all, which is why they had no home and is recorded as its own finding rather than papered over. k8s_privileged_pod_created's marker is about how your backend expands JSON arrays; slack_2fa_enforcement_disabled's is about writing a collector mapping so the rule can tell an enable from a disable. Neither has a placeholder to replace, so neither fits a table headed *Substitutions* with Substitute / Until you do columns. They get a second table — Deploy-time backend work — rather than a marker of their own, because deploy-required.sh is the one checklist an operator runs before deploying and both belong on it: skip either and the rule ships subtly wrong rather than merely noisy, which is the harder failure to notice.",
       "core": false
@@ -3289,6 +3394,14 @@
       "category": "Fixed",
       "kind": "config",
       "text": ".markdownlint.jsonc's header claimed this config was \"the local README check\" and that \"CI in this repo gates its own code, not its Markdown\". Both were true when written; dotgibson/dotfiles-core#592 made the markdown leg blocking and it covers all 21 repo-owned files, not just the README.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "The Sigma toolchain pins moved where Renovate can see them (#322). pySigma, pyparsing, sigma-cli and the three backends were strings inside sigma.yml's run: line, so nothing noticed when they aged. They now live in detections/requirements.txt, which the sigma gate installs with -r, the cloud validation plane with -c, and the README's local block with -r. check-readme-gates.sh gains a fourth assertion that the block reads the same file as CI, because the block no longer shows versions inline. renovate.json also watches docker/validation/zircolite-constraints.txt and groups every bump into one ci(deps) PR, since the packages are coupled. A bump that turns the hard gate red is that PR's intended outcome.",
       "core": false
     },
     {
