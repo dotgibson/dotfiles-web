@@ -7,7 +7,7 @@ order: 0
 
 # Introduction
 
-**dotgibson** is a cross-platform terminal environment shipped as an **twelve-repo, three-layer**
+**dotgibson** is a cross-platform terminal environment shipped as a **twelve-repo, three-layer**
 dotfiles system. The goal is a single, opinionated setup — shell, editor, multiplexer, prompt,
 git — that stays **identical on every machine you touch**, with no productivity gaps when you
 hop between them and no per-host drift creeping in over time.
@@ -23,13 +23,17 @@ into a Core that is authored once, and let each machine layer only its own diffe
 
 | Layer | Lives in | Owns |
 | --- | --- | --- |
-| **Core** | `dotfiles-core`, vendored into every OS repo's `core/` | zsh, tmux, nvim, git, starship — identical everywhere |
+| **Core** | `dotfiles-core`, vendored into every OS repo's `core/` | zsh, tmux, git, starship, and the editor it vendors in — identical everywhere |
 | **OS-native** | `dotfiles-{MacBook,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo,NixOS}` | package manager, clipboard, paths |
 | **Role** | `dotfiles-Offense` (offensive), `dotfiles-Defense` (defensive) | engagement / detection tooling on top of the OS layer |
 | *Native host* | `dotfiles-Windows` | the Windows host: pwsh, Terminal, the WSL bridge |
+| *Editor* | `dotfiles-nvim`, vendored into Core's `nvim/` and into `dotfiles-Windows` | the Neovim config |
 
 `dotfiles-Windows` is the model's one named exception rather than a fourth layer — it vendors no
-Core, replicating it natively in PowerShell.
+Core, replicating it natively in PowerShell. `dotfiles-nvim` is the other: it **owns the editor**,
+with its own gate and release line, and it is the one repo Core vendors *from* rather than *to*.
+Core pins it by `nvim.lock` and fans it out with everything else, so every machine still gets the
+same editor.
 
 Core is the **single source of truth**. It is authored here and **vendored** — copied in full —
 into each OS repo, so every machine repo is self-contained and clone-and-go: no submodule flags, no
