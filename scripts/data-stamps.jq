@@ -9,11 +9,11 @@
 #
 # Slurped, not per-file, because no single file names the whole fleet and the two
 # stamp shapes are different:
-#   • generated.json and snippets.json carry generatedFrom.repos{} — eleven repos
+#   • generated.json and snippets.json carry generatedFrom.repos{} — twelve repos
 #     and six respectively, keyed by name, each with its own commit.
 #   • corpus.json and coverage.json carry a flat generatedFrom.{repo,path,commit},
 #     one source apiece (htpx and dotfiles-Defense).
-# The union of the four is all twelve names in scripts/fleet-repos.txt, and htpx
+# The union of the four is all thirteen names in scripts/fleet-repos.txt, and htpx
 # reaches it through corpus.json alone — which is why dropping either shape would
 # silently lose a repo rather than fail.
 #
@@ -27,7 +27,7 @@
 # ARGUMENT ORDER is load-bearing, so both callers pass the same one — snippets,
 # coverage, corpus, generated. from_entries lets the LAST occurrence of a duplicate
 # key win, and generated.json is the file to trust when two disagree: it stamps all
-# eleven dotfiles repos where snippets.json stamps only its six curated sources. Two
+# twelve dotfiles repos where snippets.json stamps only its six curated sources. Two
 # callers reading this filter in different orders could pin and poll different
 # commits for the same repo, which is the one way they could still drift apart.
 #

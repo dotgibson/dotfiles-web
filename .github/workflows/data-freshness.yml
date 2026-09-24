@@ -11,7 +11,7 @@ name: Data freshness
 #
 # Note the narrow scope of that first job: it compares TWO VERSION STRINGS, and it is the
 # only job here that needs no sibling repos at all. Package counts, CI flags, the
-# changelog, fleet.publicRepos, every core.* metric and all ten per-repo drift entries are
+# changelog, fleet.publicRepos, every core.* metric and all eleven per-repo drift entries are
 # invisible to it. The derived-data job below now regenerates and diffs ALL FOUR generated
 # files — generated.json included — against fresh clones of the fleet, which is what closes
 # that gap (#150, #160). Each of the other three was checked by nothing at all until that
@@ -201,19 +201,19 @@ jobs:
   # generated.json came third, and closes #150/#160. It was never OUTSIDE a gate — the
   # check job above has always opened it — but that gate compares one version string out of
   # ~2200 lines, so package counts, CI flags, fleet.publicRepos, every core.* metric, all
-  # ten drift entries and the whole changelog were as unchecked as corpus.json used to be.
+  # eleven drift entries and the whole changelog were as unchecked as corpus.json used to be.
   # Not hypothetical: a bogus dotfiles-Windows drift entry once sat in a file CI called
   # fresh, which is why /showcase-accuracy told auditors to treat a surprising value here
   # as a lead rather than a fact. It also has the widest blast radius of the four, feeding
   # the landing page's metrics strip and repo cards, the architecture diagram, /changelog
   # and the version switcher in every page's header.
   #
-  # Adding it made the clone list EXACTLY fleet-sync.yml's twelve, which is the right end
+  # Adding it made the clone list EXACTLY fleet-sync.yml's thirteen, which is the right end
   # state rather than a coincidence: the bot that PRs the refresh and the job that fails
   # the build now read the same repos, run the same four collectors and diff with the same
   # expression, so they cannot disagree about what "in step" means.
   #
-  # Unlike the jobs above this one needs the sources, so it clones the twelve repos those
+  # Unlike the jobs above this one needs the sources, so it clones the thirteen repos those
   # four collectors read and REGENERATES the files, then fails if the result differs from
   # what is committed. Content-diffing rather than comparing source SHAs is deliberate: an
   # unrelated commit to htpx must not turn this red, only one that actually moves what the
@@ -272,14 +272,14 @@ jobs:
       # and asking the freshness question. See the mode split in the job header.
       #
       # All four files, slurped: no single one names the whole fleet. generated.json covers
-      # the eleven dotfiles repos and snippets.json six of them, but htpx reaches the map
+      # the twelve dotfiles repos and snippets.json six of them, but htpx reaches the map
       # ONLY through corpus.json's flat stamp — drop it from this list and htpx silently
       # falls back to a HEAD clone, putting the race back for the one repo whose absence
       # from the pin map would be hardest to notice.
       #
       # Same four files in the same ORDER as fleet-sync.yml's precheck, which reads the same
       # filter: from_entries lets the last duplicate key win, so generated.json is read last
-      # and its eleven win. The two must agree about which commit a repo is at, or the bot
+      # and its twelve win. The two must agree about which commit a repo is at, or the bot
       # polls one fleet state while this job clones another.
       - name: Resolve the commits the committed data claims it came from
         id: pins
@@ -336,13 +336,13 @@ jobs:
           # There is no setup-node and no npm ci here, on purpose: all four collectors
           # import only node: builtins (collect-metrics adds node:child_process for its
           # provenance stamps) plus scripts/lib/fleet-root.mjs, so the runner's preinstalled
-          # node runs them as they are, and an install step would cost more than all twelve
+          # node runs them as they are, and an install step would cost more than all thirteen
           # clones and buy nothing.
           #
           # --strict on all four. For the three file-based collectors it turns a missing
           # source into a hard error instead of the silent exit 0 that would make an
           # unrefreshed snapshot look green. For collect-metrics it ALSO gates the
-          # fleet-cleanliness preflight, which passes here structurally — twelve fresh
+          # fleet-cleanliness preflight, which passes here structurally — thirteen fresh
           # clones are on their default branch with an empty `git status` — and which
           # fleet-sync has been proving weekly against these same repos and the same
           # shallow clones.
@@ -412,7 +412,7 @@ jobs:
           # Everything else is a flat, sorted projection of the fields the site actually
           # publishes — stamp, then scalars, then the per-repo maps, then the prose. That
           # order is deliberate: a Core release moves all of it, and the first hunk of a
-          # truncated diff should be the version bump, the package counts and the ten drift
+          # truncated diff should be the version bump, the package counts and the eleven drift
           # rows rather than the middle of a changelog entry.
           #
           # sort_by(.key) on every to_entries is load-bearing, not tidiness. jq preserves an
@@ -425,7 +425,7 @@ jobs:
           # .date and .summary are optional: JSON.stringify drops date on an Unreleased block
           # and summary when it is empty, so // "undated" and // empty keep those lines from
           # rendering a bare null. .drift.repos is heterogeneous too — dotfiles-Windows
-          # carries mirroredFrom and no carried/ref, the other nine the reverse — and all four
+          # carries mirroredFrom and no carried/ref, the other ten the reverse — and all four
           # keys are printed unconditionally on purpose: a conditional projection would change
           # a row's SHAPE when a repo's status flipped, turning a one-field change into a
           # structural diff.

@@ -16,7 +16,7 @@
 # Format: `<repo-name> <role>`, one per line. Blank lines and `#` comments
 # ignored. Roles:
 #   "core" — dotfiles-core, the shared layer every Core metric is read from
-#   "os"   — the ten machine/role repos collect-metrics.mjs counts and compares
+#   "os"   — the eleven machine/role repos collect-metrics.mjs counts and compares
 #   "aux"  — read by a single collector and NOT a dotfiles layer at all
 #
 # The role names are QUOTED above on purpose. A reader that selects rows with
@@ -30,13 +30,13 @@
 # these lines reorders that file, turning a no-op change into a data diff.
 #
 # Every consumer reads a SLICE of this file, not all of it: collect-metrics.mjs
-# takes core + the ten `os` rows, collect-corpus.mjs reads only htpx, and
+# takes core + the eleven `os` rows, collect-corpus.mjs reads only htpx, and
 # collect-coverage.mjs only dotfiles-Defense. collect-snippets.mjs's six are a
-# strict subset of the metrics eleven — its eight curated files span all three
+# strict subset of the metrics twelve — its eight curated files span all three
 # layers (Core, four OS-native overlays, the Offense role) because that spread IS
 # what /config exists to show. The workflows clone the union, which is every line.
 #
-# All twelve are public, so the clones are anonymous: no PAT, no token in a URL.
+# All thirteen are public, so the clones are anonymous: no PAT, no token in a URL.
 # deploy.yml passes one only because its pinned-release build already holds it.
 #
 # dotfiles-Offense, NEVER dotfiles-Kali. The repo was renamed and github.com
@@ -60,6 +60,7 @@ dotfiles-Debian   os
 dotfiles-openSUSE os
 dotfiles-Alpine   os
 dotfiles-Gentoo   os
+dotfiles-NixOS    os
 # htpx is not a dotfiles layer and is deliberately NOT an `os` row: it is the
 # source collect-corpus.mjs reads for the /purple red/blue corpus. Leaving it
 # out of the clone lists is why corpus.json drifted for months between hand

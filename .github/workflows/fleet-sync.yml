@@ -32,7 +32,7 @@ name: fleet-sync
 on:
   schedule:
     - cron: "0 8 * * 2" # Tuesdays 08:00 UTC — full sweep of the whole fleet
-    # Hourly backstop. Costs thirteen API calls and no clones unless the fleet has actually
+    # Hourly backstop. Costs fourteen API calls and no clones unless the fleet has actually
     # moved past the committed data — see the `precheck` job, which gates the expensive half.
     - cron: "41 * * * *"
   workflow_dispatch:
@@ -56,9 +56,9 @@ permissions:
   contents: read
 
 jobs:
-  # Cheap gate in front of the twelve-repo clone below. Every trigger EXCEPT the hourly
+  # Cheap gate in front of the thirteen-repo clone below. Every trigger EXCEPT the hourly
   # cron is a deliberate "go and look" and passes straight through; the poll alone has to
-  # justify itself, with thirteen API calls and no checkout of the fleet.
+  # justify itself, with fourteen API calls and no checkout of the fleet.
   #
   # WHAT THE POLL ASKS, and why it changed (#168). It used to ask ONE question — is the
   # committed Core version behind the latest dotfiles-core release? — so it fired only when
@@ -79,7 +79,7 @@ jobs:
   # So it now asks TWO, and refreshes if EITHER fires:
   #   1. is the committed Core version behind the latest release?   (one API call)
   #   2. has any repo in scripts/fleet-repos.txt moved past the SHA the committed data was
-  #      generated from?                                            (twelve API calls)
+  #      generated from?                                            (thirteen API calls)
   #
   # Neither subsumes the other, which is why both are kept. releases.current is derived from
   # Core's CHANGELOG.md headings rather than from the releases API (deriveReleases() in
@@ -96,7 +96,7 @@ jobs:
   # `git checkout --` and reverts all four files, and scripts/data-strip.jq deliberately
   # strips .commit so a SHA-only move is not drift. So a fleet commit that changes nothing
   # this site publishes — a README typo in dotfiles-Arch — leaves live != committed
-  # PERMANENTLY, and (2) on its own would clone twelve repos (~11s, 95 MB) every hour
+  # PERMANENTLY, and (2) on its own would clone thirteen repos (~11s, 95 MB) every hour
   # forever. The metrics job therefore records a tiny Actions-cache entry keyed on the
   # fingerprint of a fleet state it swept and found in step, and this gate stands down on a
   # state that already has one: a content-neutral fleet commit costs exactly ONE sweep
@@ -180,8 +180,8 @@ jobs:
           #
           # Argument ORDER is load-bearing and must match data-freshness.yml's:
           # from_entries lets the LAST occurrence of a duplicate key win, so generated.json's
-          # eleven repos are read last and win. corpus.json is the only source of htpx's.
-          # Eleven plus htpx is exactly the manifest's twelve.
+          # twelve repos are read last and win. corpus.json is the only source of htpx's.
+          # Twelve plus htpx is exactly the manifest's thirteen.
           jq -s -f scripts/data-stamps.jq \
             src/data/snippets.json src/data/coverage.json \
             src/data/corpus.json src/data/generated.json >"$RUNNER_TEMP/stamps.json"
@@ -196,7 +196,7 @@ jobs:
           done <"$RUNNER_TEMP/heads"
 
           # The fingerprint is over the fleet's STATE, not over what this run concluded about
-          # it: the twelve heads plus the release tag. Sorted, so reordering
+          # it: the thirteen heads plus the release tag. Sorted, so reordering
           # scripts/fleet-repos.txt cannot invalidate every marker. Left empty when any head
           # is unknown — a partial fingerprint would mark a state that was never fully seen.
           fp=""
@@ -315,7 +315,7 @@ jobs:
             exit 0
           fi
 
-          # The fix may already be sitting in review. Re-cloning twelve repos every hour to
+          # The fix may already be sitting in review. Re-cloning thirteen repos every hour to
           # force-push a branch that is already correct helps nobody — the weekly sweep and
           # any manual dispatch still update an open PR, they just skip this guard.
           if [ -n "$(gh pr list --repo "${OWNER}/${REPO}" --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
@@ -502,7 +502,7 @@ jobs:
       # is load-bearing rather than an optimisation: the committed generatedFrom stamps only
       # advance when a refresh PR merges, so without a marker a fleet commit that moved no
       # published content would leave the poll's comparison unequal forever and it would
-      # clone twelve repos every hour to rediscover the same nothing.
+      # clone thirteen repos every hour to rediscover the same nothing.
       #
       # Deliberately NOT written when drift WAS found: that window is covered by the
       # precheck's open-PR guard, and a refresh PR someone closes unmerged should let the

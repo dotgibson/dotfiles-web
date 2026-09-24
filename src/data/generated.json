@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-22",
+  "generatedAt": "2026-09-24",
   "generatedFrom": {
     "clean": true,
     "repos": {
@@ -22,13 +22,13 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "dda10c09d2edb1fbb788076fb08bfaec4a29b160",
+        "commit": "5f8075493f69a0ef2367a89180e7a65622fe2cfe",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "f57d60211971a1e46bb16449701daa982047daae",
+        "commit": "449523855b821609365bfe7e5d3679900f72a835",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -64,7 +64,13 @@
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "ab0b2691ce35dc3582908fc3c2e5b37d7d7b66c1",
+        "commit": "870d8612c89989967042e1d5a73bbc462673b0da",
+        "branch": "main",
+        "defaultBranch": "main",
+        "dirty": false
+      },
+      "dotfiles-NixOS": {
+        "commit": "1e6fcaf066130d85a1938de694999d6f37df31bd",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -72,7 +78,7 @@
     }
   },
   "fleet": {
-    "publicRepos": 11,
+    "publicRepos": 12,
     "layers": 3
   },
   "releases": {
@@ -137,6 +143,11 @@
         "ref": "v7.11.0",
         "carried": "7.11.0",
         "status": "current"
+      },
+      "dotfiles-NixOS": {
+        "ref": "v7.11.0",
+        "carried": "7.11.0",
+        "status": "current"
       }
     }
   },
@@ -169,7 +180,8 @@
     "dotfiles-Debian": true,
     "dotfiles-openSUSE": true,
     "dotfiles-Alpine": true,
-    "dotfiles-Gentoo": true
+    "dotfiles-Gentoo": true,
+    "dotfiles-NixOS": true
   },
   "changelog": [
     {

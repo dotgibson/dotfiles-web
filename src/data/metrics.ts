@@ -71,7 +71,8 @@ export const driftFor = (
 };
 
 // Package count for a repo card ("dotfiles-Offense" -> 28). Returns null when the
-// repo ships no package list (e.g. the Windows host uses scoop/winget manifests).
+// collector finds no package list to count (e.g. the Windows host uses scoop/winget
+// manifests, and NixOS declares its packages in nix/home.nix rather than a list file).
 export const packageCount = (repo: string): number | null =>
   metrics.packages[repo] ?? null;
 

@@ -8,8 +8,8 @@ order: 1
 # Migrating the Mac from `~/.config`-as-repo → `~/dotfiles-MacBook`
 
 Right now your Mac is the odd one out: the repo **is** `~/.config` (you cloned it
-straight there, and `$ZDOTDIR` + `dotsync` point inside it). The eight other Unix
-machine repos — six Linux distros plus the two role repos — live at `~/dotfiles-*`
+straight there, and `$ZDOTDIR` + `dotsync` point inside it). The nine other Unix
+machine repos — seven Linux distros plus the two role repos — live at `~/dotfiles-*`
 and _symlink_ into `~/.config`. This runbook moves the Mac onto that same model so
 `sync-core.sh` and every assumption works uniformly.
 

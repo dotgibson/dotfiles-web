@@ -67,7 +67,10 @@ const nodes = consumers.map((r, i) => {
     name: r.name,
     label: short(r.name),
     layer: r.layer,
-    sub: r.layer === 'role' ? (r.name === 'dotfiles-Defense' ? 'OS + defensive' : 'OS + offensive') : r.layer === 'host' ? 'nvim+starship' : layerMeta[r.layer].label,
+    // Subtitles sit under a ~70-unit node once the row holds eleven, where 10.5px mono is
+    // ~6.3 units a glyph: the old 'OS + offensive' / 'OS + defensive' (88 units each)
+    // collided with each other as neighbours. Twelve glyphs clears between two neighbours.
+    sub: r.layer === 'role' ? (r.name === 'dotfiles-Defense' ? 'OS + defense' : 'OS + offense') : r.layer === 'host' ? 'nvim+starship' : layerMeta[r.layer].label,
     x: cx - nodeW / 2,
     cx,
     dashed: r.layer === 'host', // Windows: nvim + starship mirror, not the full Core tree

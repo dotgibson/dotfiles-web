@@ -162,7 +162,7 @@ export const platforms: Platform[] = [
       {
         title: 'Preview the plan (optional)',
         body:
-          'A dry run prints every planned action and changes nothing — every distro repo supports it. Adding --links-only narrows the preview to the symlinks, leaving the package manager out of it. (On Alpine --dry-run already implies --links-only.)',
+          'A dry run prints every planned action and changes nothing — every distro repo supports it, and on every one provisioning is skipped rather than faked, while the host probe still runs. Adding --links-only narrows the preview to the symlinks, leaving out both the package manager and the probe.',
         code: './bootstrap.sh --links-only --dry-run',
       },
       {
@@ -174,6 +174,38 @@ export const platforms: Platform[] = [
         title: 'Per-distro flags',
         body:
           'Fedora / openSUSE: --no-flatpak skips Flatpak. Gentoo: --no-sync skips the slow emerge --sync on re-runs. Arch: a manual/minimal box needs the stage-0 prep in SETUP.md first (git, sudo, a UTF-8 locale). Alpine: run as root or with doas; enable the community repo. Debian/Ubuntu: the same repo also covers Kali rolling — --no-upgrade keeps apt-get update but skips full-upgrade, --no-unattended leaves automatic security updates off, and --force-os is needed on other derivatives like Mint or Pop!_OS.',
+      },
+    ],
+  },
+  {
+    // Its own platform, not a line in `linux`: NixOS is not stamped from Fedora and its
+    // bootstrap installs nothing — nix declares the packages, so the order inverts.
+    id: 'nixos',
+    label: 'NixOS',
+    repo: 'dotfiles-NixOS',
+    available: true,
+    intro:
+      'The one declarative host. nix owns the package set, PATH and the login-shell declaration (nix/nixos.nix + nix/home.nix); bootstrap.sh installs nothing, never escalates, and only wires the links. So the order inverts: nix first, bootstrap last.',
+    steps: [
+      {
+        title: 'Clone the repo',
+        body: 'Clone before anything else — the next step imports a module from this checkout. Core is already vendored under core/.',
+        code: 'git clone https://github.com/dotgibson/dotfiles-NixOS ~/dotfiles-NixOS',
+      },
+      {
+        title: 'Rebuild the system',
+        body: 'Import ~/dotfiles-NixOS/nix/nixos.nix from your configuration.nix, and set users.users.<you>.shell = pkgs.zsh there — the bootstrap never runs chsh. On channels, add nixos-25.05 and home-manager release-25.05 first (nix/README.md); flake users import the same modules and skip that.',
+        code: 'sudo nixos-rebuild switch',
+      },
+      {
+        title: 'Apply the home profile',
+        body: 'The package set, PATH and tpm come from nix/home.nix. It deliberately declares no home.file or programs.zsh — the bootstrap owns those links, and two owners deadlock activation.',
+        code: 'home-manager switch',
+      },
+      {
+        title: 'Only now, the links',
+        body: 'Wires Core + the NixOS layer. --dry-run previews; --links-only also skips the report-only host probe.',
+        code: 'cd ~/dotfiles-NixOS\n./bootstrap.sh\nexec zsh',
       },
     ],
   },

@@ -1,5 +1,5 @@
 <!--
-  STATUS-BADGES.md — copy-paste CI status badges for the eleven-repo fleet.
+  STATUS-BADGES.md — copy-paste CI status badges for the twelve-repo fleet.
 
   Two ready-to-integrate blocks:
     1. Markdown table  — drop into any README / docs page.
@@ -13,7 +13,7 @@
 
   Workflow file per repo:
     • dotfiles-core / -MacBook / -Windows  → ci.yml   (full existing pipeline)
-    • the eight distro/role repos          → lint.yml (shellcheck · shfmt · syntax)
+    • the nine distro/role repos           → lint.yml (shellcheck · shfmt · syntax)
 
   When a repo's primary workflow file is renamed, update the matching row/card.
 -->
@@ -37,6 +37,7 @@ Live build status for every repository in the fleet. Owner: **dotgibson**.
 | [dotfiles-openSUSE](https://github.com/dotgibson/dotfiles-openSUSE) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-openSUSE/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-openSUSE/actions/workflows/lint.yml) |
 | [dotfiles-Alpine](https://github.com/dotgibson/dotfiles-Alpine) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Alpine/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Alpine/actions/workflows/lint.yml) |
 | [dotfiles-Gentoo](https://github.com/dotgibson/dotfiles-Gentoo) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-Gentoo/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-Gentoo/actions/workflows/lint.yml) |
+| [dotfiles-NixOS](https://github.com/dotgibson/dotfiles-NixOS) | OS-native | [![lint](https://github.com/dotgibson/dotfiles-NixOS/actions/workflows/lint.yml/badge.svg)](https://github.com/dotgibson/dotfiles-NixOS/actions/workflows/lint.yml) |
 
 ## 2. HTML grid block (Astro showcase)
 
@@ -48,7 +49,7 @@ component.
 ```html
 <section class="ci-badges" aria-label="Fleet CI status">
   <h2 class="ci-badges__title">Continuous integration</h2>
-  <p class="ci-badges__lead">Live build status across the eleven-repo fleet.</p>
+  <p class="ci-badges__lead">Live build status across the twelve-repo fleet.</p>
 
   <div class="ci-badges__grid">
     <!-- Core -->
@@ -159,6 +160,16 @@ component.
       </div>
       <img class="ci-card__badge" loading="lazy" alt="dotfiles-Gentoo lint status"
         src="https://github.com/dotgibson/dotfiles-Gentoo/actions/workflows/lint.yml/badge.svg" />
+    </a>
+
+    <!-- NixOS -->
+    <a class="ci-card" href="https://github.com/dotgibson/dotfiles-NixOS/actions/workflows/lint.yml" target="_blank" rel="noopener">
+      <div class="ci-card__head">
+        <span class="ci-card__name">λ dotfiles-NixOS</span>
+        <span class="ci-card__layer tone-blue">OS-native</span>
+      </div>
+      <img class="ci-card__badge" loading="lazy" alt="dotfiles-NixOS lint status"
+        src="https://github.com/dotgibson/dotfiles-NixOS/actions/workflows/lint.yml/badge.svg" />
     </a>
   </div>
 </section>

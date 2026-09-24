@@ -15,7 +15,7 @@ put something in is decided by **one question: what does it change with?**
 | Layer | Lives in | Owns |
 | --- | --- | --- |
 | **Core** | `dotfiles-core`, vendored into every OS repo's `core/` | zsh modules, tmux, nvim, git, starship |
-| **OS-native** | `dotfiles-{MacBook,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo}` | package manager, clipboard, paths |
+| **OS-native** | `dotfiles-{MacBook,Fedora,Arch,Debian,openSUSE,Alpine,Gentoo,NixOS}` | package manager, clipboard, paths |
 | **Role** | `dotfiles-Offense`, `dotfiles-Defense` | offensive / defensive tooling on the OS layer |
 | *Native host* | `dotfiles-Windows` | the Windows host: pwsh, Terminal, the WSL bridge |
 

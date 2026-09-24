@@ -614,7 +614,7 @@ function deriveReleases() {
 const releases = deriveReleases();
 
 // Provenance stamp, same rationale as corpus.json / coverage.json but per-repo, since
-// this file's figures come from eleven sources rather than one. Until now generated.json
+// this file's figures come from twelve sources rather than one. Until now generated.json
 // carried only a day-granular generatedAt, so a snapshot taken from a dirty tree was
 // indistinguishable from a clean one after the fact — the 2026-08-16 incident left no
 // trace in the file at all. `dirty` records whether a COLLECTOR-RELEVANT path was
