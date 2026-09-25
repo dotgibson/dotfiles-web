@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-24",
+  "generatedAt": "2026-09-25",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "12bf3df6d0cec6dd6b5d5f9f2a47598f008c1001",
+        "commit": "ae138df67e6a1444f6ec753b0657d6f5fed2e98c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "761be3557f35567016b0624f5629238383c6a642",
+        "commit": "8819f6dfded96ffbecff83ff2237ad2895f4f75b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,55 +22,55 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "cf6be786329d2d4a5c282439508a062df3354915",
+        "commit": "7cb4b298a72033ee8bacf8f70db901efd61f47bc",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "e67414e130c987bd59997d4dfe6f5f7f45f6b687",
+        "commit": "c94fe6a0095711a473d981db284a45c32218de6d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "66fe02caa4be3acb266b0b2826b6ac728527b03c",
+        "commit": "52fc186bec9b7a30e2d31004c0bc86009f38739a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "381e93ec3a1cf7984003d61dd8244b841b6dcefc",
+        "commit": "5ad8b231eaf9b6276a8b506a2e3f81d94a5093d4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "fe1d2703a8a90802c92ec95b4a4dd3bfe6500c08",
+        "commit": "b5b520cfacba38f01e9ff0812360678658812ace",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "29aa12d045c765d006e490a8e92f80f1feba34ab",
+        "commit": "e4173cfac9ec8e7d2a14c26a4d4f5588d691b560",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "d035d488d931b92232eba1be2bebf57bfdaeee0a",
+        "commit": "3e6a4819820e89d044ef63eda5e82900e6a62d05",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "87f7eb1e247a4c4b6304b95ddd6c7baca14a73c4",
+        "commit": "c24dda8b33f8a906507e3aa5e40a3112e5d00063",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-NixOS": {
-        "commit": "1e6fcaf066130d85a1938de694999d6f37df31bd",
+        "commit": "1fd02925b8a3fe88c85fdb68153d636ff4743108",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -94,9 +94,9 @@
     "coreVersion": "7.12.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -105,49 +105,49 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       },
       "dotfiles-NixOS": {
-        "ref": "v7.11.0",
-        "carried": "7.11.0",
-        "status": "behind"
+        "ref": "v7.12.0",
+        "carried": "7.12.0",
+        "status": "current"
       }
     }
   },
@@ -184,6 +184,21 @@
     "dotfiles-NixOS": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Documentation",
+          "items": [
+            {
+              "text": "The bash 3.2 floor stays, and PORTABILITY.md §1 now says why. Retiring it for lib/*.sh behind a re-exec stage-0 was costed first (#1153). It would shed about 30 lines of lib/. The injection guard stays because namerefs still expand a subscript, the §5k gate stays re-scoped, and a blib_main stage-0 misses dotfiles-MacBook, the only host on 3.2. RELEASE-STRATEGY.md §2 records it as a candidate declined before it reached the Breaking Backlog.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.12.0",
@@ -2133,6 +2148,14 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "fix",
+      "text": "The bash 3.2 floor stays, and PORTABILITY.md §1 now says why. Retiring it for lib/*.sh behind a re-exec stage-0 was costed first (#1153). It would shed about 30 lines of lib/. The injection guard stays because namerefs still expand a subscript, the §5k gate stays re-scoped, and a blib_main stage-0 misses dotfiles-MacBook, the only host on 3.2. RELEASE-STRATEGY.md §2 records it as a candidate declined before it reached the Breaking Backlog.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
