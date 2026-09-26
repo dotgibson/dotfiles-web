@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-09-25",
+  "generatedAt": "2026-09-26",
   "generatedFrom": {
     "repo": "htpx",
     "path": "entries",
-    "commit": "1279bd1607eeefe3abb579cd23f04eb9a7732c15"
+    "commit": "083c364d21b76d4aa461a0aef0f7fb18caa7b1ce"
   },
   "totalPairs": 107,
   "groupCount": 16,
@@ -213,7 +213,7 @@
     {
       "id": "dga-c2-domains",
       "attack": "DGA rendezvous domains (resilient C2 resolution)",
-      "detection": "Detect DGA beacons (NXDOMAIN burst + label entropy)",
+      "detection": "Detect DGA beacons (NXDOMAIN burst + label shape)",
       "group": "On-prem AD / Windows",
       "phase": "Command & Control",
       "tactic": "TA0011",
@@ -246,7 +246,7 @@
     {
       "id": "dpapi-backupkey",
       "attack": "DPAPI domain backup key (decrypt any user's secrets)",
-      "detection": "Detect DPAPI backup-key theft (protected_storage pipe, 5145)",
+      "detection": "Detect DPAPI backup-key theft (LSA secret read, 4662)",
       "group": "On-prem AD / Windows",
       "phase": "Credential Access",
       "tactic": "TA0006",
@@ -1178,7 +1178,7 @@
       "phase": "Defense Impairment",
       "tactic": "TA0112",
       "techniques": [
-        "T1685"
+        "T1556.006"
       ]
     },
     {
@@ -1233,7 +1233,7 @@
       "phase": "Defense Impairment",
       "tactic": "TA0112",
       "techniques": [
-        "T1685"
+        "T1556.006"
       ]
     },
     {
