@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-25",
+  "generatedAt": "2026-09-26",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "1c85891e82b930a0ae4e853e932ce34dc0ee9ef7",
+        "commit": "ed118d08c29045ff4673300e7d20e487314eee45",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "14c693951627419ae9c9e04ebf5c44b2f7934f3b",
+        "commit": "f5fe4547576b3a783021b9ecf8cc0040cf03b6ce",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,55 +22,55 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "7cb4b298a72033ee8bacf8f70db901efd61f47bc",
+        "commit": "6f5f2fd7e59a1eeb56a1ecbd5b14848cd88cd760",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "c94fe6a0095711a473d981db284a45c32218de6d",
+        "commit": "d75c92438a9d5371c802f0cccc2b51f78058e55e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "52fc186bec9b7a30e2d31004c0bc86009f38739a",
+        "commit": "ead17b35bfdc3640100e539f21bba27db2ab9e29",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "5ad8b231eaf9b6276a8b506a2e3f81d94a5093d4",
+        "commit": "f92cb46fbcd62366f165efae16c8d58efe21183a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "b5b520cfacba38f01e9ff0812360678658812ace",
+        "commit": "b28b89c6329ad47bd52560f752ad7df68c1f0c55",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "fd0de4715241c553b929e29f69c72f4f685240d1",
+        "commit": "123219576513a8f39b487550a4d575374c255f58",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "3e6a4819820e89d044ef63eda5e82900e6a62d05",
+        "commit": "50c9f32f8947c7415e68c4987ad64b92be345079",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "c24dda8b33f8a906507e3aa5e40a3112e5d00063",
+        "commit": "082639daa61f9e1ecab7b0936f2f571cd753df11",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-NixOS": {
-        "commit": "1fd02925b8a3fe88c85fdb68153d636ff4743108",
+        "commit": "ab2105daaa0043774f01ee4310a07fce157ec224",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -94,9 +94,9 @@
     "coreVersion": "7.13.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -105,49 +105,49 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       },
       "dotfiles-NixOS": {
-        "ref": "v7.12.0",
-        "carried": "7.12.0",
-        "status": "behind"
+        "ref": "v7.13.0",
+        "carried": "7.13.0",
+        "status": "current"
       }
     }
   },
@@ -184,6 +184,21 @@
     "dotfiles-NixOS": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "make audit from a fleet shell no longer reds four cases CI calls green. The behavioral suite's host scrub now also drops BROWSER and every ATUIN_* variable. Core's own 00-tools.zsh exports BROWSER=w3m on a headless box (WSL included), and an operator who opted into the atuin daemon exports ATUIN_DAEMON__ENABLED=true. Both leaked into the cases that pin the unset state: the GUI and macOS browser cases, and the daemon guard's never-opted-in pair. That is how the v7.13.0 cut went red locally on a tree CI had passed. Every case that wants one of these variables sets it explicitly.",
+              "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.13.0",
@@ -1964,6 +1979,14 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "make audit from a fleet shell no longer reds four cases CI calls green. The behavioral suite's host scrub now also drops BROWSER and every ATUIN_* variable. Core's own 00-tools.zsh exports BROWSER=w3m on a headless box (WSL included), and an operator who opted into the atuin daemon exports ATUIN_DAEMON__ENABLED=true. Both leaked into the cases that pin the unset state: the GUI and macOS browser cases, and the daemon guard's never-opted-in pair. That is how the v7.13.0 cut went red locally on a tree CI had passed. Every case that wants one of these variables sets it explicitly.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
