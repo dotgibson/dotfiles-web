@@ -11,7 +11,7 @@ Core is authored once in `dotfiles-core` and **vendored** — copied in full —
 `core/` directory. Each machine repo therefore carries a real copy of Core, not a reference to it.
 
 The one exception is `dotfiles-Windows`, which carries no `core/` at all: it replicates Core
-natively in PowerShell and mirrors only the Neovim and starship configs via sync scripts. Everything
+natively in PowerShell and mirrors only the Neovim, starship and theme-palette configs via sync scripts. Everything
 below describes the machine repos that do vendor Core.
 
 ## Why vendor at all
@@ -40,10 +40,10 @@ In the same commit, the script stamps **`core.lock`** at the repo root — outsi
 cannot clobber it:
 
 ```ini
-core_version=7.1.2
+core_version=7.13.0
 core_sha=3e2b2555…            # the FULL Core commit that was vendored
 core_ref=3e2b2555…            # the ref that was FOLLOWED, peeled to a commit
-core_tag=v7.1.2               # once Core carries a tag describing that commit
+core_tag=v7.13.0              # once Core carries a tag describing that commit
 ```
 
 That file is what makes "which Core is this box on?" answerable offline, and it is what

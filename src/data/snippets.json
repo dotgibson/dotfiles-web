@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26",
+  "generatedAt": "2026-09-29",
   "generatedFrom": {
     "clean": true,
     "repos": {
@@ -34,7 +34,7 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "6f5f2fd7e59a1eeb56a1ecbd5b14848cd88cd760",
+        "commit": "b4b7bad2075a7a04cfe49340e5b8ccf670097ef9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
