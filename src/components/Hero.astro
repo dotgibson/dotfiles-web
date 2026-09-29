@@ -1,5 +1,6 @@
 ---
 import { withBase } from '../lib/url';
+import { metrics } from '../data/metrics';
 ---
 
 <section class="hero">
@@ -35,7 +36,7 @@ import { withBase } from '../lib/url';
 
       <ul class="hero__stats">
         <li><strong class="tone-purple">∞</strong><span>machines</span></li>
-        <li><strong class="tone-blue">3</strong><span>layers</span></li>
+        <li><strong class="tone-blue">{metrics.fleet.layers}</strong><span>layers</span></li>
         <li><strong class="tone-green">1</strong><span>vendored Core</span></li>
         <li><strong class="tone-cyan">0</strong><span>submodule flags</span></li>
       </ul>
