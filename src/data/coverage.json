@@ -3,7 +3,7 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "27ac9ce1493dc7fcd747d7b38fbece2e497b60f5"
+    "commit": "a624f927b27647a4a21961a58114c595aa3d1632"
   },
   "ruleCount": 124,
   "documentCount": 148,
@@ -582,9 +582,11 @@
     },
     {
       "id": "T1556.006",
-      "rules": 1,
+      "rules": 3,
       "ruleNames": [
-        "okta_mfa_factor_reset"
+        "npm_publish_2fa_disabled",
+        "okta_mfa_factor_reset",
+        "slack_2fa_enforcement_disabled"
       ]
     },
     {
@@ -698,12 +700,10 @@
     },
     {
       "id": "T1685",
-      "rules": 5,
+      "rules": 3,
       "ruleNames": [
         "github_branch_protection_tamper",
         "gitlab_protected_branch_tamper",
-        "npm_publish_2fa_disabled",
-        "slack_2fa_enforcement_disabled",
         "vault_audit_device_disabled"
       ]
     },

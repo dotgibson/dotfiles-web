@@ -4,73 +4,73 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "ed118d08c29045ff4673300e7d20e487314eee45",
+        "commit": "d504614749da540dd4073d8825fbcf07ec01bec3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "f5fe4547576b3a783021b9ecf8cc0040cf03b6ce",
+        "commit": "01b0a226a696caef357996a175ce3731b0443b16",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "71f7f1a18d933344e6abcb3f3facf399562da551",
+        "commit": "229e09d3dbe32b22271defd8ae764bbe6146debd",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "b4b7bad2075a7a04cfe49340e5b8ccf670097ef9",
+        "commit": "d4c6a5e30f6df6f7687ae47485eb83a02ab07886",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "27ac9ce1493dc7fcd747d7b38fbece2e497b60f5",
+        "commit": "a624f927b27647a4a21961a58114c595aa3d1632",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "ead17b35bfdc3640100e539f21bba27db2ab9e29",
+        "commit": "d1f5d41025cab468333a8641127d16e09efe69d9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "f92cb46fbcd62366f165efae16c8d58efe21183a",
+        "commit": "b2914366bcc67913666c1c9c03fc5bd78bda0c4c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "b28b89c6329ad47bd52560f752ad7df68c1f0c55",
+        "commit": "0289b1edd56da93caba7cdd64b3f92fcce325075",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "be3b71b90c15966a099cd07053b83765e0219efe",
+        "commit": "9ec45d5adcff5e37f40f25bc96c2b1740d003e75",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "50c9f32f8947c7415e68c4987ad64b92be345079",
+        "commit": "8d4267dbdcf977d58712aade82d1ee8b455e0b5a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "082639daa61f9e1ecab7b0936f2f571cd753df11",
+        "commit": "1397d7ad5a864a8d7da75e26c7cd3270cbca6601",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-NixOS": {
-        "commit": "ab2105daaa0043774f01ee4310a07fce157ec224",
+        "commit": "c844811a058b265f7949d7b0b09cb673521794e1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -154,19 +154,19 @@
   "core": {
     "version": "7.13.0",
     "sourcedModules": 14,
-    "zshLoc": 7463,
+    "zshLoc": 7479,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 30
   },
   "packages": {
-    "dotfiles-MacBook": 76,
-    "dotfiles-Fedora": 38,
-    "dotfiles-Arch": 46,
-    "dotfiles-Debian": 46,
-    "dotfiles-openSUSE": 47,
-    "dotfiles-Alpine": 72,
-    "dotfiles-Gentoo": 40,
+    "dotfiles-MacBook": 77,
+    "dotfiles-Fedora": 39,
+    "dotfiles-Arch": 47,
+    "dotfiles-Debian": 47,
+    "dotfiles-openSUSE": 48,
+    "dotfiles-Alpine": 73,
+    "dotfiles-Gentoo": 41,
     "dotfiles-Offense-offensive": 89
   },
   "ci": {
@@ -192,8 +192,30 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "The relink fix now names which checkout to run. core-doctor's relink row and the \"relink pending\" nudge used to say run ./bootstrap.sh --links-only. On a box with both an OS checkout and a role checkout, running the wrong one moved the whole Core surface onto that repo's vendored Core, possibly an older one, and the doctor then read current. The line now names the loaded checkout's own script, for example run ~/dotfiles-Offense/bootstrap.sh --links-only, quoted when the path needs it (#1213). The other state no longer stops at \"last relinked from another checkout\". It appears after a partial --only/--skip run of the other checkout, or a moved one. It now names both fixes, since either checkout's full --links-only run re-stamps the box. Which one should own Core stays an open question in #1211 (#1218).",
+              "kind": "fix"
+            },
+            {
               "text": "make audit from a fleet shell no longer reds four cases CI calls green. The behavioral suite's host scrub now also drops BROWSER and every ATUIN_* variable. Core's own 00-tools.zsh exports BROWSER=w3m on a headless box (WSL included), and an operator who opted into the atuin daemon exports ATUIN_DAEMON__ENABLED=true. Both leaked into the cases that pin the unset state: the GUI and macOS browser cases, and the daemon guard's never-opted-in pair. That is how the v7.13.0 cut went red locally on a tree CI had passed. Every case that wants one of these variables sets it explicitly.",
               "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "CI audits on Ubuntu 26.04 ahead of the ubuntu-latest switch. ci.yml's audit matrix gains a temporary ubuntu-26.04 leg, because ubuntu-latest rolls to 26.04 between 2026-10-19 and 2026-11-19 and the new image changes or removes tools. The leg is not a required check, so a 26.04 break shows up before the switch without blocking a merge. It comes out once the rollout completes. The luacheck cache key now includes the matrix OS so the two Ubuntu legs do not restore each other's natively built tree. .github/actionlint.yaml returns to declare the label, because the pinned actionlint 1.7.12 does not know it yet and would red the audit on every leg (#1200).",
+              "kind": "perf"
+            }
+          ]
+        },
+        {
+          "category": "Documentation",
+          "items": [
+            {
+              "text": "PORTING-MATRIX.md footnotes ⁵ and ³³ stop saying dotfiles-Fedora has no version floors (dotfiles-Fedora#203). dotfiles-Fedora#193 landed both floors on 2026-09-17: the # min: pair on neovim and tree-sitter-cli, a warn-only NEOVIM_FLOOR, a tree-sitter cargo fallback that runs only below TREESITTER_FLOOR, and a floor-agreement gate. Both footnotes now describe that, and ³³ drops its claim that Fedora was the last non-rolling target without a floor.",
+              "kind": "other"
             }
           ]
         }
@@ -406,6 +428,22 @@
       "version": "Unreleased",
       "groups": [
         {
+          "category": "Security",
+          "items": [
+            {
+              "text": "CI refuses a pull_request_target trigger. That trigger runs a fork's pull request with this repo's secrets and a write-capable token. The new ci-floor.yml workflow checks out dotfiles-core@v7 and runs its check-modern.sh --banned-triggers over this repo's workflows, the same rule the OS repos get through Core's lint-call.yml (dotgibson/dotfiles-core#1215). Nothing here uses the trigger today. The check passes with a warning until the Core release that ships the mode moves the v7 tag.",
+              "kind": "feature"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "groups": [
+        {
           "category": "Added",
           "items": [
             {
@@ -415,6 +453,14 @@
             {
               "text": "task.ps1 — the fleet's make verbs, for a host without make (dotfiles-core#855). dotfiles-core declares the seven canonical verbs once (help lint check dry-run packages-check core-verify test, its scripts/make-vocabulary.txt, dotfiles-core#691) so a contributor moving between repos re-learns nothing — and this repo was the one that still answered to none of them: no Makefile, no runner, only bare scripts, in the fleet's most-tested repo, where \"reproduce the CI gate locally\" has the most to offer. make is not a given on a Windows host and just would be a new dependency, so the verbs are spelled in the language the repo is written in: .\\task.ps1 <verb>. It is a dispatcher, not a second implementation: lint is tests/Invoke-Validation.ps1 plus gen-theme.ps1 -Check (ci.yml's dependency-free legs), test is tests/Invoke-Tests.ps1 (the gated suite, exactly as CI runs it), dry-run is install.ps1 -DryRun, check is lint plus the links-only bootstrap previewed (Windows has no throwaway HOME to run it in), packages-check is packages/Check-PackageFreshness.ps1 and core-verify is the three tests/Assert-*Parity.ps1 gates over the mirrored assets. Each step runs in a child pwsh -File, so a script's exit ends its own process and the first failing step's code is the verb's. Anything after a single-step verb passes through (.\\task.ps1 test -NoGate). Core's fleet-vocabulary.sh register reads the verb table statically — the quoted keys of Get-TaskVerbs, and whether test names the suite runner by path — so tests/Task.Tests.ps1 pins that shape, the exact verb set in the contract's order, and that every step names a script that exists.",
               "kind": "feature"
+            },
+            {
+              "text": "remote-install runs the host sshd as a service that restarts itself (#266). The box's front door was a bare sshd.exe with nothing supervising it (sc.exe query sshd returned 1060), so every crash and every reboot needed a human. remote-install now registers sshd as an Automatic service with recovery actions (restart after 5s / 10s / 30s, failure count reset daily), and remote-status reports the same plan while changing nothing. Two traps the planner exists for: registration is not health — scoop's install-sshd.ps1 registers with \"take no action\" recovery, so recovery is probed separately via sc.exe qfailure — and the ImagePath goes through scoop's current junction, never its resolved target, because a version-pinned path dies silently on the next scoop update openssh (the Get-DotStablePwshPath trap). It also warns when openssh is not held, since a running service keeps the daily scoop update * from replacing its binaries. This narrows 34-remote.ps1's standing rule rather than reversing it: ports, keys, firewall rules and DefaultShell still belong to the runbook; only *supervision* moved into the verbs, which stay explicit and refuse without a token. (powershell/os/34-remote.ps1, powershell/Dotfiles/Remote.Helpers.ps1, tests/Remote.Tests.ps1, docs/REMOTE-ACCESS.md)",
+              "kind": "feature"
+            },
+            {
+              "text": "Alt+C opens PSFzf's directory picker (#246). PARITY.md listed Alt+C as aligned for years while neither shell bound it. It is not a second key for Alt+Z: Alt+Z is a zoxide frecency jump to anywhere, Alt+C is \"cd into a subdirectory of here\". It follows the lazy-load shape of the Ctrl+T and Ctrl+R stubs, so PSFzf's import stays off the render path. The loader resolves Invoke-FzfPsReadlineHandlerSetLocation with Get-Command rather than calling it blind, because that name was never verified against the pinned PSFzf. If it is missing, the first press is swallowed and the next one works, rather than printing an error at the prompt. (powershell/core/10-tools.ps1)",
+              "kind": "perf"
             }
           ]
         },
@@ -438,6 +484,14 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "remote-status / remote-install guard sshd's DefaultShell, which could lock you out of the box (#267). A healthy sshd refuses *every* login when HKLM\\SOFTWARE\\OpenSSH\\DefaultShell names a shell it cannot launch, and it rejects before authentication completes, so the client sees only Permission denied (publickey,keyboard-interactive) — every symptom points at keys. It happened here when the Store pwsh moved 7.6.5.0 → 7.6.6.0 and Windows deleted the old package directory. This is the third consumer of a version-pinned pwsh, after scheduled tasks and the sshd ImagePath (#266). Get-DotSshdShellVerdict grades the value against two independent disqualifiers, because the obvious fix for one trips the other: - A version-pinned Store directory is graded fragile while it still exists. - The per-user app alias is version-stable, but it is a reparse point, which sshd (0x105 lineage) reports as \"does not exist\" exactly like the deleted directory. remote-status reports the value next to the service. remote-install repoints it at the first machine-wide real file it finds, preferring the MSI pwsh, and says so plainly when it has to fall back to Windows PowerShell 5.1. The docs note that winget's Microsoft.PowerShell manifest can be msix-only: the MSI has to come from the GitHub release, and installing it retires this failure for all three consumers. (powershell/os/34-remote.ps1, powershell/Dotfiles/Remote.Helpers.ps1, tests/Remote.Tests.ps1, docs/REMOTE-ACCESS.md)",
+              "kind": "fix"
+            },
+            {
+              "text": "The daily maintenance run reports a per-app scoop upgrade failure instead of logging ok (#263). scoop update * exits 0 even when one app fails, so the step's exit-code check could not see it. tailscale failed every day from 2026-08-20 to 2026-09-16, re-downloading a 36.6 MB MSI each time, while the log said ok scoop upgrade (apps). Get-DotScoopUpgradeOutcome reads the result per app out of the step's output. It keys on the *block*: an app has failed when its Updating '<app>' block never reaches \"was installed successfully!\", and an ERROR line inside the block is kept as the reason. The step sets $LASTEXITCODE itself, so the runner's existing \"FAIL … — continuing\" path makes one bad app visible without aborting the run. The root cause is not fixed here: tailscale's pre_uninstall needs admin and the daily task runs unelevated, so it needs a scoop hold or the elevated-task route. (powershell/Dotfiles/Maint.Helpers.ps1, tests/Maint.Tests.ps1)",
+              "kind": "fix"
+            },
             {
               "text": "A sync bot that loses its App token now says so, instead of quietly reverting to a PR nobody can merge (#269). The mint step added in #268 carries continue-on-error: true, which is right — a fork, or a repo the App was never installed on, must not go red — and was also silent. When the mint *failed* rather than being skipped (the installation pulled, so create-github-app-token 404s on /installation) the token came back empty, ${{ steps.app.outputs.token || github.token }} fell back to GITHUB_TOKEN, and the job still concluded success. That is the #265 failure re-entering through its own fallback: the PR opens, ci.yml never fires on it, no required context arrives, and it sits BLOCKED until a human closes and reopens it. It happened the day #268 landed — theme-sync run 35223874896, all three bots degraded for most of a day — and what noticed was a *different* repo's weekly sweep (dotgibson/dotfiles-core#1116), not this one's own green run. All three bots now carry an identical step between the mint and the checkout, gated on steps.app.outputs.token == '', which is the one test that covers both branches: a skipped step and a continue-on-error failure leave the output empty for the same reason, where steps.app.outcome == 'failure' would miss the skip and steps.app.conclusion is success in both. It raises a ::warning:: and a $GITHUB_STEP_SUMMARY note that name the *consequence* rather than the cause — the cause is the part a reader can already see — and pass steps.app.outcome through, so skipped (no variable or secret reached the run) reads differently from failure (the App could not mint for this repo; go look at the installation). Deliberately still not a failure: a fork must not go red, and a real drift from Core is worth landing behind a manual nudge rather than not landing at all. New tests/SyncWorkflows.Tests.ps1 pins the block byte-identical across the three files and ordered *before* the checkout (a bare if: implicitly ANDs success(), so after it a checkout failure would swallow the warning) — nothing else read these workflows at all, which is how a fix applied to two of three would have shipped green. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml, tests/SyncWorkflows.Tests.ps1)",
               "kind": "security"
@@ -657,130 +711,6 @@
             },
             {
               "text": "Two stale psmux config tests. They asserted the pill was read via #(cmd /c type %LOCALAPPDATA%…) and passed only because that string still appeared in the comment block describing the retired transport — they had stopped testing anything real. Repointed at the live @vpn_pill / @pwr_pill segments, plus a static guard that every psmux set in the repo quotes its @option name, since the splatting bug above is invisible at runtime. (tests/Repo.Tests.ps1)",
-              "kind": "fix"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "summary": "Core → Windows parity pass (2026-07). A focused sweep to close the drift that had built up between recent dotfiles-core / dotfiles-MacBook work and the Windows host, kicked off by a host :checkhealth dump. In short: the stale nvim/ mirror was re-vendored from Core (bringing the regex Tree-sitter parser and the new :checkhealth gerrrt LSP/formatter/linter readiness sections); the native-Windows clipboard false-warning was fixed upstream in Core and pulled in; the psmux :checkhealth tmux noise was documented as the cosmetic wart it is; and the two mid-2026 Core CLI tools the host still lacked were wired up — jnv (interactive JSON explorer) and a web terminal-browser verb (via lynx, since w3m has no scoop manifest). Status-bar redesign (2026-07/08). The parity pass then widened into a full bar rework across both surfaces the host draws — psmux (terminal) and Zebar (desktop) — with macOS sketchybar as the reference. Both converged on the same chip-less items on a transparent bar language, and PARITY.md was rewritten to describe the three-island layout the macOS bar had already drifted to (adopt, not revert), so the shared contract is true for both hosts again. Several entries below are live-testing fixes from actually running it. Per-change detail below.",
-      "groups": [
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "jnv — interactive JSON explorer (fleet parity with Core's HAVE_JNV). Added to packages/scoopfile.json (scoop Main). A jq-filter editor with a collapsible viewer that fills the \"explore an unfamiliar JSON response\" gap between jq (transform) and gron (grep). Its own command with no alias — jnv file.json or pipe into it — like jq/yq/ gron. This also retires the old jless-was-left-out caveat in docs/TOOLS.md: jnv is the packaged interactive explorer now.",
-              "kind": "feature"
-            },
-            {
-              "text": "web — terminal web browser verb (parity with Core's web). Added a guarded web function in core/00-aliases.ps1 that resolves w3m→lynx→links→elinks and runs the first present (skipped entirely when none is installed, matching Core). w3m has no scoop manifest, so the host packages lynx (Core's own next fallback; scoop Main) in scoopfile.json. Unlike Core's headless path, $BROWSER is never exported — the Windows host is GUI-first, so web stays an explicit opt-in verb.",
-              "kind": "config"
-            },
-            {
-              "text": "**Command-block separators (parity with Core's _cmd_block_*). A thin full-width rule is drawn above each prompt that followed a command, colored by exit status — dim (#414868) on success, red (#f7768e) on failure — turning scrollback into scannable blocks. Ported as precmd/preexec (not** a key handler, so it can't collide with PSReadLine vi-mode): the AddToHistoryHandler sets $global:DotCmdBlockRan (a bare Enter never accepts a line, so no rule is drawn on an empty prompt), and Invoke-Starship-PreCommand draws the rule via [Console]::Write. Colour tracks $LASTEXITCODE (the status reliable at that point); pure-cmdlet failures still surface in starship's [status]. (powershell/core/10-tools.ps1)",
-              "kind": "feature"
-            },
-            {
-              "text": "Zebar caffeine / keep-awake indicator. A placeholder matching sketchybar's caffeinate.sh — grey asleep, yellow awake — in the left island. Visual only for now: it renders state but doesn't yet drive a keep-awake mechanism on the host (see the Caffeine component comment in the HTML). (desktop/zebar/vanilla-clear/)",
-              "kind": "feature"
-            },
-            {
-              "text": "Zebar battery shows an AC-power placeholder on desktops. A machine with no battery rendered nothing at all, leaving a gap in the right island; it now shows a green plug glyph. (desktop/zebar/vanilla-clear/)",
-              "kind": "feature"
-            }
-          ]
-        },
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "Re-vendored nvim/ from Core (was v4.4.0-3, now current). Brings the Core changes that had not yet reached the host: the regex Tree-sitter parser (silences :checkhealth noice's \"regex parser is not installed\" cmdline-highlighting warning), the new :checkhealth gerrrt LSP / formatter / linter readiness sections, and the servers/init.lua read-only status() export those sections consume. nvim/.core-ref updated to the synced commit. (nvim/, via nvim-sync.ps1)",
-              "kind": "feature"
-            },
-            {
-              "text": "Re-synced nvim/ to Core main a53ac4f — a follow-up mirror picking up the lazy-lock.json plugin-pin refresh (4 SHAs); nvim/.core-ref re-pointed from the pre-merge branch tip to main. starship.toml verified byte-identical to Core (no sync needed). (nvim/lazy-lock.json, nvim/.core-ref)",
-              "kind": "perf"
-            },
-            {
-              "text": "Windows Terminal cursor → bar — cursorShape filledBox → bar to match MacBook's ghostty cursor-style = bar for cross-terminal parity. (windows-terminal/settings.json)",
-              "kind": "config"
-            },
-            {
-              "text": "psmux status bar → Core's centered floating-island look. Ported Core tmux.conf's island redesign to psmux/psmux.conf: a 2-line, centered, transparent bar (status 2 + blank status-format[1], status-justify centre — later absolute-centre, see Fixed — status-style bg=default, bg=default pill caps + pane borders) with flat underlined window tabs and monitor-activity • dots for unseen output (psmux has no monitor-bell) — replacing the old left-justified opaque-pill bar. All five psmux features were probed as supported (psmux 3.3.7) before porting. Stays within psmux's no-shell-out / no-process-table rules: the cwd pill keeps #{b:pane_path} (OSC 7) and Core's nvim-gated pane_current_path segment is intentionally not ported. (psmux/psmux.conf)",
-              "kind": "fix"
-            },
-            {
-              "text": "Zebar adopts sketchybar's floating-islands design, and PARITY.md now describes it. The macOS bar had drifted to a 3-island look (transparent bar + bordered panels) without the shared contract being updated, so PARITY.md was false for one host. Resolved by adopting, not reverting: the bar goes transparent and .left/.center/.right each become a rounded island (rgba(29,32,47,0.93) fill, 2px rim, r=9) accented blue/magenta/ green. Weather moves into the left island (stable-width, non-urgent); two grey │ separators chunk the right island into I/O · load · power, each gated on its own group so a provider-startup transient can't leave a stray separator leading the island. PARITY.md (identical copy in dotfiles-MacBook) rewritten to match: three islands, weather left, transparent bar geometry, blur off, purple un-reserved and orange added to the palette. Not render-verified on a Windows host — reload Zebar and eyeball. (desktop/zebar/vanilla-clear/, desktop/PARITY.md)",
-              "kind": "perf"
-            },
-            {
-              "text": "psmux bar is chip-less. Dropped the rounded pill caps (@cap_l/@cap_r) from the session / cwd / clock / IP segments in favour of plain coloured icon+text on the transparent bar — matching sketchybar, Zebar, and PARITY.md's \"items are chip-less\" spec. Also fixes the prefix and copy-mode glyphs being clipped by the cap they sat against. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
-              "kind": "fix"
-            },
-            {
-              "text": "Default psmux session renamed main → Gerrrt — both the 30-windows.ps1 auto-launch and the mux verb default in 32-psmux.ps1, with the docs/comments that still said main updated to match. (psmux/, docs/TOOLS.md, TERMINAL_WORKFLOW_GUIDE.md)",
-              "kind": "config"
-            },
-            {
-              "text": "Zebar weather reads °F instead of °C (fahrenheitTemp). (desktop/zebar/vanilla-clear/vanilla-clear.html)",
-              "kind": "config"
-            },
-            {
-              "text": "Zebar workspace pills match sketchybar's aerospace.sh. Only the focused workspace is highlighted (blue background, dark text); every other one is a plain grey number with no chip — GlazeWM's .displayed distinction is deliberately dropped for macOS parity, since aerospace shows only the single focused workspace. (desktop/zebar/vanilla-clear/styles.css)",
-              "kind": "config"
-            },
-            {
-              "text": "Zebar spacing and font tuning from live use on a large external monitor. --item-gap 20px → 8px to match sketchybar's per-item padding (padding_left 4 + padding_right 4); left-island items dropped from a 16px to an 8px margin so both islands read at the same density; --bar-font-size 16px → 18px, since sketchybar's ~17pt suits a laptop panel but reads too small on a large panel (still fits the 28px island; 20px is the next comfortable step). (desktop/zebar/vanilla-clear/styles.css)",
-              "kind": "config"
-            }
-          ]
-        },
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "psmux tabs no longer drift off-center — status-justify absolute-centre. Plain centre (Core's value) centers the window list in the gap between status-left and status-right, so the host's variable-width session pill (wider while prefix is active) and the #{b:pane_path} cwd in status-right pushed the tabs off the true middle — most visibly as a jump when a pane running nvim widened the right float. Switched to absolute-centre, which anchors the tabs to the bar's absolute center regardless of either float's width. Deliberate divergence from Core's centre (see docs/PORTING-NOTES.md); probed on psmux 3.3.7. This is the real fix for the tab-shifting the equal-width prefix cell below was working around. (psmux/psmux.conf)",
-              "kind": "fix"
-            },
-            {
-              "text": "psmux IP / VPN pill rendered blank. Two distinct causes, found in that order. First, psmux.conf ran set -gq @vpn_pill \"\", which clobbered the refresher's poked value on every source-file reload — removed, so #{@vpn_pill} persists what the refresher sets. The segment still rendered empty, because the option was poked as a single pre-styled string ('#[fg=#9ece6a,bold]<glyph> <ip>') and an option value embedding a #[…] style run is not re-interpreted when the format expands it. That's why psmux-pill-status showed a populated cache (a plain file write, a separate code path) while the bar stayed empty. Split the transport to mirror the proven @tn_* colour pattern: @vpn_pill carries plain text only, @vpn_fg carries the accent hex, applied in status-left as #[fg=#{@vpn_fg}]#{@vpn_pill}. Only the colour is defaulted in the conf (so it's never empty on first paint); defaulting the text is what caused the original clobber. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
-              "kind": "perf"
-            },
-            {
-              "text": "psmux prefix indicator style leaked into the window tabs. A #[default] reset after #{@vpn_pill} stops the pill's bold/fg bleeding into the tabs. The indicator was also widened to an equal-width padded cell ( 󰠠 / idle ) so its branches couldn't shift the tabs — kept for stable width, though absolute-centre above is what actually holds the tabs still. (psmux/psmux.conf)",
-              "kind": "config"
-            },
-            {
-              "text": "psmux nvim cwd jammed against the clock. Two passes: the status-right cwd↔clock gap sat inside a #{?} branch and psmux trims in-branch trailing spaces, so it was moved outside the branch — then widened (6 → 12 spaces) once the branch fix made the gap actually render and it was still too tight to read. (psmux/psmux.conf)",
-              "kind": "fix"
-            },
-            {
-              "text": "psmux config warning: unknown option 'monitor-bell'. psmux 3.3.7 doesn't implement monitor-bell at all — its CLI setw/set returns exit 0 (so the capability probe was a false positive) but the config parser rejects it on load. Removed the setting; monitor-activity (which psmux does support) stays, so activity dots still work — only the bell dot is inert. (psmux/psmux.conf)",
-              "kind": "config"
-            },
-            {
-              "text": "Zebar network readout rendered white instead of blue. The .network module had no color class, so only its glyph got the global blue while the ↓↑ throughput values fell back to fg (white). Added .network { color: var(--tn-blue) } so icon and values are blue, matching sketchybar's network.sh (icon + label accent). (desktop/zebar/vanilla-clear/styles.css)",
-              "kind": "feature"
-            },
-            {
-              "text": ":checkhealth gerrrt no longer false-warns about the clipboard on the host. It read \"Core's cross-OS clipboard scripts are not on PATH (clip: found, clip-paste: missing)\" — misleading, since clip only resolved to Windows' built-in clip.exe and the Unix/WSL clip/clip-paste ladder does not apply on the host: config/clipboard.lua wires the clip-windows provider (clip.exe copy + PowerShell paste) instead. Fixed upstream in Core (health.lua now detects native Windows via has(\"win32\") and defers to :checkhealth vim.provider for the live backend) and pulled in with the nvim re-vendor above.",
-              "kind": "perf"
-            }
-          ]
-        },
-        {
-          "category": "Docs",
-          "items": [
-            {
-              "text": "Documented the psmux :checkhealth tmux cosmetic wart in docs/PORTING-NOTES.md: psmux has no show-option verb, so Neovim's built-in vim.health tmux probe shows ❌ ERRORs and a false \"true color could not be detected\" ⚠️ — cosmetic only (psmux renders 24-bit colour natively; nothing functional is affected), and not shimmed on purpose.",
-              "kind": "config"
-            },
-            {
-              "text": "Refreshed the stale \"re-vendor nvim/\" manual step (the full tree is now vendored via nvim-sync.ps1, and the old <leader>rc keymap wart is fixed upstream), and dropped the now-inaccurate \"Known Windows wart\" banner nvim-sync.ps1 printed after each sync.",
               "kind": "fix"
             }
           ]
@@ -1307,6 +1237,26 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "github_credential_backdoor now also selects personal_access_token.request_created (#348). This follows htpx's gh-cred-audit (htpx#139). GitHub logs the request only in orgs that require approval for fine-grained PATs. There it is the moment an attacker-minted token can still be denied, and a denied request never produces the access_granted the rule already selected. Neither PAT action had a fixture before. Each now has its own single-event TP row, because zircolite passes a TP file when any event in it matches, so a shared file would hide a typo in either action name.",
+              "kind": "fix"
+            },
+            {
+              "text": "npm_publish_2fa_disabled and slack_2fa_enforcement_disabled are retagged from T1685 to T1556.006 (#346). Both fire when an MFA requirement is weakened, which is an authentication-process change rather than tampering with a security tool. Upstream htpx retagged the paired entries the same way in htpx#134, and okta_mfa_factor_reset already uses T1556.006 for this shape. The tactic stays defense-impairment, which T1556.006 carries in ATT&CK v19.2 and which matches upstream's TA0112. Detection logic and fixtures are unchanged.",
+              "kind": "security"
+            },
+            {
+              "text": "htpx.pin moves to htpx v3.3.0, and both DPAPI rules name dpapi-backupkey-4662 (#336). Upstream retired entries/blue/dpapi-backupkey-5145 in favour of dpapi-backupkey-4662, which keys the theft on the 4662 LSA secret read and keeps protected_storage 5145 as its secondary arm. The 5145 rule's references: URL was a live 404 on /blob/main/ while the gate, still reading the old pin, stayed green. Both rules now reference the 4662 entry: - dpapi_backupkey_5145: the MS-BKRP hunt. - dpapi_backupkey_secret_read_4662: the theft alert. So HTPX-COVERAGE.md lists the pair under the 4662 entry. The regenerated report also shows upstream's npm/slack 2FA retag to T1556.006. The two rules here still carry T1685, and whether to follow is a separate review call.",
+              "kind": "security"
+            },
+            {
+              "text": "Detection review 3, section C: the two findings that needed lab or estate data. - dpapi_backupkey_secret_read_4662 keeps SYSTEM in scope, on purpose. Running the extraction on the DC from a SYSTEM context (psexec to the DC, then mimikatz lsadump::backupkeys or SharpDPAPI backupkey) records S-1-5-18 as the subject, so excluding SYSTEM would hide common post-compromise tradecraft. A new TP covers that read. The rule says what to do if a lab capture shows BackuprKey servicing logging as SYSTEM: split it into a lower-level rule, don't exclude it. - The GPP User-preferences sweep threshold (10) is now DEPLOY-REQUIRED, with a README deploy-time row. The count is of distinct paths, and each path carries its GPO's GUID, so the threshold has to clear what one user reads across all their linked GPOs. The TP sweep now spans four GPOs, and a new logon TN reads six files from three.",
+              "kind": "feature"
+            },
+            {
+              "text": "Detection review 3, sections A and B: defects in the review-2 rewrite, and older claims the rewrite carried forward. Each fix carries a fixture that the old rule gets wrong. - lsass_handle_access: - The lab Sysmon config still dropped MsMpEng.exe/MsSense.exe by bare file name (condition=\"image\"). A dumper renamed to either never reached the rule, whatever its filter said. The exclude now uses Defender's install directories. - The \"PROCESS_VM_READ bit\" match covered only low nibbles 0/8/A, so 0x1411 got through. All 128 read-capable suffixes are now listed, plus 0x40 (PROCESS_DUP_HANDLE). - The description no longer claims this is SigmaHQ's list. - registry_run_key_suspicious_target_sysmon_13: the generic ~1\\/~2\\ entries matched PROGRA~1/PROGRA~2 (Program Files), which the rule deliberately leaves alone. They are replaced with \\PROGRA~3\\, \\APPDAT~1\\ and \\LOCALS~1\\. - wmi_event_subscription_consumer: - The Destination allowlist gated only one of three arms, so an SCCM cmd.exe /c consumer could not be exempted. It now covers every arm. - Consumer deletions no longer alert (Operation: Created). - pwsh is added. - suid_bit_set: the /usr/bin/yum and /usr/bin/dnf entries are removed. Both tools run under Python, so the entries never matched. Review 2 removed the same entries from the cron and systemd rules and missed this file. - vault_approle_backdoor: secret-id lookup and destroy are routine CI housekeeping, and they alerted even for the allowlisted orchestrator. They are now excluded by exact suffix (/secret-id/lookup, /secret-id-accessor/destroy, ...). A contains: '/secret-id/' would also have hidden a mint written with a trailing slash (.../secret-id/, which Vault routes as a mint) and every role write on a mount named secret-id. Both lists are pinned to the AppRole mount (auth/approle/role/, DEPLOY-REQUIRED if yours differs). A bare suffix also exempted vault auth enable -path=x/secret-id/lookup, a /role/ substring exempted an LDAP group named role/secret-id/lookup, and the orchestrator's mint exemption covered creating a role named secret-id. - snowflake_data_unload: each allowlisted stage now takes two entries, @STAGE/ and @STAGE followed by a space (a root unload). A bare @MY_SANCTIONED_STAGE had also exempted @MY_SANCTIONED_STAGE_EVIL. The rule now says to write stages fully qualified, since an unqualified name resolves in the caller's own schema, and its example entries are qualified. - scheduled_task_suspicious_4698: it now matches every prefix of -EncodedCommand behind one or two of the switch characters PowerShell accepts (-, /, en dash, em dash, horizontal bar), with quotes or cmd carets allowed before and inside the flag (-\"e\"c, -e^c, ^-e), then a space or tab, then a payload: 20 base64 characters that may be split by quotes or carets, a quoted payload with spaces inside, or a variable (%p%, !p!, $p); behind / only for /ec and longer, since robocopy's /E %OPTS% is common. It also covers pwsh tasks. Quotes and carets are not accepted before the dash: they already count as a boundary, and allowing both made the pattern quadratic on a long run of quotes. Requiring the payload keeps -Encoding utf8, URLs, robocopy's /E and a script's own short -e prod argument out; a long base64-looking -e value still matches. Elastic needs the rewritten regex given in the rule. - Splunk: two rules could never run. When a regex sits inside an OR, the Splunk backend emits a search with no base (search = | rex ...), which Splunk rejects. That killed service_creation_psexec_7045 (since #337) and the new 4698 regex. gen-siem.sh now lifts the final search's source=... EventCode=N into the base. It fails the build instead of guessing when the shape differs: anything other than | rex/| eval before the final search, an EventCode that is an OR operand (lifting it would narrow the rule), or an empty or pipe-first search = it does not recognise. - spoolss_pipe_impersonation_sysmon_17: - The description no longer names GodPotato, which stands up an epmapper pipe. The sibling rule already says so. - A TP with PrintSpoofer's real nested pipe name (\\<guid>\\pipe\\spoolss) is added. - unconstrained_delegation_4624: - The description no longer claims the \"machine account\" variant. When that account's host is krbrelayx on Linux, no Windows host writes a 4624. - The DC filter uses exact FQDNs. startswith: 'DC1' exempted DC10. - systemd_unit_persistence: the documented auditd watches now include /lib/systemd/system/ (split-/usr) and the global user-unit directories, each on a line that pastes straight into an audit rules file.",
+              "kind": "security"
+            },
+            {
               "text": "Detection review 2, section E: pairing and methodology bookkeeping that misstated coverage. No detection logic changes. - HTPX-COVERAGE.md under-claimed three pairs that have detections. It listed unconstrained-deleg-4624, cryptomine-pool-detect and dga-nxdomain-entropy under \"nothing here claims\". Each detection named its pair in prose the claim regex could not parse: \"PURPLE-TEAM … row\", \"companion pair\", or \"htpx pairs (\". Each now carries the htpx blue-entry URL. - dns-tunnel-sysmon-22 stays unclaimed on purpose. Its source is Sysmon DnsQuery alone, which the lab config does not collect, and dns-c2.zeek is its wire twin rather than an implementation of it. The script now says so. - DEFENSE-METHODOLOGY.md table rows no longer name planes that have nothing in them. - Lateral Movement claimed \"Zeek SMB\", but no such script exists. - Recon claimed Zeek, but the only Zeek Kerberos script is credential access, so it moved to that row. - The Responder and LOLBAS validation cells pointed at folds with no detection behind them. They now say \"no detection yet\". - Sources are corrected to the events the rules actually read. - An Initial Access paragraph had drifted. It sat after the Sysmon-13 RegistryEvent paragraph, so \"the *registry* plane … Both rules\" read as the two registry rules. It is back under the Initial Access paragraph it explains. - The Entra count is split out. \"Six pairs of Entra/M365 identity coverage sat in detections/sigma/cloud/\" now says three are Sigma rules there and three are Sentinel joins.",
               "kind": "security"
             },
@@ -1564,6 +1514,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "dnf repoquery (43) had been red on every run since the version floors landed (#193), and never because of a floor. The version probe in test/check-packages.sh ended its options with --. dnf5 only treats -- as end-of-options from 5.4 onwards. The 5.2.x that fedora:43 ships rejects it as an unknown argument, and the probe hid that error (stderr went to /dev/null). So every floored name came back with no version, and the check reported neovim and tree-sitter-cli as \"virtual capabilities\" on F43 only. The -- is gone; manifest names never start with -. A floored name that resolves by name but yields no version now reports a probe failure instead of blaming the manifest entry. packages.yml's path filter now includes test/check-packages.sh, because a change to the probe is only exercised on that workflow's Fedora containers.",
+              "kind": "config"
+            },
+            {
               "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
               "kind": "fix"
             },
@@ -1644,6 +1598,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "jc is installed from dnf (dotgibson/dotfiles-core#1208). jc converts the output of common commands (ps, df, dig, ip, ...) to JSON for jq/yq. Fedora packages it on every supported release — jc 1.26.0 on F43, F44, F45 and rawhide (F46), shipping /usr/bin/jc and pulling python3-jc — so it is one line in install/packages.txt, and the atomic edition layers it from the same list with no change. This is the OS half of a fleet ratchet: Core's core-doctor probe and PORTING-MATRIX.md row land after the OS repos install it.",
+              "kind": "feature"
+            },
             {
               "text": "make lint stops warning about dnf on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt. Both declarations here run base-system binaries the list deliberately does not name — that file records what this repo ADDS to a box — so the check fired on 8 verbs in each, burying the one case it exists to catch: a verb naming a tool nothing installs. PKG_UNLISTED_TOOLS declares the exceptions (dnf on the workstation edition, rpm-ostree dnf rpm systemctl on the atomic one) and both declarations now validate with zero warnings. Kept honest from both ends, so it cannot rot into a blanket silencer: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
               "kind": "feature"
@@ -1741,6 +1699,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "jc is installed (dotgibson/dotfiles-core#1208). extra/jc converts the output of ps, ss, dig and friends to JSON (ss -tlnp | jc --ss | jq), next to gron in install/packages.txt. This is the OS-first step of the fleet ratchet: Core adds the detection line, the core-doctor data / net row and the PORTING-MATRIX row once the OS repos install it.",
+              "kind": "feature"
+            },
             {
               "text": "make lint stops warning about pacman and checkupdates on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt, and it fired on 7 verbs here for two different reasons. pacman is base-system, and that file records what this repo ADDS to a box. checkupdates is installed — just under another name, from pacman-contrib, which the list does carry; the check matches package names, not the binaries inside them. PKG_UNLISTED_TOOLS=pacman checkupdates declares both, and the declaration now validates with zero warnings. Kept honest from both ends: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
               "kind": "feature"
@@ -1874,6 +1836,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "jc joins the apt base stack (dotgibson/dotfiles-core#1208) — kellyjonbrazil's command-output-to-JSON converter, next to gron in install/packages.txt. Untiered, because every target resolves it: noble 1.25.1 (universe), 26.04 1.25.5 (universe), trixie 1.25.4 and kali-rolling 1.25.7 (main). This is the OS-repo half of the fleet ratchet; Core's detection line and core-doctor row follow once the fleet installs it. The name counts quoted in the packages and bootstrap workflow comments move to 33 untiered and 45 on Kali. The Kali figure had drifted: it read 47 while the list resolved 44 there.",
+              "kind": "feature"
+            },
             {
               "text": "make lint stops warning about apt-get, apt-cache and dpkg on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt. All three are base-system on any Debian box, and that file records what this repo ADDS — so the check fired on 10 verbs per declaration, the loudest in the fleet, because the verbs here split across three binaries rather than one. That buried the one case it exists to catch: a verb naming a tool nothing installs. PKG_UNLISTED_TOOLS=apt-get apt-cache dpkg declares the exceptions in both the Debian and Kali declarations, and both now validate with zero warnings. Kept honest from both ends: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
               "kind": "perf"
@@ -2016,71 +1982,39 @@
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
+      "text": "The relink fix now names which checkout to run. core-doctor's relink row and the \"relink pending\" nudge used to say run ./bootstrap.sh --links-only. On a box with both an OS checkout and a role checkout, running the wrong one moved the whole Core surface onto that repo's vendored Core, possibly an older one, and the doctor then read current. The line now names the loaded checkout's own script, for example run ~/dotfiles-Offense/bootstrap.sh --links-only, quoted when the path needs it (#1213). The other state no longer stops at \"last relinked from another checkout\". It appears after a partial --only/--skip run of the other checkout, or a moved one. It now names both fixes, since either checkout's full --links-only run re-stamps the box. Which one should own Core stays an open question in #1211 (#1218).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
       "text": "make audit from a fleet shell no longer reds four cases CI calls green. The behavioral suite's host scrub now also drops BROWSER and every ATUIN_* variable. Core's own 00-tools.zsh exports BROWSER=w3m on a headless box (WSL included), and an operator who opted into the atuin daemon exports ATUIN_DAEMON__ENABLED=true. Both leaked into the cases that pin the unset state: the GUI and macOS browser cases, and the daemon guard's never-opted-in pair. That is how the v7.13.0 cut went red locally on a tree CI had passed. Every case that wants one of these variables sets it explicitly.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "CI audits on Ubuntu 26.04 ahead of the ubuntu-latest switch. ci.yml's audit matrix gains a temporary ubuntu-26.04 leg, because ubuntu-latest rolls to 26.04 between 2026-10-19 and 2026-11-19 and the new image changes or removes tools. The leg is not a required check, so a 26.04 break shows up before the switch without blocking a merge. It comes out once the rollout completes. The luacheck cache key now includes the matrix OS so the two Ubuntu legs do not restore each other's natively built tree. .github/actionlint.yaml returns to declare the label, because the pinned actionlint 1.7.12 does not know it yet and would red the audit on every leg (#1200).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Documentation",
+      "kind": "other",
+      "text": "PORTING-MATRIX.md footnotes ⁵ and ³³ stop saying dotfiles-Fedora has no version floors (dotfiles-Fedora#203). dotfiles-Fedora#193 landed both floors on 2026-09-17: the # min: pair on neovim and tree-sitter-cli, a warn-only NEOVIM_FLOOR, a tree-sitter cargo fallback that runs only below TREESITTER_FLOOR, and a floor-agreement gate. Both footnotes now describe that, and ³³ drops its claim that Fedora was the last non-rolling target without a floor.",
       "core": true
     },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
-      "category": "Added",
-      "kind": "perf",
-      "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). Every other public repo in the fleet got one this week from dotfiles-core's shared tape generator, and this repo was the one it could not serve: the host layer is PowerShell and nothing under core/ is vendored, so there is no zsh to drive and no .zshrc to source. assets/demo.tape is therefore hand-authored — the same font, palette, framerate and beat rhythm as the nine generated tapes, the same three marquee moments (ll, cat README.md, glog -8), then this repo's own two: up -n, the fleet's one verb resolving here to scoop status + winget upgrade, and core-version. It is filmed from a WSL distro with vhs driving the Windows pwsh.exe through interop (assets/README.md has the recipe and the knobs: PSMUX_NO_AUTOLAUNCH, DOTFILES_UPDATE_CHECK, PSReadLine predictions off), and assets/demo.gif is gifsicle-optimised under the 2 MiB ceiling Core enforces for its own. Re-render after any prompt or tooling change; the gif is committed beside the tape.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "category": "Added",
+      "category": "Security",
       "kind": "feature",
-      "text": "task.ps1 — the fleet's make verbs, for a host without make (dotfiles-core#855). dotfiles-core declares the seven canonical verbs once (help lint check dry-run packages-check core-verify test, its scripts/make-vocabulary.txt, dotfiles-core#691) so a contributor moving between repos re-learns nothing — and this repo was the one that still answered to none of them: no Makefile, no runner, only bare scripts, in the fleet's most-tested repo, where \"reproduce the CI gate locally\" has the most to offer. make is not a given on a Windows host and just would be a new dependency, so the verbs are spelled in the language the repo is written in: .\\task.ps1 <verb>. It is a dispatcher, not a second implementation: lint is tests/Invoke-Validation.ps1 plus gen-theme.ps1 -Check (ci.yml's dependency-free legs), test is tests/Invoke-Tests.ps1 (the gated suite, exactly as CI runs it), dry-run is install.ps1 -DryRun, check is lint plus the links-only bootstrap previewed (Windows has no throwaway HOME to run it in), packages-check is packages/Check-PackageFreshness.ps1 and core-verify is the three tests/Assert-*Parity.ps1 gates over the mirrored assets. Each step runs in a child pwsh -File, so a script's exit ends its own process and the first failing step's code is the verb's. Anything after a single-step verb passes through (.\\task.ps1 test -NoGate). Core's fleet-vocabulary.sh register reads the verb table statically — the quoted keys of Get-TaskVerbs, and whether test names the suite runner by path — so tests/Task.Tests.ps1 pins that shape, the exact verb set in the contract's order, and that every step names a script that exists.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "category": "Changed",
-      "kind": "config",
-      "text": "desktop/PARITY.md's generated block takes the canonical marker, and the marker now says who writes it (dotgibson/dotfiles-core#1129). The pair became <!-- core:desktop-parity:gen parity --> … <!-- core:desktop-parity:end parity -->, matching the core:<ns>:gen <id> grammar every other generated region in the fleet uses. Not a tidy-up. core: is *provenance* — it names the repo whose generator owns the region — and this file is precisely where that matters: nothing in this repo writes the block, nothing here gates it, and until now its only clue that dotfiles-core rewrites it was a marker that did not say so. The block id is the other half; the old pair carried none, so the file format could hold exactly one generated region, forever. The bytes between the markers did not move. Core renders whichever marker form the target file carries, echoed back verbatim, so this repo and dotfiles-MacBook can be renamed in separate commits without the weekly parity-check sweep reding in between — which is the whole reason Core learned to accept both forms first (dotgibson/dotfiles-core#1143) rather than changing the string in one place and breaking two others. Core drops the legacy arm once both copies carry the new pair. Nothing here reads these markers — no Pester test, no workflow, no gate — so this is a two-line change in one file.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "category": "Changed",
-      "kind": "perf",
-      "text": "nvim/ is vendored from dotfiles-nvim directly, and its pin is a root-level nvim.lock (dotgibson/dotfiles-core#1124). dotfiles-core's NVIM-SPLIT-PROPOSAL.md extracted the editor into its own repo with its own gate — headless startup, :checkhealth, luacheck against a real Neovim, none of which Core's runners could do — and its own release line. This repo had always consumed the editor alone through a bespoke mirror, pinned to a Core ref that had nothing to do with when the editor changed; §3.1 called that \"the tell\". So nvim-sync.ps1 now points at dotgibson/dotfiles-nvim, and the side channel becomes the front door: a first-class second consumer of a real release line, on the same pin shape Core uses for its own copy. The re-point moved no editor bytes — the vendored tree at dotfiles-nvim v1.0.0 is byte-identical to the Core tree it replaced, which is what the extraction promised. - A bare nvim-sync.ps1 run now pins the newest vX.Y.Z release rather than tracking a branch tip. Releases are the unit the upstream gate signs off on, and they are what makes the Windows and Core pins comparable. -FollowBranch keeps the old behaviour, -Ref pins an exact revision, and the release picker orders numerically (so v1.10.0 beats v1.9.0) while dropping prereleases and the moving v1 major alias — a pin must never name a tag that moves. - The marker moved out of the tree it describes, from nvim/.core-ref to nvim.lock at the repo root, and that retires three workarounds: the parity gate compares nvim/ with no exclusion set (so it is byte-identical to upstream's), the sync bot judges drift on a plain git status -- nvim, and auto-tag.yml's nvim/ trigger cannot see a pin-only change, so a re-pin that moves no editor bytes cuts no release tag. nvim.lock carries dotfiles-core's field names on purpose, so fleet-drift.sh can compare the two pins directly. - The gate's clone target is now an owner/name slug** rather than a URL. The allowlist no longer has to enumerate every spelling of the same repo, and the URL CI dials is built from a value already matched against it. - dotfiles-doctor's nvim vendor row leads with the editor release (vendored nvim v1.0.0 (7ba9457)), because a tag answers \"which editor is this?\" on sight where a bare sha needed a lookup. starship/ and theme/ are unchanged: they are still vendored from dotfiles-core and still record a .core-ref. - The CI job keeps the name nvim Core parity deliberately, though the editor no longer comes from Core. It is one of the seven contexts the main ruleset requires; renaming it without editing branch protection first would leave every PR BLOCKED. That rename is its own change.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "notify-web.yml passes client-id, not the deprecated app-id, and reads the new FLEET_APP_CLIENT_ID org variable (#251, dotfiles-core #831). The pinned create-github-app-token (v3.2.0) deprecates app-id, and this repo's inline notifier — it does not consume Core's reusable — passed it. The variable is a new one because FLEET_APP_ID holds the App ID and the new input wants the Client ID, a different value; the if: guard and the ::warning:: that is this repo's only signal of a silently skipped refresh move in the same commit. Precondition: the org variable must exist before this merges, or the mint skips and the showcase stops refreshing with only that warning to say so.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "security",
-      "text": "A sync bot that loses its App token now says so, instead of quietly reverting to a PR nobody can merge (#269). The mint step added in #268 carries continue-on-error: true, which is right — a fork, or a repo the App was never installed on, must not go red — and was also silent. When the mint *failed* rather than being skipped (the installation pulled, so create-github-app-token 404s on /installation) the token came back empty, ${{ steps.app.outputs.token || github.token }} fell back to GITHUB_TOKEN, and the job still concluded success. That is the #265 failure re-entering through its own fallback: the PR opens, ci.yml never fires on it, no required context arrives, and it sits BLOCKED until a human closes and reopens it. It happened the day #268 landed — theme-sync run 35223874896, all three bots degraded for most of a day — and what noticed was a *different* repo's weekly sweep (dotgibson/dotfiles-core#1116), not this one's own green run. All three bots now carry an identical step between the mint and the checkout, gated on steps.app.outputs.token == '', which is the one test that covers both branches: a skipped step and a continue-on-error failure leave the output empty for the same reason, where steps.app.outcome == 'failure' would miss the skip and steps.app.conclusion is success in both. It raises a ::warning:: and a $GITHUB_STEP_SUMMARY note that name the *consequence* rather than the cause — the cause is the part a reader can already see — and pass steps.app.outcome through, so skipped (no variable or secret reached the run) reads differently from failure (the App could not mint for this repo; go look at the installation). Deliberately still not a failure: a fork must not go red, and a real drift from Core is worth landing behind a manual nudge rather than not landing at all. New tests/SyncWorkflows.Tests.ps1 pins the block byte-identical across the three files and ordered *before* the checkout (a bare if: implicitly ANDs success(), so after it a checkout failure would swallow the warning) — nothing else read these workflows at all, which is how a fix applied to two of three would have shipped green. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml, tests/SyncWorkflows.Tests.ps1)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The three sync bots open their PRs as the fleet App, so CI actually runs on them (#265). nvim-sync, starship-sync and theme-sync all pushed the branch and opened the PR with GH_TOKEN: ${{ github.token }}, and GitHub deliberately starts no workflow run from an event the default GITHUB_TOKEN created. So ci.yml's pull_request trigger never fired, not one of the six contexts the main ruleset requires ever arrived, and every sync PR sat BLOCKED indefinitely — #260 and #264 were each unblocked by a human closing and reopening them, which re-fires pull_request, and both merged minutes later. That manual step was being paid weekly, and it was not merely an annoyance: Core's fleet-drift.yml sweeps Mondays while these bots run Tue/Wed/Thu, so a sync PR waiting on a human reads as a Core drift red that is nothing of the kind (dotgibson/dotfiles-core#1058). Each bot now mints a short-lived, repo-scoped token from the dotgibson-fleet-sync App (actions/create-github-app-token, at the same SHA pin notify-web.yml already carries) and both pushes and opens the PR with it, so the PR is App-authored and its CI runs unattended — the same problem, and the same fix, as dotfiles-core's freshness.yml on its own self-PRs. Narrow on both axes: no owner:/repositories:, which is what scopes the token to *this* repository, and only contents + pull-requests: write — deliberately not workflows: write, so a bot that ever tried to rewrite CI fails loudly instead of having quietly been able to all along. It degrades rather than fails: with no App configured the mint is skipped and the bot falls back to GITHUB_TOKEN, so the PR still opens and merely needs the old manual nudge. GH_TOKEN moves from the job env: to the PR step's, because a job-level env: cannot read the steps context. The two App-free options weighed in #265 do not actually work — the recursion guard covers a push and a bot's own close+reopen exactly as it covers pull_request, so neither would have produced a single check. Depends on live infrastructure: the App is installed on this repo today, but Core's GITHUB-APP-AUTH.md still lists it under \"does not need installing\" and scripts/fleet-app-scope.sh reports it as an install nothing writes to; a Core-side issue moves it to a justified entry beside dotfiles-core's own. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "Unreleased",
-      "category": "Fixed",
-      "kind": "feature",
-      "text": "**The package-freshness check now compares *directionally* — a lock that runs ahead of its source is no longer reported as behind (#234, #250). Check-PackageFreshness.ps1 gated every row on Test-PackageVersionMatch, which answers \"same release?\" and says nothing about which side is newer. So winget still advertising TranslucentTB 2026.1 under a 2026.2.0.0 lock filed as an update every week, and re-pinning (#241, #254) could never clear it. New pure helper Compare-PackageVersion in packages/PackageLock.ps1 orders the shapes the lock actually carries — dotted numerics, scoop's 8.22.0_1 / 25.0.2-10 / 10.0.0.0p2 suffixes, the 20260812 and 2026.08.19 date stamps, and pre-release words — and returns $null rather than guessing when it cannot. The checker's single verdict function (Get-FreshnessVerdict) routes each row: behind is the only finding; ahead becomes a one-line \"lock ahead of source\" note in the report, visible but not actionable; unordered** lands under \"Skipped (could not compare)\" with both versions and *still files a report*, so a shape the comparer does not read surfaces instead of vanishing into a green run. The padding tolerance (2.7.10.0 == 2.7.10) is unchanged. (packages/PackageLock.ps1, packages/Check-PackageFreshness.ps1, tests/Packages.Tests.ps1)",
+      "text": "CI refuses a pull_request_target trigger. That trigger runs a fork's pull request with this repo's secrets and a write-capable token. The new ci-floor.yml workflow checks out dotfiles-core@v7 and runs its check-modern.sh --banned-triggers over this repo's workflows, the same rule the OS repos get through Core's lint-call.yml (dotgibson/dotfiles-core#1215). Nothing here uses the trigger today. The check passes with a warning until the Core release that ships the mode moves the v7 tag.",
       "core": false
     },
     {
@@ -3039,6 +2973,46 @@
       "repo": "dotfiles-Defense",
       "version": "Unreleased",
       "category": "Fixed",
+      "kind": "fix",
+      "text": "github_credential_backdoor now also selects personal_access_token.request_created (#348). This follows htpx's gh-cred-audit (htpx#139). GitHub logs the request only in orgs that require approval for fine-grained PATs. There it is the moment an attacker-minted token can still be denied, and a denied request never produces the access_granted the rule already selected. Neither PAT action had a fixture before. Each now has its own single-event TP row, because zircolite passes a TP file when any event in it matches, so a shared file would hide a typo in either action name.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "npm_publish_2fa_disabled and slack_2fa_enforcement_disabled are retagged from T1685 to T1556.006 (#346). Both fire when an MFA requirement is weakened, which is an authentication-process change rather than tampering with a security tool. Upstream htpx retagged the paired entries the same way in htpx#134, and okta_mfa_factor_reset already uses T1556.006 for this shape. The tactic stays defense-impairment, which T1556.006 carries in ATT&CK v19.2 and which matches upstream's TA0112. Detection logic and fixtures are unchanged.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "htpx.pin moves to htpx v3.3.0, and both DPAPI rules name dpapi-backupkey-4662 (#336). Upstream retired entries/blue/dpapi-backupkey-5145 in favour of dpapi-backupkey-4662, which keys the theft on the 4662 LSA secret read and keeps protected_storage 5145 as its secondary arm. The 5145 rule's references: URL was a live 404 on /blob/main/ while the gate, still reading the old pin, stayed green. Both rules now reference the 4662 entry: - dpapi_backupkey_5145: the MS-BKRP hunt. - dpapi_backupkey_secret_read_4662: the theft alert. So HTPX-COVERAGE.md lists the pair under the 4662 entry. The regenerated report also shows upstream's npm/slack 2FA retag to T1556.006. The two rules here still carry T1685, and whether to follow is a separate review call.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "Detection review 3, section C: the two findings that needed lab or estate data. - dpapi_backupkey_secret_read_4662 keeps SYSTEM in scope, on purpose. Running the extraction on the DC from a SYSTEM context (psexec to the DC, then mimikatz lsadump::backupkeys or SharpDPAPI backupkey) records S-1-5-18 as the subject, so excluding SYSTEM would hide common post-compromise tradecraft. A new TP covers that read. The rule says what to do if a lab capture shows BackuprKey servicing logging as SYSTEM: split it into a lower-level rule, don't exclude it. - The GPP User-preferences sweep threshold (10) is now DEPLOY-REQUIRED, with a README deploy-time row. The count is of distinct paths, and each path carries its GPO's GUID, so the threshold has to clear what one user reads across all their linked GPOs. The TP sweep now spans four GPOs, and a new logon TN reads six files from three.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "Detection review 3, sections A and B: defects in the review-2 rewrite, and older claims the rewrite carried forward. Each fix carries a fixture that the old rule gets wrong. - lsass_handle_access: - The lab Sysmon config still dropped MsMpEng.exe/MsSense.exe by bare file name (condition=\"image\"). A dumper renamed to either never reached the rule, whatever its filter said. The exclude now uses Defender's install directories. - The \"PROCESS_VM_READ bit\" match covered only low nibbles 0/8/A, so 0x1411 got through. All 128 read-capable suffixes are now listed, plus 0x40 (PROCESS_DUP_HANDLE). - The description no longer claims this is SigmaHQ's list. - registry_run_key_suspicious_target_sysmon_13: the generic ~1\\/~2\\ entries matched PROGRA~1/PROGRA~2 (Program Files), which the rule deliberately leaves alone. They are replaced with \\PROGRA~3\\, \\APPDAT~1\\ and \\LOCALS~1\\. - wmi_event_subscription_consumer: - The Destination allowlist gated only one of three arms, so an SCCM cmd.exe /c consumer could not be exempted. It now covers every arm. - Consumer deletions no longer alert (Operation: Created). - pwsh is added. - suid_bit_set: the /usr/bin/yum and /usr/bin/dnf entries are removed. Both tools run under Python, so the entries never matched. Review 2 removed the same entries from the cron and systemd rules and missed this file. - vault_approle_backdoor: secret-id lookup and destroy are routine CI housekeeping, and they alerted even for the allowlisted orchestrator. They are now excluded by exact suffix (/secret-id/lookup, /secret-id-accessor/destroy, ...). A contains: '/secret-id/' would also have hidden a mint written with a trailing slash (.../secret-id/, which Vault routes as a mint) and every role write on a mount named secret-id. Both lists are pinned to the AppRole mount (auth/approle/role/, DEPLOY-REQUIRED if yours differs). A bare suffix also exempted vault auth enable -path=x/secret-id/lookup, a /role/ substring exempted an LDAP group named role/secret-id/lookup, and the orchestrator's mint exemption covered creating a role named secret-id. - snowflake_data_unload: each allowlisted stage now takes two entries, @STAGE/ and @STAGE followed by a space (a root unload). A bare @MY_SANCTIONED_STAGE had also exempted @MY_SANCTIONED_STAGE_EVIL. The rule now says to write stages fully qualified, since an unqualified name resolves in the caller's own schema, and its example entries are qualified. - scheduled_task_suspicious_4698: it now matches every prefix of -EncodedCommand behind one or two of the switch characters PowerShell accepts (-, /, en dash, em dash, horizontal bar), with quotes or cmd carets allowed before and inside the flag (-\"e\"c, -e^c, ^-e), then a space or tab, then a payload: 20 base64 characters that may be split by quotes or carets, a quoted payload with spaces inside, or a variable (%p%, !p!, $p); behind / only for /ec and longer, since robocopy's /E %OPTS% is common. It also covers pwsh tasks. Quotes and carets are not accepted before the dash: they already count as a boundary, and allowing both made the pattern quadratic on a long run of quotes. Requiring the payload keeps -Encoding utf8, URLs, robocopy's /E and a script's own short -e prod argument out; a long base64-looking -e value still matches. Elastic needs the rewritten regex given in the rule. - Splunk: two rules could never run. When a regex sits inside an OR, the Splunk backend emits a search with no base (search = | rex ...), which Splunk rejects. That killed service_creation_psexec_7045 (since #337) and the new 4698 regex. gen-siem.sh now lifts the final search's source=... EventCode=N into the base. It fails the build instead of guessing when the shape differs: anything other than | rex/| eval before the final search, an EventCode that is an OR operand (lifting it would narrow the rule), or an empty or pipe-first search = it does not recognise. - spoolss_pipe_impersonation_sysmon_17: - The description no longer names GodPotato, which stands up an epmapper pipe. The sibling rule already says so. - A TP with PrintSpoofer's real nested pipe name (\\<guid>\\pipe\\spoolss) is added. - unconstrained_delegation_4624: - The description no longer claims the \"machine account\" variant. When that account's host is krbrelayx on Linux, no Windows host writes a 4624. - The DC filter uses exact FQDNs. startswith: 'DC1' exempted DC10. - systemd_unit_persistence: the documented auditd watches now include /lib/systemd/system/ (split-/usr) and the global user-unit directories, each on a line that pastes straight into an audit rules file.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "security",
       "text": "Detection review 2, section E: pairing and methodology bookkeeping that misstated coverage. No detection logic changes. - HTPX-COVERAGE.md under-claimed three pairs that have detections. It listed unconstrained-deleg-4624, cryptomine-pool-detect and dga-nxdomain-entropy under \"nothing here claims\". Each detection named its pair in prose the claim regex could not parse: \"PURPLE-TEAM … row\", \"companion pair\", or \"htpx pairs (\". Each now carries the htpx blue-entry URL. - dns-tunnel-sysmon-22 stays unclaimed on purpose. Its source is Sysmon DnsQuery alone, which the lab config does not collect, and dns-c2.zeek is its wire twin rather than an implementation of it. The script now says so. - DEFENSE-METHODOLOGY.md table rows no longer name planes that have nothing in them. - Lateral Movement claimed \"Zeek SMB\", but no such script exists. - Recon claimed Zeek, but the only Zeek Kerberos script is credential access, so it moved to that row. - The Responder and LOLBAS validation cells pointed at folds with no detection behind them. They now say \"no detection yet\". - Sources are corrected to the events the rules actually read. - An Initial Access paragraph had drifted. It sat after the Sysmon-13 RegistryEvent paragraph, so \"the *registry* plane … Both rules\" read as the two registry rules. It is back under the Initial Access paragraph it explains. - The Entra count is split out. \"Six pairs of Entra/M365 identity coverage sat in detections/sigma/cloud/\" now says three are Sigma rules there and three are Sentinel joins.",
       "core": false
@@ -3511,6 +3485,14 @@
       "repo": "dotfiles-Fedora",
       "version": "Unreleased",
       "category": "Fixed",
+      "kind": "config",
+      "text": "dnf repoquery (43) had been red on every run since the version floors landed (#193), and never because of a floor. The version probe in test/check-packages.sh ended its options with --. dnf5 only treats -- as end-of-options from 5.4 onwards. The 5.2.x that fedora:43 ships rejects it as an unknown argument, and the probe hid that error (stderr went to /dev/null). So every floored name came back with no version, and the check reported neovim and tree-sitter-cli as \"virtual capabilities\" on F43 only. The -- is gone; manifest names never start with -. A floored name that resolves by name but yields no version now reports a probe failure instead of blaming the manifest entry. packages.yml's path filter now includes test/check-packages.sh, because a change to the probe is only exercised on that workflow's Fedora containers.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "fix",
       "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
       "core": false
@@ -3664,6 +3646,14 @@
       "version": "Unreleased",
       "category": "Added",
       "kind": "feature",
+      "text": "jc is installed from dnf (dotgibson/dotfiles-core#1208). jc converts the output of common commands (ps, df, dig, ip, ...) to JSON for jq/yq. Fedora packages it on every supported release — jc 1.26.0 on F43, F44, F45 and rawhide (F46), shipping /usr/bin/jc and pulling python3-jc — so it is one line in install/packages.txt, and the atomic edition layers it from the same list with no change. This is the OS half of a fleet ratchet: Core's core-doctor probe and PORTING-MATRIX.md row land after the OS repos install it.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
       "text": "make lint stops warning about dnf on every package verb (dotgibson/dotfiles-core#1087, dotgibson/dotfiles-core#1104). Core's capability cross-check warns when a PKG_* verb's leading binary is absent from install/packages.txt. Both declarations here run base-system binaries the list deliberately does not name — that file records what this repo ADDS to a box — so the check fired on 8 verbs in each, burying the one case it exists to catch: a verb naming a tool nothing installs. PKG_UNLISTED_TOOLS declares the exceptions (dnf on the workstation edition, rpm-ostree dnf rpm systemctl on the atomic one) and both declarations now validate with zero warnings. Kept honest from both ends, so it cannot rot into a blanket silencer: a name no declared verb runs is a FAILURE, and so is a name packages.txt actually installs. Needs Core ≥ 7.10.0 vendored — an older validator rejects the key outright.",
       "core": false
     },
@@ -3809,6 +3799,14 @@
       "category": "Removed",
       "kind": "config",
       "text": "A stale 4.5 MB orphaned worktree copy under .claude/worktrees/, and the obsolete zsh/local.zsh ignore entry (host overrides have lived at ~/.config/zsh/99-local.zsh since v4).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "jc is installed (dotgibson/dotfiles-core#1208). extra/jc converts the output of ps, ss, dig and friends to JSON (ss -tlnp | jc --ss | jq), next to gron in install/packages.txt. This is the OS-first step of the fleet ratchet: Core adds the detection line, the core-doctor data / net row and the PORTING-MATRIX row once the OS repos install it.",
       "core": false
     },
     {
@@ -4033,6 +4031,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "bootstrap.sh installs the local core/ pre-commit guard on a fresh clone (blib_install_core_guard), catching a hand-edit at commit time rather than waiting for core-integrity.yml at PR time.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "feature",
+      "text": "jc joins the apt base stack (dotgibson/dotfiles-core#1208) — kellyjonbrazil's command-output-to-JSON converter, next to gron in install/packages.txt. Untiered, because every target resolves it: noble 1.25.1 (universe), 26.04 1.25.5 (universe), trixie 1.25.4 and kali-rolling 1.25.7 (main). This is the OS-repo half of the fleet ratchet; Core's detection line and core-doctor row follow once the fleet installs it. The name counts quoted in the packages and bootstrap workflow comments move to 33 untiered and 45 on Kali. The Kali figure had drifted: it read 47 while the list resolved 44 there.",
       "core": false
     },
     {
@@ -4265,6 +4271,114 @@
       "category": "Fixed",
       "kind": "fix",
       "text": ".markdownlint.jsonc's header claimed the rules were \"mirrored from Core rather than CI-enforced\" and that \"lint.yml skips **.md entirely\". Both were true when written and neither survived dotgibson/dotfiles-core#592.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Added",
+      "kind": "perf",
+      "text": "The README opens with a rendered terminal hero (dotgibson/dotfiles-core#948). Every other public repo in the fleet got one this week from dotfiles-core's shared tape generator, and this repo was the one it could not serve: the host layer is PowerShell and nothing under core/ is vendored, so there is no zsh to drive and no .zshrc to source. assets/demo.tape is therefore hand-authored — the same font, palette, framerate and beat rhythm as the nine generated tapes, the same three marquee moments (ll, cat README.md, glog -8), then this repo's own two: up -n, the fleet's one verb resolving here to scoop status + winget upgrade, and core-version. It is filmed from a WSL distro with vhs driving the Windows pwsh.exe through interop (assets/README.md has the recipe and the knobs: PSMUX_NO_AUTOLAUNCH, DOTFILES_UPDATE_CHECK, PSReadLine predictions off), and assets/demo.gif is gifsicle-optimised under the 2 MiB ceiling Core enforces for its own. Re-render after any prompt or tooling change; the gif is committed beside the tape.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Added",
+      "kind": "feature",
+      "text": "task.ps1 — the fleet's make verbs, for a host without make (dotfiles-core#855). dotfiles-core declares the seven canonical verbs once (help lint check dry-run packages-check core-verify test, its scripts/make-vocabulary.txt, dotfiles-core#691) so a contributor moving between repos re-learns nothing — and this repo was the one that still answered to none of them: no Makefile, no runner, only bare scripts, in the fleet's most-tested repo, where \"reproduce the CI gate locally\" has the most to offer. make is not a given on a Windows host and just would be a new dependency, so the verbs are spelled in the language the repo is written in: .\\task.ps1 <verb>. It is a dispatcher, not a second implementation: lint is tests/Invoke-Validation.ps1 plus gen-theme.ps1 -Check (ci.yml's dependency-free legs), test is tests/Invoke-Tests.ps1 (the gated suite, exactly as CI runs it), dry-run is install.ps1 -DryRun, check is lint plus the links-only bootstrap previewed (Windows has no throwaway HOME to run it in), packages-check is packages/Check-PackageFreshness.ps1 and core-verify is the three tests/Assert-*Parity.ps1 gates over the mirrored assets. Each step runs in a child pwsh -File, so a script's exit ends its own process and the first failing step's code is the verb's. Anything after a single-step verb passes through (.\\task.ps1 test -NoGate). Core's fleet-vocabulary.sh register reads the verb table statically — the quoted keys of Get-TaskVerbs, and whether test names the suite runner by path — so tests/Task.Tests.ps1 pins that shape, the exact verb set in the contract's order, and that every step names a script that exists.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Added",
+      "kind": "feature",
+      "text": "remote-install runs the host sshd as a service that restarts itself (#266). The box's front door was a bare sshd.exe with nothing supervising it (sc.exe query sshd returned 1060), so every crash and every reboot needed a human. remote-install now registers sshd as an Automatic service with recovery actions (restart after 5s / 10s / 30s, failure count reset daily), and remote-status reports the same plan while changing nothing. Two traps the planner exists for: registration is not health — scoop's install-sshd.ps1 registers with \"take no action\" recovery, so recovery is probed separately via sc.exe qfailure — and the ImagePath goes through scoop's current junction, never its resolved target, because a version-pinned path dies silently on the next scoop update openssh (the Get-DotStablePwshPath trap). It also warns when openssh is not held, since a running service keeps the daily scoop update * from replacing its binaries. This narrows 34-remote.ps1's standing rule rather than reversing it: ports, keys, firewall rules and DefaultShell still belong to the runbook; only *supervision* moved into the verbs, which stay explicit and refuse without a token. (powershell/os/34-remote.ps1, powershell/Dotfiles/Remote.Helpers.ps1, tests/Remote.Tests.ps1, docs/REMOTE-ACCESS.md)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Added",
+      "kind": "perf",
+      "text": "Alt+C opens PSFzf's directory picker (#246). PARITY.md listed Alt+C as aligned for years while neither shell bound it. It is not a second key for Alt+Z: Alt+Z is a zoxide frecency jump to anywhere, Alt+C is \"cd into a subdirectory of here\". It follows the lazy-load shape of the Ctrl+T and Ctrl+R stubs, so PSFzf's import stays off the render path. The loader resolves Invoke-FzfPsReadlineHandlerSetLocation with Get-Command rather than calling it blind, because that name was never verified against the pinned PSFzf. If it is missing, the first press is swallowed and the next one works, rather than printing an error at the prompt. (powershell/core/10-tools.ps1)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Changed",
+      "kind": "config",
+      "text": "desktop/PARITY.md's generated block takes the canonical marker, and the marker now says who writes it (dotgibson/dotfiles-core#1129). The pair became <!-- core:desktop-parity:gen parity --> … <!-- core:desktop-parity:end parity -->, matching the core:<ns>:gen <id> grammar every other generated region in the fleet uses. Not a tidy-up. core: is *provenance* — it names the repo whose generator owns the region — and this file is precisely where that matters: nothing in this repo writes the block, nothing here gates it, and until now its only clue that dotfiles-core rewrites it was a marker that did not say so. The block id is the other half; the old pair carried none, so the file format could hold exactly one generated region, forever. The bytes between the markers did not move. Core renders whichever marker form the target file carries, echoed back verbatim, so this repo and dotfiles-MacBook can be renamed in separate commits without the weekly parity-check sweep reding in between — which is the whole reason Core learned to accept both forms first (dotgibson/dotfiles-core#1143) rather than changing the string in one place and breaking two others. Core drops the legacy arm once both copies carry the new pair. Nothing here reads these markers — no Pester test, no workflow, no gate — so this is a two-line change in one file.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Changed",
+      "kind": "perf",
+      "text": "nvim/ is vendored from dotfiles-nvim directly, and its pin is a root-level nvim.lock (dotgibson/dotfiles-core#1124). dotfiles-core's NVIM-SPLIT-PROPOSAL.md extracted the editor into its own repo with its own gate — headless startup, :checkhealth, luacheck against a real Neovim, none of which Core's runners could do — and its own release line. This repo had always consumed the editor alone through a bespoke mirror, pinned to a Core ref that had nothing to do with when the editor changed; §3.1 called that \"the tell\". So nvim-sync.ps1 now points at dotgibson/dotfiles-nvim, and the side channel becomes the front door: a first-class second consumer of a real release line, on the same pin shape Core uses for its own copy. The re-point moved no editor bytes — the vendored tree at dotfiles-nvim v1.0.0 is byte-identical to the Core tree it replaced, which is what the extraction promised. - A bare nvim-sync.ps1 run now pins the newest vX.Y.Z release rather than tracking a branch tip. Releases are the unit the upstream gate signs off on, and they are what makes the Windows and Core pins comparable. -FollowBranch keeps the old behaviour, -Ref pins an exact revision, and the release picker orders numerically (so v1.10.0 beats v1.9.0) while dropping prereleases and the moving v1 major alias — a pin must never name a tag that moves. - The marker moved out of the tree it describes, from nvim/.core-ref to nvim.lock at the repo root, and that retires three workarounds: the parity gate compares nvim/ with no exclusion set (so it is byte-identical to upstream's), the sync bot judges drift on a plain git status -- nvim, and auto-tag.yml's nvim/ trigger cannot see a pin-only change, so a re-pin that moves no editor bytes cuts no release tag. nvim.lock carries dotfiles-core's field names on purpose, so fleet-drift.sh can compare the two pins directly. - The gate's clone target is now an owner/name slug** rather than a URL. The allowlist no longer has to enumerate every spelling of the same repo, and the URL CI dials is built from a value already matched against it. - dotfiles-doctor's nvim vendor row leads with the editor release (vendored nvim v1.0.0 (7ba9457)), because a tag answers \"which editor is this?\" on sight where a bare sha needed a lookup. starship/ and theme/ are unchanged: they are still vendored from dotfiles-core and still record a .core-ref. - The CI job keeps the name nvim Core parity deliberately, though the editor no longer comes from Core. It is one of the seven contexts the main ruleset requires; renaming it without editing branch protection first would leave every PR BLOCKED. That rename is its own change.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "notify-web.yml passes client-id, not the deprecated app-id, and reads the new FLEET_APP_CLIENT_ID org variable (#251, dotfiles-core #831). The pinned create-github-app-token (v3.2.0) deprecates app-id, and this repo's inline notifier — it does not consume Core's reusable — passed it. The variable is a new one because FLEET_APP_ID holds the App ID and the new input wants the Client ID, a different value; the if: guard and the ::warning:: that is this repo's only signal of a silently skipped refresh move in the same commit. Precondition: the org variable must exist before this merges, or the mint skips and the showcase stops refreshing with only that warning to say so.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "remote-status / remote-install guard sshd's DefaultShell, which could lock you out of the box (#267). A healthy sshd refuses *every* login when HKLM\\SOFTWARE\\OpenSSH\\DefaultShell names a shell it cannot launch, and it rejects before authentication completes, so the client sees only Permission denied (publickey,keyboard-interactive) — every symptom points at keys. It happened here when the Store pwsh moved 7.6.5.0 → 7.6.6.0 and Windows deleted the old package directory. This is the third consumer of a version-pinned pwsh, after scheduled tasks and the sshd ImagePath (#266). Get-DotSshdShellVerdict grades the value against two independent disqualifiers, because the obvious fix for one trips the other: - A version-pinned Store directory is graded fragile while it still exists. - The per-user app alias is version-stable, but it is a reparse point, which sshd (0x105 lineage) reports as \"does not exist\" exactly like the deleted directory. remote-status reports the value next to the service. remote-install repoints it at the first machine-wide real file it finds, preferring the MSI pwsh, and says so plainly when it has to fall back to Windows PowerShell 5.1. The docs note that winget's Microsoft.PowerShell manifest can be msix-only: the MSI has to come from the GitHub release, and installing it retires this failure for all three consumers. (powershell/os/34-remote.ps1, powershell/Dotfiles/Remote.Helpers.ps1, tests/Remote.Tests.ps1, docs/REMOTE-ACCESS.md)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The daily maintenance run reports a per-app scoop upgrade failure instead of logging ok (#263). scoop update * exits 0 even when one app fails, so the step's exit-code check could not see it. tailscale failed every day from 2026-08-20 to 2026-09-16, re-downloading a 36.6 MB MSI each time, while the log said ok scoop upgrade (apps). Get-DotScoopUpgradeOutcome reads the result per app out of the step's output. It keys on the *block*: an app has failed when its Updating '<app>' block never reaches \"was installed successfully!\", and an ERROR line inside the block is kept as the reason. The step sets $LASTEXITCODE itself, so the runner's existing \"FAIL … — continuing\" path makes one bad app visible without aborting the run. The root cause is not fixed here: tailscale's pre_uninstall needs admin and the daily task runs unelevated, so it needs a scoop hold or the elevated-task route. (powershell/Dotfiles/Maint.Helpers.ps1, tests/Maint.Tests.ps1)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "A sync bot that loses its App token now says so, instead of quietly reverting to a PR nobody can merge (#269). The mint step added in #268 carries continue-on-error: true, which is right — a fork, or a repo the App was never installed on, must not go red — and was also silent. When the mint *failed* rather than being skipped (the installation pulled, so create-github-app-token 404s on /installation) the token came back empty, ${{ steps.app.outputs.token || github.token }} fell back to GITHUB_TOKEN, and the job still concluded success. That is the #265 failure re-entering through its own fallback: the PR opens, ci.yml never fires on it, no required context arrives, and it sits BLOCKED until a human closes and reopens it. It happened the day #268 landed — theme-sync run 35223874896, all three bots degraded for most of a day — and what noticed was a *different* repo's weekly sweep (dotgibson/dotfiles-core#1116), not this one's own green run. All three bots now carry an identical step between the mint and the checkout, gated on steps.app.outputs.token == '', which is the one test that covers both branches: a skipped step and a continue-on-error failure leave the output empty for the same reason, where steps.app.outcome == 'failure' would miss the skip and steps.app.conclusion is success in both. It raises a ::warning:: and a $GITHUB_STEP_SUMMARY note that name the *consequence* rather than the cause — the cause is the part a reader can already see — and pass steps.app.outcome through, so skipped (no variable or secret reached the run) reads differently from failure (the App could not mint for this repo; go look at the installation). Deliberately still not a failure: a fork must not go red, and a real drift from Core is worth landing behind a manual nudge rather than not landing at all. New tests/SyncWorkflows.Tests.ps1 pins the block byte-identical across the three files and ordered *before* the checkout (a bare if: implicitly ANDs success(), so after it a checkout failure would swallow the warning) — nothing else read these workflows at all, which is how a fix applied to two of three would have shipped green. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml, tests/SyncWorkflows.Tests.ps1)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The three sync bots open their PRs as the fleet App, so CI actually runs on them (#265). nvim-sync, starship-sync and theme-sync all pushed the branch and opened the PR with GH_TOKEN: ${{ github.token }}, and GitHub deliberately starts no workflow run from an event the default GITHUB_TOKEN created. So ci.yml's pull_request trigger never fired, not one of the six contexts the main ruleset requires ever arrived, and every sync PR sat BLOCKED indefinitely — #260 and #264 were each unblocked by a human closing and reopening them, which re-fires pull_request, and both merged minutes later. That manual step was being paid weekly, and it was not merely an annoyance: Core's fleet-drift.yml sweeps Mondays while these bots run Tue/Wed/Thu, so a sync PR waiting on a human reads as a Core drift red that is nothing of the kind (dotgibson/dotfiles-core#1058). Each bot now mints a short-lived, repo-scoped token from the dotgibson-fleet-sync App (actions/create-github-app-token, at the same SHA pin notify-web.yml already carries) and both pushes and opens the PR with it, so the PR is App-authored and its CI runs unattended — the same problem, and the same fix, as dotfiles-core's freshness.yml on its own self-PRs. Narrow on both axes: no owner:/repositories:, which is what scopes the token to *this* repository, and only contents + pull-requests: write — deliberately not workflows: write, so a bot that ever tried to rewrite CI fails loudly instead of having quietly been able to all along. It degrades rather than fails: with no App configured the mint is skipped and the bot falls back to GITHUB_TOKEN, so the PR still opens and merely needs the old manual nudge. GH_TOKEN moves from the job env: to the PR step's, because a job-level env: cannot read the steps context. The two App-free options weighed in #265 do not actually work — the recursion guard covers a push and a bot's own close+reopen exactly as it covers pull_request, so neither would have produced a single check. Depends on live infrastructure: the App is installed on this repo today, but Core's GITHUB-APP-AUTH.md still lists it under \"does not need installing\" and scripts/fleet-app-scope.sh reports it as an install nothing writes to; a Core-side issue moves it to a justified entry beside dotfiles-core's own. (.github/workflows/nvim-sync.yml, starship-sync.yml, theme-sync.yml)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "v1.8.0",
+      "date": "2026-09-29",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "**The package-freshness check now compares *directionally* — a lock that runs ahead of its source is no longer reported as behind (#234, #250). Check-PackageFreshness.ps1 gated every row on Test-PackageVersionMatch, which answers \"same release?\" and says nothing about which side is newer. So winget still advertising TranslucentTB 2026.1 under a 2026.2.0.0 lock filed as an update every week, and re-pinning (#241, #254) could never clear it. New pure helper Compare-PackageVersion in packages/PackageLock.ps1 orders the shapes the lock actually carries — dotted numerics, scoop's 8.22.0_1 / 25.0.2-10 / 10.0.0.0p2 suffixes, the 20260812 and 2026.08.19 date stamps, and pre-release words — and returns $null rather than guessing when it cannot. The checker's single verdict function (Get-FreshnessVerdict) routes each row: behind is the only finding; ahead becomes a one-line \"lock ahead of source\" note in the report, visible but not actionable; unordered** lands under \"Skipped (could not compare)\" with both versions and *still files a report*, so a shape the comparer does not read surfaces instead of vanishing into a green run. The padding tolerance (2.7.10.0 == 2.7.10) is unchanged. (packages/PackageLock.ps1, packages/Check-PackageFreshness.ps1, tests/Packages.Tests.ps1)",
       "core": false
     },
     {
@@ -4931,222 +5045,6 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "Two stale psmux config tests. They asserted the pill was read via #(cmd /c type %LOCALAPPDATA%…) and passed only because that string still appeared in the comment block describing the retired transport — they had stopped testing anything real. Repointed at the live @vpn_pill / @pwr_pill segments, plus a static guard that every psmux set in the repo quotes its @option name, since the splatting bug above is invisible at runtime. (tests/Repo.Tests.ps1)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Added",
-      "kind": "feature",
-      "text": "jnv — interactive JSON explorer (fleet parity with Core's HAVE_JNV). Added to packages/scoopfile.json (scoop Main). A jq-filter editor with a collapsible viewer that fills the \"explore an unfamiliar JSON response\" gap between jq (transform) and gron (grep). Its own command with no alias — jnv file.json or pipe into it — like jq/yq/ gron. This also retires the old jless-was-left-out caveat in docs/TOOLS.md: jnv is the packaged interactive explorer now.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Added",
-      "kind": "config",
-      "text": "web — terminal web browser verb (parity with Core's web). Added a guarded web function in core/00-aliases.ps1 that resolves w3m→lynx→links→elinks and runs the first present (skipped entirely when none is installed, matching Core). w3m has no scoop manifest, so the host packages lynx (Core's own next fallback; scoop Main) in scoopfile.json. Unlike Core's headless path, $BROWSER is never exported — the Windows host is GUI-first, so web stays an explicit opt-in verb.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Added",
-      "kind": "feature",
-      "text": "**Command-block separators (parity with Core's _cmd_block_*). A thin full-width rule is drawn above each prompt that followed a command, colored by exit status — dim (#414868) on success, red (#f7768e) on failure — turning scrollback into scannable blocks. Ported as precmd/preexec (not** a key handler, so it can't collide with PSReadLine vi-mode): the AddToHistoryHandler sets $global:DotCmdBlockRan (a bare Enter never accepts a line, so no rule is drawn on an empty prompt), and Invoke-Starship-PreCommand draws the rule via [Console]::Write. Colour tracks $LASTEXITCODE (the status reliable at that point); pure-cmdlet failures still surface in starship's [status]. (powershell/core/10-tools.ps1)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Added",
-      "kind": "feature",
-      "text": "Zebar caffeine / keep-awake indicator. A placeholder matching sketchybar's caffeinate.sh — grey asleep, yellow awake — in the left island. Visual only for now: it renders state but doesn't yet drive a keep-awake mechanism on the host (see the Caffeine component comment in the HTML). (desktop/zebar/vanilla-clear/)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Added",
-      "kind": "feature",
-      "text": "Zebar battery shows an AC-power placeholder on desktops. A machine with no battery rendered nothing at all, leaving a gap in the right island; it now shows a green plug glyph. (desktop/zebar/vanilla-clear/)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "feature",
-      "text": "Re-vendored nvim/ from Core (was v4.4.0-3, now current). Brings the Core changes that had not yet reached the host: the regex Tree-sitter parser (silences :checkhealth noice's \"regex parser is not installed\" cmdline-highlighting warning), the new :checkhealth gerrrt LSP / formatter / linter readiness sections, and the servers/init.lua read-only status() export those sections consume. nvim/.core-ref updated to the synced commit. (nvim/, via nvim-sync.ps1)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "perf",
-      "text": "Re-synced nvim/ to Core main a53ac4f — a follow-up mirror picking up the lazy-lock.json plugin-pin refresh (4 SHAs); nvim/.core-ref re-pointed from the pre-merge branch tip to main. starship.toml verified byte-identical to Core (no sync needed). (nvim/lazy-lock.json, nvim/.core-ref)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Windows Terminal cursor → bar — cursorShape filledBox → bar to match MacBook's ghostty cursor-style = bar for cross-terminal parity. (windows-terminal/settings.json)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "psmux status bar → Core's centered floating-island look. Ported Core tmux.conf's island redesign to psmux/psmux.conf: a 2-line, centered, transparent bar (status 2 + blank status-format[1], status-justify centre — later absolute-centre, see Fixed — status-style bg=default, bg=default pill caps + pane borders) with flat underlined window tabs and monitor-activity • dots for unseen output (psmux has no monitor-bell) — replacing the old left-justified opaque-pill bar. All five psmux features were probed as supported (psmux 3.3.7) before porting. Stays within psmux's no-shell-out / no-process-table rules: the cwd pill keeps #{b:pane_path} (OSC 7) and Core's nvim-gated pane_current_path segment is intentionally not ported. (psmux/psmux.conf)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "perf",
-      "text": "Zebar adopts sketchybar's floating-islands design, and PARITY.md now describes it. The macOS bar had drifted to a 3-island look (transparent bar + bordered panels) without the shared contract being updated, so PARITY.md was false for one host. Resolved by adopting, not reverting: the bar goes transparent and .left/.center/.right each become a rounded island (rgba(29,32,47,0.93) fill, 2px rim, r=9) accented blue/magenta/ green. Weather moves into the left island (stable-width, non-urgent); two grey │ separators chunk the right island into I/O · load · power, each gated on its own group so a provider-startup transient can't leave a stray separator leading the island. PARITY.md (identical copy in dotfiles-MacBook) rewritten to match: three islands, weather left, transparent bar geometry, blur off, purple un-reserved and orange added to the palette. Not render-verified on a Windows host — reload Zebar and eyeball. (desktop/zebar/vanilla-clear/, desktop/PARITY.md)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "psmux bar is chip-less. Dropped the rounded pill caps (@cap_l/@cap_r) from the session / cwd / clock / IP segments in favour of plain coloured icon+text on the transparent bar — matching sketchybar, Zebar, and PARITY.md's \"items are chip-less\" spec. Also fixes the prefix and copy-mode glyphs being clipped by the cap they sat against. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Default psmux session renamed main → Gerrrt — both the 30-windows.ps1 auto-launch and the mux verb default in 32-psmux.ps1, with the docs/comments that still said main updated to match. (psmux/, docs/TOOLS.md, TERMINAL_WORKFLOW_GUIDE.md)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Zebar weather reads °F instead of °C (fahrenheitTemp). (desktop/zebar/vanilla-clear/vanilla-clear.html)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Zebar workspace pills match sketchybar's aerospace.sh. Only the focused workspace is highlighted (blue background, dark text); every other one is a plain grey number with no chip — GlazeWM's .displayed distinction is deliberately dropped for macOS parity, since aerospace shows only the single focused workspace. (desktop/zebar/vanilla-clear/styles.css)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Zebar spacing and font tuning from live use on a large external monitor. --item-gap 20px → 8px to match sketchybar's per-item padding (padding_left 4 + padding_right 4); left-island items dropped from a 16px to an 8px margin so both islands read at the same density; --bar-font-size 16px → 18px, since sketchybar's ~17pt suits a laptop panel but reads too small on a large panel (still fits the 28px island; 20px is the next comfortable step). (desktop/zebar/vanilla-clear/styles.css)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "psmux tabs no longer drift off-center — status-justify absolute-centre. Plain centre (Core's value) centers the window list in the gap between status-left and status-right, so the host's variable-width session pill (wider while prefix is active) and the #{b:pane_path} cwd in status-right pushed the tabs off the true middle — most visibly as a jump when a pane running nvim widened the right float. Switched to absolute-centre, which anchors the tabs to the bar's absolute center regardless of either float's width. Deliberate divergence from Core's centre (see docs/PORTING-NOTES.md); probed on psmux 3.3.7. This is the real fix for the tab-shifting the equal-width prefix cell below was working around. (psmux/psmux.conf)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Fixed",
-      "kind": "perf",
-      "text": "psmux IP / VPN pill rendered blank. Two distinct causes, found in that order. First, psmux.conf ran set -gq @vpn_pill \"\", which clobbered the refresher's poked value on every source-file reload — removed, so #{@vpn_pill} persists what the refresher sets. The segment still rendered empty, because the option was poked as a single pre-styled string ('#[fg=#9ece6a,bold]<glyph> <ip>') and an option value embedding a #[…] style run is not re-interpreted when the format expands it. That's why psmux-pill-status showed a populated cache (a plain file write, a separate code path) while the bar stayed empty. Split the transport to mirror the proven @tn_* colour pattern: @vpn_pill carries plain text only, @vpn_fg carries the accent hex, applied in status-left as #[fg=#{@vpn_fg}]#{@vpn_pill}. Only the colour is defaulted in the conf (so it's never empty on first paint); defaulting the text is what caused the original clobber. (psmux/psmux.conf, psmux/scripts/psmux-netinfo.ps1)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "psmux prefix indicator style leaked into the window tabs. A #[default] reset after #{@vpn_pill} stops the pill's bold/fg bleeding into the tabs. The indicator was also widened to an equal-width padded cell ( 󰠠 / idle ) so its branches couldn't shift the tabs — kept for stable width, though absolute-centre above is what actually holds the tabs still. (psmux/psmux.conf)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "psmux nvim cwd jammed against the clock. Two passes: the status-right cwd↔clock gap sat inside a #{?} branch and psmux trims in-branch trailing spaces, so it was moved outside the branch — then widened (6 → 12 spaces) once the branch fix made the gap actually render and it was still too tight to read. (psmux/psmux.conf)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "psmux config warning: unknown option 'monitor-bell'. psmux 3.3.7 doesn't implement monitor-bell at all — its CLI setw/set returns exit 0 (so the capability probe was a false positive) but the config parser rejects it on load. Removed the setting; monitor-activity (which psmux does support) stays, so activity dots still work — only the bell dot is inert. (psmux/psmux.conf)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Fixed",
-      "kind": "feature",
-      "text": "Zebar network readout rendered white instead of blue. The .network module had no color class, so only its glyph got the global blue while the ↓↑ throughput values fell back to fg (white). Added .network { color: var(--tn-blue) } so icon and values are blue, matching sketchybar's network.sh (icon + label accent). (desktop/zebar/vanilla-clear/styles.css)",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Fixed",
-      "kind": "perf",
-      "text": ":checkhealth gerrrt no longer false-warns about the clipboard on the host. It read \"Core's cross-OS clipboard scripts are not on PATH (clip: found, clip-paste: missing)\" — misleading, since clip only resolved to Windows' built-in clip.exe and the Unix/WSL clip/clip-paste ladder does not apply on the host: config/clipboard.lua wires the clip-windows provider (clip.exe copy + PowerShell paste) instead. Fixed upstream in Core (health.lua now detects native Windows via has(\"win32\") and defers to :checkhealth vim.provider for the live backend) and pulled in with the nvim re-vendor above.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Docs",
-      "kind": "config",
-      "text": "Documented the psmux :checkhealth tmux cosmetic wart in docs/PORTING-NOTES.md: psmux has no show-option verb, so Neovim's built-in vim.health tmux probe shows ❌ ERRORs and a false \"true color could not be detected\" ⚠️ — cosmetic only (psmux renders 24-bit colour natively; nothing functional is affected), and not shimmed on purpose.",
-      "core": false
-    },
-    {
-      "repo": "dotfiles-Windows",
-      "version": "v1.5.0",
-      "date": "2026-08-02",
-      "category": "Docs",
-      "kind": "fix",
-      "text": "Refreshed the stale \"re-vendor nvim/\" manual step (the full tree is now vendored via nvim-sync.ps1, and the old <leader>rc keymap wart is fixed upstream), and dropped the now-inaccurate \"Known Windows wart\" banner nvim-sync.ps1 printed after each sync.",
       "core": false
     }
   ]
