@@ -7,7 +7,8 @@ order: 0
 
 # Alias reference
 
-Core ships a curated set of aliases from `zsh/20-aliases.zsh` and `zsh/25-git.zsh`. The modern-CLI
+Core ships a curated set of aliases from `zsh/20-aliases.zsh` and `zsh/25-git.zsh` (plus `cheat`, defined in
+`zsh/30-functions.zsh`). The modern-CLI
 swaps are **guarded by detection flags**: `00-tools.zsh` sets `HAVE_*` at load time, and each alias
 only activates if the tool is installed — otherwise the classic command is used. Nothing breaks on
 a box without the newer tool; things just get nicer where they can.

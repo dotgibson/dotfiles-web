@@ -28,6 +28,7 @@ export interface Repo {
   blurb: string;
   highlights: string[];
   icon: string; // short glyph/emoji used on the card
+  mirrors?: string[]; // host only: the Core assets it mirrors via sync scripts instead of vendoring core/
   // Optional, render only on the generated per-repo hub page (src/pages/docs/repos/[repo].astro).
   install?: string; // getting-started snippet (raw, no code fence — the template adds it)
   installNote?: string; // one-line note under the snippet (flags, prereqs)
@@ -155,6 +156,7 @@ exec zsh
     layer: 'host',
     status: 'stable',
     icon: '⊞',
+    mirrors: ['nvim/', 'starship.toml', 'theme/palette.toml'],
     blurb:
       'The native Windows host: PowerShell 7 as daily driver, Windows Terminal, scoop/winget, psmux, and the bridge into WSL2.',
     highlights: ['pwsh profile loader', 'scoop + winget', 'psmux multiplexer', 'WSL2 bridge'],

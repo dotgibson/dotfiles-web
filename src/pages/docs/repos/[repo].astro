@@ -10,6 +10,7 @@ export function getStaticPaths() {
 
 const { repo } = Astro.props;
 const layer = layerMeta[repo.layer];
+const mirrors = repo.mirrors ?? [];
 const status = statusMeta[repo.status];
 const gh = `https://github.com/dotgibson/${repo.name}`;
 ---
@@ -35,8 +36,8 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
       <p>
         The keystone. Every OS repo except Windows — which replicates Core natively in
         PowerShell — vendors this into its <code>core/</code> directory, so a change here fans
-        out to all of them at once; Windows picks up only the mirrored Neovim and starship
-        configs. See{' '}
+        out to all of them at once; Windows picks up only the mirrored Neovim, starship and
+        theme-palette configs. See{' '}
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> and{' '}
         <a href={withBase('/docs/concepts/vendoring-with-subtree')}>vendoring Core</a>.
       </p>
@@ -44,7 +45,14 @@ const gh = `https://github.com/dotgibson/${repo.name}`;
       <p>
         The <strong>{layer.label}</strong> layer — {layer.desc} Unlike the OS repos, it does{' '}
         <strong>not</strong> vendor Core at all; the host config is replicated
-        natively in PowerShell (only <code>nvim</code> and <code>starship</code> are mirrored). See{' '}
+        natively in PowerShell (only{' '}
+        {mirrors.map((m, i) => (
+          <>
+            {i > 0 && (i === mirrors.length - 1 ? ' and ' : ', ')}
+            <code>{m}</code>
+          </>
+        ))}{' '}
+        are mirrored). See{' '}
         <a href={withBase('/docs/concepts/three-layer-model')}>the three-layer model</a> for how the
         layers compose.
       </p>

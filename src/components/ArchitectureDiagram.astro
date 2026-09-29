@@ -3,7 +3,7 @@
 //
 // The one fact the site never SHOWED: dotfiles-core is authored once and vendored
 // into every machine repo as a full copy of Core, while dotfiles-Windows
-// mirrors only select Core assets — nvim/ and starship/ via their sync scripts
+// mirrors only select Core assets (repos.ts `mirrors`) via their sync scripts
 // (dashed edge), not the full Core tree. Layout is computed from the
 // real repo list in src/data/repos.ts, so adding a repo there updates this diagram
 // — no hand-drawn drift. Pure inline SVG: no dependency, no hydration, Tokyo Night
@@ -12,6 +12,12 @@ import { repos, layerMeta } from '../data/repos';
 import type { Layer } from '../data/repos';
 import { driftFor, fleetCounts, metrics } from '../data/metrics';
 import type { DriftStatus } from '../data/metrics';
+
+// The host's mirrored Core assets, as prose ("a, b and c") — from repos.ts so the
+// diagram can't undercount them again.
+const mirrored = repos.find((r) => r.layer === 'host')?.mirrors ?? [];
+const hostMirrors =
+  mirrored.length > 1 ? `${mirrored.slice(0, -1).join(', ')} and ${mirrored.at(-1)}` : (mirrored[0] ?? '');
 
 const accentVar: Record<string, string> = {
   purple: 'var(--tn-purple)',
@@ -70,15 +76,15 @@ const nodes = consumers.map((r, i) => {
     // Subtitles sit under a ~70-unit node once the row holds eleven, where 10.5px mono is
     // ~6.3 units a glyph: the old 'OS + offensive' / 'OS + defensive' (88 units each)
     // collided with each other as neighbours. Twelve glyphs clears between two neighbours.
-    sub: r.layer === 'role' ? (r.name === 'dotfiles-Defense' ? 'OS + defense' : 'OS + offense') : r.layer === 'host' ? 'nvim+starship' : layerMeta[r.layer].label,
+    sub: r.layer === 'role' ? (r.name === 'dotfiles-Defense' ? 'OS + defense' : 'OS + offense') : r.layer === 'host' ? `${r.mirrors?.length ?? 0} mirrors` : layerMeta[r.layer].label,
     x: cx - nodeW / 2,
     cx,
-    dashed: r.layer === 'host', // Windows: nvim + starship mirror, not the full Core tree
+    dashed: r.layer === 'host', // Windows: select-asset mirror, not the full Core tree
     accent: accentVar[layerMeta[r.layer].accent],
     driftStatus: d.status,
     driftRef: d.ref, // the release/sha this repo currently carries
     // A vendoring repo's label IS the release it carries; the host's is only the
-    // Core ref its nvim/starship mirror came from. Prefix that one so a bare
+    // Core ref its asset mirror came from. Prefix that one so a bare
     // "v4.6.0" under the Windows node can't be read as "vendors v4.6.0".
     driftRefLabel: d.mirroredFrom ? `mirror ${d.mirroredFrom}` : d.ref,
     driftColor: driftColor[d.status],
@@ -104,13 +110,13 @@ const edge = (cx: number) => {
     <title id="arch-dg-t">Core vendoring topology</title>
     <desc id="arch-dg-d">
       dotfiles-core is vendored into {fleetCounts.vendoring} machine
-      repositories as a full copy (solid edges); dotfiles-Windows mirrors only the Neovim and
-      starship configs via sync scripts (dashed edge). Edges are coloured by live vendoring drift — green when the
+      repositories as a full copy (solid edges); dotfiles-Windows mirrors only {hostMirrors} via
+      sync scripts (dashed edge). Edges are coloured by live vendoring drift — green when the
       repo carries Core's current release, orange when it is behind, cyan when the repo replicates
       Core instead of vendoring it — from each repo's recorded provenance.
     </desc>
 
-    <!-- edges: solid = full vendored Core, dashed = nvim-only mirror -->
+    <!-- edges: solid = full vendored Core, dashed = select-asset mirror -->
     {
       nodes.map((n) => (
         <path
@@ -168,7 +174,7 @@ const edge = (cx: number) => {
       <line x1="0" y1="6" x2="34" y2="6" class="arch-edge" />
       <text x="42" y="10" class="arch-legend">vendored — full Core, self-contained</text>
       <line x1="0" y1="30" x2="34" y2="30" class="arch-edge arch-edge--mirror" />
-      <text x="42" y="34" class="arch-legend">nvim + starship mirror — sync scripts (Windows host)</text>
+      <text x="42" y="34" class="arch-legend">Core asset mirror — sync scripts (Windows host)</text>
 
       {
         hasDrift && (
@@ -214,7 +220,7 @@ const edge = (cx: number) => {
     One Core, vendored into {fleetCounts.vendoring} machine repos as a full copy — each
     clone is self-contained (no submodule init).
     <strong>dotfiles-Offense</strong> and <strong>dotfiles-Defense</strong> are Role layers that stack on any OS layer; <strong>dotfiles-Windows</strong>
-    carries no <code>core/</code> at all and mirrors only the Neovim and starship configs.
+    carries no <code>core/</code> at all and mirrors only {hostMirrors}.
     {
       (hasDrift || hasReplicated) && (
         <span>
