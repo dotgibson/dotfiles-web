@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "1559169c813fa8eed597f6125bfc95ba5658f6c9",
+        "commit": "8fd6d48b9dc771536d6dfc37a00ee9bda4a332ed",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "01b0a226a696caef357996a175ce3731b0443b16",
+        "commit": "91ea089d195158d80cbb70c77b0a9790aefbc7e0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,55 +22,55 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "35dae217e8460403d33b903af5933a844babba84",
+        "commit": "caadb89d308c84c044481eed57f793df86ad234e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "a624f927b27647a4a21961a58114c595aa3d1632",
+        "commit": "68f88fa417b25b8bef8473523abc1b9745e7f0bb",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "d1f5d41025cab468333a8641127d16e09efe69d9",
+        "commit": "77f998e682cc953bbf878cb502cdec570aceeb1f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "b2914366bcc67913666c1c9c03fc5bd78bda0c4c",
+        "commit": "9a351786f41c1f3e58cc2618bc5add25104e97fa",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "0289b1edd56da93caba7cdd64b3f92fcce325075",
+        "commit": "93beeaec26cde9f7c1da4ed4063ff024fac7c13a",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "9ec45d5adcff5e37f40f25bc96c2b1740d003e75",
+        "commit": "fc8c1fe9a38ada0688b9f5fc2bb9f0e240dfd3c9",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "8d4267dbdcf977d58712aade82d1ee8b455e0b5a",
+        "commit": "73ce3f9d880dc7d970b557b2b7fa669d0a5ce2ac",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "1397d7ad5a864a8d7da75e26c7cd3270cbca6601",
+        "commit": "16bc40be2e1fcf0d2ccde1d446f4a83db0f8e260",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-NixOS": {
-        "commit": "c844811a058b265f7949d7b0b09cb673521794e1",
+        "commit": "4c31c20039201d67ecb21ea61feaee4e661c9b02",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -94,9 +94,9 @@
     "coreVersion": "7.14.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -105,49 +105,49 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       },
       "dotfiles-NixOS": {
-        "ref": "v7.13.0",
-        "carried": "7.13.0",
-        "status": "behind"
+        "ref": "v7.14.0",
+        "carried": "7.14.0",
+        "status": "current"
       }
     }
   },
@@ -184,6 +184,47 @@
     "dotfiles-NixOS": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Security",
+          "items": [
+            {
+              "text": "GitHub now refuses a tag-pinned action in every Core-vendoring repo, and make fleet-protection goes red if one stops. sha_pinning_required was on in only dotfiles-core and dotfiles-MacBook. It is now on in all eleven repos the script audits, which makes GitHub enforce rule 3 of the CI floor server-side: on sibling repos' own workflows, and on anything that reaches main without the text gate. The moving major survives. GitHub exempts reusable workflows (\"can still be referenced by tag\"), and a re-run of dotfiles-Alpine's lint-call.yml@v7 passed under enforcement. The new --require-sha-pin mode turns it on idempotently, keeps each repo's allowed_actions, and re-reads the server before it reports success. The admin report now fails a repo whose setting is off or cannot be read. It also reports allowed_actions and the count of Actions execution-protection policies, without gating either. CI's --rulesets-only run still skips the block, because it has no repo admin. Composite actions are not exempt, so dotfiles-nvim first SHA-pinned its setup-core-tools@v7 references (dotgibson/dotfiles-nvim#9) and then turned the setting on too (#1226).",
+              "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "A Core PR is checked against the real sibling repos before it merges. The new fleet-gates job in ci.yml clones the fleet beside Core and runs the audit's fleet-wide gates (§5f, §9m-§9p, theme and desktop-parity drift) that every other leg skips because it checks out Core alone. That gap let #1210 merge green and then refuse the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The job is meant to be a required check, so it judges a delta: scripts/fleet-gate-delta.sh audits the PR's base and head against the same clones and fails only on a failure the PR adds. A sibling that drifts on its own therefore cannot block unrelated Core PRs. A failure already on main is a warning. A red means the sibling fix lands first, which is the fleet ratchets' existing order. The job holds no token, because the gates run sibling code (#1240).",
+              "kind": "fix"
+            }
+          ]
+        },
+        {
+          "category": "Changed",
+          "items": [
+            {
+              "text": "/release-readiness actually checks the editor pin. The scheduled job allows ./scripts/check-nvim-freshness.sh as a literal command, but the routine only named the script loosely. The first run (#1245) ran neither form: it reached for gh release list, was refused, and reported a current nvim.lock as unverified. Step 4 now lists the three fleet-state commands exactly as the job grants them, says no other tool is needed for the editor row, and spells out the exit codes. Exit 0 with ✓ means current, exit 0 with a SKIP means unverified, exit 2 means behind, and exit 1 means the lock is broken.",
+              "kind": "fix"
+            },
+            {
+              "text": "/release-readiness checks the fleet-wide gates against the sibling repos before a tag. A Core PR's CI checks out Core alone, so every gate that reads a sibling (§9m-§9p, theme and desktop-parity drift) skips there. Until now the first run that could see a sibling break was sync-fanout's pre-fan-out audit, after the tag was cut. That is how #1210's correct Kali matrix cells merged green and then redded the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The weekly job now checks Core out beside the fleet and runs audit-core.sh --scope none before the routine, with both tokens withheld from that step because the gates run sibling code. Any ✗ there is a HOLD, and a gate that could not see its sibling is reported as unverified, not as a pass. This is the fallback half of #1240. The PR-time check is still open there.",
+              "kind": "fix"
+            },
+            {
+              "text": "RELEASE-STRATEGY.md no longer lists making audit-arch and audit-alpine required checks as future work. The main ruleset already requires both, alongside the Ubuntu and macOS audit legs, and it binds admins too. The \"Still worth doing\" item still pointed at the classic branch-protection settings page that the fleet retired. The CI bullet now says what the ruleset enforces.",
+              "kind": "config"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.14.0",
@@ -1901,6 +1942,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "TOOLS_OPTIN opts yazi and viddy in on both editions (dotgibson/dotfiles-core#1239). dotgibson/dotfiles-core#1210 corrected PORTING-MATRIX.md's Kali cells for both tools from cargo³ to cargo²¹: this repo installs Kali's cargo but cargo-installs neither. That made them cell-level opt-ins, and without them core-doctor rendered a false ✗ for each on every Kali box. Core's fan-out audit caught the stale declaration and held the v7.14.0 sync back until this landed.",
+              "kind": "fix"
+            },
+            {
               "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux. DEBIAN_NO_TMUX keeps working alongside it.",
               "kind": "fix"
             },
@@ -1946,6 +1991,46 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Security",
+      "kind": "config",
+      "text": "GitHub now refuses a tag-pinned action in every Core-vendoring repo, and make fleet-protection goes red if one stops. sha_pinning_required was on in only dotfiles-core and dotfiles-MacBook. It is now on in all eleven repos the script audits, which makes GitHub enforce rule 3 of the CI floor server-side: on sibling repos' own workflows, and on anything that reaches main without the text gate. The moving major survives. GitHub exempts reusable workflows (\"can still be referenced by tag\"), and a re-run of dotfiles-Alpine's lint-call.yml@v7 passed under enforcement. The new --require-sha-pin mode turns it on idempotently, keeps each repo's allowed_actions, and re-reads the server before it reports success. The admin report now fails a repo whose setting is off or cannot be read. It also reports allowed_actions and the count of Actions execution-protection policies, without gating either. CI's --rulesets-only run still skips the block, because it has no repo admin. Composite actions are not exempt, so dotfiles-nvim first SHA-pinned its setup-core-tools@v7 references (dotgibson/dotfiles-nvim#9) and then turned the setting on too (#1226).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "A Core PR is checked against the real sibling repos before it merges. The new fleet-gates job in ci.yml clones the fleet beside Core and runs the audit's fleet-wide gates (§5f, §9m-§9p, theme and desktop-parity drift) that every other leg skips because it checks out Core alone. That gap let #1210 merge green and then refuse the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The job is meant to be a required check, so it judges a delta: scripts/fleet-gate-delta.sh audits the PR's base and head against the same clones and fails only on a failure the PR adds. A sibling that drifts on its own therefore cannot block unrelated Core PRs. A failure already on main is a warning. A red means the sibling fix lands first, which is the fleet ratchets' existing order. The job holds no token, because the gates run sibling code (#1240).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "/release-readiness actually checks the editor pin. The scheduled job allows ./scripts/check-nvim-freshness.sh as a literal command, but the routine only named the script loosely. The first run (#1245) ran neither form: it reached for gh release list, was refused, and reported a current nvim.lock as unverified. Step 4 now lists the three fleet-state commands exactly as the job grants them, says no other tool is needed for the editor row, and spells out the exit codes. Exit 0 with ✓ means current, exit 0 with a SKIP means unverified, exit 2 means behind, and exit 1 means the lock is broken.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "/release-readiness checks the fleet-wide gates against the sibling repos before a tag. A Core PR's CI checks out Core alone, so every gate that reads a sibling (§9m-§9p, theme and desktop-parity drift) skips there. Until now the first run that could see a sibling break was sync-fanout's pre-fan-out audit, after the tag was cut. That is how #1210's correct Kali matrix cells merged green and then redded the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The weekly job now checks Core out beside the fleet and runs audit-core.sh --scope none before the routine, with both tokens withheld from that step because the gates run sibling code. Any ✗ there is a HOLD, and a gate that could not see its sibling is reported as unverified, not as a pass. This is the fallback half of #1240. The PR-time check is still open there.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "RELEASE-STRATEGY.md no longer lists making audit-arch and audit-alpine required checks as future work. The main ruleset already requires both, alongside the Ubuntu and macOS audit legs, and it binds admins too. The \"Still worth doing\" item still pointed at the classic branch-protection settings page that the fleet retired. The CI bullet now says what the ruleset enforces.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
@@ -4128,6 +4213,14 @@
       "category": "Notes on what is deliberately absent",
       "kind": "other",
       "text": "PPAs, in any form. They are keyed to an Ubuntu series and would break the Debian lane; vendor-signed apt repos (Charm, 1Password) are used instead.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Debian",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "TOOLS_OPTIN opts yazi and viddy in on both editions (dotgibson/dotfiles-core#1239). dotgibson/dotfiles-core#1210 corrected PORTING-MATRIX.md's Kali cells for both tools from cargo³ to cargo²¹: this repo installs Kali's cargo but cargo-installs neither. That made them cell-level opt-ins, and without them core-doctor rendered a false ✗ for each on every Kali box. Core's fan-out audit caught the stale declaration and held the v7.14.0 sync back until this landed.",
       "core": false
     },
     {
