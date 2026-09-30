@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-09-29",
+  "generatedAt": "2026-09-30",
   "generatedFrom": {
     "repo": "dotfiles-core",
     "path": "theme/palette.toml",
-    "commit": "d504614749da540dd4073d8825fbcf07ec01bec3",
+    "commit": "1559169c813fa8eed597f6125bfc95ba5658f6c9",
     "branch": "main",
     "defaultBranch": "main",
     "dirty": false,
