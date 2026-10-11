@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-30",
+  "generatedAt": "2026-10-11",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "8fd6d48b9dc771536d6dfc37a00ee9bda4a332ed",
+        "commit": "991d1bdfaa9fca895ab88e73050d6c7f761e3449",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,25 +22,25 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "caadb89d308c84c044481eed57f793df86ad234e",
+        "commit": "6dd9909a9775a51fd09b003541d80324d4b76095",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "68f88fa417b25b8bef8473523abc1b9745e7f0bb",
+        "commit": "b01e434fe0e635323ee7904d85b9b35b605a373f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "77f998e682cc953bbf878cb502cdec570aceeb1f",
+        "commit": "8469fc30b16f08cea587fb2fcba05e21bd8fc84d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "9a351786f41c1f3e58cc2618bc5add25104e97fa",
+        "commit": "c9ca5aa656e603eea32dd0db3fbb589d7e3ef9a4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -52,7 +52,7 @@
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "fc8c1fe9a38ada0688b9f5fc2bb9f0e240dfd3c9",
+        "commit": "92f89b8bfe15f7b6f857933ffdf8441a004c2da4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -64,7 +64,7 @@
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "16bc40be2e1fcf0d2ccde1d446f4a83db0f8e260",
+        "commit": "3e5c256576bc0568cd53f407fdb59a632fcbdb13",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -161,7 +161,7 @@
   },
   "packages": {
     "dotfiles-MacBook": 77,
-    "dotfiles-Fedora": 39,
+    "dotfiles-Fedora": 46,
     "dotfiles-Arch": 47,
     "dotfiles-Debian": 47,
     "dotfiles-openSUSE": 48,
