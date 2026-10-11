@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-30",
+  "generatedAt": "2026-10-11",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "8fd6d48b9dc771536d6dfc37a00ee9bda4a332ed",
+        "commit": "991d1bdfaa9fca895ab88e73050d6c7f761e3449",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "77f998e682cc953bbf878cb502cdec570aceeb1f",
+        "commit": "8469fc30b16f08cea587fb2fcba05e21bd8fc84d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "9a351786f41c1f3e58cc2618bc5add25104e97fa",
+        "commit": "c9ca5aa656e603eea32dd0db3fbb589d7e3ef9a4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -34,7 +34,7 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "caadb89d308c84c044481eed57f793df86ad234e",
+        "commit": "6dd9909a9775a51fd09b003541d80324d4b76095",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
