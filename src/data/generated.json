@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-10-11",
+  "generatedAt": "2026-10-12",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "3e9002bedb6bd41a9fe2b37c748cf713fc066f50",
+        "commit": "6734287513b09716943244a1ce589786de36c332",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "91ea089d195158d80cbb70c77b0a9790aefbc7e0",
+        "commit": "44a7e7ea5770cac8cac95007a80aae59bd85e82e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,55 +22,55 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "6dd9909a9775a51fd09b003541d80324d4b76095",
+        "commit": "4022ebbcf7b370036a21422b10b9cfe9899fb166",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "b01e434fe0e635323ee7904d85b9b35b605a373f",
+        "commit": "46c1a63d140cb72e159368a272be83c0957036ca",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "46930a48eec950027dd359bcb92004da11b09a54",
+        "commit": "b3ee9cc2049c40b9191a063c991438501d02d937",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "e582a6709a397abfd974028f8a4f1b7b7215b4df",
+        "commit": "b2fca31eaabd48ea0fe19cb5454a6872f7891edf",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "7fb787d46c84388574ecc0645d13dfac844ea4e7",
+        "commit": "22016bb67c5adf38cf9f2793f636896bc906aaff",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "9db8dec0e8470e654f92767c669e50ba0dbe9bb0",
+        "commit": "d626d64814df565889a092db3763c8fb5a133a1f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "777c193c166e01b95a2d241262b1ca9754797925",
+        "commit": "c9a0298a3cfa3acf1d1e28d95411db9f25ef0a1d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "d2ec7911efe8dbc1a4312f1a71268729b276a59d",
+        "commit": "12dc6389f18011889ec11b4f5ca077a0a8c9a483",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-NixOS": {
-        "commit": "4c31c20039201d67ecb21ea61feaee4e661c9b02",
+        "commit": "367acbdbba8095456d2efe627a047811bb8b4047",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -94,9 +94,9 @@
     "coreVersion": "7.15.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -105,49 +105,49 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       },
       "dotfiles-NixOS": {
-        "ref": "v7.14.0",
-        "carried": "7.14.0",
-        "status": "behind"
+        "ref": "v7.15.0",
+        "carried": "7.15.0",
+        "status": "current"
       }
     }
   },
@@ -165,7 +165,7 @@
     "dotfiles-Arch": 50,
     "dotfiles-Debian": 47,
     "dotfiles-openSUSE": 58,
-    "dotfiles-Alpine": 73,
+    "dotfiles-Alpine": 74,
     "dotfiles-Gentoo": 42,
     "dotfiles-Offense-offensive": 89
   },
@@ -184,6 +184,21 @@
     "dotfiles-NixOS": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "PORTING-MATRIX.md no longer says a privileged Gentoo bootstrap installs no gum. dotgibson/dotfiles-Gentoo#218 adds charm.land/gum/v2 to that path's go-install block, because gum has no ebuild and gentoo/mise-tools.toml covers only --user. Footnote ³⁰ now names both providers. Footnote ³¹'s module-path table gains a gum row (six of eight rows now need more than the repo URL), and its \"go-installed by no bootstrap.sh\" line now names dotfiles-Gentoo. No cell changes.",
+              "kind": "feature"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.15.0",
@@ -1942,6 +1957,14 @@
     }
   ],
   "feed": [
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "feature",
+      "text": "PORTING-MATRIX.md no longer says a privileged Gentoo bootstrap installs no gum. dotgibson/dotfiles-Gentoo#218 adds charm.land/gum/v2 to that path's go-install block, because gum has no ebuild and gentoo/mise-tools.toml covers only --user. Footnote ³⁰ now names both providers. Footnote ³¹'s module-path table gains a gum row (six of eight rows now need more than the repo URL), and its \"go-installed by no bootstrap.sh\" line now names dotfiles-Gentoo. No cell changes.",
+      "core": true
+    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
