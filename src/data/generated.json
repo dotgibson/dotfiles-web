@@ -4,7 +4,7 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "991d1bdfaa9fca895ab88e73050d6c7f761e3449",
+        "commit": "3e9002bedb6bd41a9fe2b37c748cf713fc066f50",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -34,37 +34,37 @@
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "8469fc30b16f08cea587fb2fcba05e21bd8fc84d",
+        "commit": "46930a48eec950027dd359bcb92004da11b09a54",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "c9ca5aa656e603eea32dd0db3fbb589d7e3ef9a4",
+        "commit": "e582a6709a397abfd974028f8a4f1b7b7215b4df",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "93beeaec26cde9f7c1da4ed4063ff024fac7c13a",
+        "commit": "7fb787d46c84388574ecc0645d13dfac844ea4e7",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "92f89b8bfe15f7b6f857933ffdf8441a004c2da4",
+        "commit": "9db8dec0e8470e654f92767c669e50ba0dbe9bb0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "73ce3f9d880dc7d970b557b2b7fa669d0a5ce2ac",
+        "commit": "777c193c166e01b95a2d241262b1ca9754797925",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "3e5c256576bc0568cd53f407fdb59a632fcbdb13",
+        "commit": "d2ec7911efe8dbc1a4312f1a71268729b276a59d",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -82,21 +82,21 @@
     "layers": 3
   },
   "releases": {
-    "current": "v7.14.0",
+    "current": "v7.15.0",
     "channels": [
+      "v7.15.0",
       "v7.14.0",
       "v7.13.0",
-      "v7.12.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "7.14.0",
+    "coreVersion": "7.15.0",
     "repos": {
       "dotfiles-MacBook": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -107,54 +107,54 @@
       "dotfiles-Offense": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Defense": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Fedora": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Arch": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Debian": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-openSUSE": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Alpine": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-Gentoo": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       },
       "dotfiles-NixOS": {
         "ref": "v7.14.0",
         "carried": "7.14.0",
-        "status": "current"
+        "status": "behind"
       }
     }
   },
   "core": {
-    "version": "7.14.0",
+    "version": "7.15.0",
     "sourcedModules": 14,
-    "zshLoc": 7483,
+    "zshLoc": 7493,
     "gitAliases": 57,
     "pinnedPlugins": 8,
     "completions": 30
@@ -162,11 +162,11 @@
   "packages": {
     "dotfiles-MacBook": 77,
     "dotfiles-Fedora": 46,
-    "dotfiles-Arch": 47,
+    "dotfiles-Arch": 50,
     "dotfiles-Debian": 47,
-    "dotfiles-openSUSE": 48,
+    "dotfiles-openSUSE": 58,
     "dotfiles-Alpine": 73,
-    "dotfiles-Gentoo": 41,
+    "dotfiles-Gentoo": 42,
     "dotfiles-Offense-offensive": 89
   },
   "ci": {
@@ -186,7 +186,8 @@
   "changelog": [
     {
       "repo": "dotfiles-core",
-      "version": "Unreleased",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
       "groups": [
         {
           "category": "Security",
@@ -201,6 +202,10 @@
           "category": "Added",
           "items": [
             {
+              "text": "TOOLS_OPTIN=none says \"nothing is opt-in\". A repo that installs every tool core-doctor probes had no way to declare it. An empty TOOLS_OPTIN means \"not declared\" and falls back to the default opt-in list, so on such a box a failed install of lnav, ouch, jnv and the rest rendered · instead of ✗. none, alone, is now the explicit empty set: _core_doctor_optin treats every probed tool as expected, in the render and in --json. check-capabilities.sh accepts it and refuses none mixed with tool names. Empty keeps its meaning. A Core that predates this reads none as a list naming one nonexistent tool, which gives the same answer, so a repo can declare it before every box has upgraded. dotfiles-Fedora is the first user.",
+              "kind": "config"
+            },
+            {
               "text": "A Core PR is checked against the real sibling repos before it merges. The new fleet-gates job in ci.yml clones the fleet beside Core and runs the audit's fleet-wide gates (§5f, §9m-§9p, theme and desktop-parity drift) that every other leg skips because it checks out Core alone. That gap let #1210 merge green and then refuse the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The job is meant to be a required check, so it judges a delta: scripts/fleet-gate-delta.sh audits the PR's base and head against the same clones and fails only on a failure the PR adds. A sibling that drifts on its own therefore cannot block unrelated Core PRs. A failure already on main is a warning. A red means the sibling fix lands first, which is the fleet ratchets' existing order. The job holds no token, because the gates run sibling code (#1240).",
               "kind": "fix"
             }
@@ -210,16 +215,37 @@
           "category": "Changed",
           "items": [
             {
+              "text": "PORTING-MATRIX.md catches up with dotgibson/dotfiles-openSUSE#229. openSUSE's install/packages.txt now lists Core's opt-in set: hyperfine, ShellCheck, shfmt, lnav, git-absorb, gping, watchexec and python3-uv; jnv comes from a bootstrap.sh cargo build. lnav installs on Tumbleweed only: Leap 16.0/16.1 do not ship it, so zypper skips it there and Leap's TOOLS_OPTIN keeps it opt-in. Each of the eight openSUSE cells in gen-porting-matrix.sh is now derived (=). Before that, gen-porting-matrix.sh --check exited 2 against the live fleet, which also hid every other drift check. The uv cell drops its ²¹ mark. That was openSUSE's last cell-level mark, so the TOOLS_OPTIN gate no longer demands that openSUSE list Core's whole opt-in set. Footnote ²¹'s coverage table gives openSUSE its own column and counts four repos whose bootstrap.sh installs from the family. Footnote ³⁰ no longer says openSUSE skips uv. The TOOLS_OPTIN gate's tests read the real matrix and keyed on that uv cell, so they now use Gentoo's column, whose jj and ast-grep marks also exercise the alias path.",
+              "kind": "config"
+            },
+            {
+              "text": "PORTING-MATRIX.md now records that Arch installs jujutsu, difftastic and ast-grep. dotgibson/dotfiles-Arch#201 adds all three to Arch's install/packages.txt. dotfiles-Arch declares no TOOLS_OPTIN, so core-doctor falls back to _CORE_DOCTOR_OPTIN, which lists none of them, and showed a ✗ on every fresh Arch box. Arch's three cells in gen-porting-matrix.sh are now derived (=), not asserted; the rendered table is unchanged. Footnote ⁸ no longer says Arch lists jj \"only as a commented opt-in\" (#1262).",
+              "kind": "feature"
+            },
+            {
+              "text": "PORTING-MATRIX.md footnote ²¹ now counts Fedora among the repos that install this family. dotgibson/dotfiles-Fedora#209 puts hyperfine, ShellCheck, shfmt, lnav and git-absorb in Fedora's install/packages.txt. Its bootstrap.sh cargo-builds ouch, gping and watchexec. The footnote said \"two repos' bootstrap.sh\" and \"the other seven repos\", and its table grouped Fedora with the detect-only repos. The table now has its own Fedora column, the counts read three and six, and new notes cover two Fedora specifics: ouch is built without unrar/bzip3, and Fedora has no --no-extras to decline these tools. Footnotes ⁸ (jj), ¹¹ (ast-grep), ¹⁷ (jnv), ¹⁹ (gping), ²⁴ (lnav), ²⁵ (watchexec), ²⁶ (git-absorb) and ³⁰ (uv) made the same per-repo claims and now name Fedora too. ³⁰ also records that mise exec go@latest no longer downloads Go under Core's auto_install = false, so the five bootstraps that use it (Arch, openSUSE, Alpine, Gentoo, Fedora) need mise install go@latest first. The ²¹ notes and the _CORE_DOCTOR_OPTIN comment in zsh/30-functions.zsh say how core-doctor classifies these rows on Fedora: it declares TOOLS_OPTIN=none (dotgibson/dotfiles-Fedora#212), the empty-set form added in this release, so a failed install there shows ✗, not ·.",
+              "kind": "feature"
+            },
+            {
               "text": "/release-readiness actually checks the editor pin. The scheduled job allows ./scripts/check-nvim-freshness.sh as a literal command, but the routine only named the script loosely. The first run (#1245) ran neither form: it reached for gh release list, was refused, and reported a current nvim.lock as unverified. Step 4 now lists the three fleet-state commands exactly as the job grants them, says no other tool is needed for the editor row, and spells out the exit codes. Exit 0 with ✓ means current, exit 0 with a SKIP means unverified, exit 2 means behind, and exit 1 means the lock is broken.",
               "kind": "fix"
             },
             {
-              "text": "/release-readiness checks the fleet-wide gates against the sibling repos before a tag. A Core PR's CI checks out Core alone, so every gate that reads a sibling (§9m-§9p, theme and desktop-parity drift) skips there. Until now the first run that could see a sibling break was sync-fanout's pre-fan-out audit, after the tag was cut. That is how #1210's correct Kali matrix cells merged green and then redded the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The weekly job now checks Core out beside the fleet and runs audit-core.sh --scope none before the routine, with both tokens withheld from that step because the gates run sibling code. Any ✗ there is a HOLD, and a gate that could not see its sibling is reported as unverified, not as a pass. This is the fallback half of #1240. The PR-time check is still open there.",
+              "text": "/release-readiness checks the fleet-wide gates against the sibling repos before a tag. A Core PR's CI checks out Core alone, so every gate that reads a sibling (§9m-§9p, theme and desktop-parity drift) skips there. Until now the first run that could see a sibling break was sync-fanout's pre-fan-out audit, after the tag was cut. That is how #1210's correct Kali matrix cells merged green and then redded the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The weekly job now checks Core out beside the fleet and runs audit-core.sh --scope none before the routine, with both tokens withheld from that step because the gates run sibling code. Any ✗ there is a HOLD, and a gate that could not see its sibling is reported as unverified, not as a pass. This is the fallback half of #1240. The PR-time half is the fleet-gates job (#1243, under Added), which closed #1240.",
               "kind": "fix"
             },
             {
               "text": "RELEASE-STRATEGY.md no longer lists making audit-arch and audit-alpine required checks as future work. The main ruleset already requires both, alongside the Ubuntu and macOS audit legs, and it binds admins too. The \"Still worth doing\" item still pointed at the classic branch-protection settings page that the fleet retired. The CI bullet now says what the ruleset enforces.",
               "kind": "config"
+            }
+          ]
+        },
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "Three Arch version stamps in PORTING-MATRIX.md had fallen behind extra. Re-checked 2026-10-11 against archlinux.org: - Footnote ²⁵'s Arch/Homebrew watchexec bullet goes from 2.7.3 (2.7.3-1) to 2.8.0 (2.8.0-1). formulae.brew.sh also has 2.8.0, so the two moved together again and the shared bullet stays shared. - Footnote ³²'s Arch direnv stamp goes from 2.37.1-1 to 2.38.2-1. - The Arch neovim row in scripts/fleet-package-versions.tsv goes from 0.12.5 to 0.12.6. The rendered table is regenerated with gen-porting-matrix.sh --local; it is still above the ≥ 0.12.0 floor. None of these changes a package name or a cell. Surfaced by /os-package-availability arch (dotgibson/dotfiles-Arch#197). The AUR names that report could not reach (carapace-bin, sesh-bin, 1password-cli, viddy) were checked separately through the AUR RPC, and all four still resolve.",
+              "kind": "fix"
             }
           ]
         }
@@ -349,85 +375,6 @@
             {
               "text": "The bash 3.2 floor stays, and PORTABILITY.md §1 now says why. Retiring it for lib/*.sh behind a re-exec stage-0 was costed first (#1153). It would shed about 30 lines of lib/. The injection guard stays because namerefs still expand a subscript, the §5k gate stays re-scoped, and a blib_main stage-0 misses dotfiles-MacBook, the only host on 3.2. RELEASE-STRATEGY.md §2 records it as a candidate declined before it reached the Breaking Backlog.",
               "kind": "fix"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "groups": [
-        {
-          "category": "Security",
-          "items": [
-            {
-              "text": "The CI floor's template-injection rule now covers push-trigger ref names and workflow inputs. Rule 7 of scripts/modern-baseline.yml bans an attacker-influenced ${{ }} expression inside a run: body, and it named github.head_ref — the fork branch on a pull request — but not github.ref_name, which on a push or tag event is the same attacker-chosen string by another trigger (git refnames allow $ ; & | ( ) { }). It now bans github.ref_name and, for uniformity, github.base_ref. And its inputs. exemption, earned by the composite setup-core-tools/action.yml, was applied to every gated file, which left bare inputs.* ungated in the workflows — where it is workflow_dispatch free text or a value a sibling repo feeds one of Core's *-call.yml@vN workflows. A new rule 7b (banned_run_interpolation_contexts_workflow_only) bans it under .github/workflows/ alone. Both were free: every occurrence in the tree was already routed through env: (#1160).",
-              "kind": "feature"
-            },
-            {
-              "text": "The CI floor bans secrets: inherit, and Core stops documenting it. The caller example at the top of claude-routines-call.yml, the shape the seven OS repos were told to copy, passed secrets: inherit. That hands the called @v7 workflow every secret the caller repo holds, declared or not, at a moving tag the caller does not pin. The seven live callers had already moved to the explicit CLAUDE_CODE_OAUTH_TOKEN: mapping, so only the comment was wrong, and it now shows the mapping. A new rule 9 in scripts/modern-baseline.yml (banned_call_secrets) reads the value the way rule 5b reads write-all: anchored to the key, bare or quoted, a trailing comment tolerated. It was green on arrival, and no workflow in the fleet passes it (#1160).",
-              "kind": "security"
-            }
-          ]
-        },
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "Two zsh plugin pins roll forward in zsh/45-plugins.zsh (#1156, the freshness bot): zsh-history-substring-search 14c8d2e0ffae → a0bdb0d47dba and zsh-syntax-highlighting 2fc57d63067c → 0bfcb582e71d. This is the one change in the release that reaches a host, so it is recorded here even though a bot landed it — CONTRIBUTING.md has no carve-out for automation. Both ranges were read against the upstream compare: the first is two commits touching only README.md (+2/-2, a zplug snippet fix), the second one commit adding an Arch install path to INSTALL.md (+8/-0). So the pins move and no plugin code does; the other six pins were already current.",
-              "kind": "fix"
-            },
-            {
-              "text": "The scaffold's README is now linted for real, and held to Core's. The suite drove the scaffolded repo's markdown leg through a shim that records argv and exits 0, so the README new-os-repo.sh writes was never judged by the .markdownlint.jsonc it writes beside it, and its hand-copied shield block could drift from Core's unnoticed (#1162). 35-new-os-repo.sh now runs the real markdownlint-cli2 on it wherever the tool is installed (CI's main leg installs the pinned one), and asserts the header and every shield link definition match Core's README.md with the repo name swapped. dotgibson-* (Core's release, on purpose) and ci-url (lint.yml, not ci.yml) are the stated exceptions.",
-              "kind": "feature"
-            },
-            {
-              "text": "new-os-repo.sh writes the fleet's shield row into the README it scaffolds. A checkup that fetched every badge and link target across the fifteen public READMEs found the two newest repos opening with no shield row at all — dotfiles-NixOS because this scaffold wrote none, and its generated .markdownlint.jsonc deliberately left out the MD033 allowance the row needs (\"a fresh OS repo has no showcase page\"). The scaffold now writes the eight-badge row above the title, the link definitions at the end, the CI badge pointing at the lint.yml it also writes, and the scoped MD033 allowed_elements stanza the siblings carry — so the next repo starts where dotfiles-NixOS had to be brought to by hand (dotfiles-NixOS#11). The same checkup fixed a dead bash link here (#1151), two logo slugs simple-icons no longer ships in each of dotfiles-Windows and dotfiles-Defense, and dotfiles-Offense's Python badge, which read CPython's GitHub releases — it publishes tags — and rendered \"no releases or repo not found\".",
-              "kind": "fix"
-            },
-            {
-              "text": "Two tool pins roll forward: markdownlint-cli2 0.23.2 → 0.23.3 and the maintenance bots' Claude Code CLI 2.1.273 → 2.1.281. The weekly freshness review (#1159) found them the only pins behind upstream that are not deliberately held. markdownlint-cli2 0.23.3 only updates dependencies, and both versions pin the markdownlint library at 0.41.1, so no rule is added, renamed or given a new default in Core or in the lint-call.yml consumers. The pre-commit hook's rev moves with it, because §9 keeps the two in step. Both are registry installs, so there is no *_SHA256 to refresh. shfmt stays held at 3.13.1 (#813).",
-              "kind": "config"
-            },
-            {
-              "text": "Both atuin guard premises re-measured against 18.23.0; both VERIFIED_AGAINST anchors move (#1158, run 35956975589). Upstream released 18.23.0 on 2026-09-22, one minor past the 18.22.0 the anchors in zsh/00-tools.zsh carried. One atuin-guard-verify dispatch, checksum and build-provenance verified: silent discard holds (its report job skipped), and autostart self-healing is moved exactly as it was on 18.22.0. absent and stale spawn a daemon and land their row, and wedged blocks on the pidfile lock and loses it (upstream atuinsh/atuin#4114, still open). That is the shape #1102 already answers by probing and warning rather than standing down, so the auto-filed #1177 asks nothing new of Core. Editing an anchor is a claim that the premise was re-measured at that version, so this is that claim and not a version bump. 18.23.0 continues 18.22.0's direction, and the block now says so: an FTS index over captured command output and a sync engine replacing the event bus both sit behind the socket, with no client-side spool or direct-write fallback (the one PR that would have changed the client's connect shape, atuin #4168, closed unmerged). A dead socket still discards, and atuinsh/atuin#3382 (accept-but-silent) is still open, so the steer away from socket activation stays.",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "The test suite no longer writes to the developer's real ~/.config/zsh/.zshrc. Every fixture moves HOME into the sandbox, but an interactive fleet shell also exports ZDOTDIR=~/.config/zsh, and the driver defaults ZDOTDIR only when it is unset. So a make audit (or make release) run from such a shell had the driver and scaffold fixtures re-point the real $ZDOTDIR/.zshrc into a temp dir, deleted at exit, and the next shell started bare. The same inherited mise activation state made sandboxed shells error on an untrusted mise/config.toml, so the audit went red locally while CI stayed green. test-core.sh now unsets ZDOTDIR, the four XDG_*HOME dirs and every MISE*/__MISE_* variable before any fragment runs, and 05-suite-shape.sh asserts that none survive. The test/check-links.sh that new-os-repo.sh scaffolds clears the same variables itself.",
-              "kind": "fix"
-            },
-            {
-              "text": "The fan-out count gate no longer reads binary files. _core_fanout_count_hits ran its awk over every tracked file, assets/demo.gif included, so every make audit printed a gawk Invalid multibyte data detected warning under a UTF-8 locale. It now skips any file containing a NUL byte. It does not use grep -I, because BusyBox grep accepts that flag and ignores it. The verdict never changed (a GIF makes no fan-out claim); the audit's output is quieter.",
-              "kind": "fix"
-            },
-            {
-              "text": "new-os-repo.sh writes the LICENSE its README shield advertises. The shield row added above carries an MIT License badge linking blob/main/LICENSE, but nothing wrote that file (it is in neither core.manifest nor core.vendor), so a new repo's first push would show license | not identified and a link that 404s. The scaffold now writes Core's LICENSE (the whole fleet's, byte for byte) with the birth year, and the generated .markdownlint.jsonc names the real reason MD041 is off: the README opens with the back-to-top anchor and shield row, not an H1.",
-              "kind": "config"
-            }
-          ]
-        },
-        {
-          "category": "Documentation",
-          "items": [
-            {
-              "text": "PORTING-MATRIX.md and the README stop contradicting the fleet (#1174, from the #1157 sweep). The sesh row's Arch cell asserted AUR⁹, but dotfiles-Arch go-installs sesh and says the AUR sesh-bin is not needed; it is now go⁹, and footnote ⁹ names Arch among the go-install consumers. Footnote ³³ gave Gentoo's ~arch neovim range two ways eleven lines apart (0.12.5 and 0.12.3); both now read 0.12.5, as the TSV does. Footnote ³⁴ said jq 1.8.2 reached \"all three\" supported Alpine stable branches; Alpine carries four, and 3.21 is still on 1.7.1. The README's install steps gain the Defense clone and name Debian and NixOS among the Linux distros, matching the \"all ten bootstraps\" line beneath them.",
-              "kind": "other"
-            },
-            {
-              "text": "Every registered README hero is now filmed — the tenth, dotfiles-NixOS's, landed as dotfiles-NixOS#8, so the \"still to be filmed\" prose in CLAUDE.md, assets/hero-repos.txt and assets/README.md is retired. It was the one row no rootless chroot could film — its host guard asserts sudo nixos-rebuild switch --upgrade and up -n probes $PATH for it — so it was filmed on NixOS-WSL, and assets/README.md gains \"Filming the NixOS hero\": the two-rebuild install, nixpkgs' own render kit (vhs 0.11.0, not the 0.12.0 that writes no gif), the Adwaita Mono rejection the ❖ fallback needs, and the trap that is NixOS-WSL's alone — a nixos-rebuild switch resets the kernel-global binfmt_misc table, which every distro on the machine shares, so the distro you drive from loses wsl.exe until it is re-registered (the recipe is there). The install also surfaced dotfiles-NixOS#6: home.nix named two attributes nixpkgs does not have, invisible to that repo's parse-only gate. §9k's rule stands: a registered tape with no gif is a skip, so a re-render that has not landed never blocks the gate.",
-              "kind": "fix"
-            },
-            {
-              "text": "PORTING-MATRIX.md gains an eza fleet-version table (footnote ³⁹), against a 0.23.5 floor. 0.23.5 added --hyperlink=auto and lines-of-code counting, and an older eza rejects the flag outright. The /tool-scout scan in #1158 held it on a watch that ends only when every lane is at or above that version, and until now nothing recorded where the lanes sit. scripts/fleet-package-versions.tsv now carries seventeen rows, each read from the distro's own index. Seven are at or above; Alpine edge/3.24/3.23 and Gentoo stable are one patch short on 0.23.4; Ubuntu 24.04 (0.18.2), both Leap backports (0.20.4), Debian 13 (0.21.0) and Alpine 3.22/3.21 are further back. gen-porting-matrix.sh registers the block and marks the eza row. Core enforces no eza floor, and zsh/ passes no flag that needs one.",
-              "kind": "feature"
             }
           ]
         }
@@ -1763,6 +1710,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "The Go fallback installs Go before it uses it. On a box with no go, bootstrap's mise exec go@latest arm never fetched a toolchain: Core's mise/config.toml sets auto_install = false, and mise 2026.10.7 carries that into exec_auto_install. So the exec failed in about two seconds and every Go-installed extra was skipped. It now runs mise install go@latest first, which is a no-op once Go is present (dotgibson/dotfiles-Fedora#209 found it).",
+              "kind": "config"
+            },
+            {
               "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
               "kind": "fix"
             },
@@ -1991,46 +1942,6 @@
     }
   ],
   "feed": [
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Security",
-      "kind": "config",
-      "text": "GitHub now refuses a tag-pinned action in every Core-vendoring repo, and make fleet-protection goes red if one stops. sha_pinning_required was on in only dotfiles-core and dotfiles-MacBook. It is now on in all eleven repos the script audits, which makes GitHub enforce rule 3 of the CI floor server-side: on sibling repos' own workflows, and on anything that reaches main without the text gate. The moving major survives. GitHub exempts reusable workflows (\"can still be referenced by tag\"), and a re-run of dotfiles-Alpine's lint-call.yml@v7 passed under enforcement. The new --require-sha-pin mode turns it on idempotently, keeps each repo's allowed_actions, and re-reads the server before it reports success. The admin report now fails a repo whose setting is off or cannot be read. It also reports allowed_actions and the count of Actions execution-protection policies, without gating either. CI's --rulesets-only run still skips the block, because it has no repo admin. Composite actions are not exempt, so dotfiles-nvim first SHA-pinned its setup-core-tools@v7 references (dotgibson/dotfiles-nvim#9) and then turned the setting on too (#1226).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Added",
-      "kind": "fix",
-      "text": "A Core PR is checked against the real sibling repos before it merges. The new fleet-gates job in ci.yml clones the fleet beside Core and runs the audit's fleet-wide gates (§5f, §9m-§9p, theme and desktop-parity drift) that every other leg skips because it checks out Core alone. That gap let #1210 merge green and then refuse the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The job is meant to be a required check, so it judges a delta: scripts/fleet-gate-delta.sh audits the PR's base and head against the same clones and fails only on a failure the PR adds. A sibling that drifts on its own therefore cannot block unrelated Core PRs. A failure already on main is a warning. A red means the sibling fix lands first, which is the fleet ratchets' existing order. The job holds no token, because the gates run sibling code (#1240).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "/release-readiness actually checks the editor pin. The scheduled job allows ./scripts/check-nvim-freshness.sh as a literal command, but the routine only named the script loosely. The first run (#1245) ran neither form: it reached for gh release list, was refused, and reported a current nvim.lock as unverified. Step 4 now lists the three fleet-state commands exactly as the job grants them, says no other tool is needed for the editor row, and spells out the exit codes. Exit 0 with ✓ means current, exit 0 with a SKIP means unverified, exit 2 means behind, and exit 1 means the lock is broken.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "/release-readiness checks the fleet-wide gates against the sibling repos before a tag. A Core PR's CI checks out Core alone, so every gate that reads a sibling (§9m-§9p, theme and desktop-parity drift) skips there. Until now the first run that could see a sibling break was sync-fanout's pre-fan-out audit, after the tag was cut. That is how #1210's correct Kali matrix cells merged green and then redded the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The weekly job now checks Core out beside the fleet and runs audit-core.sh --scope none before the routine, with both tokens withheld from that step because the gates run sibling code. Any ✗ there is a HOLD, and a gate that could not see its sibling is reported as unverified, not as a pass. This is the fallback half of #1240. The PR-time check is still open there.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "Unreleased",
-      "category": "Changed",
-      "kind": "config",
-      "text": "RELEASE-STRATEGY.md no longer lists making audit-arch and audit-alpine required checks as future work. The main ruleset already requires both, alongside the Ubuntu and macOS audit legs, and it binds admins too. The \"Still worth doing\" item still pointed at the classic branch-protection settings page that the fleet retired. The CI bullet now says what the ruleset enforces.",
-      "core": true
-    },
     {
       "repo": "dotfiles-Windows",
       "version": "Unreleased",
@@ -3923,6 +3834,14 @@
       "repo": "dotfiles-Arch",
       "version": "Unreleased",
       "category": "Fixed",
+      "kind": "config",
+      "text": "The Go fallback installs Go before it uses it. On a box with no go, bootstrap's mise exec go@latest arm never fetched a toolchain: Core's mise/config.toml sets auto_install = false, and mise 2026.10.7 carries that into exec_auto_install. So the exec failed in about two seconds and every Go-installed extra was skipped. It now runs mise install go@latest first, which is a no-op once Go is present (dotgibson/dotfiles-Fedora#209 found it).",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Arch",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "fix",
       "text": "The tmux auto-attach honours DOTFILES_NO_AUTOTMUX, the fleet's one opt-out name (dotgibson/dotfiles-core#877). MacBook, openSUSE and Gentoo already read it; this layer attached unconditionally for any interactive TTY, which is how dotfiles-core's README hero render — a vhs session that sources this layer — typed its whole tour into a fresh main session. Core's gen-hero-tape.sh now refuses to render a hero on a layer that does not honour the knob. Export DOTFILES_NO_AUTOTMUX=1 for any harness that drives an interactive zsh and must not land in tmux.",
       "core": false
@@ -4305,6 +4224,96 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Security",
+      "kind": "config",
+      "text": "GitHub now refuses a tag-pinned action in every Core-vendoring repo, and make fleet-protection goes red if one stops. sha_pinning_required was on in only dotfiles-core and dotfiles-MacBook. It is now on in all eleven repos the script audits, which makes GitHub enforce rule 3 of the CI floor server-side: on sibling repos' own workflows, and on anything that reaches main without the text gate. The moving major survives. GitHub exempts reusable workflows (\"can still be referenced by tag\"), and a re-run of dotfiles-Alpine's lint-call.yml@v7 passed under enforcement. The new --require-sha-pin mode turns it on idempotently, keeps each repo's allowed_actions, and re-reads the server before it reports success. The admin report now fails a repo whose setting is off or cannot be read. It also reports allowed_actions and the count of Actions execution-protection policies, without gating either. CI's --rulesets-only run still skips the block, because it has no repo admin. Composite actions are not exempt, so dotfiles-nvim first SHA-pinned its setup-core-tools@v7 references (dotgibson/dotfiles-nvim#9) and then turned the setting on too (#1226).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Added",
+      "kind": "config",
+      "text": "TOOLS_OPTIN=none says \"nothing is opt-in\". A repo that installs every tool core-doctor probes had no way to declare it. An empty TOOLS_OPTIN means \"not declared\" and falls back to the default opt-in list, so on such a box a failed install of lnav, ouch, jnv and the rest rendered · instead of ✗. none, alone, is now the explicit empty set: _core_doctor_optin treats every probed tool as expected, in the render and in --json. check-capabilities.sh accepts it and refuses none mixed with tool names. Empty keeps its meaning. A Core that predates this reads none as a list naming one nonexistent tool, which gives the same answer, so a repo can declare it before every box has upgraded. dotfiles-Fedora is the first user.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Added",
+      "kind": "fix",
+      "text": "A Core PR is checked against the real sibling repos before it merges. The new fleet-gates job in ci.yml clones the fleet beside Core and runs the audit's fleet-wide gates (§5f, §9m-§9p, theme and desktop-parity drift) that every other leg skips because it checks out Core alone. That gap let #1210 merge green and then refuse the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The job is meant to be a required check, so it judges a delta: scripts/fleet-gate-delta.sh audits the PR's base and head against the same clones and fails only on a failure the PR adds. A sibling that drifts on its own therefore cannot block unrelated Core PRs. A failure already on main is a warning. A red means the sibling fix lands first, which is the fleet ratchets' existing order. The job holds no token, because the gates run sibling code (#1240).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Changed",
+      "kind": "config",
+      "text": "PORTING-MATRIX.md catches up with dotgibson/dotfiles-openSUSE#229. openSUSE's install/packages.txt now lists Core's opt-in set: hyperfine, ShellCheck, shfmt, lnav, git-absorb, gping, watchexec and python3-uv; jnv comes from a bootstrap.sh cargo build. lnav installs on Tumbleweed only: Leap 16.0/16.1 do not ship it, so zypper skips it there and Leap's TOOLS_OPTIN keeps it opt-in. Each of the eight openSUSE cells in gen-porting-matrix.sh is now derived (=). Before that, gen-porting-matrix.sh --check exited 2 against the live fleet, which also hid every other drift check. The uv cell drops its ²¹ mark. That was openSUSE's last cell-level mark, so the TOOLS_OPTIN gate no longer demands that openSUSE list Core's whole opt-in set. Footnote ²¹'s coverage table gives openSUSE its own column and counts four repos whose bootstrap.sh installs from the family. Footnote ³⁰ no longer says openSUSE skips uv. The TOOLS_OPTIN gate's tests read the real matrix and keyed on that uv cell, so they now use Gentoo's column, whose jj and ast-grep marks also exercise the alias path.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "PORTING-MATRIX.md now records that Arch installs jujutsu, difftastic and ast-grep. dotgibson/dotfiles-Arch#201 adds all three to Arch's install/packages.txt. dotfiles-Arch declares no TOOLS_OPTIN, so core-doctor falls back to _CORE_DOCTOR_OPTIN, which lists none of them, and showed a ✗ on every fresh Arch box. Arch's three cells in gen-porting-matrix.sh are now derived (=), not asserted; the rendered table is unchanged. Footnote ⁸ no longer says Arch lists jj \"only as a commented opt-in\" (#1262).",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Changed",
+      "kind": "feature",
+      "text": "PORTING-MATRIX.md footnote ²¹ now counts Fedora among the repos that install this family. dotgibson/dotfiles-Fedora#209 puts hyperfine, ShellCheck, shfmt, lnav and git-absorb in Fedora's install/packages.txt. Its bootstrap.sh cargo-builds ouch, gping and watchexec. The footnote said \"two repos' bootstrap.sh\" and \"the other seven repos\", and its table grouped Fedora with the detect-only repos. The table now has its own Fedora column, the counts read three and six, and new notes cover two Fedora specifics: ouch is built without unrar/bzip3, and Fedora has no --no-extras to decline these tools. Footnotes ⁸ (jj), ¹¹ (ast-grep), ¹⁷ (jnv), ¹⁹ (gping), ²⁴ (lnav), ²⁵ (watchexec), ²⁶ (git-absorb) and ³⁰ (uv) made the same per-repo claims and now name Fedora too. ³⁰ also records that mise exec go@latest no longer downloads Go under Core's auto_install = false, so the five bootstraps that use it (Arch, openSUSE, Alpine, Gentoo, Fedora) need mise install go@latest first. The ²¹ notes and the _CORE_DOCTOR_OPTIN comment in zsh/30-functions.zsh say how core-doctor classifies these rows on Fedora: it declares TOOLS_OPTIN=none (dotgibson/dotfiles-Fedora#212), the empty-set form added in this release, so a failed install there shows ✗, not ·.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "/release-readiness actually checks the editor pin. The scheduled job allows ./scripts/check-nvim-freshness.sh as a literal command, but the routine only named the script loosely. The first run (#1245) ran neither form: it reached for gh release list, was refused, and reported a current nvim.lock as unverified. Step 4 now lists the three fleet-state commands exactly as the job grants them, says no other tool is needed for the editor row, and spells out the exit codes. Exit 0 with ✓ means current, exit 0 with a SKIP means unverified, exit 2 means behind, and exit 1 means the lock is broken.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Changed",
+      "kind": "fix",
+      "text": "/release-readiness checks the fleet-wide gates against the sibling repos before a tag. A Core PR's CI checks out Core alone, so every gate that reads a sibling (§9m-§9p, theme and desktop-parity drift) skips there. Until now the first run that could see a sibling break was sync-fanout's pre-fan-out audit, after the tag was cut. That is how #1210's correct Kali matrix cells merged green and then redded the v7.14.0 fan-out on dotfiles-Debian's stale TOOLS_OPTIN (#1239). The weekly job now checks Core out beside the fleet and runs audit-core.sh --scope none before the routine, with both tokens withheld from that step because the gates run sibling code. Any ✗ there is a HOLD, and a gate that could not see its sibling is reported as unverified, not as a pass. This is the fallback half of #1240. The PR-time half is the fleet-gates job (#1243, under Added), which closed #1240.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Changed",
+      "kind": "config",
+      "text": "RELEASE-STRATEGY.md no longer lists making audit-arch and audit-alpine required checks as future work. The main ruleset already requires both, alongside the Ubuntu and macOS audit legs, and it binds admins too. The \"Still worth doing\" item still pointed at the classic branch-protection settings page that the fleet retired. The CI bullet now says what the ruleset enforces.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.15.0",
+      "date": "2026-10-11",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "Three Arch version stamps in PORTING-MATRIX.md had fallen behind extra. Re-checked 2026-10-11 against archlinux.org: - Footnote ²⁵'s Arch/Homebrew watchexec bullet goes from 2.7.3 (2.7.3-1) to 2.8.0 (2.8.0-1). formulae.brew.sh also has 2.8.0, so the two moved together again and the shared bullet stays shared. - Footnote ³²'s Arch direnv stamp goes from 2.37.1-1 to 2.38.2-1. - The Arch neovim row in scripts/fleet-package-versions.tsv goes from 0.12.5 to 0.12.6. The rendered table is regenerated with gen-porting-matrix.sh --local; it is still above the ≥ 0.12.0 floor. None of these changes a package name or a cell. Surfaced by /os-package-availability arch (dotgibson/dotfiles-Arch#197). The AUR names that report could not reach (carapace-bin, sesh-bin, 1password-cli, viddy) were checked separately through the AUR RPC, and all four still resolve.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v7.14.0",
       "date": "2026-09-29",
       "category": "Security",
@@ -4589,123 +4598,6 @@
       "category": "Documentation",
       "kind": "fix",
       "text": "The bash 3.2 floor stays, and PORTABILITY.md §1 now says why. Retiring it for lib/*.sh behind a re-exec stage-0 was costed first (#1153). It would shed about 30 lines of lib/. The injection guard stays because namerefs still expand a subscript, the §5k gate stays re-scoped, and a blib_main stage-0 misses dotfiles-MacBook, the only host on 3.2. RELEASE-STRATEGY.md §2 records it as a candidate declined before it reached the Breaking Backlog.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Security",
-      "kind": "feature",
-      "text": "The CI floor's template-injection rule now covers push-trigger ref names and workflow inputs. Rule 7 of scripts/modern-baseline.yml bans an attacker-influenced ${{ }} expression inside a run: body, and it named github.head_ref — the fork branch on a pull request — but not github.ref_name, which on a push or tag event is the same attacker-chosen string by another trigger (git refnames allow $ ; & | ( ) { }). It now bans github.ref_name and, for uniformity, github.base_ref. And its inputs. exemption, earned by the composite setup-core-tools/action.yml, was applied to every gated file, which left bare inputs.* ungated in the workflows — where it is workflow_dispatch free text or a value a sibling repo feeds one of Core's *-call.yml@vN workflows. A new rule 7b (banned_run_interpolation_contexts_workflow_only) bans it under .github/workflows/ alone. Both were free: every occurrence in the tree was already routed through env: (#1160).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Security",
-      "kind": "security",
-      "text": "The CI floor bans secrets: inherit, and Core stops documenting it. The caller example at the top of claude-routines-call.yml, the shape the seven OS repos were told to copy, passed secrets: inherit. That hands the called @v7 workflow every secret the caller repo holds, declared or not, at a moving tag the caller does not pin. The seven live callers had already moved to the explicit CLAUDE_CODE_OAUTH_TOKEN: mapping, so only the comment was wrong, and it now shows the mapping. A new rule 9 in scripts/modern-baseline.yml (banned_call_secrets) reads the value the way rule 5b reads write-all: anchored to the key, bare or quoted, a trailing comment tolerated. It was green on arrival, and no workflow in the fleet passes it (#1160).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "Two zsh plugin pins roll forward in zsh/45-plugins.zsh (#1156, the freshness bot): zsh-history-substring-search 14c8d2e0ffae → a0bdb0d47dba and zsh-syntax-highlighting 2fc57d63067c → 0bfcb582e71d. This is the one change in the release that reaches a host, so it is recorded here even though a bot landed it — CONTRIBUTING.md has no carve-out for automation. Both ranges were read against the upstream compare: the first is two commits touching only README.md (+2/-2, a zplug snippet fix), the second one commit adding an Arch install path to INSTALL.md (+8/-0). So the pins move and no plugin code does; the other six pins were already current.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Changed",
-      "kind": "feature",
-      "text": "The scaffold's README is now linted for real, and held to Core's. The suite drove the scaffolded repo's markdown leg through a shim that records argv and exits 0, so the README new-os-repo.sh writes was never judged by the .markdownlint.jsonc it writes beside it, and its hand-copied shield block could drift from Core's unnoticed (#1162). 35-new-os-repo.sh now runs the real markdownlint-cli2 on it wherever the tool is installed (CI's main leg installs the pinned one), and asserts the header and every shield link definition match Core's README.md with the repo name swapped. dotgibson-* (Core's release, on purpose) and ci-url (lint.yml, not ci.yml) are the stated exceptions.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "new-os-repo.sh writes the fleet's shield row into the README it scaffolds. A checkup that fetched every badge and link target across the fifteen public READMEs found the two newest repos opening with no shield row at all — dotfiles-NixOS because this scaffold wrote none, and its generated .markdownlint.jsonc deliberately left out the MD033 allowance the row needs (\"a fresh OS repo has no showcase page\"). The scaffold now writes the eight-badge row above the title, the link definitions at the end, the CI badge pointing at the lint.yml it also writes, and the scoped MD033 allowed_elements stanza the siblings carry — so the next repo starts where dotfiles-NixOS had to be brought to by hand (dotfiles-NixOS#11). The same checkup fixed a dead bash link here (#1151), two logo slugs simple-icons no longer ships in each of dotfiles-Windows and dotfiles-Defense, and dotfiles-Offense's Python badge, which read CPython's GitHub releases — it publishes tags — and rendered \"no releases or repo not found\".",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Changed",
-      "kind": "config",
-      "text": "Two tool pins roll forward: markdownlint-cli2 0.23.2 → 0.23.3 and the maintenance bots' Claude Code CLI 2.1.273 → 2.1.281. The weekly freshness review (#1159) found them the only pins behind upstream that are not deliberately held. markdownlint-cli2 0.23.3 only updates dependencies, and both versions pin the markdownlint library at 0.41.1, so no rule is added, renamed or given a new default in Core or in the lint-call.yml consumers. The pre-commit hook's rev moves with it, because §9 keeps the two in step. Both are registry installs, so there is no *_SHA256 to refresh. shfmt stays held at 3.13.1 (#813).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "Both atuin guard premises re-measured against 18.23.0; both VERIFIED_AGAINST anchors move (#1158, run 35956975589). Upstream released 18.23.0 on 2026-09-22, one minor past the 18.22.0 the anchors in zsh/00-tools.zsh carried. One atuin-guard-verify dispatch, checksum and build-provenance verified: silent discard holds (its report job skipped), and autostart self-healing is moved exactly as it was on 18.22.0. absent and stale spawn a daemon and land their row, and wedged blocks on the pidfile lock and loses it (upstream atuinsh/atuin#4114, still open). That is the shape #1102 already answers by probing and warning rather than standing down, so the auto-filed #1177 asks nothing new of Core. Editing an anchor is a claim that the premise was re-measured at that version, so this is that claim and not a version bump. 18.23.0 continues 18.22.0's direction, and the block now says so: an FTS index over captured command output and a sync engine replacing the event bus both sit behind the socket, with no client-side spool or direct-write fallback (the one PR that would have changed the client's connect shape, atuin #4168, closed unmerged). A dead socket still discards, and atuinsh/atuin#3382 (accept-but-silent) is still open, so the steer away from socket activation stays.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The test suite no longer writes to the developer's real ~/.config/zsh/.zshrc. Every fixture moves HOME into the sandbox, but an interactive fleet shell also exports ZDOTDIR=~/.config/zsh, and the driver defaults ZDOTDIR only when it is unset. So a make audit (or make release) run from such a shell had the driver and scaffold fixtures re-point the real $ZDOTDIR/.zshrc into a temp dir, deleted at exit, and the next shell started bare. The same inherited mise activation state made sandboxed shells error on an untrusted mise/config.toml, so the audit went red locally while CI stayed green. test-core.sh now unsets ZDOTDIR, the four XDG_*HOME dirs and every MISE*/__MISE_* variable before any fragment runs, and 05-suite-shape.sh asserts that none survive. The test/check-links.sh that new-os-repo.sh scaffolds clears the same variables itself.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The fan-out count gate no longer reads binary files. _core_fanout_count_hits ran its awk over every tracked file, assets/demo.gif included, so every make audit printed a gawk Invalid multibyte data detected warning under a UTF-8 locale. It now skips any file containing a NUL byte. It does not use grep -I, because BusyBox grep accepts that flag and ignores it. The verdict never changed (a GIF makes no fan-out claim); the audit's output is quieter.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Fixed",
-      "kind": "config",
-      "text": "new-os-repo.sh writes the LICENSE its README shield advertises. The shield row added above carries an MIT License badge linking blob/main/LICENSE, but nothing wrote that file (it is in neither core.manifest nor core.vendor), so a new repo's first push would show license | not identified and a link that 404s. The scaffold now writes Core's LICENSE (the whole fleet's, byte for byte) with the birth year, and the generated .markdownlint.jsonc names the real reason MD041 is off: the README opens with the back-to-top anchor and shield row, not an H1.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Documentation",
-      "kind": "other",
-      "text": "PORTING-MATRIX.md and the README stop contradicting the fleet (#1174, from the #1157 sweep). The sesh row's Arch cell asserted AUR⁹, but dotfiles-Arch go-installs sesh and says the AUR sesh-bin is not needed; it is now go⁹, and footnote ⁹ names Arch among the go-install consumers. Footnote ³³ gave Gentoo's ~arch neovim range two ways eleven lines apart (0.12.5 and 0.12.3); both now read 0.12.5, as the TSV does. Footnote ³⁴ said jq 1.8.2 reached \"all three\" supported Alpine stable branches; Alpine carries four, and 3.21 is still on 1.7.1. The README's install steps gain the Defense clone and name Debian and NixOS among the Linux distros, matching the \"all ten bootstraps\" line beneath them.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Documentation",
-      "kind": "fix",
-      "text": "Every registered README hero is now filmed — the tenth, dotfiles-NixOS's, landed as dotfiles-NixOS#8, so the \"still to be filmed\" prose in CLAUDE.md, assets/hero-repos.txt and assets/README.md is retired. It was the one row no rootless chroot could film — its host guard asserts sudo nixos-rebuild switch --upgrade and up -n probes $PATH for it — so it was filmed on NixOS-WSL, and assets/README.md gains \"Filming the NixOS hero\": the two-rebuild install, nixpkgs' own render kit (vhs 0.11.0, not the 0.12.0 that writes no gif), the Adwaita Mono rejection the ❖ fallback needs, and the trap that is NixOS-WSL's alone — a nixos-rebuild switch resets the kernel-global binfmt_misc table, which every distro on the machine shares, so the distro you drive from loses wsl.exe until it is re-registered (the recipe is there). The install also surfaced dotfiles-NixOS#6: home.nix named two attributes nixpkgs does not have, invisible to that repo's parse-only gate. §9k's rule stands: a registered tape with no gif is a skip, so a re-render that has not landed never blocks the gate.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.12.0",
-      "date": "2026-09-24",
-      "category": "Documentation",
-      "kind": "feature",
-      "text": "PORTING-MATRIX.md gains an eza fleet-version table (footnote ³⁹), against a 0.23.5 floor. 0.23.5 added --hyperlink=auto and lines-of-code counting, and an older eza rejects the flag outright. The /tool-scout scan in #1158 held it on a watch that ends only when every lane is at or above that version, and until now nothing recorded where the lanes sit. scripts/fleet-package-versions.tsv now carries seventeen rows, each read from the distro's own index. Seven are at or above; Alpine edge/3.24/3.23 and Gentoo stable are one patch short on 0.23.4; Ubuntu 24.04 (0.18.2), both Leap backports (0.20.4), Debian 13 (0.21.0) and Alpine 3.22/3.21 are further back. gen-porting-matrix.sh registers the block and marks the eza row. Core enforces no eza floor, and zsh/ passes no flag that needs one.",
       "core": true
     },
     {
