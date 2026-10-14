@@ -4,13 +4,13 @@
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "08d4e1346ca80e1d97b3b6f7a1e5f2dd74c48796",
+        "commit": "b5b48d654608602cba97efd857f83138083cef54",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "44a7e7ea5770cac8cac95007a80aae59bd85e82e",
+        "commit": "16bf0b902241a19448abc0196b62dee48c632d4c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,55 +22,55 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "c6c23ccdeb17a59bcfcf27a1c3434e5118f156f9",
+        "commit": "6f87cf1f4ce28443f386031863305ae447a27bc1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "46c1a63d140cb72e159368a272be83c0957036ca",
+        "commit": "b6485eeb1a7a71e143cc6b7ad66dc7aa744491c0",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "b3ee9cc2049c40b9191a063c991438501d02d937",
+        "commit": "b287e288c1a6329e1fa985969b2c9c645c7e9087",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "92a24c6cce4028251a14332fa9974296184a3b38",
+        "commit": "2e414ff86e904c0aee824dfe4ed18bca92be5f8b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "22016bb67c5adf38cf9f2793f636896bc906aaff",
+        "commit": "ef41583b7882d2e984ec6c379d95e1818d56038f",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "bd0f5889dad7ebad2fb528e18c9e5c983099a872",
+        "commit": "d14652fafb550a2a1e31eadf5cd2f311bffd37e5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "a6bccc4ef98bdfa72ba166f71a627e3afd6106a6",
+        "commit": "2d8123c8660d38568bda684a6abb5fe39e88d31e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "a0a0c94bd7f1a1dbf5da4840c94289a57c7dac22",
+        "commit": "dc165e3d45449e2a49216e6ba3e8d1c1f44ca278",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-NixOS": {
-        "commit": "367acbdbba8095456d2efe627a047811bb8b4047",
+        "commit": "5d214026b30354ac166f352220f210ae516eb4e5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -82,20 +82,20 @@
     "layers": 3
   },
   "releases": {
-    "current": "v7.15.1",
+    "current": "v7.16.0",
     "channels": [
+      "v7.16.0",
       "v7.15.1",
       "v7.15.0",
-      "v7.14.0",
       "main"
     ]
   },
   "drift": {
-    "coreVersion": "7.15.1",
+    "coreVersion": "7.16.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-Windows": {
@@ -105,54 +105,54 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-Defense": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-Arch": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-Debian": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       },
       "dotfiles-NixOS": {
-        "ref": "v7.15.0",
-        "carried": "7.15.0",
+        "ref": "v7.15.1",
+        "carried": "7.15.1",
         "status": "behind"
       }
     }
   },
   "core": {
-    "version": "7.15.1",
+    "version": "7.16.0",
     "sourcedModules": 14,
     "zshLoc": 7493,
     "gitAliases": 57,
@@ -184,6 +184,22 @@
     "dotfiles-NixOS": true
   },
   "changelog": [
+    {
+      "repo": "dotfiles-core",
+      "version": "v7.16.0",
+      "date": "2026-10-14",
+      "groups": [
+        {
+          "category": "Added",
+          "items": [
+            {
+              "text": "sync-core.sh refuses to vendor an unreleased commit. make sync defaults to main, so an ad-hoc run put one repo on a main tip no release pointed at (dotgibson/dotfiles-Arch#203, stamped v7.14.0-11-g200ebaa, 32 minutes before v7.15.0 was tagged): unreleased behaviour landed in one repo ahead of the fleet, core.version understated what core/ carried, and fleet-drift flagged it the next morning. The sync now classifies the resolved commit by the same alias-proof git describe it already stamps into core.lock and exits 1 unless the commit sits exactly at a vX.Y.Z tag. A tagless (greenfield) Core still syncs; a checkout that lacks the commit or its tags is told to fetch rather than called unreleased. The fan-out is unaffected (it passes the released SHA). SYNC_ALLOW_UNRELEASED=1 is the explicit, logged override. --dry-run refuses too, so a rehearsal says what the real run would.",
+              "kind": "config"
+            }
+          ]
+        }
+      ]
+    },
     {
       "repo": "dotfiles-core",
       "version": "v7.15.1",
@@ -266,106 +282,6 @@
             {
               "text": "Three Arch version stamps in PORTING-MATRIX.md had fallen behind extra. Re-checked 2026-10-11 against archlinux.org: - Footnote ²⁵'s Arch/Homebrew watchexec bullet goes from 2.7.3 (2.7.3-1) to 2.8.0 (2.8.0-1). formulae.brew.sh also has 2.8.0, so the two moved together again and the shared bullet stays shared. - Footnote ³²'s Arch direnv stamp goes from 2.37.1-1 to 2.38.2-1. - The Arch neovim row in scripts/fleet-package-versions.tsv goes from 0.12.5 to 0.12.6. The rendered table is regenerated with gen-porting-matrix.sh --local; it is still above the ≥ 0.12.0 floor. None of these changes a package name or a cell. Surfaced by /os-package-availability arch (dotgibson/dotfiles-Arch#197). The AUR names that report could not reach (carapace-bin, sesh-bin, 1password-cli, viddy) were checked separately through the AUR RPC, and all four still resolve.",
               "kind": "fix"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "groups": [
-        {
-          "category": "Security",
-          "items": [
-            {
-              "text": "The CI floor bans the pull_request_target trigger. It runs a fork's pull request in the base repo's context, with its secrets and a write-capable token, which is the precondition for a \"pwn request\". GitHub starts blocking it by default on 2026-11-02 for repos on the default policy, and rule 10 of scripts/modern-baseline.yml makes that permanent whatever a policy later allows. check-modern.sh reads the on: block itself: the scalar, flow and block forms, quoted or bare, and first-level entries only. A comment, a branch filter or an env: value that names the trigger does not fire. That is why it is not a banned_patterns entry, which would red the baseline's own rule 1 rationale. It was free to add: no repo in the org declared the trigger on its default branch (#1215).",
-              "kind": "config"
-            },
-            {
-              "text": "The pull_request_target ban now reaches every repo that calls lint-call.yml@v7. The reusable workflow's actionlint job gains a step that runs check-modern.sh --banned-triggers caller: rule 10 alone, from the Core checkout, over the caller's own workflows, including ones not yet committed. It blocks from the start, because every caller was measured clean first. Rule 10's walker is now one function that both the floor and the new mode call, so the fleet check cannot drift from Core's. A caller that pins the workflow to a SHA newer than the v7 tag gets a warning, not a false red. dotfiles-Windows, dotfiles-web and htpx do not call lint-call.yml, so they are not covered yet. All three are clean today (#1215).",
-              "kind": "feature"
-            }
-          ]
-        },
-        {
-          "category": "Fixed",
-          "items": [
-            {
-              "text": "The openSUSE Tumbleweed tree-sitter-cli row moves to 0.27.0. Tumbleweed's tree-sitter went 0.26.8 → 0.27.0 (checked 2026-09-29; 0.26.8 has left the index), and both Leap 16.x lanes stay at 0.26.8. All three still clear the ≥ 0.26.1 floor. Footnote ⁵ also named the split-off library libtree-sitter0_26 for every openSUSE lane. That library is named for its soname, so Tumbleweed now ships libtree-sitter0_27. Reported by dotgibson/dotfiles-openSUSE#217.",
-              "kind": "fix"
-            },
-            {
-              "text": "The relink fix now names which checkout to run. core-doctor's relink row and the \"relink pending\" nudge used to say run ./bootstrap.sh --links-only. On a box with both an OS checkout and a role checkout, running the wrong one moved the whole Core surface onto that repo's vendored Core, possibly an older one, and the doctor then read current. The line now names the loaded checkout's own script, for example run ~/dotfiles-Offense/bootstrap.sh --links-only, quoted when the path needs it (#1213). The other state no longer stops at \"last relinked from another checkout\". It appears after a partial --only/--skip run of the other checkout, or a moved one. It now names both fixes, since either checkout's full --links-only run re-stamps the box. Which one should own Core stays an open question in #1211 (#1218).",
-              "kind": "fix"
-            },
-            {
-              "text": "make audit from a fleet shell no longer reds four cases CI calls green. The behavioral suite's host scrub now also drops BROWSER and every ATUIN_* variable. Core's own 00-tools.zsh exports BROWSER=w3m on a headless box (WSL included), and an operator who opted into the atuin daemon exports ATUIN_DAEMON__ENABLED=true. Both leaked into the cases that pin the unset state: the GUI and macOS browser cases, and the daemon guard's never-opted-in pair. That is how the v7.13.0 cut went red locally on a tree CI had passed. Every case that wants one of these variables sets it explicitly.",
-              "kind": "fix"
-            },
-            {
-              "text": "An operator who exports a Core knob no longer reds make audit either. Exporting CORE_SHADOW_CLASSICS=0 in ~/.zshenv, as the v7.13.0 notes suggest, failed the suite's \"knob unset\" shadow case. The host scrub now unsets every CORE_* variable that zsh/ reads, including one read arithmetically as ((CORE_X)) with no $. The list is derived from the sources, ignoring comments, so a new knob is covered without an edit. core-doctor's unknown relink row also drops its \"live check\" hint. That check proved the capability contract was live, not that this box had relinked, so a pass read as \"you're fine\" when it wasn't (#1204).",
-              "kind": "feature"
-            },
-            {
-              "text": "The weekly /freshness-triage routine can now check the CLI tool pins it reports on (#1203). Its \"CLI tool pins\" row asks for each scripts/tool-versions.env pin against upstream, but neither the routine's allowed-tools nor the job's mirrored --allowedTools granted a release lookup, so the row came back \"not checked\" (#1193). Both lists now grant the read-only gh release view and npm view, and the routine says which to use for which pin.",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Changed",
-          "items": [
-            {
-              "text": "A bootstrap no longer downgrades Core on a box with two checkouts. An OS repo and a role repo stacked on it each vendor Core, and each bootstrap linked the whole Core surface from its own copy. So running the OS repo's bootstrap after the role repo's could quietly swap in an older Core, and core-doctor then read current. The shared driver now checks the Core already linked. If it comes from another checkout with a newer core.version, the run leaves every Core link alone, still wires its own layer, says why, and leaves the relink stamp as it was. --force-core overrides. An unreadable version or an equal one relinks as before (#1211).",
-              "kind": "config"
-            },
-            {
-              "text": "The maintenance bots' Claude Code CLI pin rolls forward, 2.1.281 → 2.1.285. The weekly freshness review (#1193) found it the only scripts/tool-versions.env pin behind upstream that is not deliberately held. It is an npm install, so there is no *_SHA256 to refresh. shfmt stays held at 3.13.1 (#813).",
-              "kind": "config"
-            },
-            {
-              "text": "CI audits on Ubuntu 26.04 ahead of the ubuntu-latest switch. ci.yml's audit matrix gains a temporary ubuntu-26.04 leg, because ubuntu-latest rolls to 26.04 between 2026-10-19 and 2026-11-19 and the new image changes or removes tools. The leg is not a required check, so a 26.04 break shows up before the switch without blocking a merge. It comes out once the rollout completes. The luacheck cache key now includes the matrix OS so the two Ubuntu legs do not restore each other's natively built tree. .github/actionlint.yaml returns to declare the label, because the pinned actionlint 1.7.12 does not know it yet and would red the audit on every leg (#1200).",
-              "kind": "perf"
-            },
-            {
-              "text": "The fleet's pinned shfmt moves 3.13.1 → 3.14.1, ending the #813 hold (#1217). The hold assumed the bump would add ::warning:: nags to consumer repos that pass today. Measured against every sibling's main, none of the ten lint-call.yml consumers passes today, and 3.14.1 leaves each one's count of drifting files unchanged. The one consumer where shfmt blocks is dotfiles-MacBook's make fmt-check, and it was rewritten first to a form both versions agree on (dotfiles-MacBook#275). SHFMT_SHA256 is refreshed, and the tool-versions.env note now says where the next output-changing bump can bite. Core's own scripts are unaffected, since Core does not run shfmt.",
-              "kind": "feature"
-            },
-            {
-              "text": "make fleet-protection now reports each repo's Actions execution settings. After the ruleset rows, the default run lists whether GitHub itself refuses a tag-pinned action (sha_pinning_required, the server-side twin of check-modern.sh rule 3) and the allowed_actions policy. The rows are reported, not gated: they never change the exit code until the fleet decides whether to enforce them. An unreadable setting prints as ?, not as \"not required\". They need repo admin, so --rulesets-only, the CI mode, skips them and says so. The first run shows SHA pinning required on 2 of the 11 repos it covers: dotfiles-core and dotfiles-MacBook. --help now prints the whole header instead of a fixed line range that had fallen out of date (#1226).",
-              "kind": "fix"
-            }
-          ]
-        },
-        {
-          "category": "Added",
-          "items": [
-            {
-              "text": "jc is part of the stack: it turns command output into JSON. ps aux | jc --ps, jc dig example.com and a few hundred other parsers hand jq something to transform. Before this, Core's JSON tools could transform, grep and explore JSON but could not produce it from ps, ss or dig. It is its own command with no alias, probed by zsh/00-tools.zsh and listed in core-doctor's data / net group. Every OS repo now installs it. PORTING-MATRIX.md gains a jc row and footnote ⁴⁰, which records the two exceptions: openSUSE Leap 16.x has no package, so it is declared opt-in there, and Gentoo's dev-python/jc is testing-keyworded only (#1208).",
-              "kind": "feature"
-            }
-          ]
-        },
-        {
-          "category": "Documentation",
-          "items": [
-            {
-              "text": "/modernize now re-checks its standing watches on every run. Some floor changes wait on an upstream event, so the routine gains a Standing watches list and reports each one as still watching or trigger met. It starts with two. One is workflow dependency locking (#1223), which would extend the SHA-pin rule to an action's transitive and composite uses: once GitHub ships a public preview. Rule 3 in scripts/modern-baseline.yml now names that gap. The other is the retirement of the macos-15 and windows-2022 runners (#1222).",
-              "kind": "other"
-            },
-            {
-              "text": "The README's install steps now put the OS layer before a role repo. Offense used to be shown cloned and bootstrapped on its own, but it ships no OS layer: Kali needs dotfiles-Debian first, and Defense needs whichever OS repo the box runs. The WSL mirrored-networking note now points at dotfiles-Debian/wsl/windows.wslconfig.example, because Offense no longer carries that file.",
-              "kind": "other"
-            },
-            {
-              "text": "PORTING-MATRIX.md no longer promises installs that don't happen. Kali's yazi and viddy cells read cargo²¹ (available, not installed): dotfiles-Debian installs Kali's cargo but cargo-builds nothing with it. Footnote ¹³ says Arch only hints the AUR 1password-cli, and that the vendor-repo setup is key-first rather than rolled back. Footnote ¹⁵ drops a go install fallback for glow/gum that never existed. Footnote ¹⁸ counts four openSUSE installers and two curl | sh routes now that yazi's is gone. The lineage notes name NixOS as its own lineage and Offense as a role layer on dotfiles-Debian. Found by the weekly doc-audit (#1192).",
-              "kind": "other"
-            },
-            {
-              "text": "PORTING-MATRIX.md footnotes ⁵ and ³³ stop saying dotfiles-Fedora has no version floors (dotfiles-Fedora#203). dotfiles-Fedora#193 landed both floors on 2026-09-17: the # min: pair on neovim and tree-sitter-cli, a warn-only NEOVIM_FLOOR, a tree-sitter cargo fallback that runs only below TREESITTER_FLOOR, and a floor-agreement gate. Both footnotes now describe that, and ³³ drops its claim that Fedora was the last non-rolling target without a floor.",
-              "kind": "other"
             }
           ]
         }
@@ -1159,6 +1075,14 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "zircolite-constraints.txt pins pysigma-backend-sqlite back to 2.0.0; the host-plane validation gate had been red on main since #354. 2.1.0 is the backend's pySigma-2 release (pysigma>=2.0.0,<3.0), and the same file pins pysigma==1.5.1, so Renovate's minor bump turned the constraint set into a contradiction: pip install stopped at ResolutionImpossible and sigma rules fire on synthetic event logs failed on the merge commit and on every run after it, with 0 of 123 rows executed. Nothing caught it — main's ruleset requires sigma validate + compile but neither validation-plane job, and the job is path-filtered, so the Core syncs that followed never re-ran it. With 2.0.0 (pysigma>=1.5.1,<2) the set resolves and the gate passes 123/123 (93 with a true-negative) against zircolite v3.7.6. renovate.json now holds the backend below 2.1.0 so it moves only with the pysigma major, in the grouped toolchain PR; that rule is to be deleted in the same PR that takes pysigma 2. The pysigma 2 PR itself (#353) stays open and red on purpose: sigma-cli and every pinned backend and pipeline still declare pysigma<2, and pysigma 2's google-re2 has no Python 3.15 wheel, so it goes green only once upstream ships.",
+              "kind": "fix"
+            },
+            {
+              "text": "Weekly detection review #351: /identity anchored, three token-creation rules get filter_ci, 4698 LOLBins gated, ' stop ' aligned, Harbor retitled; four proposals declined in the rules (#351). The review found no coverage holes and ten scoping calls. Each was checked against the rule body, the gates and the fixtures before being adopted or declined; a decline that lives only in a closed issue gets re-proposed next cycle, so every decline below is recorded in the rule it concerns. - linux/ssh_private_key_read: name|contains: '/identity' matched every read under a directory whose name begins identity (~/identity-service/config.yml), a standing false-positive stream on a high rule. The SSHv1 key now has its own name|endswith: '/.ssh/identity' selection (a contains would still take ~/.ssh/identity-service/), proven by a single-event row; the true-negative fixture gains both near-misses. - cloudflare/cloudflare_api_token_created, terraform/tfc_token_backdoor, gitlab/gitlab_token_backdoor: each shipped condition: selection while its folder siblings carried a DEPLOY-REQUIRED filter_ci, and each selects an action the IaC provider performs on every apply (cloudflare_api_token, tfe_team_token, gitlab_personal_access_token). Each now carries the sibling's stub on the sibling's actor field (GitLab, first in its folder, on the streamed event's top-level author_name, with author_id named as the stricter form), a _ci_suppressed manifest row proving the stub suppresses, and a deploy-time README row. cloud/aws_login_profile_created is declined in-rule: actor ≠ target is the triage criterion, medium is a triage surface, and an automation minting console passwords is itself worth seeing. - cloud/entra_illicit_consent_grant: the filter_known_apps comment and falsepositives now say that an unanchored TargetResources|contains allowlist hides a grant to a different app whenever a sanctioned id appears anywhere in the event, and name the two Sentinel paths to anchor on (TargetResources[0].id is the SP object id; the app id sits in TargetId.ServicePrincipalNames). Comment-only; nothing compiled changes. - lateral_movement/rdp_hijack_tscon_4688: declined, and the description now says which arm sees which channel. The review read the arms the other way round: the /dest: selection arm is deliberately not Image-pinned (the sc-create and cmd /c wrappers carry the string in their own command lines) and reads a field both channels carry, so the SYSTEM-via-service variant is covered on 4688 and Sysmon alike; the Sysmon-only as_system arm is the no-/dest interactive form, as its comment already said. mstsc /shadow is named as a different technique, out of scope. - persistence/scheduled_task_suspicious_4698: \\regsvr32.exe and \\rundll32.exe fired at high as bare substrings while the same rule had removed \\Users\\ and \\Temp\\ for being too common. They now require a co-occurring attacker-controlled target (URL or scriptlet, UNC path, user-writable directory); mshta stays bare. Two traps found on the way and written into the block: a bare http matches the <Task xmlns=\"http://…\"> root of every real 4698 and would have collapsed the AND (the synthetic fixtures omit the root, so no gate saw it — the new TN carries it), and a UNC prefix is '\\\\\\\\' because \\ is Sigma's escape. Neither LOLBin had a fixture before; three single-event TP rows and a dedicated TN file are added, because an aggregate TP passes when any event fires and would not have caught these arms going silent. - lateral_movement/passthehash_4624_fanout: filter_machine is a coverage decision, not only a noise filter — reuse of a captured machine-account hash never reaches the count. Stated in the base rule with why Sigma cannot narrow it (no field-to-field compare of TargetUserName against the source host). - impact/service_stop_burst: ' stop' → ' stop ' on the net and sc arms, the anchor service_stop_protected_services already used; a bare ' stop' also matched ' stopped' and padded the distinct-CommandLine burst. Cmdlet-arm anchoring is declined in the rule: a piped | Stop-Service carries no trailing target. The precedence allowlist row is re-traced. - impact/account_access_removal_4725: declined in-rule. 4724 is pooled with 4725/4726 because resetting a responder's password locks them out as surely as disabling them; the org-wide forced reset that trips the pool is what filter_identity_admins exists to name, and a lower-priority 4724 arm would hide the attacker who only resets. - registry/harbor_image_pushed_trusted_tag: retitled *Harbor artifact push or tag create (supply-chain triage surface)* to match the logic (every push and tag create minus the CI robot). A protected-repo selector is declined in-rule: a selection-side list is inert until filled, the opposite failure from a noisy filter. File name, manifests and htpx pairing are unchanged. - google_workspace/gws_external_mail_forwarding: verified, no change to logic. Google's Reports API appendix lists email_forwarding_out_of_domain under both user_accounts and login; exporter samples carry user_accounts, which is what is declared. Recorded in a logsource comment with the appendix as a reference. - Ledger: 124 rules, 0 added, 0 removed. coverage-layer.json and COVERAGE.md are unchanged (no tag or count moved); all three SIEM forms regenerate (descriptions and the Harbor stanza title are embedded). - zircolite-constraints.txt carries the pysigma-backend-sqlite==2.0.0 pin as a stopgap: the host-plane job was red on main since #354 (ResolutionImpossible against pysigma==1.5.1) and could not prove the new 4698 fixtures. #360 / #361 hold the full fix with the Renovate cap; this is the same line so either merges cleanly over it.",
+              "kind": "perf"
+            },
+            {
               "text": "github_credential_backdoor now also selects personal_access_token.request_created (#348). This follows htpx's gh-cred-audit (htpx#139). GitHub logs the request only in orgs that require approval for fine-grained PATs. There it is the moment an attacker-minted token can still be denied, and a denied request never produces the access_granted the rule already selected. Neither PAT action had a fixture before. Each now has its own single-event TP row, because zircolite passes a TP file when any event in it matches, so a shared file would hide a typo in either action name.",
               "kind": "fix"
             },
@@ -1304,6 +1228,10 @@
           "category": "Changed",
           "items": [
             {
+              "text": "sigma-validation.yml runs on every PR, so its two jobs can join the ruleset. The ruleset on main requires sigma validate + compile but not the host-plane job (sigma rules fire on synthetic event logs) or the cloud-plane job (cloud sigma rules fire on synthetic events (nested-field plane)), and both were path-filtered on pull_request, which rules them out: a path-filtered required check never reports on a PR that misses its paths, and that PR never merges (#213). So #354 merged with the host plane failing, and main stayed red for four days. A Renovate PR with auto-merge on makes the gap concrete: it squashes the moment the compile gate is green, red validation or not. The filter goes, exactly as sigma.yml did it. Both jobs are pure CPU on a checkout and run in a few minutes. push stays filtered. Adding the two contexts to the ruleset is a repo-settings change and is not in this diff.",
+              "kind": "config"
+            },
+            {
               "text": "The Sigma toolchain pins moved where Renovate can see them (#322). pySigma, pyparsing, sigma-cli and the three backends were strings inside sigma.yml's run: line, so nothing noticed when they aged. They now live in detections/requirements.txt, which the sigma gate installs with -r, the cloud validation plane with -c, and the README's local block with -r. check-readme-gates.sh gains a fourth assertion that the block reads the same file as CI, because the block no longer shows versions inline. renovate.json also watches docker/validation/zircolite-constraints.txt and groups every bump into one ci(deps) PR, since the packages are coupled. A bump that turns the hard gate red is that PR's intended outcome.",
               "kind": "config"
             },
@@ -1340,6 +1268,10 @@
         {
           "category": "Added",
           "items": [
+            {
+              "text": "dc_account_pkinit_non_dc_4768 — the ESC8 end state DEFENSE-METHODOLOGY.md recorded as an open gap. A 4768 for a domain controller's machine account with certificate pre-authentication (PreAuthType 16, PKINIT) from a client address that is not a DC. The invariant is that a DC's own account should only ever obtain a TGT from a DC address; a certificate issued to DC01$ and used from a member server is the coercion → relay → CA web enrollment chain reaching its goal, and the 4662 pair cannot see it (dcsync_replication_4662 drops $ subjects, dcsync_non_dc_machine_account_4662 allowlists the real DCs, and 4662 has no source address). Tagged T1649 only: the event is the certificate being used as a credential, not the DCSync that follows. experimental, high, with two DEPLOY-REQUIRED lists — the DC accounts in the selection (inert until filled, the unconstrained_delegation_4624 caveat) and the DC addresses in filter_dc_sources. Its false-positive profile is unmeasured: the lab has captured no DC-account PKINIT, so the falsepositives (RODCs, re-addressed DCs, DC-to-DC Kerberos through a load balancer, machine-certificate PKINIT on a DC) are stated as hypotheses to check, and the methodology now says the logon side is written and stays experimental until a lab run measures them. TP + TN fixtures are vendor-documented from Microsoft's 4768 reference; the certificate values are synthetic.",
+              "kind": "security"
+            },
             {
               "text": "check-readme-tables.sh — the README's rule and deploy-time tables are now gated (#314). Same argument check-readme-gates.sh makes about the other half of the file: *\"the README is load-bearing documentation, so it gets a gate like the rest of the load-bearing artifacts.\"* Nothing tied these tables to detections/sigma/, so they drifted — twelve rules carried a DEPLOY-REQUIRED marker with no row in the deploy-time table, and three had no row in any per-directory table. Four assertions, both directions on both tables. The deploy direction is the expensive one: the table's own preamble says the marker *\"isn't enforcement, so this is the discoverable checklist instead\"*, so a rule missing from it ships with an unfilled placeholder nobody was told about — the failure half those rules' comments describe at length. A phantom row is worse, sending an operator to fill a placeholder that is not there. The rule-table direction is about honesty of scale: the cloud/ table listed one of three GCP rules, so GCP read as a third of what shipped. It locates the tables by heading text and fails rather than passing if a heading moves, because a silent pass would report a clean bill for a table it never read — the same posture as keying splunk-precedence-allowlist.tsv on stanza title. Each of the four assertions plus the heading guard was verified to fire by mutating the README, so the gate is demonstrated rather than assumed. Wired into make methodology, make sigma and sigma.yml (thirteen hard checks become fourteen), and check-readme-gates.sh required it to document itself.",
               "kind": "fix"
@@ -2864,6 +2796,22 @@
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
+      "text": "zircolite-constraints.txt pins pysigma-backend-sqlite back to 2.0.0; the host-plane validation gate had been red on main since #354. 2.1.0 is the backend's pySigma-2 release (pysigma>=2.0.0,<3.0), and the same file pins pysigma==1.5.1, so Renovate's minor bump turned the constraint set into a contradiction: pip install stopped at ResolutionImpossible and sigma rules fire on synthetic event logs failed on the merge commit and on every run after it, with 0 of 123 rows executed. Nothing caught it — main's ruleset requires sigma validate + compile but neither validation-plane job, and the job is path-filtered, so the Core syncs that followed never re-ran it. With 2.0.0 (pysigma>=1.5.1,<2) the set resolves and the gate passes 123/123 (93 with a true-negative) against zircolite v3.7.6. renovate.json now holds the backend below 2.1.0 so it moves only with the pysigma major, in the grouped toolchain PR; that rule is to be deleted in the same PR that takes pysigma 2. The pysigma 2 PR itself (#353) stays open and red on purpose: sigma-cli and every pinned backend and pipeline still declare pysigma<2, and pysigma 2's google-re2 has no Python 3.15 wheel, so it goes green only once upstream ships.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "perf",
+      "text": "Weekly detection review #351: /identity anchored, three token-creation rules get filter_ci, 4698 LOLBins gated, ' stop ' aligned, Harbor retitled; four proposals declined in the rules (#351). The review found no coverage holes and ten scoping calls. Each was checked against the rule body, the gates and the fixtures before being adopted or declined; a decline that lives only in a closed issue gets re-proposed next cycle, so every decline below is recorded in the rule it concerns. - linux/ssh_private_key_read: name|contains: '/identity' matched every read under a directory whose name begins identity (~/identity-service/config.yml), a standing false-positive stream on a high rule. The SSHv1 key now has its own name|endswith: '/.ssh/identity' selection (a contains would still take ~/.ssh/identity-service/), proven by a single-event row; the true-negative fixture gains both near-misses. - cloudflare/cloudflare_api_token_created, terraform/tfc_token_backdoor, gitlab/gitlab_token_backdoor: each shipped condition: selection while its folder siblings carried a DEPLOY-REQUIRED filter_ci, and each selects an action the IaC provider performs on every apply (cloudflare_api_token, tfe_team_token, gitlab_personal_access_token). Each now carries the sibling's stub on the sibling's actor field (GitLab, first in its folder, on the streamed event's top-level author_name, with author_id named as the stricter form), a _ci_suppressed manifest row proving the stub suppresses, and a deploy-time README row. cloud/aws_login_profile_created is declined in-rule: actor ≠ target is the triage criterion, medium is a triage surface, and an automation minting console passwords is itself worth seeing. - cloud/entra_illicit_consent_grant: the filter_known_apps comment and falsepositives now say that an unanchored TargetResources|contains allowlist hides a grant to a different app whenever a sanctioned id appears anywhere in the event, and name the two Sentinel paths to anchor on (TargetResources[0].id is the SP object id; the app id sits in TargetId.ServicePrincipalNames). Comment-only; nothing compiled changes. - lateral_movement/rdp_hijack_tscon_4688: declined, and the description now says which arm sees which channel. The review read the arms the other way round: the /dest: selection arm is deliberately not Image-pinned (the sc-create and cmd /c wrappers carry the string in their own command lines) and reads a field both channels carry, so the SYSTEM-via-service variant is covered on 4688 and Sysmon alike; the Sysmon-only as_system arm is the no-/dest interactive form, as its comment already said. mstsc /shadow is named as a different technique, out of scope. - persistence/scheduled_task_suspicious_4698: \\regsvr32.exe and \\rundll32.exe fired at high as bare substrings while the same rule had removed \\Users\\ and \\Temp\\ for being too common. They now require a co-occurring attacker-controlled target (URL or scriptlet, UNC path, user-writable directory); mshta stays bare. Two traps found on the way and written into the block: a bare http matches the <Task xmlns=\"http://…\"> root of every real 4698 and would have collapsed the AND (the synthetic fixtures omit the root, so no gate saw it — the new TN carries it), and a UNC prefix is '\\\\\\\\' because \\ is Sigma's escape. Neither LOLBin had a fixture before; three single-event TP rows and a dedicated TN file are added, because an aggregate TP passes when any event fires and would not have caught these arms going silent. - lateral_movement/passthehash_4624_fanout: filter_machine is a coverage decision, not only a noise filter — reuse of a captured machine-account hash never reaches the count. Stated in the base rule with why Sigma cannot narrow it (no field-to-field compare of TargetUserName against the source host). - impact/service_stop_burst: ' stop' → ' stop ' on the net and sc arms, the anchor service_stop_protected_services already used; a bare ' stop' also matched ' stopped' and padded the distinct-CommandLine burst. Cmdlet-arm anchoring is declined in the rule: a piped | Stop-Service carries no trailing target. The precedence allowlist row is re-traced. - impact/account_access_removal_4725: declined in-rule. 4724 is pooled with 4725/4726 because resetting a responder's password locks them out as surely as disabling them; the org-wide forced reset that trips the pool is what filter_identity_admins exists to name, and a lower-priority 4724 arm would hide the attacker who only resets. - registry/harbor_image_pushed_trusted_tag: retitled *Harbor artifact push or tag create (supply-chain triage surface)* to match the logic (every push and tag create minus the CI robot). A protected-repo selector is declined in-rule: a selection-side list is inert until filled, the opposite failure from a noisy filter. File name, manifests and htpx pairing are unchanged. - google_workspace/gws_external_mail_forwarding: verified, no change to logic. Google's Reports API appendix lists email_forwarding_out_of_domain under both user_accounts and login; exporter samples carry user_accounts, which is what is declared. Recorded in a logsource comment with the appendix as a reference. - Ledger: 124 rules, 0 added, 0 removed. coverage-layer.json and COVERAGE.md are unchanged (no tag or count moved); all three SIEM forms regenerate (descriptions and the Harbor stanza title are embedded). - zircolite-constraints.txt carries the pysigma-backend-sqlite==2.0.0 pin as a stopgap: the host-plane job was red on main since #354 (ResolutionImpossible against pysigma==1.5.1) and could not prove the new 4698 fixtures. #360 / #361 hold the full fix with the Renovate cap; this is the same line so either merges cleanly over it.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
       "text": "github_credential_backdoor now also selects personal_access_token.request_created (#348). This follows htpx's gh-cred-audit (htpx#139). GitHub logs the request only in orgs that require approval for fine-grained PATs. There it is the moment an attacker-minted token can still be denied, and a denied request never produces the access_granted the rule already selected. Neither PAT action had a fixture before. Each now has its own single-event TP row, because zircolite passes a TP file when any event in it matches, so a shared file would hide a typo in either action name.",
       "core": false
     },
@@ -3144,6 +3092,14 @@
       "version": "Unreleased",
       "category": "Changed",
       "kind": "config",
+      "text": "sigma-validation.yml runs on every PR, so its two jobs can join the ruleset. The ruleset on main requires sigma validate + compile but not the host-plane job (sigma rules fire on synthetic event logs) or the cloud-plane job (cloud sigma rules fire on synthetic events (nested-field plane)), and both were path-filtered on pull_request, which rules them out: a path-filtered required check never reports on a PR that misses its paths, and that PR never merges (#213). So #354 merged with the host plane failing, and main stayed red for four days. A Renovate PR with auto-merge on makes the gap concrete: it squashes the moment the compile gate is green, red validation or not. The filter goes, exactly as sigma.yml did it. Both jobs are pure CPU on a checkout and run in a few minutes. push stays filtered. Adding the two contexts to the ruleset is a repo-settings change and is not in this diff.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
       "text": "The Sigma toolchain pins moved where Renovate can see them (#322). pySigma, pyparsing, sigma-cli and the three backends were strings inside sigma.yml's run: line, so nothing noticed when they aged. They now live in detections/requirements.txt, which the sigma gate installs with -r, the cloud validation plane with -c, and the README's local block with -r. check-readme-gates.sh gains a fourth assertion that the block reads the same file as CI, because the block no longer shows versions inline. renovate.json also watches docker/validation/zircolite-constraints.txt and groups every bump into one ci(deps) PR, since the packages are coupled. A bump that turns the hard gate red is that PR's intended outcome.",
       "core": false
     },
@@ -3201,6 +3157,14 @@
       "category": "Changed",
       "kind": "fix",
       "text": "Four proposals from the same review were declined, in the rules themselves. A decline that lives only in an issue gets re-proposed next cycle. sudo_root_shell keeps comm and its interpreter list: exe resolves symlinks, so an exe|endswith list silently loses hosts where /bin/sh is dash or python3 is python3.14, and dropping the list turns a detection into a log of every command run through sudo — the GTFOBins escapes it is accused of missing exec a listed shell as a child and are caught there. k8s_clusteradmin_binding does not gain verb: [escalate, bind]: those are RBAC authorization verbs, never the verb of an audit event, so the selection would match nothing while reading as coverage. jenkins_job_backdoor does not add config.xml: the Audit Trail plugin's default pattern does not log it, and the logged line carries no HTTP method, so the branch could not separate the malicious POST from the routine GET. jenkins_api_token_created keeps no filter block: this corpus has no verified Jenkins actor field, and inventing one produces a filter that passes its own fixture and matches nothing in production — the hazard fixture-provenance.tsv exists to expose.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "security",
+      "text": "dc_account_pkinit_non_dc_4768 — the ESC8 end state DEFENSE-METHODOLOGY.md recorded as an open gap. A 4768 for a domain controller's machine account with certificate pre-authentication (PreAuthType 16, PKINIT) from a client address that is not a DC. The invariant is that a DC's own account should only ever obtain a TGT from a DC address; a certificate issued to DC01$ and used from a member server is the coercion → relay → CA web enrollment chain reaching its goal, and the 4662 pair cannot see it (dcsync_replication_4662 drops $ subjects, dcsync_non_dc_machine_account_4662 allowlists the real DCs, and 4662 has no source address). Tagged T1649 only: the event is the certificate being used as a credential, not the DCSync that follows. experimental, high, with two DEPLOY-REQUIRED lists — the DC accounts in the selection (inert until filled, the unconstrained_delegation_4624 caveat) and the DC addresses in filter_dc_sources. Its false-positive profile is unmeasured: the lab has captured no DC-account PKINIT, so the falsepositives (RODCs, re-addressed DCs, DC-to-DC Kerberos through a load balancer, machine-certificate PKINIT on a DC) are stated as hypotheses to check, and the methodology now says the logon side is written and stays experimental until a lab run measures them. TP + TN fixtures are vendor-documented from Microsoft's 4768 reference; the certificate values are synthetic.",
       "core": false
     },
     {
@@ -4181,6 +4145,15 @@
     },
     {
       "repo": "dotfiles-core",
+      "version": "v7.16.0",
+      "date": "2026-10-14",
+      "category": "Added",
+      "kind": "config",
+      "text": "sync-core.sh refuses to vendor an unreleased commit. make sync defaults to main, so an ad-hoc run put one repo on a main tip no release pointed at (dotgibson/dotfiles-Arch#203, stamped v7.14.0-11-g200ebaa, 32 minutes before v7.15.0 was tagged): unreleased behaviour landed in one repo ahead of the fleet, core.version understated what core/ carried, and fleet-drift flagged it the next morning. The sync now classifies the resolved commit by the same alias-proof git describe it already stamps into core.lock and exits 1 unless the commit sits exactly at a vX.Y.Z tag. A tagless (greenfield) Core still syncs; a checkout that lacks the commit or its tags is told to fetch rather than called unreleased. The fan-out is unaffected (it passes the released SHA). SYNC_ALLOW_UNRELEASED=1 is the explicit, logged override. --dry-run refuses too, so a rehearsal says what the real run would.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
       "version": "v7.15.1",
       "date": "2026-10-14",
       "category": "Fixed",
@@ -4339,159 +4312,6 @@
       "category": "Fixed",
       "kind": "fix",
       "text": "Three Arch version stamps in PORTING-MATRIX.md had fallen behind extra. Re-checked 2026-10-11 against archlinux.org: - Footnote ²⁵'s Arch/Homebrew watchexec bullet goes from 2.7.3 (2.7.3-1) to 2.8.0 (2.8.0-1). formulae.brew.sh also has 2.8.0, so the two moved together again and the shared bullet stays shared. - Footnote ³²'s Arch direnv stamp goes from 2.37.1-1 to 2.38.2-1. - The Arch neovim row in scripts/fleet-package-versions.tsv goes from 0.12.5 to 0.12.6. The rendered table is regenerated with gen-porting-matrix.sh --local; it is still above the ≥ 0.12.0 floor. None of these changes a package name or a cell. Surfaced by /os-package-availability arch (dotgibson/dotfiles-Arch#197). The AUR names that report could not reach (carapace-bin, sesh-bin, 1password-cli, viddy) were checked separately through the AUR RPC, and all four still resolve.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Security",
-      "kind": "config",
-      "text": "The CI floor bans the pull_request_target trigger. It runs a fork's pull request in the base repo's context, with its secrets and a write-capable token, which is the precondition for a \"pwn request\". GitHub starts blocking it by default on 2026-11-02 for repos on the default policy, and rule 10 of scripts/modern-baseline.yml makes that permanent whatever a policy later allows. check-modern.sh reads the on: block itself: the scalar, flow and block forms, quoted or bare, and first-level entries only. A comment, a branch filter or an env: value that names the trigger does not fire. That is why it is not a banned_patterns entry, which would red the baseline's own rule 1 rationale. It was free to add: no repo in the org declared the trigger on its default branch (#1215).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Security",
-      "kind": "feature",
-      "text": "The pull_request_target ban now reaches every repo that calls lint-call.yml@v7. The reusable workflow's actionlint job gains a step that runs check-modern.sh --banned-triggers caller: rule 10 alone, from the Core checkout, over the caller's own workflows, including ones not yet committed. It blocks from the start, because every caller was measured clean first. Rule 10's walker is now one function that both the floor and the new mode call, so the fleet check cannot drift from Core's. A caller that pins the workflow to a SHA newer than the v7 tag gets a warning, not a false red. dotfiles-Windows, dotfiles-web and htpx do not call lint-call.yml, so they are not covered yet. All three are clean today (#1215).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The openSUSE Tumbleweed tree-sitter-cli row moves to 0.27.0. Tumbleweed's tree-sitter went 0.26.8 → 0.27.0 (checked 2026-09-29; 0.26.8 has left the index), and both Leap 16.x lanes stay at 0.26.8. All three still clear the ≥ 0.26.1 floor. Footnote ⁵ also named the split-off library libtree-sitter0_26 for every openSUSE lane. That library is named for its soname, so Tumbleweed now ships libtree-sitter0_27. Reported by dotgibson/dotfiles-openSUSE#217.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The relink fix now names which checkout to run. core-doctor's relink row and the \"relink pending\" nudge used to say run ./bootstrap.sh --links-only. On a box with both an OS checkout and a role checkout, running the wrong one moved the whole Core surface onto that repo's vendored Core, possibly an older one, and the doctor then read current. The line now names the loaded checkout's own script, for example run ~/dotfiles-Offense/bootstrap.sh --links-only, quoted when the path needs it (#1213). The other state no longer stops at \"last relinked from another checkout\". It appears after a partial --only/--skip run of the other checkout, or a moved one. It now names both fixes, since either checkout's full --links-only run re-stamps the box. Which one should own Core stays an open question in #1211 (#1218).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "make audit from a fleet shell no longer reds four cases CI calls green. The behavioral suite's host scrub now also drops BROWSER and every ATUIN_* variable. Core's own 00-tools.zsh exports BROWSER=w3m on a headless box (WSL included), and an operator who opted into the atuin daemon exports ATUIN_DAEMON__ENABLED=true. Both leaked into the cases that pin the unset state: the GUI and macOS browser cases, and the daemon guard's never-opted-in pair. That is how the v7.13.0 cut went red locally on a tree CI had passed. Every case that wants one of these variables sets it explicitly.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Fixed",
-      "kind": "feature",
-      "text": "An operator who exports a Core knob no longer reds make audit either. Exporting CORE_SHADOW_CLASSICS=0 in ~/.zshenv, as the v7.13.0 notes suggest, failed the suite's \"knob unset\" shadow case. The host scrub now unsets every CORE_* variable that zsh/ reads, including one read arithmetically as ((CORE_X)) with no $. The list is derived from the sources, ignoring comments, so a new knob is covered without an edit. core-doctor's unknown relink row also drops its \"live check\" hint. That check proved the capability contract was live, not that this box had relinked, so a pass read as \"you're fine\" when it wasn't (#1204).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Fixed",
-      "kind": "fix",
-      "text": "The weekly /freshness-triage routine can now check the CLI tool pins it reports on (#1203). Its \"CLI tool pins\" row asks for each scripts/tool-versions.env pin against upstream, but neither the routine's allowed-tools nor the job's mirrored --allowedTools granted a release lookup, so the row came back \"not checked\" (#1193). Both lists now grant the read-only gh release view and npm view, and the routine says which to use for which pin.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Changed",
-      "kind": "config",
-      "text": "A bootstrap no longer downgrades Core on a box with two checkouts. An OS repo and a role repo stacked on it each vendor Core, and each bootstrap linked the whole Core surface from its own copy. So running the OS repo's bootstrap after the role repo's could quietly swap in an older Core, and core-doctor then read current. The shared driver now checks the Core already linked. If it comes from another checkout with a newer core.version, the run leaves every Core link alone, still wires its own layer, says why, and leaves the relink stamp as it was. --force-core overrides. An unreadable version or an equal one relinks as before (#1211).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Changed",
-      "kind": "config",
-      "text": "The maintenance bots' Claude Code CLI pin rolls forward, 2.1.281 → 2.1.285. The weekly freshness review (#1193) found it the only scripts/tool-versions.env pin behind upstream that is not deliberately held. It is an npm install, so there is no *_SHA256 to refresh. shfmt stays held at 3.13.1 (#813).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Changed",
-      "kind": "perf",
-      "text": "CI audits on Ubuntu 26.04 ahead of the ubuntu-latest switch. ci.yml's audit matrix gains a temporary ubuntu-26.04 leg, because ubuntu-latest rolls to 26.04 between 2026-10-19 and 2026-11-19 and the new image changes or removes tools. The leg is not a required check, so a 26.04 break shows up before the switch without blocking a merge. It comes out once the rollout completes. The luacheck cache key now includes the matrix OS so the two Ubuntu legs do not restore each other's natively built tree. .github/actionlint.yaml returns to declare the label, because the pinned actionlint 1.7.12 does not know it yet and would red the audit on every leg (#1200).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Changed",
-      "kind": "feature",
-      "text": "The fleet's pinned shfmt moves 3.13.1 → 3.14.1, ending the #813 hold (#1217). The hold assumed the bump would add ::warning:: nags to consumer repos that pass today. Measured against every sibling's main, none of the ten lint-call.yml consumers passes today, and 3.14.1 leaves each one's count of drifting files unchanged. The one consumer where shfmt blocks is dotfiles-MacBook's make fmt-check, and it was rewritten first to a form both versions agree on (dotfiles-MacBook#275). SHFMT_SHA256 is refreshed, and the tool-versions.env note now says where the next output-changing bump can bite. Core's own scripts are unaffected, since Core does not run shfmt.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Changed",
-      "kind": "fix",
-      "text": "make fleet-protection now reports each repo's Actions execution settings. After the ruleset rows, the default run lists whether GitHub itself refuses a tag-pinned action (sha_pinning_required, the server-side twin of check-modern.sh rule 3) and the allowed_actions policy. The rows are reported, not gated: they never change the exit code until the fleet decides whether to enforce them. An unreadable setting prints as ?, not as \"not required\". They need repo admin, so --rulesets-only, the CI mode, skips them and says so. The first run shows SHA pinning required on 2 of the 11 repos it covers: dotfiles-core and dotfiles-MacBook. --help now prints the whole header instead of a fixed line range that had fallen out of date (#1226).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Added",
-      "kind": "feature",
-      "text": "jc is part of the stack: it turns command output into JSON. ps aux | jc --ps, jc dig example.com and a few hundred other parsers hand jq something to transform. Before this, Core's JSON tools could transform, grep and explore JSON but could not produce it from ps, ss or dig. It is its own command with no alias, probed by zsh/00-tools.zsh and listed in core-doctor's data / net group. Every OS repo now installs it. PORTING-MATRIX.md gains a jc row and footnote ⁴⁰, which records the two exceptions: openSUSE Leap 16.x has no package, so it is declared opt-in there, and Gentoo's dev-python/jc is testing-keyworded only (#1208).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Documentation",
-      "kind": "other",
-      "text": "/modernize now re-checks its standing watches on every run. Some floor changes wait on an upstream event, so the routine gains a Standing watches list and reports each one as still watching or trigger met. It starts with two. One is workflow dependency locking (#1223), which would extend the SHA-pin rule to an action's transitive and composite uses: once GitHub ships a public preview. Rule 3 in scripts/modern-baseline.yml now names that gap. The other is the retirement of the macos-15 and windows-2022 runners (#1222).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Documentation",
-      "kind": "other",
-      "text": "The README's install steps now put the OS layer before a role repo. Offense used to be shown cloned and bootstrapped on its own, but it ships no OS layer: Kali needs dotfiles-Debian first, and Defense needs whichever OS repo the box runs. The WSL mirrored-networking note now points at dotfiles-Debian/wsl/windows.wslconfig.example, because Offense no longer carries that file.",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Documentation",
-      "kind": "other",
-      "text": "PORTING-MATRIX.md no longer promises installs that don't happen. Kali's yazi and viddy cells read cargo²¹ (available, not installed): dotfiles-Debian installs Kali's cargo but cargo-builds nothing with it. Footnote ¹³ says Arch only hints the AUR 1password-cli, and that the vendor-repo setup is key-first rather than rolled back. Footnote ¹⁵ drops a go install fallback for glow/gum that never existed. Footnote ¹⁸ counts four openSUSE installers and two curl | sh routes now that yazi's is gone. The lineage notes name NixOS as its own lineage and Offense as a role layer on dotfiles-Debian. Found by the weekly doc-audit (#1192).",
-      "core": true
-    },
-    {
-      "repo": "dotfiles-core",
-      "version": "v7.14.0",
-      "date": "2026-09-29",
-      "category": "Documentation",
-      "kind": "other",
-      "text": "PORTING-MATRIX.md footnotes ⁵ and ³³ stop saying dotfiles-Fedora has no version floors (dotfiles-Fedora#203). dotfiles-Fedora#193 landed both floors on 2026-09-17: the # min: pair on neovim and tree-sitter-cli, a warn-only NEOVIM_FLOOR, a tree-sitter cargo fallback that runs only below TREESITTER_FLOOR, and a floor-agreement gate. Both footnotes now describe that, and ³³ drops its claim that Fedora was the last non-rolling target without a floor.",
       "core": true
     },
     {
