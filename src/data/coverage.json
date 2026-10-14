@@ -3,10 +3,10 @@
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "46c1a63d140cb72e159368a272be83c0957036ca"
+    "commit": "b6485eeb1a7a71e143cc6b7ad66dc7aa744491c0"
   },
-  "ruleCount": 124,
-  "documentCount": 148,
+  "ruleCount": 125,
+  "documentCount": 149,
   "techniqueCount": 87,
   "tacticCount": 6,
   "logsourceCount": 24,
@@ -685,9 +685,10 @@
     },
     {
       "id": "T1649",
-      "rules": 1,
+      "rules": 2,
       "ruleNames": [
-        "adcs_esc1_san_mismatch_4886"
+        "adcs_esc1_san_mismatch_4886",
+        "dc_account_pkinit_non_dc_4768"
       ]
     },
     {
@@ -760,7 +761,7 @@
       "products": [
         "windows"
       ],
-      "rules": 14
+      "rules": 15
     },
     {
       "dir": "defense_impairment",
