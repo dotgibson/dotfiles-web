@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14",
+  "generatedAt": "2026-10-15",
   "generatedFrom": {
     "clean": true,
     "repos": {
@@ -10,7 +10,7 @@
         "dirty": false
       },
       "dotfiles-MacBook": {
-        "commit": "16bf0b902241a19448abc0196b62dee48c632d4c",
+        "commit": "0c47728b1d9c9103382047a1d074b9f2f183e091",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -22,55 +22,55 @@
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "6f87cf1f4ce28443f386031863305ae447a27bc1",
+        "commit": "0a61a7f10ffa08553d51d65072a19e3e6684a14e",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "b6485eeb1a7a71e143cc6b7ad66dc7aa744491c0",
+        "commit": "e72c61fc1c07dd8c82c32c9f23efa752ea308228",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "b287e288c1a6329e1fa985969b2c9c645c7e9087",
+        "commit": "bffe44cb4423ed8b709fc28874df22ae56d5bc64",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "2e414ff86e904c0aee824dfe4ed18bca92be5f8b",
+        "commit": "7641dce6cfbf9c64927f9d526458e431aa6e3dd4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Debian": {
-        "commit": "ef41583b7882d2e984ec6c379d95e1818d56038f",
+        "commit": "25f698adc32164c03485cb524f1d1b8b74af75cb",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "d14652fafb550a2a1e31eadf5cd2f311bffd37e5",
+        "commit": "74c6bec7ac639aa143846114efb96b6e36b96c2c",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "2d8123c8660d38568bda684a6abb5fe39e88d31e",
+        "commit": "51c9d1ccd71850b209194ba3c5272f64aa99fae5",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "dc165e3d45449e2a49216e6ba3e8d1c1f44ca278",
+        "commit": "b815599738fa74fcb99660f3532fc32157bd5196",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-NixOS": {
-        "commit": "5d214026b30354ac166f352220f210ae516eb4e5",
+        "commit": "09a4877cb02e0d786c0b85347a7d85b308b2bce1",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -94,9 +94,9 @@
     "coreVersion": "7.16.0",
     "repos": {
       "dotfiles-MacBook": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-Windows": {
         "ref": null,
@@ -105,49 +105,49 @@
         "status": "replicated"
       },
       "dotfiles-Offense": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-Defense": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-Fedora": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-Arch": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-Debian": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-openSUSE": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-Alpine": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-Gentoo": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       },
       "dotfiles-NixOS": {
-        "ref": "v7.15.1",
-        "carried": "7.15.1",
-        "status": "behind"
+        "ref": "v7.16.0",
+        "carried": "7.16.0",
+        "status": "current"
       }
     }
   },
@@ -1075,6 +1075,10 @@
           "category": "Fixed",
           "items": [
             {
+              "text": "The potato runbook and the 4688 rule description now match the SID-keyed rule from #338; #246 stays open. potato_seimpersonate_4688.yml was re-keyed from SubjectUserName|contains: 'APPPOOL' onto SIDs (S-1-5-82-, S-1-5-19/S-1-5-20, SubjectDomainName: 'IIS APPPOOL') and gained a true-negative fixture in #338, but docker/validation/labruns/runbook-potato-seimpersonate.md still described the old name-based rule — its prediction 2, its item-3 and bare-pool-name branches, its promotion table and its \"Manifest consequences\" section all told a host operator to add a SubjectDomainName term and a TN fixture the rule already has. Those passages are rewritten to the shipped rule, the promotion table gains the existing potato_security_4688_tn.jsonl row, the rule's thread-token note is reframed onto SubjectUserSid (and the Splunk savedsearches regenerated), and the potato_security_4688.jsonl ledger note's #338 run-on is repaired. No fixture is promoted — that still needs a first-party Windows capture — so #246 remains open.",
+              "kind": "fix"
+            },
+            {
               "text": "zircolite-constraints.txt pins pysigma-backend-sqlite back to 2.0.0; the host-plane validation gate had been red on main since #354. 2.1.0 is the backend's pySigma-2 release (pysigma>=2.0.0,<3.0), and the same file pins pysigma==1.5.1, so Renovate's minor bump turned the constraint set into a contradiction: pip install stopped at ResolutionImpossible and sigma rules fire on synthetic event logs failed on the merge commit and on every run after it, with 0 of 123 rows executed. Nothing caught it — main's ruleset requires sigma validate + compile but neither validation-plane job, and the job is path-filtered, so the Core syncs that followed never re-ran it. With 2.0.0 (pysigma>=1.5.1,<2) the set resolves and the gate passes 123/123 (93 with a true-negative) against zircolite v3.7.6. renovate.json now holds the backend below 2.1.0 so it moves only with the pysigma major, in the grouped toolchain PR; that rule is to be deleted in the same PR that takes pysigma 2. The pysigma 2 PR itself (#353) stays open and red on purpose: sigma-cli and every pinned backend and pipeline still declare pysigma<2, and pysigma 2's google-re2 has no Python 3.15 wheel, so it goes green only once upstream ships.",
               "kind": "fix"
             },
@@ -1271,6 +1275,10 @@
             {
               "text": "dc_account_pkinit_non_dc_4768 — the ESC8 end state DEFENSE-METHODOLOGY.md recorded as an open gap. A 4768 for a domain controller's machine account with certificate pre-authentication (PreAuthType 16, PKINIT) from a client address that is not a DC. The invariant is that a DC's own account should only ever obtain a TGT from a DC address; a certificate issued to DC01$ and used from a member server is the coercion → relay → CA web enrollment chain reaching its goal, and the 4662 pair cannot see it (dcsync_replication_4662 drops $ subjects, dcsync_non_dc_machine_account_4662 allowlists the real DCs, and 4662 has no source address). Tagged T1649 only: the event is the certificate being used as a credential, not the DCSync that follows. experimental, high, with two DEPLOY-REQUIRED lists — the DC accounts in the selection (inert until filled, the unconstrained_delegation_4624 caveat) and the DC addresses in filter_dc_sources. Its false-positive profile is unmeasured: the lab has captured no DC-account PKINIT, so the falsepositives (RODCs, re-addressed DCs, DC-to-DC Kerberos through a load balancer, machine-certificate PKINIT on a DC) are stated as hypotheses to check, and the methodology now says the logon side is written and stays experimental until a lab run measures them. TP + TN fixtures are vendor-documented from Microsoft's 4768 reference; the certificate values are synthetic.",
               "kind": "security"
+            },
+            {
+              "text": "LOLBin proxy execution gets its first rule, and stealth/ opens as a directory (#352). The weekly coverage-gap routine found no hole against the methodology and ranked one authorable frontier: system-binary proxy execution, named in the methodology as \"LOLBAS: no detection yet\" and sitting in neither the known-absent marker nor the declined ledger. stealth/lolbin_proxy_execution_suspicious_target closes it on the process-creation feed the host_recon_* and token_theft_* rules already read: rundll32 and regsvr32 fire only with a co-occurring attacker-controlled target (URL, scriptlet, UNC path, user-writable directory - the gating #351 put on the 4698 LOLBin arm), mshta is bare, and filter_vendor_installers is the one DEPLOY-REQUIRED placeholder, keyed on the parent's full path - a basename match would let a renamed launcher in a user-writable directory silence every arm, and a fifth fixture holds that bypass open as a true positive (#365 review). http is anchored on the scheme rather than on a delimiter as in 4698, because regsvr32 /s winhttp.dll is a real installer step; the TN carries that exact near-miss so a bare http can never come back unnoticed. Four single-event TPs, one per arm, share one five-event TN; all five fixtures are unverified - public LOLBAS command forms on a synthetic event shape, since no capture of these binaries exists in the corpus. No htpx entry pairs with it, so it lands under \"Sigma techniques no htpx entry covers\". gen-siem.sh's WIN_DIRS gains stealth: that explicit list would otherwise have dropped the new directory from the Splunk form without a word. Ledger: Stealth TA0005 3 | 6 -> 6 | 7; corpus 125 -> 126 rules, 149 -> 150 documents, 87 -> 90 techniques, 24 -> 25 logsource directories; HTPX-COVERAGE.md 26 -> 29 techniques with no htpx entry. The methodology's Stealth paragraph records the first move of its technique count since #225.",
+              "kind": "fix"
             },
             {
               "text": "check-readme-tables.sh — the README's rule and deploy-time tables are now gated (#314). Same argument check-readme-gates.sh makes about the other half of the file: *\"the README is load-bearing documentation, so it gets a gate like the rest of the load-bearing artifacts.\"* Nothing tied these tables to detections/sigma/, so they drifted — twelve rules carried a DEPLOY-REQUIRED marker with no row in the deploy-time table, and three had no row in any per-directory table. Four assertions, both directions on both tables. The deploy direction is the expensive one: the table's own preamble says the marker *\"isn't enforcement, so this is the discoverable checklist instead\"*, so a rule missing from it ships with an unfilled placeholder nobody was told about — the failure half those rules' comments describe at length. A phantom row is worse, sending an operator to fill a placeholder that is not there. The rule-table direction is about honesty of scale: the cloud/ table listed one of three GCP rules, so GCP read as a third of what shipped. It locates the tables by heading text and fails rather than passing if a heading moves, because a silent pass would report a clean bill for a table it never read — the same posture as keying splunk-precedence-allowlist.tsv on stanza title. Each of the four assertions plus the heading guard was verified to fire by mutating the README, so the gate is demonstrated rather than assumed. Wired into make methodology, make sigma and sigma.yml (thirteen hard checks become fourteen), and check-readme-gates.sh required it to document itself.",
@@ -2796,6 +2804,14 @@
       "version": "Unreleased",
       "category": "Fixed",
       "kind": "fix",
+      "text": "The potato runbook and the 4688 rule description now match the SID-keyed rule from #338; #246 stays open. potato_seimpersonate_4688.yml was re-keyed from SubjectUserName|contains: 'APPPOOL' onto SIDs (S-1-5-82-, S-1-5-19/S-1-5-20, SubjectDomainName: 'IIS APPPOOL') and gained a true-negative fixture in #338, but docker/validation/labruns/runbook-potato-seimpersonate.md still described the old name-based rule — its prediction 2, its item-3 and bare-pool-name branches, its promotion table and its \"Manifest consequences\" section all told a host operator to add a SubjectDomainName term and a TN fixture the rule already has. Those passages are rewritten to the shipped rule, the promotion table gains the existing potato_security_4688_tn.jsonl row, the rule's thread-token note is reframed onto SubjectUserSid (and the Splunk savedsearches regenerated), and the potato_security_4688.jsonl ledger note's #338 run-on is repaired. No fixture is promoted — that still needs a first-party Windows capture — so #246 remains open.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
       "text": "zircolite-constraints.txt pins pysigma-backend-sqlite back to 2.0.0; the host-plane validation gate had been red on main since #354. 2.1.0 is the backend's pySigma-2 release (pysigma>=2.0.0,<3.0), and the same file pins pysigma==1.5.1, so Renovate's minor bump turned the constraint set into a contradiction: pip install stopped at ResolutionImpossible and sigma rules fire on synthetic event logs failed on the merge commit and on every run after it, with 0 of 123 rows executed. Nothing caught it — main's ruleset requires sigma validate + compile but neither validation-plane job, and the job is path-filtered, so the Core syncs that followed never re-ran it. With 2.0.0 (pysigma>=1.5.1,<2) the set resolves and the gate passes 123/123 (93 with a true-negative) against zircolite v3.7.6. renovate.json now holds the backend below 2.1.0 so it moves only with the pysigma major, in the grouped toolchain PR; that rule is to be deleted in the same PR that takes pysigma 2. The pysigma 2 PR itself (#353) stays open and red on purpose: sigma-cli and every pinned backend and pipeline still declare pysigma<2, and pysigma 2's google-re2 has no Python 3.15 wheel, so it goes green only once upstream ships.",
       "core": false
     },
@@ -3165,6 +3181,14 @@
       "category": "Added",
       "kind": "security",
       "text": "dc_account_pkinit_non_dc_4768 — the ESC8 end state DEFENSE-METHODOLOGY.md recorded as an open gap. A 4768 for a domain controller's machine account with certificate pre-authentication (PreAuthType 16, PKINIT) from a client address that is not a DC. The invariant is that a DC's own account should only ever obtain a TGT from a DC address; a certificate issued to DC01$ and used from a member server is the coercion → relay → CA web enrollment chain reaching its goal, and the 4662 pair cannot see it (dcsync_replication_4662 drops $ subjects, dcsync_non_dc_machine_account_4662 allowlists the real DCs, and 4662 has no source address). Tagged T1649 only: the event is the certificate being used as a credential, not the DCSync that follows. experimental, high, with two DEPLOY-REQUIRED lists — the DC accounts in the selection (inert until filled, the unconstrained_delegation_4624 caveat) and the DC addresses in filter_dc_sources. Its false-positive profile is unmeasured: the lab has captured no DC-account PKINIT, so the falsepositives (RODCs, re-addressed DCs, DC-to-DC Kerberos through a load balancer, machine-certificate PKINIT on a DC) are stated as hypotheses to check, and the methodology now says the logon side is written and stays experimental until a lab run measures them. TP + TN fixtures are vendor-documented from Microsoft's 4768 reference; the certificate values are synthetic.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Defense",
+      "version": "Unreleased",
+      "category": "Added",
+      "kind": "fix",
+      "text": "LOLBin proxy execution gets its first rule, and stealth/ opens as a directory (#352). The weekly coverage-gap routine found no hole against the methodology and ranked one authorable frontier: system-binary proxy execution, named in the methodology as \"LOLBAS: no detection yet\" and sitting in neither the known-absent marker nor the declined ledger. stealth/lolbin_proxy_execution_suspicious_target closes it on the process-creation feed the host_recon_* and token_theft_* rules already read: rundll32 and regsvr32 fire only with a co-occurring attacker-controlled target (URL, scriptlet, UNC path, user-writable directory - the gating #351 put on the 4698 LOLBin arm), mshta is bare, and filter_vendor_installers is the one DEPLOY-REQUIRED placeholder, keyed on the parent's full path - a basename match would let a renamed launcher in a user-writable directory silence every arm, and a fifth fixture holds that bypass open as a true positive (#365 review). http is anchored on the scheme rather than on a delimiter as in 4698, because regsvr32 /s winhttp.dll is a real installer step; the TN carries that exact near-miss so a bare http can never come back unnoticed. Four single-event TPs, one per arm, share one five-event TN; all five fixtures are unverified - public LOLBAS command forms on a synthetic event shape, since no capture of these binaries exists in the corpus. No htpx entry pairs with it, so it lands under \"Sigma techniques no htpx entry covers\". gen-siem.sh's WIN_DIRS gains stealth: that explicit list would otherwise have dropped the new directory from the Splunk form without a word. Ledger: Stealth TA0005 3 | 6 -> 6 | 7; corpus 125 -> 126 rules, 149 -> 150 documents, 87 -> 90 techniques, 24 -> 25 logsource directories; HTPX-COVERAGE.md 26 -> 29 techniques with no htpx entry. The methodology's Stealth paragraph records the first move of its technique count since #225.",
       "core": false
     },
     {
