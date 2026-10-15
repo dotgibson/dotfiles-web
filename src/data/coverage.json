@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-10-14",
+  "generatedAt": "2026-10-15",
   "generatedFrom": {
     "repo": "dotfiles-Defense",
     "path": "detections/sigma",
-    "commit": "b6485eeb1a7a71e143cc6b7ad66dc7aa744491c0"
+    "commit": "e72c61fc1c07dd8c82c32c9f23efa752ea308228"
   },
-  "ruleCount": 125,
-  "documentCount": 149,
-  "techniqueCount": 87,
+  "ruleCount": 126,
+  "documentCount": 150,
+  "techniqueCount": 90,
   "tacticCount": 6,
-  "logsourceCount": 24,
+  "logsourceCount": 25,
   "tactics": [
     {
       "id": "TA0002",
@@ -400,6 +400,27 @@
       "rules": 1,
       "ruleNames": [
         "dcshadow_rogue_dc_4742"
+      ]
+    },
+    {
+      "id": "T1218.005",
+      "rules": 1,
+      "ruleNames": [
+        "lolbin_proxy_execution_suspicious_target"
+      ]
+    },
+    {
+      "id": "T1218.010",
+      "rules": 1,
+      "ruleNames": [
+        "lolbin_proxy_execution_suspicious_target"
+      ]
+    },
+    {
+      "id": "T1218.011",
+      "rules": 1,
+      "ruleNames": [
+        "lolbin_proxy_execution_suspicious_target"
       ]
     },
     {
@@ -888,6 +909,13 @@
         "snowflake"
       ],
       "rules": 3
+    },
+    {
+      "dir": "stealth",
+      "products": [
+        "windows"
+      ],
+      "rules": 1
     },
     {
       "dir": "terraform",
