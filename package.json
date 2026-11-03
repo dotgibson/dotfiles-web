@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.0.0",
     "astro": "^7.2.4",
     "typescript": "^6.0.3"
   },
