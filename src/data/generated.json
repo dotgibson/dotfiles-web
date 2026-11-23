@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-10-15",
+  "generatedAt": "2026-11-23",
   "generatedFrom": {
     "clean": true,
     "repos": {
       "dotfiles-core": {
-        "commit": "b2fe65e2dd44537cfba4c7c1c01a68fb739898ce",
+        "commit": "3d5a5e5b00466dbfe167ec683b5fcd1d62e56cd3",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -16,31 +16,31 @@
         "dirty": false
       },
       "dotfiles-Windows": {
-        "commit": "05ea2c86933bbd8ca26af3f5b4036b958b0fe402",
+        "commit": "85bfe3945829e86a3552c7d4690d24fafabc9761",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Offense": {
-        "commit": "3388e2195db05bebedfe11d21ae6704db9a2176b",
+        "commit": "b0246c6df34111b8b1239948441f5a13db77f839",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Defense": {
-        "commit": "e72c61fc1c07dd8c82c32c9f23efa752ea308228",
+        "commit": "60a9f5cbda2fd21110910348e397505542bfd296",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Fedora": {
-        "commit": "bffe44cb4423ed8b709fc28874df22ae56d5bc64",
+        "commit": "4ebcdc28f44f2204d2df342b9b0d073a5b70c4a4",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Arch": {
-        "commit": "7641dce6cfbf9c64927f9d526458e431aa6e3dd4",
+        "commit": "5d38d5bf120238ffe02c1eb1d43531effbf358ae",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -52,19 +52,19 @@
         "dirty": false
       },
       "dotfiles-openSUSE": {
-        "commit": "74c6bec7ac639aa143846114efb96b6e36b96c2c",
+        "commit": "055e57137e62d7d257a360567c95b91e1705452b",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Alpine": {
-        "commit": "51c9d1ccd71850b209194ba3c5272f64aa99fae5",
+        "commit": "933b8b8c04024e0d2d48974f9f5a2a32fcbcb625",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
       },
       "dotfiles-Gentoo": {
-        "commit": "b7cf454b1d8917acdc6fd472a2f6ac12b91e5733",
+        "commit": "205b95ea777fd2d7c1aa8244a6df48787a28d4de",
         "branch": "main",
         "defaultBranch": "main",
         "dirty": false
@@ -200,6 +200,10 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "A self-PR bot that cannot mint the fleet App token now fails instead of quietly opening a PR that never runs CI. freshness.yml's two PR-opening jobs fall back to GITHUB_TOKEN when the mint is skipped or fails, and GitHub starts no workflow for a PR that token opens — so the run stayed green while the PR sat BLOCKED waiting on required contexts that would never arrive (dotgibson/dotfiles-Windows#265, dotgibson/dotfiles-nvim#16). Each job now ends with a step that reds the run when no token was minted, after the PR step, so the PR still opens and notify-failure files the red run as an issue. It says which half was missing: the org secret or variable not shared with the repo, or the App not installed on it. dotfiles-nvim is registered as the fourth EXTRA_REPOS self-PR install in scripts/fleet-app-scope.sh and GITHUB-APP-AUTH.md — its freshness.yml has minted since #1123 and was never on the list — and the doc records the registration no register here can see: FLEET_APP_PRIVATE_KEY must be shared with every self-PR repo.",
+              "kind": "security"
+            },
             {
               "text": "Tools installed with mise use -g are wired on a fresh shell. Band-00 detection ran before mise activate put a mise tool's install dir on PATH, so every one came up with no HAVE_* flag, alias or init, and core-doctor's \"not wired\" block could only name per-tool, per-version dirs that mise activate rewrites on each cd — a fix that did not exist. The shims dir (${MISE_DATA_DIR:-${XDG_DATA_HOME:-~/.local/share}/mise}/shims) is the one fixed path mise keeps, one entry per installed tool, so it joins the bindir list in zsh/00-tools.zsh and its mirror blib_user_bindirs_on_path — first in the list, hence LAST in PATH order: mise activate still puts the real install dirs ahead of it, so which binary runs is unchanged. One more -d stat, no fork. A test pins the flag and the order. A shim is not the binary, though (a review catch): mise does not rewrite it when the tool it fronts is upgraded, so _cache_eval and _cache_completion keyed on its mtime would have served a stale init — or a negative cache — forever. Behind a shim they now key on <mise data>/installs/<tool>, whose mtime moves whenever a version is installed or removed; two tests pin the upgrade and the negative-cache reopening (#1257).",
               "kind": "perf"
@@ -351,6 +355,21 @@
             {
               "text": "Three Arch version stamps in PORTING-MATRIX.md had fallen behind extra. Re-checked 2026-10-11 against archlinux.org: - Footnote ²⁵'s Arch/Homebrew watchexec bullet goes from 2.7.3 (2.7.3-1) to 2.8.0 (2.8.0-1). formulae.brew.sh also has 2.8.0, so the two moved together again and the shared bullet stays shared. - Footnote ³²'s Arch direnv stamp goes from 2.37.1-1 to 2.38.2-1. - The Arch neovim row in scripts/fleet-package-versions.tsv goes from 0.12.5 to 0.12.6. The rendered table is regenerated with gen-porting-matrix.sh --local; it is still above the ≥ 0.12.0 floor. None of these changes a package name or a cell. Surfaced by /os-package-availability arch (dotgibson/dotfiles-Arch#197). The AUR names that report could not reach (carapace-bin, sesh-bin, 1password-cli, viddy) were checked separately through the AUR RPC, and all four still resolve.",
               "kind": "fix"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "groups": [
+        {
+          "category": "Fixed",
+          "items": [
+            {
+              "text": "The three sync bots go red when they cannot mint the fleet App token. nvim-sync, starship-sync and theme-sync already warned (#269) when the mint was skipped or failed, but a warning on a green scheduled run reaches nobody: the PR they then open with GITHUB_TOKEN gets no CI and sits BLOCKED, as #265 did. Each bot now ends with a step that fails the run in that case, after the PR step, so the PR still opens for a manual nudge. The error says whether the org secret/variable is not shared with this repo or the App is not installed on it. The same step closes dotfiles-core's and dotfiles-nvim's freshness.yml.",
+              "kind": "security"
             }
           ]
         }
@@ -1004,6 +1023,10 @@
           "category": "Changed",
           "items": [
             {
+              "text": "companion-freshness measures the vendored companion against htpx's latest release, not its main tip. The companion advances on htpx release tags, but the scheduled check compared against main, which takes CI-only bot commits between releases that never reach the corpus. It stayed red for eight weeks after v3.3.0 over two of them, and would have gone red again after every sync. \"Current\" now means the newest vX.Y.Z release commit is the vendored commit or an ancestor of it, so a lock synced past the release (as #375 did) is current too. Ancestry comes from a commits-only (--filter=tree:0) fetch into a throwaway bare repo. A behind result names the exact scripts/sync-companion.sh --ref <tag> to run. A companion_sha upstream does not have is now a hard failure rather than \"behind\", and with no release tags upstream the check falls back to the branch tip.",
+              "kind": "config"
+            },
+            {
               "text": "bootstrap.sh runs on Core's bootstrap driver, blib_main (dotgibson/dotfiles-core#986). The shared half — the flag loop, the Core symlink surface, the band-85 role stage, the managed ~/.zshrc, the closing report — now runs from one definition in core/lib/bootstrap-lib.sh. This file declares what it is (BOOTSTRAP_ROLE=offensive, BOOTSTRAP_LOGIN_SHELL=0, and BOOTSTRAP_SU=lazy: the driver resolves no escalator and primes no keepalive, because only --install's Kali apt route needs them and install_offensive does both itself at the point of need) and keeps only what is offensive: the host-tool probe as bootstrap_check (which also runs the installer's own dry-run preview under --dry-run --install), the opt-in stack as bootstrap_provision (install_offensive unchanged), the pre-role-layer migration, the prefix + e popup script and the ~/ field references as bootstrap_wire_pre_loader, the engagement note plus the login-shell guard — now Core's blib_login_shell_hint, which Defense carried the same copy of — as bootstrap_closing, and --install / --no-check plus the two deprecation shims through bootstrap_flag. The --links-only + --install contradiction is refused in bootstrap_guard as before. 619 → 551 lines. One convention change: an unknown flag exits 2 (usage error), not 1. Same links, same routes, same exit codes otherwise; a plain run still never prompts for sudo.",
               "kind": "perf"
             },
@@ -1448,6 +1471,10 @@
         {
           "category": "Fixed",
           "items": [
+            {
+              "text": "The package-name gate is green on F45 again, and shfmt still lands there. Since fedora:latest became F45 (2026-10-20), tealdeer, procs and shfmt no longer resolve: the first two are orphaned (already documented), and shfmt is packaged through F44 only, with no golang-mvdan-sh in F45 or rawhide. The scheduled resolve gate has been red since 2026-11-04. The three stay in install/packages.txt for F43/F44, now marked # fallback: <how>, and the gate reads a copy without the marked names, so every other name must still resolve on the newest release. shfmt had no fallback, so an F45 box silently went without it; bootstrap.sh now go installs mvdan.cc/sh/v3/cmd/shfmt where dnf did not supply it, and the dry-run plan lists it.",
+              "kind": "fix"
+            },
             {
               "text": "dnf repoquery (43) had been red on every run since the version floors landed (#193), and never because of a floor. The version probe in test/check-packages.sh ended its options with --. dnf5 only treats -- as end-of-options from 5.4 onwards. The 5.2.x that fedora:43 ships rejects it as an unknown argument, and the probe hid that error (stderr went to /dev/null). So every floored name came back with no version, and the check reported neovim and tree-sitter-cli as \"virtual capabilities\" on F43 only. The -- is gone; manifest names never start with -. A floored name that resolves by name but yields no version now reports a probe failure instead of blaming the manifest entry. packages.yml's path filter now includes test/check-packages.sh, because a change to the probe is only exercised on that workflow's Fedora containers.",
               "kind": "config"
@@ -1932,6 +1959,14 @@
       "repo": "dotfiles-core",
       "version": "Unreleased",
       "category": "Fixed",
+      "kind": "security",
+      "text": "A self-PR bot that cannot mint the fleet App token now fails instead of quietly opening a PR that never runs CI. freshness.yml's two PR-opening jobs fall back to GITHUB_TOKEN when the mint is skipped or fails, and GitHub starts no workflow for a PR that token opens — so the run stayed green while the PR sat BLOCKED waiting on required contexts that would never arrive (dotgibson/dotfiles-Windows#265, dotgibson/dotfiles-nvim#16). Each job now ends with a step that reds the run when no token was minted, after the PR step, so the PR still opens and notify-failure files the red run as an issue. It says which half was missing: the org secret or variable not shared with the repo, or the App not installed on it. dotfiles-nvim is registered as the fourth EXTRA_REPOS self-PR install in scripts/fleet-app-scope.sh and GITHUB-APP-AUTH.md — its freshness.yml has minted since #1123 and was never on the list — and the doc records the registration no register here can see: FLEET_APP_PRIVATE_KEY must be shared with every self-PR repo.",
+      "core": true
+    },
+    {
+      "repo": "dotfiles-core",
+      "version": "Unreleased",
+      "category": "Fixed",
       "kind": "perf",
       "text": "Tools installed with mise use -g are wired on a fresh shell. Band-00 detection ran before mise activate put a mise tool's install dir on PATH, so every one came up with no HAVE_* flag, alias or init, and core-doctor's \"not wired\" block could only name per-tool, per-version dirs that mise activate rewrites on each cd — a fix that did not exist. The shims dir (${MISE_DATA_DIR:-${XDG_DATA_HOME:-~/.local/share}/mise}/shims) is the one fixed path mise keeps, one entry per installed tool, so it joins the bindir list in zsh/00-tools.zsh and its mirror blib_user_bindirs_on_path — first in the list, hence LAST in PATH order: mise activate still puts the real install dirs ahead of it, so which binary runs is unchanged. One more -d stat, no fork. A test pins the flag and the order. A shim is not the binary, though (a review catch): mise does not rewrite it when the tool it fronts is upgraded, so _cache_eval and _cache_completion keyed on its mtime would have served a stale init — or a negative cache — forever. Behind a shim they now key on <mise data>/installs/<tool>, whose mtime moves whenever a version is installed or removed; two tests pin the upgrade and the negative-cache reopening (#1257).",
       "core": true
@@ -2015,6 +2050,14 @@
       "kind": "fix",
       "text": "Prose counts, corrected: the fan-out is ten repos, not nine (ci.yml, common.sh, 22-ci-classify.sh); CLAUDE.md says ~1,500 footnote lines and the doc-consistency agent 40 footnotes; core.manifest's layer summary names every layer it lists (#1251).",
       "core": true
+    },
+    {
+      "repo": "dotfiles-Windows",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "security",
+      "text": "The three sync bots go red when they cannot mint the fleet App token. nvim-sync, starship-sync and theme-sync already warned (#269) when the mint was skipped or failed, but a warning on a green scheduled run reaches nobody: the PR they then open with GITHUB_TOKEN gets no CI and sits BLOCKED, as #265 did. Each bot now ends with a step that fails the run in that case, after the PR step, so the PR still opens for a manual nudge. The error says whether the org secret/variable is not shared with this repo or the App is not installed on it. The same step closes dotfiles-core's and dotfiles-nvim's freshness.yml.",
+      "core": false
     },
     {
       "repo": "dotfiles-Offense",
@@ -2718,6 +2761,14 @@
       "category": "Added",
       "kind": "feature",
       "text": "companion_version / companion_tag in companion.lock, for symmetry with core.lock.",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Offense",
+      "version": "Unreleased",
+      "category": "Changed",
+      "kind": "config",
+      "text": "companion-freshness measures the vendored companion against htpx's latest release, not its main tip. The companion advances on htpx release tags, but the scheduled check compared against main, which takes CI-only bot commits between releases that never reach the corpus. It stayed red for eight weeks after v3.3.0 over two of them, and would have gone red again after every sync. \"Current\" now means the newest vX.Y.Z release commit is the vendored commit or an ancestor of it, so a lock synced past the release (as #375 did) is current too. Ancestry comes from a commits-only (--filter=tree:0) fetch into a throwaway bare repo. A behind result names the exact scripts/sync-companion.sh --ref <tag> to run. A companion_sha upstream does not have is now a hard failure rather than \"behind\", and with no release tags upstream the check falls back to the branch tip.",
       "core": false
     },
     {
@@ -3534,6 +3585,14 @@
       "category": "Added",
       "kind": "perf",
       "text": "The repo hygiene surface: Makefile, CONTRIBUTING.md, .editorconfig, .gitattributes, and the PR/issue templates. This repo and dotfiles-Offense are deliberate mirrors — equal CI weight at 14 workflows each, and Defense carries *more* tracked files — but Defense was the only repo in the fleet missing all of these at once. The Makefile is the one with immediate value: every gate here was already real and already scripted, but there was no front door, so reproducing CI locally meant reading .github/workflows/ and reconstructing the command list by hand. It wires what exists — tests/lint-shell.sh, tests/test-defense.sh, the four --check drift gates, the methodology and validation-coverage gates, lab-smoke.sh — and reads MARKDOWNLINT_VERSION from the vendored Core pins so a local run matches CI exactly. Offense's target list was not ported wholesale, because that would have recreated in reverse the exact bug Offense's Makefile was written to fix: core-sync, core-lock and the companion-* targets name scripts this repo does not have (Core is pushed *into* here by dotfiles-core's own make sync, and this repo vendors no htpx companion). They are absent rather than stubbed. .gitattributes is the one with teeth. dotfiles-Arch/CLAUDE.md documents what its absence costs when a repo is touched from Windows over a UNC share: a .sh that picks up CRLF gets a shebang of …/env bash\\r and dies with *\"bad interpreter\"* — text that looks perfectly valid and that both shellcheck and bash -n accept. It also pins *.rules, *.zeek and *.pcap, which are this repo's product and are parsed by tools that are not uniformly CRLF-tolerant. Adding this file also makes Defense visible to dotfiles-web's changelog feed, which derives from each repo's CHANGELOG.md and had been skipping this one for want of the file. (dotgibson/dotfiles-Defense#196)",
+      "core": false
+    },
+    {
+      "repo": "dotfiles-Fedora",
+      "version": "Unreleased",
+      "category": "Fixed",
+      "kind": "fix",
+      "text": "The package-name gate is green on F45 again, and shfmt still lands there. Since fedora:latest became F45 (2026-10-20), tealdeer, procs and shfmt no longer resolve: the first two are orphaned (already documented), and shfmt is packaged through F44 only, with no golang-mvdan-sh in F45 or rawhide. The scheduled resolve gate has been red since 2026-11-04. The three stay in install/packages.txt for F43/F44, now marked # fallback: <how>, and the gate reads a copy without the marked names, so every other name must still resolve on the newest release. shfmt had no fallback, so an F45 box silently went without it; bootstrap.sh now go installs mvdan.cc/sh/v3/cmd/shfmt where dnf did not supply it, and the dry-run plan lists it.",
       "core": false
     },
     {
